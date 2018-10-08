@@ -7,15 +7,22 @@ include_directories(src/main/cpp)
 include_directories(${PATH_TO_SUPERPOWERED})
 
 # compile player example to a native library
-add_library(
+#[[add_library(
         native-lib
         SHARED
         src/main/cpp/native-lib.cpp
         ${PATH_TO_SUPERPOWERED}/AndroidIO/SuperpoweredAndroidAudioIO.cpp
+)]]
+add_library(
+        Player
+        SHARED
+        src/main/cpp/Player.cpp
+        ${PATH_TO_SUPERPOWERED}/AndroidIO/SuperpoweredAndroidAudioIO.cpp
 )
 # link the native library against the following libraries
 target_link_libraries(
-        native-lib
+        #        native-lib
+        Player
         log
         android
         OpenSLES
