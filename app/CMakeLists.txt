@@ -3,6 +3,8 @@ cmake_minimum_required(VERSION 3.4.1)
 # convert SDK path to forward slashes on Windows
 file(TO_CMAKE_PATH ${PATH_TO_SUPERPOWERED} PATH_TO_SUPERPOWERED)
 
+set(CMAKE_VERBOSE_MAKEFILE on)
+
 include_directories(src/main/cpp)
 include_directories(${PATH_TO_SUPERPOWERED})
 
@@ -13,6 +15,7 @@ include_directories(${PATH_TO_SUPERPOWERED})
         src/main/cpp/native-lib.cpp
         ${PATH_TO_SUPERPOWERED}/AndroidIO/SuperpoweredAndroidAudioIO.cpp
 )]]
+
 add_library(
         Player
         SHARED
@@ -23,8 +26,8 @@ add_library(
 target_link_libraries(
         #        native-lib
         Player
+        ${PATH_TO_SUPERPOWERED}/libSuperpoweredAndroid${ANDROID_ABI}.a
+        OpenSLES
         log
         android
-        OpenSLES
-        ${PATH_TO_SUPERPOWERED}/libSuperpoweredAndroid${ANDROID_ABI}.a
 )
