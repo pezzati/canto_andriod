@@ -5,4 +5,15 @@
     <string name="description_info">Info</string>
     <string name="permission_request">This sample needs permission for camera and audio recording.</string>
     <string name="camera_error">This device doesn\'t support Camera2 API.</string>
+    <string name="sing_by_canto">Sing! by Canto</string>
+    <string name="continue_with">Continue with</string>
+    <string name="phone_number">Phone number</string>
+    <string name="email">Email</string>
+    <string name="google">Google</string>
+    <string name="login_by_phone_number">Login by \n Phone Number</string>
+    <string name="accept_the_terms">I have read and accepted the terms and conditions</string>
+    <string name="send">Send</string>
+    <string name="code_was_sent_to_the_following_number">Code was send to the number:</string>
+    <string name="didnt_receive_code">Didn\'t receive code?</string>
+    <string name="wrong_phone_number">Wrong phone number?</string>
 </resources>
