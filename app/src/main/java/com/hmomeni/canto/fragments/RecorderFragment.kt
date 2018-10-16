@@ -21,6 +21,7 @@ import android.os.HandlerThread
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentActivity
 import android.support.v4.content.ContextCompat.checkSelfPermission
+import android.support.v4.view.ViewPager
 import android.util.Size
 import android.util.SparseIntArray
 import android.view.*
@@ -30,15 +31,16 @@ import com.example.android.camera2video.CompareSizesByArea
 import com.example.android.camera2video.ErrorDialog
 import com.hmomeni.canto.R
 import com.hmomeni.canto.activities.DubsmashActivity
-import com.hmomeni.canto.utils.RecordMode
 import com.hmomeni.canto.utils.VIDEO_PERMISSIONS
 import com.hmomeni.canto.utils.adapters.viewpager.ModePagerAdapter
+import com.hmomeni.canto.utils.dpToPx
 import com.hmomeni.canto.utils.views.AutoFitTextureView
 import com.karumi.dexter.Dexter
 import com.karumi.dexter.MultiplePermissionsReport
 import com.karumi.dexter.PermissionToken
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener
+import com.tmall.ultraviewpager.transformer.UltraScaleTransformer
 import kotlinx.android.synthetic.main.fragment_recorder.*
 import timber.log.Timber
 import java.io.IOException
@@ -187,17 +189,103 @@ class RecorderFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         textureView = AutoFitTextureView(context!!).apply {
-            layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+            layoutParams = ViewGroup.LayoutParams(dpToPx(365), dpToPx(200))
         }
         textureView2 = AutoFitTextureView(context!!).apply {
-            layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+            layoutParams = ViewGroup.LayoutParams(dpToPx(365), dpToPx(200))
         }
-        viewPager.adapter = ModePagerAdapter(context!!, arrayOf(textureView, textureView2), listOf(RecordMode.Dubsmash, RecordMode.Karaoke))
+
+        val singView = View(context!!).apply {
+            setBackgroundColor(context!!.resources.getColor(R.color.md_green_400))
+            layoutParams = ViewGroup.LayoutParams(dpToPx(365), dpToPx(200))
+        }
+        viewPager.setMultiScreen(0.6f)
+        viewPager.setPageTransformer(false, UltraScaleTransformer())
+        viewPager.adapter = ModePagerAdapter(context!!, arrayOf(textureView, textureView2, singView))
 
         textureView2.setOnClickListener {
             it.transitionName = "textureView"
             startActivity(Intent(context!!, DubsmashActivity::class.java), ActivityOptions.makeSceneTransitionAnimation(activity, textureView2, "textureView").toBundle())
         }
+
+        nextTabTitle.alpha = 0f
+        nextTabTitle.translationY = -100f
+
+        nextTabDesc.alpha = 0f
+        nextTabDesc.translationY = -100f
+        var lastPage = 0
+        viewPager.setOnPageChangeListener(object : ViewPager.OnPageChangeListener {
+            override fun onPageScrollStateChanged(state: Int) {
+
+            }
+
+            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
+                if (positionOffset != 0f) {
+                    when (position) {
+                        0 -> {
+                            currentTabTitle.alpha = 1 - positionOffset
+                            currentTabTitle.translationY = 100 * positionOffset
+
+                            currentTabDesc.alpha = 1 - positionOffset
+                            currentTabDesc.translationY = 100 * positionOffset
+
+                            nextTabTitle.alpha = positionOffset
+                            nextTabTitle.translationY = -(100 - 100 * positionOffset)
+
+                            nextTabDesc.alpha = positionOffset
+                            nextTabDesc.translationY = -(100 - 100 * positionOffset)
+                        }
+                        1 -> {
+                            nextTabTitle.alpha = 1 - positionOffset
+                            nextTabTitle.translationY = 100 * positionOffset
+
+                            nextTabDesc.alpha = 1 - positionOffset
+                            nextTabDesc.translationY = 100 * positionOffset
+
+                            currentTabTitle.alpha = positionOffset
+                            currentTabTitle.translationY = -(100 - 100 * positionOffset)
+
+                            currentTabDesc.alpha = positionOffset
+                            currentTabDesc.translationY = -(100 - 100 * positionOffset)
+                        }
+                    }
+                } else {
+                    when (position) {
+                        0 -> {
+                            nextTabTitle.alpha = 0f
+                            nextTabTitle.translationY = -100f
+
+                            nextTabDesc.alpha = 0f
+                            nextTabDesc.translationY = -100f
+
+                            nextTabTitle.setText(R.string.sing)
+                            nextTabTitle.setText(R.string.sing_desc)
+                        }
+                        1 -> {
+                            currentTabTitle.alpha = 0f
+                            currentTabTitle.translationY = -100f
+
+                            currentTabDesc.alpha = 0f
+                            currentTabDesc.translationY = -100f
+
+                            if (lastPage == 0) {
+                                currentTabTitle.setText(R.string.karaoke)
+                                currentTabDesc.setText(R.string.karaoke_desc)
+                            } else {
+                                currentTabTitle.setText(R.string.dubsmash)
+                                currentTabDesc.setText(R.string.dubsmash_desc)
+                            }
+                        }
+                    }
+                    lastPage = position
+                }
+            }
+
+            override fun onPageSelected(position: Int) {
+
+            }
+
+        })
     }
 
     override fun onResume() {
@@ -293,8 +381,7 @@ class RecorderFragment : Fragment() {
                     ?: throw RuntimeException("Cannot get available preview/video sizes")
             sensorOrientation = characteristics.get(SENSOR_ORIENTATION)
             videoSize = chooseVideoSize(map.getOutputSizes(MediaRecorder::class.java))
-            previewSize = chooseOptimalSize(map.getOutputSizes(SurfaceTexture::class.java),
-                    width, height, videoSize)
+            previewSize = Size(dpToPx(365), dpToPx(200))
 
             if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
                 textureView.setAspectRatio(previewSize.width, previewSize.height)
