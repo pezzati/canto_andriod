@@ -393,7 +393,7 @@ abstract class CameraActivity : AppCompatActivity() {
         val cameraActivity = this
 
         if (nextVideoAbsolutePath.isNullOrEmpty()) {
-            nextVideoAbsolutePath = getVideoFilePath(cameraActivity)
+            nextVideoAbsolutePath = getVideoFilePath()
         }
 
         val rotation = cameraActivity.windowManager.defaultDisplay.rotation
@@ -418,7 +418,9 @@ abstract class CameraActivity : AppCompatActivity() {
         }
     }
 
-    private fun getVideoFilePath(context: Context?): String {
+    abstract fun getVideoFilePath(): String
+
+    /*private fun getVideoFilePath(context: Context?): String {
         val filename = "${System.currentTimeMillis()}.mp4"
         val dir = context?.getExternalFilesDir(null)
 
@@ -427,7 +429,7 @@ abstract class CameraActivity : AppCompatActivity() {
         } else {
             "${dir.absolutePath}/$filename"
         }
-    }
+    }*/
 
     protected fun startRecordingVideo() {
         if (cameraDevice == null || !getTextureView().isAvailable) return

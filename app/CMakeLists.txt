@@ -16,16 +16,23 @@ include_directories(${PATH_TO_SUPERPOWERED})
         ${PATH_TO_SUPERPOWERED}/AndroidIO/SuperpoweredAndroidAudioIO.cpp
 )]]
 
+#add_library(
+#        Player
+#        SHARED
+#        src/main/cpp/Player.cpp
+#        ${PATH_TO_SUPERPOWERED}/AndroidIO/SuperpoweredAndroidAudioIO.cpp
+#)
 add_library(
-        Player
+        Dubsmash
         SHARED
-        src/main/cpp/Player.cpp
+        src/main/cpp/Dubsmash.cpp
         ${PATH_TO_SUPERPOWERED}/AndroidIO/SuperpoweredAndroidAudioIO.cpp
 )
 # link the native library against the following libraries
 target_link_libraries(
         #        native-lib
-        Player
+        Dubsmash
+        #        Player
         ${PATH_TO_SUPERPOWERED}/libSuperpoweredAndroid${ANDROID_ABI}.a
         OpenSLES
         log
