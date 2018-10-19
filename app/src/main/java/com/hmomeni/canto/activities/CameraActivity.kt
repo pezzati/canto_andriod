@@ -37,6 +37,9 @@ import java.util.concurrent.TimeUnit
 @SuppressLint("Registered")
 abstract class CameraActivity : AppCompatActivity() {
     abstract fun getTextureView(): AutoFitTextureView
+    abstract fun onRecordStarted()
+    abstract fun onRecordStopped()
+    abstract fun onRecordError()
 
     private val FRAGMENT_DIALOG = "dialog"
     private val SENSOR_ORIENTATION_DEFAULT_DEGREES = 90
@@ -405,7 +408,7 @@ abstract class CameraActivity : AppCompatActivity() {
         }
 
         mediaRecorder?.apply {
-            setAudioSource(MediaRecorder.AudioSource.MIC)
+            //            setAudioSource(MediaRecorder.AudioSource.MIC)
             setVideoSource(MediaRecorder.VideoSource.SURFACE)
             setOutputFormat(MediaRecorder.OutputFormat.MPEG_4)
             setOutputFile(nextVideoAbsolutePath)
@@ -413,7 +416,7 @@ abstract class CameraActivity : AppCompatActivity() {
             setVideoFrameRate(30)
             setVideoSize(videoSize.width, videoSize.height)
             setVideoEncoder(MediaRecorder.VideoEncoder.H264)
-            setAudioEncoder(MediaRecorder.AudioEncoder.AAC)
+//            setAudioEncoder(MediaRecorder.AudioEncoder.AAC)
             prepare()
         }
     }
@@ -459,23 +462,27 @@ abstract class CameraActivity : AppCompatActivity() {
                     object : CameraCaptureSession.StateCallback() {
 
                         override fun onConfigured(cameraCaptureSession: CameraCaptureSession) {
+                            Timber.d("Camera Capture Session Configured")
                             captureSession = cameraCaptureSession
                             updatePreview()
                             runOnUiThread {
-                                //                                videoButton.setText(R.string.stop)
                                 isRecordingVideo = true
                                 mediaRecorder?.start()
+                                onRecordStarted()
                             }
                         }
 
                         override fun onConfigureFailed(cameraCaptureSession: CameraCaptureSession) {
                             showToast("Failed")
+                            onRecordError()
                         }
                     }, backgroundHandler)
         } catch (e: CameraAccessException) {
             Timber.e(e)
+            onRecordError()
         } catch (e: IOException) {
             Timber.e(e)
+            onRecordError()
         }
 
     }
@@ -488,6 +495,7 @@ abstract class CameraActivity : AppCompatActivity() {
     protected fun stopRecordingVideo() {
         isRecordingVideo = false
 //        videoButton.setText(R.string.record)
+        onRecordStopped()
         mediaRecorder?.apply {
             stop()
             reset()

@@ -21,13 +21,22 @@ class DubsmashActivity : CameraActivity() {
         return File(Environment.getExternalStorageDirectory(), "dubsmash.mp4").absolutePath
     }
 
+    override fun onRecordStarted() {
+    }
+
+    override fun onRecordStopped() {
+    }
+
+    override fun onRecordError() {
+    }
+
     private lateinit var filePath: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_dubsmash)
 
-        filePath = intent.extras["audio_src"].toString()
+        filePath = "/mnt/sdcard/Music/07-Mohsen_Chavoshi_To_Dar_Masafate_Barani.mp3"
 
         initAudio()
 

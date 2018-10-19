@@ -1,7 +1,6 @@
 package com.hmomeni.canto.fragments
 
 import android.annotation.SuppressLint
-import android.app.ActivityOptions
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager.PERMISSION_GRANTED
@@ -221,7 +220,7 @@ class RecorderFragment : Fragment() {
             dialog.setDialogSelectionListener {
                 val file = File(it[0])
                 v.transitionName = "textureView"
-                startActivity(Intent(context!!, DubsmashActivity::class.java).putExtra("audio_src", file.absoluteFile), ActivityOptions.makeSceneTransitionAnimation(activity, textureView2, "textureView").toBundle())
+                startActivity(Intent(context!!, DubsmashActivity::class.java).putExtra("audio_src", file.absoluteFile))
             }
             dialog.show()
         }
