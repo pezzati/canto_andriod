@@ -1,16 +1,25 @@
 package com.hmomeni.canto.utils
 
+import android.app.Application
 import android.content.Context
 import android.content.res.Resources
 import android.graphics.Point
 import android.view.View
 import android.view.WindowManager
+import com.hmomeni.canto.App
 import io.reactivex.Flowable
 import io.reactivex.FlowableTransformer
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
+fun Application.app(): App {
+    return this as App
+}
+
+fun Context.app(): App {
+    return applicationContext as App
+}
 
 fun <T> schedulers(): FlowableTransformer<T, T> = FlowableTransformer {
     it.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
