@@ -1,10 +1,13 @@
 package com.hmomeni.canto.api
 
 import com.google.gson.JsonObject
+import com.hmomeni.canto.entities.ApiResponse
+import com.hmomeni.canto.entities.Banner
 import io.reactivex.Completable
 import io.reactivex.Single
 import okhttp3.RequestBody
 import retrofit2.http.Body
+import retrofit2.http.GET
 import retrofit2.http.POST
 
 interface Api {
@@ -13,4 +16,7 @@ interface Api {
 
     @POST("user/profile/verify")
     fun verify(@Body requestBody: RequestBody): Single<JsonObject>
+
+    @GET("analysis/banners")
+    fun getBanners(): Single<ApiResponse<List<Banner>>>
 }

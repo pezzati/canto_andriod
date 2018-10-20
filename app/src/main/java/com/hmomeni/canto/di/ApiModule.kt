@@ -5,6 +5,7 @@ import com.google.gson.GsonBuilder
 import com.hmomeni.canto.App
 import com.hmomeni.canto.api.Api
 import com.hmomeni.canto.utils.BASE_URL
+import com.pixplicity.easyprefs.library.Prefs
 import dagger.Module
 import dagger.Provides
 import okhttp3.OkHttpClient
@@ -35,6 +36,14 @@ class ApiModule {
                     OkHttpClient.Builder()
                             .writeTimeout(30, TimeUnit.SECONDS)
                             .readTimeout(30, TimeUnit.SECONDS)
+                            .addNetworkInterceptor {
+                                val builder = it.request().newBuilder()
+                                val token = Prefs.getString("token", "")
+                                if (token.isNotEmpty()) {
+                                    builder.addHeader("USERTOKEN", token)
+                                }
+                                it.proceed(builder.build())
+                            }
                             .addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
                             .addNetworkInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.HEADERS))
                             .build()
