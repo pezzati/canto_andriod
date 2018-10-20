@@ -8,8 +8,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.hmomeni.canto.R
+import com.hmomeni.canto.adapters.rcl.MainRclAdapter
 import com.hmomeni.canto.utils.ViewModelFactory
-import com.hmomeni.canto.utils.adapters.rcl.MainRclAdapter
 import com.hmomeni.canto.utils.app
 import com.hmomeni.canto.utils.iomain
 import com.hmomeni.canto.vms.MainViewModel

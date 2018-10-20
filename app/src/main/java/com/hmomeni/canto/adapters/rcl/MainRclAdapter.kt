@@ -1,4 +1,4 @@
-package com.hmomeni.canto.utils.adapters.rcl
+package com.hmomeni.canto.adapters.rcl
 
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -6,9 +6,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.hmomeni.canto.R
+import com.hmomeni.canto.adapters.viewpager.BannerPagerAdapter
 import com.hmomeni.canto.entities.Banner
 import com.hmomeni.canto.entities.Genre
-import com.hmomeni.canto.utils.adapters.viewpager.BannerPagerAdapter
 import kotlinx.android.synthetic.main.rcl_item_banner.view.*
 import kotlinx.android.synthetic.main.rcl_item_genre.view.*
 

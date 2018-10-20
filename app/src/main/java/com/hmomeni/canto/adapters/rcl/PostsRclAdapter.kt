@@ -1,4 +1,4 @@
-package com.hmomeni.canto.utils.adapters.rcl
+package com.hmomeni.canto.adapters.rcl
 
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater

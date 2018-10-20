@@ -1,4 +1,4 @@
-package com.hmomeni.canto.utils.adapters.viewpager
+package com.hmomeni.canto.adapters.viewpager
 
 import android.support.v4.view.PagerAdapter
 import android.view.View
