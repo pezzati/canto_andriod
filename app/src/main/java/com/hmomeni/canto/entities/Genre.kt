@@ -13,5 +13,5 @@ data class Genre(
         val name: String,
         @field:SerializedName("liked_it")
         val likedIt: Boolean,
-        val posts: List<Post>? = null
+        var posts: List<Post>? = null
 )

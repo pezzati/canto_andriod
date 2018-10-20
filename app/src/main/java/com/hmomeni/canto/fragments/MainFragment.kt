@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.hmomeni.canto.R
 import com.hmomeni.canto.adapters.rcl.MainRclAdapter
+import com.hmomeni.canto.entities.Genre
 import com.hmomeni.canto.utils.ViewModelFactory
 import com.hmomeni.canto.utils.app
 import com.hmomeni.canto.utils.iomain
@@ -34,12 +35,34 @@ class MainFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         recyclerView.layoutManager = LinearLayoutManager(recyclerView.context)
-
+        val genres = mutableListOf<Genre>()
         viewModel.api.getBanners()
                 .map { it.data }
                 .iomain()
                 .subscribe({
-                    recyclerView.adapter = MainRclAdapter(it, listOf())
+                    recyclerView.adapter = MainRclAdapter(it, genres)
+                    viewModel.api.getGenres()
+                            .map { it.data }
+                            .iomain()
+                            .subscribe({
+                                it.forEach { genre ->
+                                    val genreId = genre.filesLink.replace(Regex("[^\\d]"), "").toInt()
+                                    viewModel.api
+                                            .getGenrePosts(genreId)
+                                            .map { it.data }
+                                            .iomain()
+                                            .subscribe({
+                                                genre.posts = it
+                                                genres.add(genre)
+                                                recyclerView.adapter.notifyDataSetChanged()
+                                            }, {
+                                                Timber.e(it)
+                                            })
+
+                                }
+                            }, {
+                                Timber.e(it)
+                            }).addTo(compositeDisposable)
                 }, {
                     Timber.e(it)
                 }).addTo(compositeDisposable)

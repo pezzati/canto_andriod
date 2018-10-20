@@ -3,12 +3,15 @@ package com.hmomeni.canto.api
 import com.google.gson.JsonObject
 import com.hmomeni.canto.entities.ApiResponse
 import com.hmomeni.canto.entities.Banner
+import com.hmomeni.canto.entities.Genre
+import com.hmomeni.canto.entities.Post
 import io.reactivex.Completable
 import io.reactivex.Single
 import okhttp3.RequestBody
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.Path
 
 interface Api {
     @POST("user/signup")
@@ -19,4 +22,10 @@ interface Api {
 
     @GET("analysis/banners")
     fun getBanners(): Single<ApiResponse<List<Banner>>>
+
+    @GET("song/genre")
+    fun getGenres(): Single<ApiResponse<List<Genre>>>
+
+    @GET("song/genre/{genreId}/karaokes")
+    fun getGenrePosts(@Path("genreId") genreId: Int): Single<ApiResponse<List<Post>>>
 }

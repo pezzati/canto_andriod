@@ -48,6 +48,7 @@ class MainRclAdapter(private val banners: List<Banner>, private val genres: List
 
     class GenreHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         fun bind(genre: Genre) {
+            itemView.genreName.text = genre.name
             itemView.genresRecyclerView.layoutManager = LinearLayoutManager(itemView.context, LinearLayoutManager.HORIZONTAL, false)
             itemView.genresRecyclerView.adapter = PostsRclAdapter(genre.posts!!)
         }
