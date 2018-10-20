@@ -1,21 +1,28 @@
 package com.hmomeni.canto.activities
 
 import android.animation.Animator
+import android.app.ProgressDialog
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.View
 import android.view.ViewTreeObserver
+import android.widget.Toast
 import com.hmomeni.canto.R
 import com.hmomeni.canto.utils.MyAnimatorListener
 import com.hmomeni.canto.utils.ViewModelFactory
 import com.hmomeni.canto.utils.app
+import com.hmomeni.canto.utils.iomain
 import com.hmomeni.canto.vms.LoginViewModel
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxkotlin.addTo
 import kotlinx.android.synthetic.main.activity_login.*
+import timber.log.Timber
 
 class LoginActivity : AppCompatActivity() {
     private lateinit var viewModel: LoginViewModel
+    private val compositeDisposable = CompositeDisposable()
 
     private var step = 0
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -27,13 +34,15 @@ class LoginActivity : AppCompatActivity() {
         phoneBtn.setOnClickListener {
             when (step) {
                 0 -> goToPhoneInput()
-                1 -> goToCodeInput()
-                2 -> {
-                    startActivity(Intent(this, MainActivity::class.java))
-                    finish()
-                }
+                1 -> submitPhone()
+                2 -> submitCode()
             }
         }
+    }
+
+    override fun onStop() {
+        compositeDisposable.clear()
+        super.onStop()
     }
 
     override fun onBackPressed() {
@@ -119,4 +128,41 @@ class LoginActivity : AppCompatActivity() {
             }
         })
     }
+
+    private fun submitPhone() {
+        val progressDialog = ProgressDialog(this).apply {
+            isIndeterminate = true
+        }
+
+        viewModel.signUpPhone(phoneInput.text.toString())
+                .iomain()
+                .doOnSubscribe { progressDialog.show() }
+                .doAfterTerminate { progressDialog.dismiss() }
+                .subscribe({
+                    goToCodeInput()
+                }, {
+                    Toast.makeText(this, R.string.failed_requstin_verification, Toast.LENGTH_SHORT).show()
+                    Timber.e(it)
+                }).addTo(compositeDisposable)
+    }
+
+    private fun submitCode() {
+        val progressDialog = ProgressDialog(this).apply {
+            isIndeterminate = true
+        }
+
+        viewModel.verifyPhone(codeInput.text.toString())
+                .iomain()
+                .doOnSubscribe { progressDialog.show() }
+                .doAfterTerminate { progressDialog.dismiss() }
+                .subscribe({
+                    startActivity(Intent(this, MainActivity::class.java))
+                    finish()
+                }, {
+                    Toast.makeText(this, R.string.failed_requstin_verification, Toast.LENGTH_SHORT).show()
+                    Timber.e(it)
+                }).addTo(compositeDisposable)
+    }
+
+
 }

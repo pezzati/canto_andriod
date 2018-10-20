@@ -7,9 +7,7 @@ import android.graphics.Point
 import android.view.View
 import android.view.WindowManager
 import com.hmomeni.canto.App
-import io.reactivex.Flowable
-import io.reactivex.FlowableTransformer
-import io.reactivex.Single
+import io.reactivex.*
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
@@ -27,6 +25,14 @@ fun <T> schedulers(): FlowableTransformer<T, T> = FlowableTransformer {
 
 fun <T> Flowable<T>.iomain(): Flowable<T> = this.compose(schedulers())
 fun <T> Single<T>.iomain(): Single<T> = this.compose {
+    it.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+}
+
+fun Completable.iomain(): Completable = this.compose {
+    it.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+}
+
+fun <T> Maybe<T>.iomain(): Maybe<T> = this.compose {
     it.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
 }
 
@@ -86,3 +92,5 @@ fun setViewDimension(view: View, dimension: Dimension) {
 }
 
 fun dpToPx(dp: Int) = (dp * Resources.getSystem().displayMetrics.density).toInt()
+
+fun validatePhoneNumber(string: String) = string.matches(Regex("^(0?9|989)[0-9]{9}$"))

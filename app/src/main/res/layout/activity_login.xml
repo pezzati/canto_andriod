@@ -128,6 +128,7 @@
             android:layout_height="wrap_content" />
 
         <EditText
+            android:id="@+id/phoneInput"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="64dp"
@@ -181,6 +182,7 @@
             android:text="+989123456789" />
 
         <EditText
+            android:id="@+id/codeInput"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="28dp"

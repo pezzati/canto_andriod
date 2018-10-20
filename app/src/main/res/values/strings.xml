@@ -22,4 +22,5 @@
     <string name="sing_desc">Sing Desc</string>
     <string name="karaoke">Karaoke</string>
     <string name="karaoke_desc">Karaoke Desc</string>
+    <string name="failed_requstin_verification">Failed requesting verification</string>
 </resources>
