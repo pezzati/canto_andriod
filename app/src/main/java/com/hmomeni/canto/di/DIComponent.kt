@@ -1,6 +1,7 @@
 package com.hmomeni.canto.di
 
 import com.hmomeni.canto.activities.MainActivity
+import com.hmomeni.canto.vms.ListViewModel
 import com.hmomeni.canto.vms.LoginViewModel
 import com.hmomeni.canto.vms.MainViewModel
 import dagger.Component
@@ -15,4 +16,5 @@ interface DIComponent {
     fun inject(mainActivity: MainActivity)
     fun inject(mainActivity: LoginViewModel)
     fun inject(mainViewModel: MainViewModel)
+    fun inject(listViewModel: ListViewModel)
 }

@@ -6,7 +6,9 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import com.bumptech.glide.Glide
 import com.hmomeni.canto.entities.Banner
+import com.hmomeni.canto.utils.GlideApp
 import com.hmomeni.canto.utils.dpToPx
+import com.hmomeni.canto.utils.rounded
 
 class BannerPagerAdapter(private val banners: List<Banner>) : PagerAdapter() {
     override fun instantiateItem(container: ViewGroup, position: Int): Any {
@@ -15,8 +17,9 @@ class BannerPagerAdapter(private val banners: List<Banner>) : PagerAdapter() {
             layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
             setPadding(padding, padding, padding, padding)
         }
-        Glide.with(container.context)
+        GlideApp.with(container.context)
                 .load(banners[position].file)
+                .rounded(dpToPx(15))
                 .into(imageView)
         container.addView(imageView)
         return imageView

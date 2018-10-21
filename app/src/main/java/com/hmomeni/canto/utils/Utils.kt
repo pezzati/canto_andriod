@@ -3,13 +3,16 @@ package com.hmomeni.canto.utils
 import android.app.Application
 import android.content.Context
 import android.content.res.Resources
+import android.graphics.Bitmap
 import android.graphics.Point
+import android.graphics.drawable.Drawable
 import android.view.View
 import android.view.WindowManager
 import com.hmomeni.canto.App
 import io.reactivex.*
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+import jp.wasabeef.glide.transformations.RoundedCornersTransformation
 
 fun Application.app(): App {
     return this as App
@@ -94,3 +97,9 @@ fun setViewDimension(view: View, dimension: Dimension) {
 fun dpToPx(dp: Int) = (dp * Resources.getSystem().displayMetrics.density).toInt()
 
 fun validatePhoneNumber(string: String) = string.matches(Regex("^(0?9|989)[0-9]{9}$"))
+
+fun GlideRequest<Drawable>.rounded(radius: Int, margin: Int = 3): GlideRequest<Drawable> =
+        this.apply(com.bumptech.glide.request.RequestOptions().transform(RoundedCornersTransformation(radius, margin)))
+
+fun GlideRequest<Bitmap>.roundedBitmap(radius: Int, margin: Int = 3): GlideRequest<Bitmap> =
+        this.apply(com.bumptech.glide.request.RequestOptions().transform(RoundedCornersTransformation(radius, margin)))
