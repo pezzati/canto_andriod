@@ -3,6 +3,8 @@ package com.hmomeni.canto.vms
 import android.arch.lifecycle.ViewModel
 import com.hmomeni.canto.api.Api
 import com.hmomeni.canto.di.DIComponent
+import com.hmomeni.canto.utils.navigation.NavEvent
+import io.reactivex.processors.PublishProcessor
 import javax.inject.Inject
 
 class MainViewModel : ViewModel(), DIComponent.Injectable {
@@ -12,4 +14,6 @@ class MainViewModel : ViewModel(), DIComponent.Injectable {
 
     @Inject
     lateinit var api: Api
+    @Inject
+    lateinit var navEvents: PublishProcessor<NavEvent>
 }

@@ -7,15 +7,25 @@ import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import com.hmomeni.canto.App
 import com.hmomeni.canto.R
+import com.hmomeni.canto.fragments.ListFragment
+import com.hmomeni.canto.utils.navigation.ListNavEvent
+import com.hmomeni.canto.utils.navigation.NavEvent
 import com.pixplicity.easyprefs.library.Prefs
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
+import io.reactivex.processors.PublishProcessor
 import javax.inject.Inject
 
 class MainActivity : AppCompatActivity() {
 
     @Inject
     lateinit var app: App
+    @Inject
+    lateinit var navEvents: PublishProcessor<NavEvent>
 
-    lateinit var navController: NavController
+    private lateinit var navController: NavController
+
+    private var navDisposable: Disposable? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,7 +40,21 @@ class MainActivity : AppCompatActivity() {
 
         setContentView(R.layout.activity_main)
         navController = findNavController(R.id.mainNav)
+        navDisposable = navEvents
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe {
+                    when (it) {
+                        is ListNavEvent -> {
+                            navController.navigate(R.id.action_mainFragment_to_listFragment, ListFragment.getBundle(it.type, it.objectId))
+                        }
+                    }
+                }
 
+    }
+
+    override fun onDestroy() {
+        navDisposable?.dispose()
+        super.onDestroy()
     }
 
 

@@ -13,6 +13,7 @@ import com.hmomeni.canto.entities.Genre
 import com.hmomeni.canto.utils.ViewModelFactory
 import com.hmomeni.canto.utils.app
 import com.hmomeni.canto.utils.iomain
+import com.hmomeni.canto.utils.navigation.ListNavEvent
 import com.hmomeni.canto.vms.MainViewModel
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
@@ -40,7 +41,19 @@ class MainFragment : Fragment() {
                 .map { it.data }
                 .iomain()
                 .subscribe({
-                    recyclerView.adapter = MainRclAdapter(it, genres)
+                    recyclerView.adapter = MainRclAdapter(it, genres).also {
+                        it.clickPublisher.subscribe {
+                            when (it.first) {
+                                0 -> {
+                                }
+                                else -> {
+                                    val pos = it.first - 1
+                                    val genre = genres[pos]
+                                    viewModel.navEvents.onNext(ListNavEvent("genre", genre.filesLink.replace(Regex("[^\\d]"), "").toInt()))
+                                }
+                            }
+                        }.addTo(compositeDisposable)
+                    }
                     viewModel.api.getGenres()
                             .map { it.data }
                             .iomain()

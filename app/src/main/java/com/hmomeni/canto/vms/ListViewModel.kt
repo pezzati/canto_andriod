@@ -3,6 +3,8 @@ package com.hmomeni.canto.vms
 import android.arch.lifecycle.ViewModel
 import com.hmomeni.canto.api.Api
 import com.hmomeni.canto.di.DIComponent
+import com.hmomeni.canto.entities.Post
+import io.reactivex.Completable
 import javax.inject.Inject
 
 class ListViewModel : ViewModel(), DIComponent.Injectable {
@@ -15,4 +17,18 @@ class ListViewModel : ViewModel(), DIComponent.Injectable {
 
     @Inject
     lateinit var api: Api
+
+    val posts: MutableList<Post> = mutableListOf()
+
+    private var page = 0
+
+    fun loadPosts(): Completable {
+        return api
+                .getGenrePosts(objectId)
+                .map { it.data }
+                .doOnSuccess {
+                    posts.addAll(it)
+                }
+                .ignoreElement()
+    }
 }

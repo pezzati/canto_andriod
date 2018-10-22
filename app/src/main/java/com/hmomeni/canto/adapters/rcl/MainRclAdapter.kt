@@ -9,6 +9,7 @@ import com.hmomeni.canto.R
 import com.hmomeni.canto.adapters.viewpager.BannerPagerAdapter
 import com.hmomeni.canto.entities.Banner
 import com.hmomeni.canto.entities.Genre
+import io.reactivex.processors.PublishProcessor
 import kotlinx.android.synthetic.main.rcl_item_banner.view.*
 import kotlinx.android.synthetic.main.rcl_item_genre.view.*
 
@@ -16,6 +17,9 @@ const val TYPE_BANNER = 0
 const val TYPE_GENRE = 1
 
 class MainRclAdapter(private val banners: List<Banner>, private val genres: List<Genre>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+
+    val clickPublisher: PublishProcessor<Pair<Int, Int>> = PublishProcessor.create()
+
     override fun getItemViewType(position: Int): Int {
         return when (position) {
             0 -> TYPE_BANNER
@@ -26,7 +30,7 @@ class MainRclAdapter(private val banners: List<Banner>, private val genres: List
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
             TYPE_BANNER -> BannerHolder(LayoutInflater.from(parent.context).inflate(R.layout.rcl_item_banner, parent, false))
-            TYPE_GENRE -> GenreHolder(LayoutInflater.from(parent.context).inflate(R.layout.rcl_item_genre, parent, false))
+            TYPE_GENRE -> GenreHolder(LayoutInflater.from(parent.context).inflate(R.layout.rcl_item_genre, parent, false), clickPublisher)
             else -> throw RuntimeException("Invalid Item ViewType")
         }
     }
@@ -46,7 +50,13 @@ class MainRclAdapter(private val banners: List<Banner>, private val genres: List
         }
     }
 
-    class GenreHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    class GenreHolder(itemView: View, clickPublisher: PublishProcessor<Pair<Int, Int>>) : RecyclerView.ViewHolder(itemView) {
+        init {
+            itemView.moreBtn.setOnClickListener {
+                clickPublisher.onNext(Pair(adapterPosition, -1))
+            }
+        }
+
         fun bind(genre: Genre) {
             itemView.genreName.text = genre.name
             itemView.genresRecyclerView.layoutManager = LinearLayoutManager(itemView.context, LinearLayoutManager.HORIZONTAL, false)

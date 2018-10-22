@@ -7,9 +7,20 @@
     <fragment
         android:id="@+id/mainFragment"
         android:name="com.hmomeni.canto.fragments.MainFragment"
-        android:label="MainFragment" />
+        android:label="MainFragment">
+        <action
+            android:id="@+id/action_mainFragment_to_recorderFragment"
+            app:destination="@id/recorderFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_listFragment"
+            app:destination="@id/listFragment" />
+    </fragment>
     <fragment
         android:id="@+id/recorderFragment"
         android:name="com.hmomeni.canto.fragments.RecorderFragment"
         android:label="RecorderFragment" />
+    <fragment
+        android:id="@+id/listFragment"
+        android:name="com.hmomeni.canto.fragments.ListFragment"
+        android:label="ListFragment" />
 </navigation>
