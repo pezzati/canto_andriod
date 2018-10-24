@@ -8,6 +8,7 @@
         <item name="colorAccent">@color/colorAccent</item>
 
         <item name="android:textColor">@color/md_white_1000</item>
+        <item name="android:textColorSecondary">@color/secondaryText</item>
         <item name="android:windowActivityTransitions">true</item>
     </style>
 
@@ -16,6 +17,11 @@
         <item name="android:clickable">true</item>
         <item name="android:focusable">true</item>
         <item name="android:background">?android:attr/selectableItemBackgroundBorderless</item>
+    </style>
+
+    <style name="AppTheme.SecondaryText">
+        <item name="android:textSize">10sp</item>
+        <item name="android:textColor">@color/secondaryText</item>
     </style>
 
 </resources>

@@ -9,11 +9,11 @@ import com.hmomeni.canto.entities.Post
 import com.hmomeni.canto.utils.GlideApp
 import com.hmomeni.canto.utils.dpToPx
 import com.hmomeni.canto.utils.rounded
-import kotlinx.android.synthetic.main.rcl_item_post.view.*
+import kotlinx.android.synthetic.main.rcl_item_post_rect.view.*
 
 class PostsRclAdapter(private val posts: List<Post>) : RecyclerView.Adapter<PostsRclAdapter.PostHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PostHolder {
-        return PostHolder(LayoutInflater.from(parent.context).inflate(R.layout.rcl_item_post, parent, false))
+        return PostHolder(LayoutInflater.from(parent.context).inflate(R.layout.rcl_item_post_rect, parent, false))
     }
 
     override fun getItemCount() = posts.size
@@ -30,6 +30,9 @@ class PostsRclAdapter(private val posts: List<Post>) : RecyclerView.Adapter<Post
                         .rounded(dpToPx(15))
                         .into(itemView.postImageView)
             }
+
+            itemView.artistName.text = post.artist!!.name
+            itemView.trackName.text = post.name
 
         }
     }

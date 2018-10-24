@@ -94,7 +94,7 @@ static void recorderStopped(void *__unused clientdata) {
 }
 
 extern "C" JNIEXPORT void
-Java_com_example_activities_DubsmashActivity_InitAudio(
+Java_com_hmomeni_canto_activities_DubsmashActivity_InitAudio(
         JNIEnv  __unused *env,
         jobject  __unused obj,
         jint bufferSize,
@@ -115,7 +115,7 @@ Java_com_example_activities_DubsmashActivity_InitAudio(
 }
 
 extern "C" JNIEXPORT jdouble
-Java_com_example_activities_DubsmashActivity_OpenFile(
+Java_com_hmomeni_canto_activities_DubsmashActivity_OpenFile(
         JNIEnv *env,
         jobject  __unused obj,
         jstring filePath) {
@@ -136,7 +136,7 @@ Java_com_example_activities_DubsmashActivity_OpenFile(
 
     stretching = new SuperpoweredTimeStretching(decoder->samplerate);
 
-    stretching->setRateAndPitchShift(1, 0);
+    stretching->setRateAndPitchShift(1, 4);
 
     // Initialize the recorder with a temporary file path.
     recorder = new SuperpoweredRecorder(
@@ -155,14 +155,14 @@ Java_com_example_activities_DubsmashActivity_OpenFile(
 }
 
 extern "C" JNIEXPORT void
-Java_com_example_activities_DubsmashActivity_TogglePlayback(
+Java_com_hmomeni_canto_activities_DubsmashActivity_TogglePlayback(
         JNIEnv *env,
         jobject  __unused obj) {
     playing = !playing;
 }
 
 extern "C" JNIEXPORT void
-Java_com_example_activities_DubsmashActivity_StartAudio(
+Java_com_hmomeni_canto_activities_DubsmashActivity_StartAudio(
         JNIEnv *env,
         jobject  __unused obj) {
     playing = true;
@@ -170,7 +170,7 @@ Java_com_example_activities_DubsmashActivity_StartAudio(
 }
 
 extern "C" JNIEXPORT void
-Java_com_example_activities_DubsmashActivity_StopAudio(
+Java_com_hmomeni_canto_activities_DubsmashActivity_StopAudio(
         JNIEnv *env,
         jobject  __unused obj) {
     recorder->stop();
@@ -178,21 +178,21 @@ Java_com_example_activities_DubsmashActivity_StopAudio(
 }
 
 extern "C" JNIEXPORT jdouble
-Java_com_example_activities_DubsmashActivity_GetProgressMS(
+Java_com_hmomeni_canto_activities_DubsmashActivity_GetProgressMS(
         JNIEnv *env,
         jobject  __unused obj) {
     return 0;
 }
 
 extern "C" JNIEXPORT jdouble
-Java_com_example_activities_DubsmashActivity_GetDurationMS(
+Java_com_hmomeni_canto_activities_DubsmashActivity_GetDurationMS(
         JNIEnv *env,
         jobject  __unused obj) {
     return 0;
 }
 
 extern "C" JNIEXPORT void
-Java_com_example_activities_DubsmashActivity_Seek(
+Java_com_hmomeni_canto_activities_DubsmashActivity_Seek(
         JNIEnv *env,
         jobject  __unused obj,
         jdouble positionMS) {
@@ -201,7 +201,7 @@ Java_com_example_activities_DubsmashActivity_Seek(
 
 // onBackground - Put audio processing to sleep.
 extern "C" JNIEXPORT void
-Java_com_example_MainActivity_onBackground(
+Java_com_hmomeni_canto_MainActivity_onBackground(
         JNIEnv *__unused env,
         jobject __unused obj
 ) {
@@ -211,7 +211,7 @@ Java_com_example_MainActivity_onBackground(
 
 // onForeground - Resume audio processing.
 extern "C" JNIEXPORT void
-Java_com_example_MainActivity_onForeground(
+Java_com_hmomeni_canto_MainActivity_onForeground(
         JNIEnv *__unused env,
         jobject __unused obj
 ) {
@@ -221,7 +221,7 @@ Java_com_example_MainActivity_onForeground(
 
 // Cleanup - Free resources.
 extern "C" JNIEXPORT void
-Java_com_example_MainActivity_Cleanup(
+Java_com_hmomeni_canto_MainActivity_Cleanup(
         JNIEnv *__unused env,
         jobject __unused obj
 ) {
