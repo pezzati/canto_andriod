@@ -13,6 +13,7 @@ import com.hmomeni.canto.adapters.rcl.ListPostsRclAdapter
 import com.hmomeni.canto.utils.ViewModelFactory
 import com.hmomeni.canto.utils.app
 import com.hmomeni.canto.utils.iomain
+import com.hmomeni.canto.utils.navigation.BackEvent
 import com.hmomeni.canto.vms.ListViewModel
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
@@ -60,6 +61,11 @@ class ListFragment : Fragment() {
 
     private var isList = true
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+
+        backBtn.setOnClickListener {
+            viewModel.navEvents.onNext(BackEvent())
+        }
+
         listAdapter = ListPostsRclAdapter(viewModel.posts, R.layout.rcl_item_list_post)
         recyclerView.layoutManager = LinearLayoutManager(context)
         recyclerView.adapter = listAdapter
@@ -79,7 +85,7 @@ class ListFragment : Fragment() {
                     if (listAdapter == null) {
                         listAdapter = ListPostsRclAdapter(viewModel.posts, R.layout.rcl_item_list_post)
                     }
-                    recyclerView.swapAdapter(listAdapter, false)
+                    recyclerView.adapter = listAdapter
                     recyclerView.layoutManager = LinearLayoutManager(context!!)
                     isList = true
                 }
@@ -87,7 +93,7 @@ class ListFragment : Fragment() {
                     if (gridAdapter == null) {
                         gridAdapter = ListPostsRclAdapter(viewModel.posts, R.layout.rcl_item_grid_post)
                     }
-                    recyclerView.swapAdapter(gridAdapter, false)
+                    recyclerView.adapter = gridAdapter
                     recyclerView.layoutManager = GridLayoutManager(context!!, 2)
                     isList = false
                 }

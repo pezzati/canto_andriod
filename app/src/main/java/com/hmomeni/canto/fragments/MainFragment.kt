@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.hmomeni.canto.R
 import com.hmomeni.canto.adapters.rcl.MainRclAdapter
+import com.hmomeni.canto.entities.Banner
 import com.hmomeni.canto.entities.Genre
 import com.hmomeni.canto.utils.ViewModelFactory
 import com.hmomeni.canto.utils.app
@@ -24,36 +25,20 @@ class MainFragment : Fragment() {
     private lateinit var viewModel: MainViewModel
     private val compositeDisposable = CompositeDisposable()
 
+    private var adapter: MainRclAdapter? = null
+
+    private val genres: MutableList<Genre> = mutableListOf()
+    private val banners: MutableList<Banner> = mutableListOf()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel = ViewModelProviders.of(this, ViewModelFactory(context!!.app()))[MainViewModel::class.java]
-    }
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_main, container, false)
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        recyclerView.layoutManager = LinearLayoutManager(recyclerView.context)
-        val genres = mutableListOf<Genre>()
         viewModel.api.getBanners()
                 .map { it.data }
                 .iomain()
                 .subscribe({
-                    recyclerView.adapter = MainRclAdapter(it, genres).also {
-                        it.clickPublisher.subscribe {
-                            when (it.first) {
-                                0 -> {
-                                }
-                                else -> {
-                                    val pos = it.first - 1
-                                    val genre = genres[pos]
-                                    viewModel.navEvents.onNext(ListNavEvent("genre", genre.filesLink.replace(Regex("[^\\d]"), "").toInt()))
-                                }
-                            }
-                        }.addTo(compositeDisposable)
-                    }
+                    banners.addAll(it)
+                    adapter?.notifyDataSetChanged()
                     viewModel.api.getGenres()
                             .map { it.data }
                             .iomain()
@@ -67,7 +52,7 @@ class MainFragment : Fragment() {
                                             .subscribe({
                                                 genre.posts = it
                                                 genres.add(genre)
-                                                recyclerView.adapter.notifyDataSetChanged()
+                                                adapter?.notifyDataSetChanged()
                                             }, {
                                                 Timber.e(it)
                                             })
@@ -81,8 +66,34 @@ class MainFragment : Fragment() {
                 }).addTo(compositeDisposable)
     }
 
-    override fun onStop() {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        return inflater.inflate(R.layout.fragment_main, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        if (adapter == null) {
+            adapter = MainRclAdapter(banners, genres).also {
+                it.clickPublisher.subscribe {
+                    when (it.first) {
+                        0 -> {
+                        }
+                        else -> {
+                            val pos = it.first - 1
+                            val genre = genres[pos]
+                            viewModel.navEvents.onNext(ListNavEvent("genre", genre.filesLink.replace(Regex("[^\\d]"), "").toInt()))
+                        }
+                    }
+                }.addTo(compositeDisposable)
+            }
+        }
+
+        recyclerView.layoutManager = LinearLayoutManager(recyclerView.context)
+        recyclerView.adapter = adapter
+
+    }
+
+    override fun onDestroy() {
         compositeDisposable.clear()
-        super.onStop()
+        super.onDestroy()
     }
 }

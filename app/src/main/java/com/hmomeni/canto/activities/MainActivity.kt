@@ -8,6 +8,7 @@ import androidx.navigation.findNavController
 import com.hmomeni.canto.App
 import com.hmomeni.canto.R
 import com.hmomeni.canto.fragments.ListFragment
+import com.hmomeni.canto.utils.navigation.BackEvent
 import com.hmomeni.canto.utils.navigation.ListNavEvent
 import com.hmomeni.canto.utils.navigation.NavEvent
 import com.pixplicity.easyprefs.library.Prefs
@@ -44,6 +45,9 @@ class MainActivity : AppCompatActivity() {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
                     when (it) {
+                        is BackEvent -> {
+                            navController.navigateUp()
+                        }
                         is ListNavEvent -> {
                             navController.navigate(R.id.action_mainFragment_to_listFragment, ListFragment.getBundle(it.type, it.objectId))
                         }
