@@ -55,7 +55,7 @@ class MainFragment : Fragment() {
                                                 adapter?.notifyDataSetChanged()
                                             }, {
                                                 Timber.e(it)
-                                            })
+                                            }).addTo(compositeDisposable)
 
                                 }
                             }, {

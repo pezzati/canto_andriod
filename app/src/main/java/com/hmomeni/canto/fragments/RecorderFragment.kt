@@ -27,13 +27,13 @@ import android.view.*
 import android.widget.Toast
 import android.widget.Toast.LENGTH_SHORT
 import com.example.android.camera2video.CompareSizesByArea
-import com.example.android.camera2video.ErrorDialog
 import com.github.angads25.filepicker.model.DialogConfigs
 import com.github.angads25.filepicker.model.DialogProperties
 import com.github.angads25.filepicker.view.FilePickerDialog
 import com.hmomeni.canto.R
 import com.hmomeni.canto.activities.DubsmashActivity
 import com.hmomeni.canto.adapters.viewpager.ModePagerAdapter
+import com.hmomeni.canto.utils.ErrorDialog
 import com.hmomeni.canto.utils.VIDEO_PERMISSIONS
 import com.hmomeni.canto.utils.dpToPx
 import com.hmomeni.canto.utils.views.AutoFitTextureView

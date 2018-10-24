@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.example.android.camera2video
+package com.hmomeni.canto.utils
 
 import android.app.AlertDialog
 import android.os.Bundle

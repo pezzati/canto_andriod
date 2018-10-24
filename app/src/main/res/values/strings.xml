@@ -23,4 +23,6 @@
     <string name="karaoke">Karaoke</string>
     <string name="karaoke_desc">Karaoke Desc</string>
     <string name="failed_requstin_verification">Failed requesting verification</string>
+    <string name="home">Home</string>
+    <string name="search">Search</string>
 </resources>

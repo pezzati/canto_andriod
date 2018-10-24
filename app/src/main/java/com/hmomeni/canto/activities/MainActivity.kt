@@ -11,10 +11,12 @@ import com.hmomeni.canto.fragments.ListFragment
 import com.hmomeni.canto.utils.navigation.BackEvent
 import com.hmomeni.canto.utils.navigation.ListNavEvent
 import com.hmomeni.canto.utils.navigation.NavEvent
+import com.hmomeni.canto.utils.navigation.SearchEvent
 import com.pixplicity.easyprefs.library.Prefs
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.processors.PublishProcessor
+import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
 
 class MainActivity : AppCompatActivity() {
@@ -51,8 +53,25 @@ class MainActivity : AppCompatActivity() {
                         is ListNavEvent -> {
                             navController.navigate(R.id.action_mainFragment_to_listFragment, ListFragment.getBundle(it.type, it.objectId))
                         }
+                        is SearchEvent -> {
+                            if (navController.currentDestination!!.id != R.id.mainFragment) {
+                                navController.popBackStack(R.id.mainFragment, false)
+                            }
+                            navController.navigate(R.id.action_mainFragment_to_searchFragment)
+                        }
                     }
                 }
+
+        bottomNav.setOnNavigationItemSelectedListener {
+            when (it.itemId) {
+                R.id.navSearch -> {
+                    navEvents.onNext(SearchEvent())
+                }
+                else -> {
+                }
+            }
+            return@setOnNavigationItemSelectedListener true
+        }
 
     }
 

@@ -19,8 +19,8 @@ import android.view.Surface
 import android.view.TextureView
 import android.widget.Toast
 import com.example.android.camera2video.CompareSizesByArea
-import com.example.android.camera2video.ErrorDialog
 import com.hmomeni.canto.R
+import com.hmomeni.canto.utils.ErrorDialog
 import com.hmomeni.canto.utils.VIDEO_PERMISSIONS
 import com.hmomeni.canto.utils.views.AutoFitTextureView
 import com.karumi.dexter.Dexter
