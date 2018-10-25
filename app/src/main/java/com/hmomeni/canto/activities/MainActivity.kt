@@ -51,7 +51,7 @@ class MainActivity : AppCompatActivity() {
                             navController.navigateUp()
                         }
                         is ListNavEvent -> {
-                            navController.navigate(R.id.action_mainFragment_to_listFragment, ListFragment.getBundle(it.type, it.objectId))
+                            navController.navigate(R.id.action_mainFragment_to_listFragment, ListFragment.getBundle(it.type, it.objectId, it.title))
                         }
                         is SearchEvent -> {
                             if (navController.currentDestination!!.id != R.id.mainFragment) {

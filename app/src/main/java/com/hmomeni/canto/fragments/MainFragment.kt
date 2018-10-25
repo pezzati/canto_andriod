@@ -42,6 +42,9 @@ class MainFragment : Fragment() {
                     viewModel.api.getGenres()
                             .map { it.data }
                             .iomain()
+                            .doAfterTerminate {
+                                progressBar?.visibility = View.GONE
+                            }
                             .subscribe({
                                 it.forEach { genre ->
                                     val genreId = genre.filesLink.replace(Regex("[^\\d]"), "").toInt()
@@ -80,11 +83,13 @@ class MainFragment : Fragment() {
                         else -> {
                             val pos = it.first - 1
                             val genre = genres[pos]
-                            viewModel.navEvents.onNext(ListNavEvent("genre", genre.filesLink.replace(Regex("[^\\d]"), "").toInt()))
+                            viewModel.navEvents.onNext(ListNavEvent("genre", genre.filesLink.replace(Regex("[^\\d]"), "").toInt(), genre.name))
                         }
                     }
                 }.addTo(compositeDisposable)
             }
+        } else {
+            progressBar.visibility = View.GONE
         }
 
         recyclerView.layoutManager = LinearLayoutManager(recyclerView.context)

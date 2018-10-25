@@ -32,14 +32,16 @@ class ListFragment : Fragment() {
             }
         }
 
-        fun getBundle(type: String, objectId: Int): Bundle {
+        fun getBundle(type: String, objectId: Int, title: String): Bundle {
             return Bundle().apply {
                 putString("type", type)
+                putString("title", title)
                 putInt("object_id", objectId)
             }
         }
     }
 
+    private lateinit var title: String
     private lateinit var viewModel: ListViewModel
     private val compositeDisposable = CompositeDisposable()
 
@@ -51,6 +53,7 @@ class ListFragment : Fragment() {
         viewModel = ViewModelProviders.of(this, ViewModelFactory(context!!.app()))[ListViewModel::class.java]
 
         arguments?.let {
+            title = it.getString("title")
             viewModel.type = it.getString("type")
             viewModel.objectId = it.getInt("object_id")
         }
@@ -61,7 +64,7 @@ class ListFragment : Fragment() {
 
     private var isList = true
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-
+        pageTitle.text = title
         backBtn.setOnClickListener {
             viewModel.navEvents.onNext(BackEvent())
         }
@@ -72,6 +75,9 @@ class ListFragment : Fragment() {
         viewModel
                 .loadPosts()
                 .iomain()
+                .doAfterTerminate {
+                    progressBar?.visibility = View.GONE
+                }
                 .subscribe({
                     recyclerView.adapter.notifyItemRangeInserted(0, viewModel.posts.size)
                 }, {
