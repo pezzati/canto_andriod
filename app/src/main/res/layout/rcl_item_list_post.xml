@@ -15,6 +15,16 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <View
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="32dp"
+        android:background="@drawable/gradient_index_rect"
+        app:layout_constraintBottom_toBottomOf="@+id/postImageView"
+        app:layout_constraintEnd_toEndOf="@+id/postImageView"
+        app:layout_constraintStart_toStartOf="@+id/postImageView"
+        app:layout_constraintTop_toTopOf="@+id/postImageView" />
+
     <TextView
         android:id="@+id/artistName"
         android:layout_width="wrap_content"

@@ -61,9 +61,16 @@ class MainActivity : AppCompatActivity() {
                         }
                     }
                 }
-
+        var userNavFired = false
         bottomNav.setOnNavigationItemSelectedListener {
+            if (userNavFired) {
+                userNavFired = false
+                return@setOnNavigationItemSelectedListener true
+            }
             when (it.itemId) {
+                R.id.navHome -> {
+                    navController.popBackStack(R.id.mainFragment, false)
+                }
                 R.id.navSearch -> {
                     navEvents.onNext(SearchEvent())
                 }
@@ -71,6 +78,19 @@ class MainActivity : AppCompatActivity() {
                 }
             }
             return@setOnNavigationItemSelectedListener true
+        }
+
+        navController.addOnNavigatedListener { _, destination ->
+            when (destination.id) {
+                R.id.mainFragment -> {
+                    userNavFired = true
+                    bottomNav.selectedItemId = R.id.navHome
+                }
+                R.id.searchFragment -> {
+                    userNavFired = true
+                    bottomNav.selectedItemId = R.id.navSearch
+                }
+            }
         }
 
     }

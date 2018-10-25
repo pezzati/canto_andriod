@@ -25,4 +25,5 @@
     <string name="failed_requstin_verification">Failed requesting verification</string>
     <string name="home">Home</string>
     <string name="search">Search</string>
+    <string name="search_hint">Start typing to search...</string>
 </resources>
