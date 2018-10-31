@@ -27,9 +27,6 @@ import android.view.*
 import android.widget.Toast
 import android.widget.Toast.LENGTH_SHORT
 import com.example.android.camera2video.CompareSizesByArea
-import com.github.angads25.filepicker.model.DialogConfigs
-import com.github.angads25.filepicker.model.DialogProperties
-import com.github.angads25.filepicker.view.FilePickerDialog
 import com.hmomeni.canto.R
 import com.hmomeni.canto.activities.DubsmashActivity
 import com.hmomeni.canto.adapters.viewpager.ModePagerAdapter
@@ -45,7 +42,6 @@ import com.karumi.dexter.listener.multi.MultiplePermissionsListener
 import com.tmall.ultraviewpager.transformer.UltraScaleTransformer
 import kotlinx.android.synthetic.main.fragment_recorder.*
 import timber.log.Timber
-import java.io.File
 import java.io.IOException
 import java.util.*
 import java.util.concurrent.Semaphore
@@ -207,22 +203,7 @@ class RecorderFragment : Fragment() {
         viewPager.adapter = ModePagerAdapter(context!!, arrayOf(textureView, textureView2, singView))
 
         textureView2.setOnClickListener { v ->
-            val properties = DialogProperties()
-            properties.selection_mode = DialogConfigs.SINGLE_MODE
-            properties.selection_type = DialogConfigs.FILE_SELECT
-            properties.root = File(DialogConfigs.DEFAULT_DIR)
-            properties.error_dir = File(DialogConfigs.DEFAULT_DIR)
-            properties.offset = File(DialogConfigs.DEFAULT_DIR)
-            properties.extensions = null
-            val dialog = FilePickerDialog(context!!, properties)
-            dialog.setTitle("Select a File")
-
-            dialog.setDialogSelectionListener {
-                val file = File(it[0])
-                v.transitionName = "textureView"
-                startActivity(Intent(context!!, DubsmashActivity::class.java).putExtra("audio_src", file.absoluteFile))
-            }
-            dialog.show()
+            startActivity(Intent(context!!, DubsmashActivity::class.java).putExtra("audio_src", ""))
         }
 
         nextTabTitle.alpha = 0f

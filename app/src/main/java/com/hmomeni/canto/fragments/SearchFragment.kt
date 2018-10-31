@@ -38,7 +38,7 @@ class SearchFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_search, container, false)
     }
 
-    private var searchDispoasble: Disposable? = null
+    private var searchDisposable: Disposable? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         searchInput.afterTextChangeEvents()
@@ -46,11 +46,11 @@ class SearchFragment : Fragment() {
                 .debounce(500, TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
-                    searchDispoasble?.let {
+                    searchDisposable?.let {
                         it.dispose()
                         compositeDisposable.remove(it)
                     }
-                    searchDispoasble = viewModel.api.getGenrePosts(4)
+                    searchDisposable = viewModel.api.searchInGenres(it.editable.toString())
                             .map { it.data }
                             .iomain()
                             .doOnSubscribe {
@@ -68,7 +68,7 @@ class SearchFragment : Fragment() {
                             }, {
                                 Timber.e(it)
                             })
-                    compositeDisposable.add(searchDispoasble!!)
+                    compositeDisposable.add(searchDisposable!!)
                 }.addTo(compositeDisposable)
 
 

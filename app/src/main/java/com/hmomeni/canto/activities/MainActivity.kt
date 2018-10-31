@@ -1,6 +1,5 @@
 package com.hmomeni.canto.activities
 
-import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import androidx.navigation.NavController
@@ -12,7 +11,6 @@ import com.hmomeni.canto.utils.navigation.BackEvent
 import com.hmomeni.canto.utils.navigation.ListNavEvent
 import com.hmomeni.canto.utils.navigation.NavEvent
 import com.hmomeni.canto.utils.navigation.SearchEvent
-import com.pixplicity.easyprefs.library.Prefs
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.processors.PublishProcessor
@@ -33,11 +31,11 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        if (Prefs.getString("token", "").isEmpty()) {
+        /*if (Prefs.getString("token", "").isEmpty()) {
             startActivity(Intent(this, LoginActivity::class.java))
             finish()
             return
-        }
+        }*/
 
         (application as App).di.inject(this)
 

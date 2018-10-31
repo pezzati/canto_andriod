@@ -8,10 +8,7 @@ import com.hmomeni.canto.entities.Post
 import io.reactivex.Completable
 import io.reactivex.Single
 import okhttp3.RequestBody
-import retrofit2.http.Body
-import retrofit2.http.GET
-import retrofit2.http.POST
-import retrofit2.http.Path
+import retrofit2.http.*
 
 interface Api {
     @POST("user/signup")
@@ -28,4 +25,8 @@ interface Api {
 
     @GET("song/genre/{genreId}/karaokes")
     fun getGenrePosts(@Path("genreId") genreId: Int): Single<ApiResponse<List<Post>>>
+
+    @GET("song/karaokes/search")
+    fun searchInGenres(@Query("key") query: String): Single<ApiResponse<List<Post>>>
+
 }

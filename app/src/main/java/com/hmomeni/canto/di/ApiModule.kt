@@ -14,7 +14,6 @@ import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.converter.scalars.ScalarsConverterFactory
-import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
 @Module
@@ -34,8 +33,8 @@ class ApiModule {
             .addConverterFactory(GsonConverterFactory.create(gson))
             .client(
                     OkHttpClient.Builder()
-                            .writeTimeout(30, TimeUnit.SECONDS)
-                            .readTimeout(30, TimeUnit.SECONDS)
+//                            .writeTimeout(30, TimeUnit.SECONDS)
+//                            .readTimeout(30, TimeUnit.SECONDS)
                             .addNetworkInterceptor {
                                 val builder = it.request().newBuilder()
                                 val token = Prefs.getString("token", "")

@@ -8,37 +8,18 @@ set(CMAKE_VERBOSE_MAKEFILE on)
 include_directories(src/main/cpp)
 include_directories(${PATH_TO_SUPERPOWERED})
 
-# compile player example to a native library
-#[[add_library(
-        native-lib
-        SHARED
-        src/main/cpp/native-lib.cpp
-        ${PATH_TO_SUPERPOWERED}/AndroidIO/SuperpoweredAndroidAudioIO.cpp
-)]]
 add_library(
-        Dubsmash
+        Canto
         SHARED
         src/main/cpp/Dubsmash.cpp
-        ${PATH_TO_SUPERPOWERED}/AndroidIO/SuperpoweredAndroidAudioIO.cpp
-)
-
-add_library(
-        Player
-        SHARED
-        src/main/cpp/Player.cpp
+        #        src/main/cpp/Player.cpp
+        #        src/main/cpp/Karaoke.cpp
         ${PATH_TO_SUPERPOWERED}/AndroidIO/SuperpoweredAndroidAudioIO.cpp
 )
 
 # link the native library against the following libraries
 target_link_libraries(
-        Dubsmash
-        ${PATH_TO_SUPERPOWERED}/libSuperpoweredAndroid${ANDROID_ABI}.a
-        OpenSLES
-        log
-        android
-)
-target_link_libraries(
-        Player
+        Canto
         ${PATH_TO_SUPERPOWERED}/libSuperpoweredAndroid${ANDROID_ABI}.a
         OpenSLES
         log

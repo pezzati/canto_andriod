@@ -12,7 +12,7 @@ import java.io.File
 class DubsmashActivity : CameraActivity() {
 
     init {
-        System.loadLibrary("Dubsmash")
+        System.loadLibrary("Canto")
     }
 
     override fun getTextureView(): AutoFitTextureView = textureView
@@ -72,12 +72,12 @@ class DubsmashActivity : CameraActivity() {
 
     private fun startDubsmash() {
         StartAudio()
-        startRecordingVideo()
+//        startRecordingVideo()
     }
 
     private fun stopDubsmash() {
         StopAudio()
-        stopRecordingVideo()
+//        stopRecordingVideo()
     }
 
     external fun InitAudio(bufferSize: Int, sampleRate: Int, outputPath: String, tempPath: String)
