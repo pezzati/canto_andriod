@@ -25,6 +25,7 @@ const char *tempFilePath;
 
 static short int *intBuffer;
 static int sampleRate;
+static int bufferSize;
 
 bool audioInitialized = false;
 bool playing = false;
@@ -37,17 +38,20 @@ static bool audioProcessing(
 ) {
 
     if (playing) {
-        unsigned int samplesDecoded = decoder->samplesPerFrame;
-        if (decoder->decode(intBuffer, &samplesDecoded) == SUPERPOWEREDDECODER_ERROR) return false;
+        unsigned int samplesDecoded = (unsigned int) numberOfFrames;
+        if (decoder->decode(intBuffer, &samplesDecoded) == SUPERPOWEREDDECODER_ERROR) {
+            log_print(ANDROID_LOG_DEBUG, TAG, "Decoder Error");
+            return false;
+        }
         if (samplesDecoded < 1) {
-//            __android_log_print(ANDROID_LOG_DEBUG, "STRETCHING", "BREAKED!!!");
+            __android_log_print(ANDROID_LOG_DEBUG, "STRETCHING", "BREAKED!!!");
             playing = false;
             return false;
         }
-        SuperpoweredFloatToShortInt(reinterpret_cast<float *>(intBuffer), audio,
-                                    (unsigned int) numberOfFrames);
-        return true;
-        /*SuperpoweredAudiobufferlistElement inputBuffer;
+
+        log_print(ANDROID_LOG_DEBUG, TAG, "samplesDecoded=%d", samplesDecoded);
+
+        SuperpoweredAudiobufferlistElement inputBuffer;
         inputBuffer.samplePosition = decoder->samplePosition;
         inputBuffer.startSample = 0;
         inputBuffer.samplesUsed = 0;
@@ -59,7 +63,7 @@ static bool audioProcessing(
 
         stretching->process(&inputBuffer, outputBuffers);
 
-        if (outputBuffers->makeSlice(0, outputBuffers->sampleLength)) {
+        if (outputBuffers->makeSlice(0, numberOfFrames)) {
             while (true) {
                 int numSamples = 0;
                 float *timeStretchedAudio = (float *) outputBuffers->nextSliceItem(&numSamples);
@@ -67,12 +71,12 @@ static bool audioProcessing(
 //                recorder->process(timeStretchedAudio, (unsigned int) numSamples);
                 SuperpoweredFloatToShortInt(timeStretchedAudio, audio,
                                             (unsigned int) numSamples);
-                outputBuffers->truncate(numSamples, true);
                 log_print(ANDROID_LOG_DEBUG, TAG, "numSamples=%d numberOfFrames=%d", numSamples,
                           numberOfFrames);
             };
+            outputBuffers->clear();
             return true;
-        };*/
+        };
     }
     return false;
 }
@@ -154,7 +158,7 @@ Java_com_hmomeni_canto_activities_DubsmashActivity_InitAudio(
     tempFilePath = env->GetStringUTFChars(tempPath, 0);
 
     sampleRate = sRate;
-
+    bufferSize = bSize;
 }
 
 extern "C" JNIEXPORT jdouble
@@ -173,22 +177,23 @@ Java_com_hmomeni_canto_activities_DubsmashActivity_OpenFile(
 
     stretching = new SuperpoweredTimeStretching(decoder->samplerate);
 
-    stretching->setRateAndPitchShift(1.0, 0);
+    stretching->setRateAndPitchShift(1, 0);
 
-    int bufferSize = 1152; //getActualBufferSize();
+    int actualBufferSize = bufferSize; //getActualBufferSize();
 
-    log_print(ANDROID_LOG_DEBUG, TAG, "bufferSize=%d", bufferSize);
+    log_print(ANDROID_LOG_DEBUG, TAG, "bufferSize=%d", actualBufferSize);
 
     decoder->seek(0, true);
 
     audioIO = new SuperpoweredAndroidAudioIO(
             sampleRate,
-            bufferSize,
+            actualBufferSize,
             false,
             true,
             audioProcessing,
             NULL,
-            -1, -1
+            -1, -1,
+            actualBufferSize * 2
     );
     // Initialize the recorder with a temporary file path.
     recorder = new SuperpoweredRecorder(

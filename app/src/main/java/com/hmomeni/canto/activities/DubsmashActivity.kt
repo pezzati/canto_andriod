@@ -72,12 +72,12 @@ class DubsmashActivity : CameraActivity() {
 
     private fun startDubsmash() {
         StartAudio()
-//        startRecordingVideo()
+        startRecordingVideo()
     }
 
     private fun stopDubsmash() {
         StopAudio()
-//        stopRecordingVideo()
+        stopRecordingVideo()
     }
 
     external fun InitAudio(bufferSize: Int, sampleRate: Int, outputPath: String, tempPath: String)
