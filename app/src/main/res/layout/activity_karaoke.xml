@@ -28,4 +28,36 @@
         app:layout_constraintBottom_toTopOf="@+id/playBtn"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <com.hmomeni.canto.utils.views.VerticalSlider
+        android:id="@+id/pitchSlider"
+        android:layout_width="80dp"
+        android:layout_height="145dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="64dp"
+        app:layout_constraintBottom_toTopOf="@+id/seekBar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/tempoSlider" />
+
+    <com.hmomeni.canto.utils.views.VerticalSlider
+        android:id="@+id/tempoSlider"
+        android:layout_width="80dp"
+        android:layout_height="145dp"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintBottom_toBottomOf="@+id/pitchSlider"
+        app:layout_constraintEnd_toStartOf="@+id/pitchSlider"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/volumeSlider" />
+
+    <com.hmomeni.canto.utils.views.VerticalSlider
+        android:id="@+id/volumeSlider"
+        android:layout_width="80dp"
+        android:layout_height="145dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintBottom_toBottomOf="@+id/pitchSlider"
+        app:layout_constraintEnd_toStartOf="@+id/tempoSlider"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent" />
 </android.support.constraint.ConstraintLayout>

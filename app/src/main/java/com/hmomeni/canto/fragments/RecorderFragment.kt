@@ -29,6 +29,7 @@ import android.widget.Toast.LENGTH_SHORT
 import com.example.android.camera2video.CompareSizesByArea
 import com.hmomeni.canto.R
 import com.hmomeni.canto.activities.DubsmashActivity
+import com.hmomeni.canto.activities.KaraokeActivity
 import com.hmomeni.canto.adapters.viewpager.ModePagerAdapter
 import com.hmomeni.canto.utils.ErrorDialog
 import com.hmomeni.canto.utils.VIDEO_PERMISSIONS
@@ -194,16 +195,20 @@ class RecorderFragment : Fragment() {
             layoutParams = ViewGroup.LayoutParams(dpToPx(365), dpToPx(200))
         }
 
-        val singView = View(context!!).apply {
+        val karaokeView = View(context!!).apply {
             setBackgroundColor(context!!.resources.getColor(R.color.md_green_400))
             layoutParams = ViewGroup.LayoutParams(dpToPx(365), dpToPx(200))
         }
         viewPager.setMultiScreen(0.6f)
         viewPager.setPageTransformer(false, UltraScaleTransformer())
-        viewPager.adapter = ModePagerAdapter(context!!, arrayOf(textureView, textureView2, singView))
+        viewPager.adapter = ModePagerAdapter(context!!, arrayOf(textureView, textureView2, karaokeView))
 
-        textureView2.setOnClickListener { v ->
+        textureView2.setOnClickListener {
             startActivity(Intent(context!!, DubsmashActivity::class.java).putExtra("audio_src", ""))
+        }
+
+        karaokeView.setOnClickListener {
+            startActivity(Intent(context!!, KaraokeActivity::class.java))
         }
 
         nextTabTitle.alpha = 0f

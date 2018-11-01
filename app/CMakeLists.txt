@@ -13,7 +13,7 @@ add_library(
         SHARED
         src/main/cpp/Dubsmash.cpp
         #        src/main/cpp/Player.cpp
-        #        src/main/cpp/Karaoke.cpp
+        src/main/cpp/Karaoke.cpp
         ${PATH_TO_SUPERPOWERED}/AndroidIO/SuperpoweredAndroidAudioIO.cpp
 )
 
