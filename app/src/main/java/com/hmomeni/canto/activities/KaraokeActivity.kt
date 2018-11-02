@@ -3,7 +3,9 @@ package com.hmomeni.canto.activities
 import android.content.Context
 import android.media.AudioManager
 import android.os.Bundle
+import android.os.Environment
 import android.support.v7.app.AppCompatActivity
+import android.widget.Toast
 import com.hmomeni.canto.R
 import com.hmomeni.canto.utils.views.VerticalSlider
 import kotlinx.android.synthetic.main.activity_karaoke.*
@@ -52,6 +54,18 @@ class KaraokeActivity : AppCompatActivity() {
                 SetVolume(progress / 10f)
             }
         }
+
+        recordBtn.setOnClickListener {
+            if (!IsPlaying() && !IsRecording()) {
+                Toast.makeText(this, R.string.you_must_play_the_song_first, Toast.LENGTH_SHORT).show()
+            } else if (IsPlaying() && !IsRecording()) {
+                Toast.makeText(this, R.string.recording_started, Toast.LENGTH_SHORT).show()
+                StartRecording()
+            } else {
+                Toast.makeText(this, R.string.recording_stopped, Toast.LENGTH_SHORT).show()
+                StopRecording()
+            }
+        }
     }
 
     override fun onResume() {
@@ -81,11 +95,14 @@ class KaraokeActivity : AppCompatActivity() {
         val sampleRate = Integer.parseInt(samplerateString)
         val bufferSize = Integer.parseInt(buffersizeString)
 
-        StartAudio(sampleRate, bufferSize)
+        val tempFilePath = File(filesDir, "temp.wav").absolutePath
+        val finalFilePath = File(Environment.getExternalStorageDirectory(), "out.wav").absolutePath
+
+        StartAudio(sampleRate, bufferSize, tempFilePath, finalFilePath)
 
     }
 
-    private external fun StartAudio(samplerate: Int, buffersize: Int)
+    private external fun StartAudio(samplerate: Int, buffersize: Int, tempFilePath: String, finalFilePath: String)
     private external fun OpenFile(path: String, offset: Int, length: Int)
     private external fun TogglePlayback()
     private external fun onForeground()
@@ -94,4 +111,8 @@ class KaraokeActivity : AppCompatActivity() {
     private external fun SetPitch(pitchShift: Int)
     private external fun SetTempo(tempo: Double)
     private external fun SetVolume(vol: Float)
+    private external fun StartRecording()
+    private external fun StopRecording()
+    private external fun IsPlaying(): Boolean
+    private external fun IsRecording(): Boolean
 }

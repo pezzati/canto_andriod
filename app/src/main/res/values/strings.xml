@@ -26,4 +26,7 @@
     <string name="home">Home</string>
     <string name="search">Search</string>
     <string name="search_hint">Start typing to search...</string>
+    <string name="you_must_play_the_song_first">You must play the song first!</string>
+    <string name="recording_started">Recording started</string>
+    <string name="recording_stopped">Recording stopped</string>
 </resources>

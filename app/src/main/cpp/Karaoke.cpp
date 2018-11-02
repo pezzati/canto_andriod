@@ -22,6 +22,8 @@ static SuperpoweredAdvancedAudioPlayer *player;
 static SuperpoweredRecorder *recorder;
 static float *floatBuffer;
 static float volume = 1;
+bool isRecording = false;
+const char *finalPath = "";
 
 static bool audioProcessing(
         void *__unused clientdata, // custom pointer
@@ -31,6 +33,9 @@ static bool audioProcessing(
 ) {
     if (player->process(floatBuffer, false, (unsigned int) numberOfFrames, volume)) {
         SuperpoweredFloatToShortInt(floatBuffer, audio, (unsigned int) numberOfFrames);
+        if (isRecording) {
+            recorder->process(floatBuffer, (unsigned int) numberOfFrames);
+        }
         return true;
     } else {
         return false;
@@ -57,13 +62,21 @@ static void playerEventCallback(
     };
 }
 
+// This is called after the recorder closed the WAV file.
+static void recorderStopped(void *__unused clientdata) {
+    log_write(ANDROID_LOG_DEBUG, "RecorderExample", "Finished recording.");
+    delete recorder;
+}
+
 // StartAudio - Start audio engine and initialize player.
 extern "C" JNIEXPORT void
 Java_com_hmomeni_canto_activities_KaraokeActivity_StartAudio(
         JNIEnv *__unused env,
         jobject  __unused obj,
         jint samplerate,
-        jint buffersize
+        jint buffersize,
+        jstring tempFilePath,
+        jstring finalFilePath
 ) {
     // Allocate audio buffer.
     floatBuffer = (float *) malloc(sizeof(float) * 2 * buffersize);
@@ -90,6 +103,19 @@ Java_com_hmomeni_canto_activities_KaraokeActivity_StartAudio(
             SL_ANDROID_STREAM_MEDIA,        // outputStreamType (-1 = default)
             buffersize * 2                  // latencySamples
     );
+
+    const char *tFilePath = env->GetStringUTFChars(tempFilePath, 0);
+    finalPath = env->GetStringUTFChars(finalFilePath, 0);
+
+    recorder = new SuperpoweredRecorder(
+            tFilePath,               // The full filesystem path of a temporarily file.
+            (unsigned int) samplerate,   // Sampling rate.
+            1,                  // The minimum length of a recording (in seconds).
+            2,                  // The number of channels.
+            false,              // applyFade (fade in/out at the beginning / end of the recording)
+            recorderStopped,    // Called when the recorder finishes writing after stop().
+            NULL                // A custom pointer your callback receives (clientData).
+    );
 }
 
 // OpenFile - Open file in player, specifying offset and length.
@@ -104,7 +130,6 @@ Java_com_hmomeni_canto_activities_KaraokeActivity_OpenFile(
     const char *str = env->GetStringUTFChars(path, 0);
     player->open(str, offset, length);
     env->ReleaseStringUTFChars(path, str);
-
 }
 
 // TogglePlayback - Toggle Play/Pause state of the player.
@@ -115,6 +140,25 @@ Java_com_hmomeni_canto_activities_KaraokeActivity_TogglePlayback(
 ) {
     player->togglePlayback();
     SuperpoweredCPU::setSustainedPerformanceMode(player->playing);  // prevent dropouts
+}
+
+// TogglePlayback - Toggle Play/Pause state of the player.
+extern "C" JNIEXPORT void
+Java_com_hmomeni_canto_activities_KaraokeActivity_StartRecording(
+        JNIEnv *__unused env,
+        jobject __unused obj
+) {
+    isRecording = true;
+    recorder->start(finalPath);
+}
+
+// TogglePlayback - Toggle Play/Pause state of the player.
+extern "C" JNIEXPORT void
+Java_com_hmomeni_canto_activities_KaraokeActivity_StopRecording(
+        JNIEnv *__unused env,
+        jobject __unused obj) {
+    isRecording = false;
+    recorder->stop();
 }
 
 // onBackground - Put audio processing to sleep.
@@ -175,4 +219,30 @@ Java_com_hmomeni_canto_activities_KaraokeActivity_SetVolume(
         jfloat vol
 ) {
     volume = vol;
+}
+
+// Cleanup - Free resources.
+extern "C" JNIEXPORT jboolean
+Java_com_hmomeni_canto_activities_KaraokeActivity_IsPlaying(
+        JNIEnv *__unused env,
+        jobject __unused obj
+) {
+    if (player->playing) {
+        return 1;
+    } else {
+        return 0;
+    }
+}
+
+// Cleanup - Free resources.
+extern "C" JNIEXPORT jboolean
+Java_com_hmomeni_canto_activities_KaraokeActivity_IsRecording(
+        JNIEnv *__unused env,
+        jobject __unused obj
+) {
+    if (isRecording) {
+        return 1;
+    } else {
+        return 0;
+    }
 }
