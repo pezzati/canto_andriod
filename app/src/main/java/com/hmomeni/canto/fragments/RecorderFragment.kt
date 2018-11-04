@@ -345,7 +345,7 @@ class RecorderFragment : Fragment() {
                 .withPermissions(VIDEO_PERMISSIONS)
                 .withListener(object : MultiplePermissionsListener {
                     override fun onPermissionsChecked(report: MultiplePermissionsReport) {
-                        if (report.grantedPermissionResponses.size == 2) {
+                        if (report.grantedPermissionResponses.size == 3) {
                             openCamera(textureView.width, textureView.height)
                         }
                     }

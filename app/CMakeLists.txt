@@ -12,8 +12,9 @@ add_library(
         Canto
         SHARED
         src/main/cpp/Dubsmash.cpp
-        #        src/main/cpp/Player.cpp
         src/main/cpp/Karaoke.cpp
+        src/main/cpp/Singing.cpp
+        #        src/main/cpp/Player.cpp
         ${PATH_TO_SUPERPOWERED}/AndroidIO/SuperpoweredAndroidAudioIO.cpp
 )
 

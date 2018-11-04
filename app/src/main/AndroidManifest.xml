@@ -29,7 +29,8 @@
         <activity
             android:name=".activities.LoginActivity"
             android:exported="true" />
-        <activity android:name=".activities.KaraokeActivity"></activity>
+        <activity android:name=".activities.KaraokeActivity" />
+        <activity android:name=".activities.SingingActivity"></activity>
     </application>
 
 </manifest>

@@ -7,6 +7,7 @@ import android.os.Environment
 import com.hmomeni.canto.R
 import com.hmomeni.canto.utils.views.AutoFitTextureView
 import kotlinx.android.synthetic.main.activity_dubsmash.*
+import timber.log.Timber
 import java.io.File
 
 class DubsmashActivity : CameraActivity() {
@@ -67,7 +68,7 @@ class DubsmashActivity : CameraActivity() {
                 File(Environment.getExternalStorageDirectory(), "dubsmash.wav").absolutePath,
                 File(Environment.getExternalStorageDirectory(), "temp.wav").absolutePath
         )
-        OpenFile(filePath)
+        OpenFile(filePath, File(filePath).length().toInt())
     }
 
     private fun startDubsmash() {
@@ -80,13 +81,19 @@ class DubsmashActivity : CameraActivity() {
         stopRecordingVideo()
     }
 
+    public fun AudioFinished() {
+        Timber.d("Audio Finished!")
+    }
+
     external fun InitAudio(bufferSize: Int, sampleRate: Int, outputPath: String, tempPath: String)
-    external fun OpenFile(filePath: String): Double
+    external fun OpenFile(filePath: String, length: Int): Double
     external fun TogglePlayback()
     external fun StartAudio()
     external fun StopAudio()
     external fun GetProgressMS(): Double
     external fun GetDurationMS(): Double
     external fun Seek(positionMS: Double)
+    private external fun SetPitch(pitchShift: Int)
+    private external fun SetTempo(tempo: Double)
 
 }
