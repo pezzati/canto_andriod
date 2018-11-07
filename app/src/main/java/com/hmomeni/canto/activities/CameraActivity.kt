@@ -28,6 +28,7 @@ import com.karumi.dexter.MultiplePermissionsReport
 import com.karumi.dexter.PermissionToken
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener
+import kotlinx.android.synthetic.main.activity_dubsmash.*
 import timber.log.Timber
 import java.io.IOException
 import java.util.*
@@ -40,6 +41,11 @@ abstract class CameraActivity : AppCompatActivity() {
     abstract fun onRecordStarted()
     abstract fun onRecordStopped()
     abstract fun onRecordError()
+
+    val CAMERA_FRONT = "1"
+    val CAMERA_BACK = "0"
+
+    private var cameraId = CAMERA_BACK
 
     private val FRAGMENT_DIALOG = "dialog"
     private val SENSOR_ORIENTATION_DEFAULT_DEGREES = 90
@@ -56,6 +62,13 @@ abstract class CameraActivity : AppCompatActivity() {
         append(Surface.ROTATION_180, 90)
         append(Surface.ROTATION_270, 0)
     }
+
+    var ratio = 16f / 9f
+        set(value) {
+            field = value
+            closeCamera()
+            openCamera(textureView.width, textureView.height)
+        }
 
     /**
      * [TextureView.SurfaceTextureListener] handles several lifecycle events on a
@@ -238,26 +251,35 @@ abstract class CameraActivity : AppCompatActivity() {
 
     }
 
+    protected fun switchCamera() {
+        closeCamera()
+        cameraId = if (cameraId == CAMERA_BACK) CAMERA_FRONT else CAMERA_BACK
+        openCamera(getTextureView().width, getTextureView().height)
+    }
+
     /**
      * Tries to open a [CameraDevice]. The result is listened by [stateCallback].
      *
      * Lint suppression - permission is checked in [hasPermissionsGranted]
      */
     @SuppressLint("MissingPermission")
-    private fun openCamera(width: Int, height: Int) {
+    protected fun openCamera(width: Int, height: Int): Boolean {
         if (!hasPermissionsGranted(VIDEO_PERMISSIONS.toTypedArray())) {
             requestVideoPermissions()
-            return
+            return false
         }
         val cameraActivity = this
-        if (cameraActivity.isFinishing) return
+        if (cameraActivity.isFinishing) return false
 
         val manager = cameraActivity.getSystemService(Context.CAMERA_SERVICE) as CameraManager
         try {
             if (!cameraOpenCloseLock.tryAcquire(2500, TimeUnit.MILLISECONDS)) {
                 throw RuntimeException("Time out waiting to lock camera opening.")
             }
-            val cameraId = manager.cameraIdList[0]
+
+            if (!manager.cameraIdList.contains(cameraId)) {
+                return false
+            }
 
             // Choose the sizes for camera preview and video recording
             val characteristics = manager.getCameraCharacteristics(cameraId)
@@ -276,23 +298,27 @@ abstract class CameraActivity : AppCompatActivity() {
             configureTransform(width, height)
             mediaRecorder = MediaRecorder()
             manager.openCamera(cameraId, stateCallback, null)
+            return true
         } catch (e: CameraAccessException) {
             showToast("Cannot access the camera.")
             cameraActivity.finish()
+            return false
         } catch (e: NullPointerException) {
             // Currently an NPE is thrown when the Camera2API is used but not supported on the
             // device this code runs.
             ErrorDialog.newInstance(getString(R.string.camera_error))
                     .show(supportFragmentManager, FRAGMENT_DIALOG)
+            return false
         } catch (e: InterruptedException) {
             throw RuntimeException("Interrupted while trying to lock camera opening.")
         }
+
     }
 
     /**
      * Close the [CameraDevice].
      */
-    private fun closeCamera() {
+    protected fun closeCamera() {
         try {
             cameraOpenCloseLock.acquire()
             closePreviewSession()
@@ -516,7 +542,7 @@ abstract class CameraActivity : AppCompatActivity() {
      * @return The video size
      */
     private fun chooseVideoSize(choices: Array<Size>) = choices.firstOrNull {
-        it.width == it.height * 4 / 3 && it.width <= 1080
+        it.width == (it.height * ratio).toInt() && it.width <= 1080
     } ?: choices[choices.size - 1]
 
     /**
@@ -551,4 +577,5 @@ abstract class CameraActivity : AppCompatActivity() {
             choices[0]
         }
     }
+
 }

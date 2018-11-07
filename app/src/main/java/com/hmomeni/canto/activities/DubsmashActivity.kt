@@ -31,7 +31,11 @@ class DubsmashActivity : CameraActivity() {
     override fun onRecordError() {
     }
 
+    val RATIO_FULLSCREEN = 1
+    val RATIO_SQUARE = 2
+
     private lateinit var filePath: String
+    private var mRatio = RATIO_FULLSCREEN
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,13 +43,28 @@ class DubsmashActivity : CameraActivity() {
 
         filePath = "/mnt/sdcard/Music/07-Mohsen_Chavoshi_To_Dar_Masafate_Barani.mp3"
 
-        initAudio()
+//        initAudio()
 
         recordBtn.setOnClickListener {
             if (isRecordingVideo) {
                 stopDubsmash()
             } else {
                 startDubsmash()
+            }
+        }
+
+        switchCam.setOnClickListener {
+            switchCamera()
+        }
+//        val screenDimension = getScreenDimensions(this)
+        switchRatio.setOnClickListener {
+            closeCamera()
+            if (mRatio == RATIO_FULLSCREEN) {
+                ratio = 3 / 4f
+                mRatio = RATIO_SQUARE
+            } else {
+                ratio = 16 / 9f
+                mRatio = RATIO_FULLSCREEN
             }
         }
     }
