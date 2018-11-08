@@ -31,6 +31,8 @@
             android:exported="true" />
         <activity android:name=".activities.KaraokeActivity" />
         <activity android:name=".activities.SingingActivity"></activity>
+
+        <service android:name=".DownloadService" />
     </application>
 
 </manifest>

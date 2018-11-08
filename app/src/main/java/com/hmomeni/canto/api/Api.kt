@@ -1,10 +1,7 @@
 package com.hmomeni.canto.api
 
 import com.google.gson.JsonObject
-import com.hmomeni.canto.entities.ApiResponse
-import com.hmomeni.canto.entities.Banner
-import com.hmomeni.canto.entities.Genre
-import com.hmomeni.canto.entities.Post
+import com.hmomeni.canto.entities.*
 import io.reactivex.Completable
 import io.reactivex.Single
 import okhttp3.RequestBody
@@ -28,5 +25,8 @@ interface Api {
 
     @GET("song/karaokes/search")
     fun searchInGenres(@Query("key") query: String): Single<ApiResponse<List<Post>>>
+
+    @GET("song/posts/{postId}")
+    fun getSinglePost(@Path("postId") postId: Int): Single<ApiResponse<FullPost>>
 
 }

@@ -1,6 +1,7 @@
 package com.hmomeni.canto.fragments
 
 import android.annotation.SuppressLint
+import android.app.ProgressDialog
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager.PERMISSION_GRANTED
@@ -12,7 +13,6 @@ import android.hardware.camera2.*
 import android.hardware.camera2.CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP
 import android.hardware.camera2.CameraCharacteristics.SENSOR_ORIENTATION
 import android.hardware.camera2.CameraDevice.TEMPLATE_PREVIEW
-import android.hardware.camera2.CameraDevice.TEMPLATE_RECORD
 import android.media.MediaRecorder
 import android.os.Bundle
 import android.os.Handler
@@ -22,18 +22,15 @@ import android.support.v4.app.FragmentActivity
 import android.support.v4.content.ContextCompat.checkSelfPermission
 import android.support.v4.view.ViewPager
 import android.util.Size
-import android.util.SparseIntArray
 import android.view.*
 import android.widget.Toast
 import android.widget.Toast.LENGTH_SHORT
-import com.example.android.camera2video.CompareSizesByArea
 import com.hmomeni.canto.R
 import com.hmomeni.canto.activities.DubsmashActivity
 import com.hmomeni.canto.activities.KaraokeActivity
 import com.hmomeni.canto.adapters.viewpager.ModePagerAdapter
-import com.hmomeni.canto.utils.ErrorDialog
-import com.hmomeni.canto.utils.VIDEO_PERMISSIONS
-import com.hmomeni.canto.utils.dpToPx
+import com.hmomeni.canto.api.Api
+import com.hmomeni.canto.utils.*
 import com.hmomeni.canto.utils.views.AutoFitTextureView
 import com.karumi.dexter.Dexter
 import com.karumi.dexter.MultiplePermissionsReport
@@ -43,28 +40,25 @@ import com.karumi.dexter.listener.multi.MultiplePermissionsListener
 import com.tmall.ultraviewpager.transformer.UltraScaleTransformer
 import kotlinx.android.synthetic.main.fragment_recorder.*
 import timber.log.Timber
-import java.io.IOException
-import java.util.*
 import java.util.concurrent.Semaphore
 import java.util.concurrent.TimeUnit
-import kotlin.collections.ArrayList
+import javax.inject.Inject
 
 
 class RecorderFragment : Fragment() {
     private val FRAGMENT_DIALOG = "dialog"
-    private val SENSOR_ORIENTATION_DEFAULT_DEGREES = 90
-    private val SENSOR_ORIENTATION_INVERSE_DEGREES = 270
-    private val DEFAULT_ORIENTATIONS = SparseIntArray().apply {
-        append(Surface.ROTATION_0, 90)
-        append(Surface.ROTATION_90, 0)
-        append(Surface.ROTATION_180, 270)
-        append(Surface.ROTATION_270, 180)
-    }
-    private val INVERSE_ORIENTATIONS = SparseIntArray().apply {
-        append(Surface.ROTATION_0, 270)
-        append(Surface.ROTATION_90, 180)
-        append(Surface.ROTATION_180, 90)
-        append(Surface.ROTATION_270, 0)
+
+    var selectPostId: Int = 1085
+
+    @Inject
+    lateinit var api: Api
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        context!!.app().di.inject(this)
+        arguments?.let {
+            selectPostId = it.getInt("post_id")
+        }
     }
 
     /**
@@ -88,16 +82,6 @@ class RecorderFragment : Fragment() {
     }
 
     /**
-     * An [AutoFitTextureView] for camera preview.
-     */
-//    private lateinit var textureView: AutoFitTextureView
-
-    /**
-     * Button to record video
-     */
-//    private lateinit var videoButton: Button
-
-    /**
      * A reference to the opened [android.hardware.camera2.CameraDevice].
      */
     private var cameraDevice: CameraDevice? = null
@@ -117,12 +101,6 @@ class RecorderFragment : Fragment() {
      * The [android.util.Size] of video recording.
      */
     private lateinit var videoSize: Size
-
-    /**
-     * Whether the app is recording video now
-     */
-    private var isRecordingVideo = false
-
     /**
      * An additional thread for running tasks that shouldn't block the UI.
      */
@@ -178,11 +156,6 @@ class RecorderFragment : Fragment() {
     private lateinit var textureView: AutoFitTextureView
     private lateinit var textureView2: AutoFitTextureView
 
-    /**
-     * Output file for video
-     */
-    private var nextVideoAbsolutePath: String? = null
-
     private var mediaRecorder: MediaRecorder? = null
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
             inflater.inflate(R.layout.fragment_recorder, container, false)
@@ -203,8 +176,17 @@ class RecorderFragment : Fragment() {
         viewPager.setPageTransformer(false, UltraScaleTransformer())
         viewPager.adapter = ModePagerAdapter(context!!, arrayOf(textureView, textureView2, karaokeView))
 
-        textureView2.setOnClickListener {
-            startActivity(Intent(context!!, DubsmashActivity::class.java).putExtra("audio_src", ""))
+        textureView.setOnClickListener {
+            val loadingDialog = ProgressDialog(context)
+            api.getSinglePost(postId = selectPostId)
+                    .iomain()
+                    .doOnSubscribe { loadingDialog.show() }
+                    .doAfterTerminate { loadingDialog.dismiss() }
+                    .subscribe({
+                        startActivity(Intent(context, DubsmashActivity::class.java).putExtra("post", it.data))
+                    }, {
+                        Timber.e(it)
+                    })
         }
 
         karaokeView.setOnClickListener {
@@ -517,113 +499,11 @@ class RecorderFragment : Fragment() {
         textureView2.setTransform(matrix)
     }
 
-    @Throws(IOException::class)
-    private fun setUpMediaRecorder() {
-        val cameraActivity = activity ?: return
-
-        if (nextVideoAbsolutePath.isNullOrEmpty()) {
-            nextVideoAbsolutePath = getVideoFilePath(cameraActivity)
-        }
-
-        val rotation = cameraActivity.windowManager.defaultDisplay.rotation
-        when (sensorOrientation) {
-            SENSOR_ORIENTATION_DEFAULT_DEGREES ->
-                mediaRecorder?.setOrientationHint(DEFAULT_ORIENTATIONS.get(rotation))
-            SENSOR_ORIENTATION_INVERSE_DEGREES ->
-                mediaRecorder?.setOrientationHint(INVERSE_ORIENTATIONS.get(rotation))
-        }
-
-        mediaRecorder?.apply {
-            setAudioSource(MediaRecorder.AudioSource.MIC)
-            setVideoSource(MediaRecorder.VideoSource.SURFACE)
-            setOutputFormat(MediaRecorder.OutputFormat.MPEG_4)
-            setOutputFile(nextVideoAbsolutePath)
-            setVideoEncodingBitRate(10000000)
-            setVideoFrameRate(30)
-            setVideoSize(videoSize.width, videoSize.height)
-            setVideoEncoder(MediaRecorder.VideoEncoder.H264)
-            setAudioEncoder(MediaRecorder.AudioEncoder.AAC)
-            prepare()
-        }
-    }
-
-    private fun getVideoFilePath(context: Context?): String {
-        val filename = "${System.currentTimeMillis()}.mp4"
-        val dir = context?.getExternalFilesDir(null)
-
-        return if (dir == null) {
-            filename
-        } else {
-            "${dir.absolutePath}/$filename"
-        }
-    }
-
-    private fun startRecordingVideo() {
-        if (cameraDevice == null || !textureView.isAvailable) return
-
-        try {
-            closePreviewSession()
-            setUpMediaRecorder()
-            val texture = textureView.surfaceTexture.apply {
-                setDefaultBufferSize(previewSize.width, previewSize.height)
-            }
-
-            // Set up Surface for camera preview and MediaRecorder
-            val previewSurface = Surface(texture)
-            val recorderSurface = mediaRecorder!!.surface
-            val surfaces = ArrayList<Surface>().apply {
-                add(previewSurface)
-                add(recorderSurface)
-            }
-            previewRequestBuilder = cameraDevice!!.createCaptureRequest(TEMPLATE_RECORD).apply {
-                addTarget(previewSurface)
-                addTarget(recorderSurface)
-            }
-
-            // Start a capture session
-            // Once the session starts, we can update the UI and start recording
-            cameraDevice?.createCaptureSession(surfaces,
-                    object : CameraCaptureSession.StateCallback() {
-
-                        override fun onConfigured(cameraCaptureSession: CameraCaptureSession) {
-                            captureSession = cameraCaptureSession
-                            updatePreview()
-                            activity?.runOnUiThread {
-                                //                                videoButton.setText(R.string.stop)
-                                isRecordingVideo = true
-                                mediaRecorder?.start()
-                            }
-                        }
-
-                        override fun onConfigureFailed(cameraCaptureSession: CameraCaptureSession) {
-                            if (activity != null) showToast("Failed")
-                        }
-                    }, backgroundHandler)
-        } catch (e: CameraAccessException) {
-            Timber.e(e)
-        } catch (e: IOException) {
-            Timber.e(e)
-        }
-
-    }
-
     private fun closePreviewSession() {
         captureSession?.close()
         captureSession = null
     }
 
-    private fun stopRecordingVideo() {
-        isRecordingVideo = false
-//        videoButton.setText(R.string.record)
-        mediaRecorder?.apply {
-            stop()
-            reset()
-        }
-
-        if (activity != null) showToast("Video saved: $nextVideoAbsolutePath")
-        nextVideoAbsolutePath = null
-        startPreview()
-    }
 
     private fun showToast(message: String) = Toast.makeText(activity, message, LENGTH_SHORT).show()
 
@@ -637,38 +517,5 @@ class RecorderFragment : Fragment() {
     private fun chooseVideoSize(choices: Array<Size>) = choices.firstOrNull {
         it.width == it.height * 4 / 3 && it.width <= 1080
     } ?: choices[choices.size - 1]
-
-    /**
-     * Given [choices] of [Size]s supported by a camera, chooses the smallest one whose
-     * width and height are at least as large as the respective requested values, and whose aspect
-     * ratio matches with the specified value.
-     *
-     * @param choices     The list of sizes that the camera supports for the intended output class
-     * @param width       The minimum desired width
-     * @param height      The minimum desired height
-     * @param aspectRatio The aspect ratio
-     * @return The optimal [Size], or an arbitrary one if none were big enough
-     */
-    private fun chooseOptimalSize(
-            choices: Array<Size>,
-            width: Int,
-            height: Int,
-            aspectRatio: Size
-    ): Size {
-
-        // Collect the supported resolutions that are at least as big as the preview Surface
-        val w = aspectRatio.width
-        val h = aspectRatio.height
-        val bigEnough = choices.filter {
-            it.height == it.width * h / w && it.width >= width && it.height >= height
-        }
-
-        // Pick the smallest of those, assuming we found any
-        return if (bigEnough.isNotEmpty()) {
-            Collections.min(bigEnough, CompareSizesByArea())
-        } else {
-            choices[0]
-        }
-    }
 
 }

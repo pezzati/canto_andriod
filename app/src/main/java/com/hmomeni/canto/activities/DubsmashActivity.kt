@@ -1,11 +1,19 @@
 package com.hmomeni.canto.activities
 
+import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.media.AudioManager
 import android.os.Bundle
 import android.os.Environment
-import com.hmomeni.canto.R
+import com.hmomeni.canto.*
+import com.hmomeni.canto.utils.DownloadEvent
+import com.hmomeni.canto.utils.ViewModelFactory
+import com.hmomeni.canto.utils.app
 import com.hmomeni.canto.utils.views.AutoFitTextureView
+import com.hmomeni.canto.utils.views.RecordButton
+import com.hmomeni.canto.vms.DubsmashViewModel
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.activity_dubsmash.*
 import timber.log.Timber
 import java.io.File
@@ -35,14 +43,28 @@ class DubsmashActivity : CameraActivity() {
     val RATIO_SQUARE = 2
 
     private lateinit var filePath: String
+    private lateinit var fileUrl: String
     private var mRatio = RATIO_FULLSCREEN
+
+    private lateinit var viewModel: DubsmashViewModel
+
+    private var disposable: Disposable? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        viewModel = ViewModelProviders.of(this, ViewModelFactory(app()))[DubsmashViewModel::class.java]
+
+        disposable = viewModel.dEvents()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe {
+                    handleDownloadEvents(it)
+                }
+
         setContentView(R.layout.activity_dubsmash)
 
-        filePath = "/mnt/sdcard/Music/07-Mohsen_Chavoshi_To_Dar_Masafate_Barani.mp3"
-
+        fileUrl = "https://storage.backtory.com/cantotest/posts/Canto/karaokes/2018-8/K_125_Dreamon.mp3"
+        filePath = DownloadService.startDownload(this, fileUrl)
 //        initAudio()
 
         recordBtn.setOnClickListener {
@@ -65,6 +87,30 @@ class DubsmashActivity : CameraActivity() {
             } else {
                 ratio = 16 / 9f
                 mRatio = RATIO_FULLSCREEN
+            }
+        }
+    }
+
+    override fun onStop() {
+        disposable?.dispose()
+        super.onStop()
+    }
+
+    private fun handleDownloadEvents(event: DownloadEvent) {
+        when (event.action) {
+            ACTION_DOWNLOAD_START -> {
+                recordBtn.mode = RecordButton.Mode.Loading
+            }
+            ACTION_DOWNLOAD_PROGRESS -> {
+                recordBtn.mode = RecordButton.Mode.Loading
+                recordBtn.progress = event.progress
+            }
+            ACTION_DOWNLOAD_FINISH -> {
+                recordBtn.mode = RecordButton.Mode.Ready
+            }
+            ACTION_DOWNLOAD_FAILED -> {
+            }
+            ACTION_DOWNLOAD_CANCEL -> {
             }
         }
     }
