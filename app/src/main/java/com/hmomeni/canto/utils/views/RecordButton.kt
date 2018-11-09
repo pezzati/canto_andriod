@@ -32,7 +32,7 @@ class RecordButton : View {
         textSize = dpToPx(14).toFloat()
     }
 
-    var mode: Mode = Mode.Loading
+    var mode: Mode = Mode.Idle
         set(value) {
             field = value
             requestLayout()
@@ -65,7 +65,6 @@ class RecordButton : View {
     }
 
     override fun onDraw(canvas: Canvas) {
-        super.onDraw(canvas)
         when (mode) {
             Mode.Loading -> {
                 canvas.drawArc(arcRect, 0f, 360f * (progress.toFloat() / 100f), true, outerPaint)

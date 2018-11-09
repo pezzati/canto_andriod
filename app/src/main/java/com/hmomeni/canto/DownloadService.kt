@@ -81,7 +81,13 @@ class DownloadService : Service() {
 
             if (c.responseCode != 200) throw Exception("Error in connection")
 
-            val downloadFile = File(filesDir, fileName)
+            val finalFile = File(filesDir, fileName)
+            if (finalFile.exists()) {
+                onDownloadFinished()
+                return
+            }
+            val downloadFile = File(filesDir, "tempFile")
+
             val fileOutput = FileOutputStream(downloadFile)
             val inputStream = c.inputStream
             val buffer = ByteArray(1024)
@@ -109,6 +115,8 @@ class DownloadService : Service() {
                 fileOutput.write(buffer, 0, read)
                 read = inputStream.read(buffer)
             }
+
+            downloadFile.renameTo(finalFile)
 
             onDownloadFinished()
 

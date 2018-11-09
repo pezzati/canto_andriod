@@ -15,7 +15,6 @@ import com.hmomeni.canto.vms.DubsmashViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.activity_dubsmash.*
-import timber.log.Timber
 import java.io.File
 
 class DubsmashActivity : CameraActivity() {
@@ -65,24 +64,23 @@ class DubsmashActivity : CameraActivity() {
 
         fileUrl = "https://storage.backtory.com/cantotest/posts/Canto/karaokes/2018-8/K_125_Dreamon.mp3"
         filePath = DownloadService.startDownload(this, fileUrl)
-//        initAudio()
 
         recordBtn.setOnClickListener {
             if (isRecordingVideo) {
                 stopDubsmash()
             } else {
                 startDubsmash()
+                recordBtn.mode = RecordButton.Mode.Recording
             }
         }
 
         switchCam.setOnClickListener {
             switchCamera()
         }
-//        val screenDimension = getScreenDimensions(this)
         switchRatio.setOnClickListener {
             closeCamera()
             if (mRatio == RATIO_FULLSCREEN) {
-                ratio = 3 / 4f
+                ratio = 4 / 3f
                 mRatio = RATIO_SQUARE
             } else {
                 ratio = 16 / 9f
@@ -106,11 +104,15 @@ class DubsmashActivity : CameraActivity() {
                 recordBtn.progress = event.progress
             }
             ACTION_DOWNLOAD_FINISH -> {
+                initAudio()
+                OpenFile(filePath, File(filePath).length().toInt())
                 recordBtn.mode = RecordButton.Mode.Ready
             }
             ACTION_DOWNLOAD_FAILED -> {
+
             }
             ACTION_DOWNLOAD_CANCEL -> {
+
             }
         }
     }
@@ -133,7 +135,6 @@ class DubsmashActivity : CameraActivity() {
                 File(Environment.getExternalStorageDirectory(), "dubsmash.wav").absolutePath,
                 File(Environment.getExternalStorageDirectory(), "temp.wav").absolutePath
         )
-        OpenFile(filePath, File(filePath).length().toInt())
     }
 
     private fun startDubsmash() {
@@ -144,10 +145,6 @@ class DubsmashActivity : CameraActivity() {
     private fun stopDubsmash() {
         StopAudio()
         stopRecordingVideo()
-    }
-
-    public fun AudioFinished() {
-        Timber.d("Audio Finished!")
     }
 
     external fun InitAudio(bufferSize: Int, sampleRate: Int, outputPath: String, tempPath: String)

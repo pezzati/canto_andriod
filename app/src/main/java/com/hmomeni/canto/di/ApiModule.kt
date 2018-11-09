@@ -41,6 +41,7 @@ class ApiModule {
                                 if (token.isNotEmpty()) {
                                     builder.addHeader("USERTOKEN", token)
                                 }
+                                builder.addHeader("deviceType", "android")
                                 it.proceed(builder.build())
                             }
                             .addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))

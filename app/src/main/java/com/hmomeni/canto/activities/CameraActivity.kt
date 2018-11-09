@@ -9,6 +9,7 @@ import android.graphics.RectF
 import android.graphics.SurfaceTexture
 import android.hardware.camera2.*
 import android.media.MediaRecorder
+import android.os.Bundle
 import android.os.Handler
 import android.os.HandlerThread
 import android.support.v4.content.ContextCompat
@@ -17,6 +18,8 @@ import android.util.Size
 import android.util.SparseIntArray
 import android.view.Surface
 import android.view.TextureView
+import android.view.Window
+import android.view.WindowManager
 import android.widget.Toast
 import com.example.android.camera2video.CompareSizesByArea
 import com.hmomeni.canto.R
@@ -183,7 +186,12 @@ abstract class CameraActivity : AppCompatActivity() {
     private var nextVideoAbsolutePath: String? = null
 
     private var mediaRecorder: MediaRecorder? = null
-
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        requestWindowFeature(Window.FEATURE_NO_TITLE)
+        window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN)
+    }
 
     override fun onResume() {
         super.onResume()
@@ -287,8 +295,10 @@ abstract class CameraActivity : AppCompatActivity() {
                     ?: throw RuntimeException("Cannot get available preview/video sizes")
             sensorOrientation = characteristics.get(CameraCharacteristics.SENSOR_ORIENTATION)
             videoSize = chooseVideoSize(map.getOutputSizes(MediaRecorder::class.java))
+            Timber.d("Selected Video Size=%s", videoSize)
             previewSize = chooseOptimalSize(map.getOutputSizes(SurfaceTexture::class.java),
                     width, height, videoSize)
+            Timber.d("Selected Preview Video Size=%s", videoSize)
 
             if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
                 getTextureView().setAspectRatio(previewSize.width, previewSize.height)
@@ -439,7 +449,7 @@ abstract class CameraActivity : AppCompatActivity() {
             setOutputFormat(MediaRecorder.OutputFormat.MPEG_4)
             setOutputFile(nextVideoAbsolutePath)
             setVideoEncodingBitRate(10000000)
-            setVideoFrameRate(30)
+            setVideoFrameRate(60)
             setVideoSize(videoSize.width, videoSize.height)
             setVideoEncoder(MediaRecorder.VideoEncoder.H264)
 //            setAudioEncoder(MediaRecorder.AudioEncoder.AAC)
@@ -542,7 +552,7 @@ abstract class CameraActivity : AppCompatActivity() {
      * @return The video size
      */
     private fun chooseVideoSize(choices: Array<Size>) = choices.firstOrNull {
-        it.width == (it.height * ratio).toInt() && it.width <= 1080
+        it.width == (it.height * ratio).toInt()
     } ?: choices[choices.size - 1]
 
     /**
@@ -567,7 +577,7 @@ abstract class CameraActivity : AppCompatActivity() {
         val w = aspectRatio.width
         val h = aspectRatio.height
         val bigEnough = choices.filter {
-            it.height == it.width * h / w && it.width >= width && it.height >= height
+            it.height == it.width * h / w
         }
 
         // Pick the smallest of those, assuming we found any

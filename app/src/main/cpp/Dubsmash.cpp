@@ -46,7 +46,7 @@ static bool audioProcessing(
         int numberOfFrames,         // number of frames to process
         int __unused sampleRate     // sampling rate
 ) {
-    if (player->process(playerBuffer, false, (unsigned int) numberOfFrames, 1)) {
+    if (player->playing && player->process(playerBuffer, false, (unsigned int) numberOfFrames, 1)) {
         recorder->process(playerBuffer, (unsigned int) numberOfFrames);
         SuperpoweredFloatToShortInt(playerBuffer, audio, (unsigned int) numberOfFrames);
         return true;
@@ -63,7 +63,7 @@ static void recorderStopped(void *__unused clientdata) {
 
 // Called by the player.
 static void playerEventCallback(
-        void *clientData,
+        void __unused *clientData,
         SuperpoweredAdvancedAudioPlayerEvent event,
         void *value
 ) {
