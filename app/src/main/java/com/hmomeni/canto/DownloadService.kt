@@ -72,7 +72,11 @@ class DownloadService : Service() {
 
     private fun downloadFile() {
         val fileName = Uri.parse(downloadUrl).lastPathSegment
-
+        val finalFile = File(filesDir, fileName)
+        if (finalFile.exists()) {
+            onDownloadFinished()
+            return
+        }
         try {
             val url = URL(downloadUrl)
             val c = url.openConnection() as HttpURLConnection
@@ -81,11 +85,6 @@ class DownloadService : Service() {
 
             if (c.responseCode != 200) throw Exception("Error in connection")
 
-            val finalFile = File(filesDir, fileName)
-            if (finalFile.exists()) {
-                onDownloadFinished()
-                return
-            }
             val downloadFile = File(filesDir, "tempFile")
 
             val fileOutput = FileOutputStream(downloadFile)
@@ -123,8 +122,6 @@ class DownloadService : Service() {
             fileOutput.close()
             inputStream.close()
             c.disconnect()
-
-
         } catch (e: IOException) {
             Timber.e(e)
             onDownloadFailed()
@@ -133,7 +130,6 @@ class DownloadService : Service() {
 
     private fun onDownloadStarted() {
         downloadEvents.onNext(DownloadEvent(ACTION_DOWNLOAD_START, 0))
-
     }
 
     private fun onDownloadCanceled() {
@@ -142,7 +138,6 @@ class DownloadService : Service() {
 
     private fun onDownloadFailed() {
         downloadEvents.onNext(DownloadEvent(ACTION_DOWNLOAD_FAILED, 0))
-
     }
 
     private fun onDownloadFinished() {

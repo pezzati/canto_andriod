@@ -29,11 +29,21 @@ class TrimView : View {
     private val mainLineHeight = dpToPx(8)
     private val anchorWidth = dpToPx(5).toFloat()
 
+    var progress = 0
+        set(value) {
+            if (value > 100) {
+                throw RuntimeException("progress must exceed 100")
+            }
+            field = value
+            progressLine.right = measuredWidth * field / 100f
+            requestLayout()
+        }
+
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
         if (measuredWidth > 0 && measuredHeight > 0) {
             mainLine.set(0f, (measuredHeight / 2f) - (mainLineHeight / 2), measuredWidth.toFloat(), (measuredHeight / 2f) + (mainLineHeight / 2))
-            progressLine.set(measuredWidth / 4f, (measuredHeight / 2f) - (mainLineHeight / 2), measuredWidth * 3 / 4f, (measuredHeight / 2f) + (mainLineHeight / 2))
+            progressLine.set(0f, (measuredHeight / 2f) - (mainLineHeight / 2), 0f, (measuredHeight / 2f) + (mainLineHeight / 2))
             leftAnchor.set(0f, 0f, measuredHeight.toFloat(), measuredHeight.toFloat())
             rightAnchor.set((measuredWidth - measuredHeight).toFloat(), 0f, measuredWidth.toFloat(), measuredHeight.toFloat())
         }

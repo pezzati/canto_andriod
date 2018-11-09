@@ -183,8 +183,8 @@ extern "C" JNIEXPORT void
 Java_com_hmomeni_canto_activities_DubsmashActivity_Seek(
         JNIEnv  __unused *env,
         jobject  __unused obj,
-        jdouble positionMS) {
-    player->setPosition(positionMS, false, false);
+        jdouble percent) {
+    player->seek(percent);
 }
 
 // onBackground - Put audio processing to sleep.

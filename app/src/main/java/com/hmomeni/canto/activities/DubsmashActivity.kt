@@ -5,10 +5,12 @@ import android.content.Context
 import android.media.AudioManager
 import android.os.Bundle
 import android.os.Environment
+import android.view.MotionEvent
 import com.hmomeni.canto.*
 import com.hmomeni.canto.utils.DownloadEvent
 import com.hmomeni.canto.utils.ViewModelFactory
 import com.hmomeni.canto.utils.app
+import com.hmomeni.canto.utils.getDuration
 import com.hmomeni.canto.utils.views.AutoFitTextureView
 import com.hmomeni.canto.utils.views.RecordButton
 import com.hmomeni.canto.vms.DubsmashViewModel
@@ -41,6 +43,9 @@ class DubsmashActivity : CameraActivity() {
     val RATIO_FULLSCREEN = 1
     val RATIO_SQUARE = 2
 
+    private var audioInitialized: Boolean = false
+    private var isPlaying: Boolean = false
+
     private lateinit var filePath: String
     private lateinit var fileUrl: String
     private var mRatio = RATIO_FULLSCREEN
@@ -66,9 +71,16 @@ class DubsmashActivity : CameraActivity() {
         filePath = DownloadService.startDownload(this, fileUrl)
 
         recordBtn.setOnClickListener {
+            if (recordBtn.mode == RecordButton.Mode.Loading) {
+                return@setOnClickListener
+            }
             if (isRecordingVideo) {
                 stopDubsmash()
             } else {
+                if (!audioInitialized) {
+                    initAudio()
+                    OpenFile(filePath, File(filePath).length().toInt())
+                }
                 startDubsmash()
                 recordBtn.mode = RecordButton.Mode.Recording
             }
@@ -85,6 +97,31 @@ class DubsmashActivity : CameraActivity() {
             } else {
                 ratio = 16 / 9f
                 mRatio = RATIO_FULLSCREEN
+            }
+        }
+        var initx = 0f
+        trimView.setOnTouchListener { v, event ->
+            when (event.action) {
+                MotionEvent.ACTION_DOWN -> {
+                    initx = event.x
+                    true
+                }
+                MotionEvent.ACTION_MOVE -> {
+                    val dx = event.x - initx
+                    val newX = v.x + dx
+                    if (newX >= progressBg.x && newX <= progressBg.x + progressBg.measuredWidth - v.measuredWidth) {
+                        v.x = newX
+                    } else if (newX < progressBg.x) {
+                        v.x = progressBg.x
+                    } else if (newX > progressBg.x + progressBg.measuredWidth - v.measuredWidth) {
+                        v.x = progressBg.x + progressBg.measuredWidth - v.measuredWidth
+                    }
+                    if (isPlaying) {
+                        Seek(((v.x - progressBg.x) / progressBg.measuredWidth).toDouble())
+                    }
+                    true
+                }
+                else -> false
             }
         }
     }
@@ -104,8 +141,7 @@ class DubsmashActivity : CameraActivity() {
                 recordBtn.progress = event.progress
             }
             ACTION_DOWNLOAD_FINISH -> {
-                initAudio()
-                OpenFile(filePath, File(filePath).length().toInt())
+                calculateTrimViewWidth()
                 recordBtn.mode = RecordButton.Mode.Ready
             }
             ACTION_DOWNLOAD_FAILED -> {
@@ -115,6 +151,15 @@ class DubsmashActivity : CameraActivity() {
 
             }
         }
+    }
+
+    private fun calculateTrimViewWidth() {
+        val duration = getDuration(filePath) / 1000
+        val trimViewWidth = progressBg.measuredWidth * 60 / duration
+        trimView.layoutParams = trimView.layoutParams.apply {
+            width = trimViewWidth.toInt()
+        }
+
     }
 
     private fun initAudio() {
@@ -135,14 +180,17 @@ class DubsmashActivity : CameraActivity() {
                 File(Environment.getExternalStorageDirectory(), "dubsmash.wav").absolutePath,
                 File(Environment.getExternalStorageDirectory(), "temp.wav").absolutePath
         )
+        audioInitialized = true
     }
 
     private fun startDubsmash() {
+        isPlaying = true
         StartAudio()
         startRecordingVideo()
     }
 
     private fun stopDubsmash() {
+        isPlaying = false
         StopAudio()
         stopRecordingVideo()
     }
@@ -154,7 +202,7 @@ class DubsmashActivity : CameraActivity() {
     external fun StopAudio()
     external fun GetProgressMS(): Double
     external fun GetDurationMS(): Double
-    external fun Seek(positionMS: Double)
+    external fun Seek(percent: Double)
     private external fun SetPitch(pitchShift: Int)
     private external fun SetTempo(tempo: Double)
 
