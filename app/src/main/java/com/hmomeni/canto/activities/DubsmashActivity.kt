@@ -5,6 +5,7 @@ import android.content.Context
 import android.media.AudioManager
 import android.os.Bundle
 import android.os.Environment
+import android.os.Handler
 import android.view.MotionEvent
 import com.hmomeni.canto.*
 import com.hmomeni.canto.utils.DownloadEvent
@@ -54,6 +55,8 @@ class DubsmashActivity : CameraActivity() {
 
     private lateinit var viewModel: DubsmashViewModel
 
+    private var seekFraction = 0f
+
     private var disposable: Disposable? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -80,12 +83,9 @@ class DubsmashActivity : CameraActivity() {
                 stopDubsmash()
                 recordBtn.mode = RecordButton.Mode.Ready
             } else {
-                if (!audioInitialized) {
-                    initAudio()
-                    OpenFile(filePath, File(filePath).length().toInt())
-                }
                 startDubsmash()
                 recordBtn.mode = RecordButton.Mode.Recording
+                timer()
             }
         }
 
@@ -121,7 +121,8 @@ class DubsmashActivity : CameraActivity() {
                     }
                     Timber.d("Seek Percent=%f", ((v.x - progressBg.x + trimView.anchorWidth) / progressBg.measuredWidth).toDouble())
                     if (isPlaying) {
-                        Seek(((v.x - progressBg.x) / progressBg.measuredWidth).toDouble())
+                        seekFraction = (v.x - progressBg.x + trimView.anchorWidth) / progressBg.measuredWidth
+                        Seek(seekFraction.toDouble())
                     }
                     true
                 }
@@ -146,6 +147,19 @@ class DubsmashActivity : CameraActivity() {
         }
     }
 
+    var handler = Handler()
+    private fun timer() {
+        Timber.d("dur=%f, pos=%f", GetDurationMS(), GetProgressMS())
+        val currentPos = GetProgressMS() - (GetDurationMS() * seekFraction)
+
+        trimView.progress = (currentPos * 100 / 60000).toInt()
+        handler.postDelayed({
+            if (isPlaying) {
+                timer()
+            }
+        }, 300)
+    }
+
     override fun onStop() {
         disposable?.dispose()
         super.onStop()
@@ -163,6 +177,8 @@ class DubsmashActivity : CameraActivity() {
             ACTION_DOWNLOAD_FINISH -> {
                 calculateTrimViewWidth()
                 recordBtn.mode = RecordButton.Mode.Ready
+                initAudio()
+                OpenFile(filePath, File(filePath).length().toInt())
             }
             ACTION_DOWNLOAD_FAILED -> {
 
@@ -175,7 +191,8 @@ class DubsmashActivity : CameraActivity() {
 
     private fun calculateTrimViewWidth() {
         val duration = getDuration(filePath) / 1000
-        val trimViewWidth = progressBg.measuredWidth * 60 / duration
+        Timber.d("Duration=%d", duration)
+        val trimViewWidth = progressBg.measuredWidth * (100 * 60 / duration) / 100
         trimView.trimWidth = trimViewWidth.toInt()
         trimView.x = progressBg.x - trimView.anchorWidth
     }

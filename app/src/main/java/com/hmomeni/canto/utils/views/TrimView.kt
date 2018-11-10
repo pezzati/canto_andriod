@@ -42,7 +42,7 @@ class TrimView : View {
                 throw RuntimeException("progress must not exceed 100")
             }
             field = value
-            progressLine.right = trimWidth * field / 100f
+//            progressLine.right = trimWidth * field / 100f
             requestLayout()
         }
 
@@ -57,7 +57,7 @@ class TrimView : View {
         setMeasuredDimension((trimWidth + anchorWidth * 2).toInt(), anchorWidth.toInt())
         if (measuredWidth > 0 && measuredHeight > 0) {
             mainLine.set(anchorWidth, (measuredHeight / 2f) - (mainLineHeight / 2), measuredWidth.toFloat() - anchorWidth, (measuredHeight / 2f) + (mainLineHeight / 2))
-            progressLine.set(anchorWidth, (measuredHeight / 2f) - (mainLineHeight / 2), anchorWidth, (measuredHeight / 2f) + (mainLineHeight / 2))
+            progressLine.set(anchorWidth, (measuredHeight / 2f) - (mainLineHeight / 2), anchorWidth + (trimWidth * progress / 100f), (measuredHeight / 2f) + (mainLineHeight / 2))
             leftAnchor.set(0f, 0f, measuredHeight.toFloat(), measuredHeight.toFloat())
             rightAnchor.set((measuredWidth - measuredHeight).toFloat(), 0f, measuredWidth.toFloat(), measuredHeight.toFloat())
         }

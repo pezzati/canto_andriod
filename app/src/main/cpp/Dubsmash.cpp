@@ -26,19 +26,8 @@ const char *tempFilePath;
 
 static float *playerBuffer;
 
-jobject obj;
-JNIEnv *jniEnv;
-
 bool audioInitialized = false;
 bool playing = false;
-
-static jclass getClass(JNIEnv *env) {
-    return env->FindClass("com/hmomeni/canto/activities/DubsmashActivity");
-}
-
-static jmethodID getMethodID(JNIEnv *env, const char *methodName, const char *signature) {
-    return env->GetMethodID(getClass(env), methodName, signature);
-}
 
 static bool audioProcessing(
         void *__unused clientData, // custom pointer
@@ -74,7 +63,7 @@ static void playerEventCallback(
             log_print(ANDROID_LOG_ERROR, "PlayerExample", "Open error: %s", (char *) value);
             break;
         case SuperpoweredAdvancedAudioPlayerEvent_EOF:
-            player->seek(0);    // loop track
+            //player->seek(0);    // loop track
             break;
     };
 }
@@ -89,8 +78,6 @@ Java_com_hmomeni_canto_activities_DubsmashActivity_InitAudio(
         jstring outputPath,
         jstring tempPath
 ) {
-    obj = jobj;
-    jniEnv = env;
     outFilePath = env->GetStringUTFChars(outputPath, 0);
     tempFilePath = env->GetStringUTFChars(tempPath, 0);
 
@@ -154,7 +141,6 @@ Java_com_hmomeni_canto_activities_DubsmashActivity_StartAudio(
         jobject  __unused obj) {
     recorder->start(outFilePath);
     player->play(false);
-    player->seek(0.95);
 }
 
 extern "C" JNIEXPORT void
@@ -218,7 +204,6 @@ Java_com_hmomeni_canto_DubsmashActivity_Cleanup(
     delete obj;
 }
 
-// Cleanup - Free resources.
 extern "C" JNIEXPORT void
 Java_com_hmomeni_canto_activities_DubsmashActivity_SetPitch(
         JNIEnv *__unused env,
@@ -229,7 +214,6 @@ Java_com_hmomeni_canto_activities_DubsmashActivity_SetPitch(
 }
 
 
-// Cleanup - Free resources.
 extern "C" JNIEXPORT void
 Java_com_hmomeni_canto_activities_DubsmashActivity_SetTempo(
         JNIEnv *__unused env,
