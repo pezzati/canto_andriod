@@ -13,10 +13,12 @@ import com.hmomeni.canto.utils.app
 import com.hmomeni.canto.utils.getDuration
 import com.hmomeni.canto.utils.views.AutoFitTextureView
 import com.hmomeni.canto.utils.views.RecordButton
+import com.hmomeni.canto.utils.views.VerticalSlider
 import com.hmomeni.canto.vms.DubsmashViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.activity_dubsmash.*
+import timber.log.Timber
 import java.io.File
 
 class DubsmashActivity : CameraActivity() {
@@ -71,11 +73,12 @@ class DubsmashActivity : CameraActivity() {
         filePath = DownloadService.startDownload(this, fileUrl)
 
         recordBtn.setOnClickListener {
-            if (recordBtn.mode == RecordButton.Mode.Loading) {
+            if (recordBtn.mode in arrayOf(RecordButton.Mode.Loading, RecordButton.Mode.Idle)) {
                 return@setOnClickListener
             }
             if (isRecordingVideo) {
                 stopDubsmash()
+                recordBtn.mode = RecordButton.Mode.Ready
             } else {
                 if (!audioInitialized) {
                     initAudio()
@@ -109,19 +112,36 @@ class DubsmashActivity : CameraActivity() {
                 MotionEvent.ACTION_MOVE -> {
                     val dx = event.x - initx
                     val newX = v.x + dx
-                    if (newX >= progressBg.x && newX <= progressBg.x + progressBg.measuredWidth - v.measuredWidth) {
+                    if (newX >= progressBg.x - trimView.anchorWidth && newX <= progressBg.x + progressBg.measuredWidth - v.measuredWidth + trimView.anchorWidth) {
                         v.x = newX
-                    } else if (newX < progressBg.x) {
-                        v.x = progressBg.x
-                    } else if (newX > progressBg.x + progressBg.measuredWidth - v.measuredWidth) {
-                        v.x = progressBg.x + progressBg.measuredWidth - v.measuredWidth
+                    } else if (newX < progressBg.x - trimView.anchorWidth) {
+                        v.x = progressBg.x - trimView.anchorWidth
+                    } else if (newX > progressBg.x + progressBg.measuredWidth - v.measuredWidth + trimView.anchorWidth) {
+                        v.x = progressBg.x + progressBg.measuredWidth - v.measuredWidth + trimView.anchorWidth
                     }
+                    Timber.d("Seek Percent=%f", ((v.x - progressBg.x + trimView.anchorWidth) / progressBg.measuredWidth).toDouble())
                     if (isPlaying) {
                         Seek(((v.x - progressBg.x) / progressBg.measuredWidth).toDouble())
                     }
                     true
                 }
                 else -> false
+            }
+        }
+
+        pitchSlider.max = 20
+        pitchSlider.progress = 10
+        pitchSlider.onProgressChangeListener = object : VerticalSlider.OnSliderProgressChangeListener {
+            override fun onChanged(progress: Int, max: Int) {
+                SetPitch(progress - 10)
+            }
+        }
+
+        tempoSlider.max = 20
+        tempoSlider.progress = 10
+        tempoSlider.onProgressChangeListener = object : VerticalSlider.OnSliderProgressChangeListener {
+            override fun onChanged(progress: Int, max: Int) {
+                SetTempo((progress / 10f).toDouble())
             }
         }
     }
@@ -156,10 +176,8 @@ class DubsmashActivity : CameraActivity() {
     private fun calculateTrimViewWidth() {
         val duration = getDuration(filePath) / 1000
         val trimViewWidth = progressBg.measuredWidth * 60 / duration
-        trimView.layoutParams = trimView.layoutParams.apply {
-            width = trimViewWidth.toInt()
-        }
-
+        trimView.trimWidth = trimViewWidth.toInt()
+        trimView.x = progressBg.x - trimView.anchorWidth
     }
 
     private fun initAudio() {

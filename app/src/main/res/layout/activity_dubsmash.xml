@@ -60,8 +60,8 @@
         android:id="@+id/progressBg"
         android:layout_width="0dp"
         android:layout_height="8dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="32dp"
         android:layout_marginBottom="32dp"
         android:background="@drawable/progressbar_bg"
         app:layout_constraintBottom_toTopOf="@+id/recordBtn"
@@ -70,13 +70,35 @@
 
     <com.hmomeni.canto.utils.views.TrimView
         android:id="@+id/trimView"
-        android:layout_width="140dp"
-        android:layout_height="28dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginEnd="32dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="@id/progressBg"
         app:layout_constraintEnd_toEndOf="@id/progressBg"
-        app:layout_constraintHorizontal_bias="0.6"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/progressBg"
         app:layout_constraintTop_toTopOf="@id/progressBg" />
+
+    <LinearLayout
+        android:id="@+id/slidersWrapper"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="32dp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toTopOf="@+id/progressBg"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <com.hmomeni.canto.utils.views.VerticalSlider
+            android:id="@+id/pitchSlider"
+            android:layout_width="80dp"
+            android:layout_height="145dp" />
+
+        <com.hmomeni.canto.utils.views.VerticalSlider
+            android:id="@+id/tempoSlider"
+            android:layout_width="80dp"
+            android:layout_height="145dp"
+            android:layout_marginStart="32dp" />
+
+    </LinearLayout>
 </android.support.constraint.ConstraintLayout>

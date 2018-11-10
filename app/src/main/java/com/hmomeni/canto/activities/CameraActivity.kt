@@ -77,7 +77,7 @@ abstract class CameraActivity : AppCompatActivity() {
      * [TextureView.SurfaceTextureListener] handles several lifecycle events on a
      * [TextureView].
      */
-    private val surfaceTextureListener = object : TextureView.SurfaceTextureListener {
+    val surfaceTextureListener = object : TextureView.SurfaceTextureListener {
 
         override fun onSurfaceTextureAvailable(texture: SurfaceTexture, width: Int, height: Int) {
             openCamera(width, height)
@@ -157,7 +157,7 @@ abstract class CameraActivity : AppCompatActivity() {
     /**
      * [CameraDevice.StateCallback] is called when [CameraDevice] changes its status.
      */
-    private val stateCallback = object : CameraDevice.StateCallback() {
+    val stateCallback = object : CameraDevice.StateCallback() {
 
         override fun onOpened(cameraDevice: CameraDevice) {
             cameraOpenCloseLock.release()
