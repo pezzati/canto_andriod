@@ -536,8 +536,6 @@ abstract class CameraActivity : AppCompatActivity() {
             stop()
             reset()
         }
-
-        showToast("Video saved: $nextVideoAbsolutePath")
         nextVideoAbsolutePath = null
         startPreview()
     }

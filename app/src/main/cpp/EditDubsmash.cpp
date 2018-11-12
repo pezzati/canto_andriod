@@ -15,19 +15,11 @@
 #define log_write __android_log_write
 #define log_print __android_log_print
 
-const char *TAG = "DubsmashCPP";
-
 static SuperpoweredAndroidAudioIO *audioIO;
 static SuperpoweredAdvancedAudioPlayer *player;
-static SuperpoweredRecorder *recorder;
-
-const char *outFilePath;
-const char *tempFilePath;
+static SuperpoweredDecoder *decoder;
 
 static float *playerBuffer;
-
-bool audioInitialized = false;
-bool playing = false;
 
 static bool audioProcessing(
         void *__unused clientData, // custom pointer
@@ -36,7 +28,6 @@ static bool audioProcessing(
         int __unused sampleRate     // sampling rate
 ) {
     if (player->playing && player->process(playerBuffer, false, (unsigned int) numberOfFrames, 1)) {
-        recorder->process(playerBuffer, (unsigned int) numberOfFrames);
         SuperpoweredFloatToShortInt(playerBuffer, audio, (unsigned int) numberOfFrames);
         return true;
     }
@@ -44,11 +35,6 @@ static bool audioProcessing(
     return false;
 }
 
-// This is called after the recorder closed the WAV file.
-static void recorderStopped(void *__unused clientdata) {
-    log_write(ANDROID_LOG_DEBUG, "RecorderExample", "Finished recording.");
-    delete recorder;
-}
 
 // Called by the player.
 static void playerEventCallback(
@@ -70,28 +56,14 @@ static void playerEventCallback(
 
 
 extern "C" JNIEXPORT void
-Java_com_hmomeni_canto_activities_DubsmashActivity_InitAudio(
+Java_com_hmomeni_canto_activities_EditActivity_InitAudio(
         JNIEnv *env,
         jobject  __unused jobj,
         jint bufferSize,
-        jint sampleRate,
-        jstring outputPath,
-        jstring tempPath
+        jint sampleRate
 ) {
-    outFilePath = env->GetStringUTFChars(outputPath, 0);
-    tempFilePath = env->GetStringUTFChars(tempPath, 0);
 
     playerBuffer = (float *) malloc(sizeof(float) * 2 * bufferSize);
-
-    recorder = new SuperpoweredRecorder(
-            tempFilePath,
-            (unsigned int) sampleRate,
-            1,
-            2,
-            false,
-            recorderStopped,
-            NULL
-    );
 
     audioIO = new SuperpoweredAndroidAudioIO(
             sampleRate,
@@ -110,10 +82,11 @@ Java_com_hmomeni_canto_activities_DubsmashActivity_InitAudio(
             (unsigned int) sampleRate,
             0, 2, 3
     );
+    decoder = new SuperpoweredDecoder();
 }
 
 extern "C" JNIEXPORT jdouble
-Java_com_hmomeni_canto_activities_DubsmashActivity_OpenFile(
+Java_com_hmomeni_canto_activities_EditActivity_OpenFile(
         JNIEnv *env,
         jobject  __unused obj,
         jstring filePath,
@@ -123,12 +96,11 @@ Java_com_hmomeni_canto_activities_DubsmashActivity_OpenFile(
 
     player->open(path, 0, length);
 
-    audioInitialized = true;
-    return 0;
+    return player->durationMs;
 }
 
 extern "C" JNIEXPORT void
-Java_com_hmomeni_canto_activities_DubsmashActivity_TogglePlayback(
+Java_com_hmomeni_canto_activities_EditActivity_TogglePlayback(
         JNIEnv  __unused *env,
         jobject  __unused obj) {
     player->togglePlayback();
@@ -136,37 +108,37 @@ Java_com_hmomeni_canto_activities_DubsmashActivity_TogglePlayback(
 }
 
 extern "C" JNIEXPORT void
-Java_com_hmomeni_canto_activities_DubsmashActivity_StartAudio(
+Java_com_hmomeni_canto_activities_EditActivity_StartAudio(
         JNIEnv  __unused *env,
         jobject  __unused obj) {
-    recorder->start(outFilePath);
     player->play(false);
+    SuperpoweredCPU::setSustainedPerformanceMode(true);
 }
 
 extern "C" JNIEXPORT void
-Java_com_hmomeni_canto_activities_DubsmashActivity_StopAudio(
+Java_com_hmomeni_canto_activities_EditActivity_StopAudio(
         JNIEnv  __unused *env,
         jobject  __unused obj) {
-    recorder->stop();
     player->pause();
+    SuperpoweredCPU::setSustainedPerformanceMode(false);
 }
 
 extern "C" JNIEXPORT jdouble
-Java_com_hmomeni_canto_activities_DubsmashActivity_GetProgressMS(
+Java_com_hmomeni_canto_activities_EditActivity_GetProgressMS(
         JNIEnv  __unused *env,
         jobject  __unused obj) {
     return player->positionMs;
 }
 
 extern "C" JNIEXPORT jdouble
-Java_com_hmomeni_canto_activities_DubsmashActivity_GetDurationMS(
+Java_com_hmomeni_canto_activities_EditActivity_GetDurationMS(
         JNIEnv  __unused *env,
         jobject  __unused obj) {
     return player->durationMs;
 }
 
 extern "C" JNIEXPORT void
-Java_com_hmomeni_canto_activities_DubsmashActivity_Seek(
+Java_com_hmomeni_canto_activities_EditActivity_Seek(
         JNIEnv  __unused *env,
         jobject  __unused obj,
         jdouble percent) {
@@ -174,7 +146,7 @@ Java_com_hmomeni_canto_activities_DubsmashActivity_Seek(
 }
 
 extern "C" JNIEXPORT void
-Java_com_hmomeni_canto_activities_DubsmashActivity_SeekMS(
+Java_com_hmomeni_canto_activities_EditActivity_SeekMS(
         JNIEnv  __unused *env,
         jobject  __unused obj,
         jdouble position) {
@@ -183,27 +155,25 @@ Java_com_hmomeni_canto_activities_DubsmashActivity_SeekMS(
 
 // onBackground - Put audio processing to sleep.
 extern "C" JNIEXPORT void
-Java_com_hmomeni_canto_DubsmashActivity_onBackground(
+Java_com_hmomeni_canto_activities_EditActivity_onBackground(
         JNIEnv *__unused env,
         jobject __unused obj
 ) {
-    if (audioInitialized)
-        audioIO->onBackground();
+    audioIO->onBackground();
 }
 
 // onForeground - Resume audio processing.
 extern "C" JNIEXPORT void
-Java_com_hmomeni_canto_DubsmashActivity_onForeground(
+Java_com_hmomeni_canto_activities_EditActivity_onForeground(
         JNIEnv *__unused env,
         jobject __unused obj
 ) {
-    if (audioInitialized)
-        audioIO->onForeground();
+    audioIO->onForeground();
 }
 
 // Cleanup - Free resources.
 extern "C" JNIEXPORT void
-Java_com_hmomeni_canto_DubsmashActivity_Cleanup(
+Java_com_hmomeni_canto_activities_EditActivity_Cleanup(
         JNIEnv *__unused env,
         jobject __unused obj
 ) {
@@ -212,21 +182,54 @@ Java_com_hmomeni_canto_DubsmashActivity_Cleanup(
     delete obj;
 }
 
+// Cleanup - Free resources.
 extern "C" JNIEXPORT void
-Java_com_hmomeni_canto_activities_DubsmashActivity_SetPitch(
+Java_com_hmomeni_canto_activities_EditActivity_CropSave(
         JNIEnv *__unused env,
         jobject __unused obj,
-        jint pitch
+        jstring sourceFile,
+        jstring destFile,
+        jlong from,
+        jlong to,
+        jlong total
 ) {
-    player->setPitchShift(pitch);
-}
+
+    const char *sourceFilePath = env->GetStringUTFChars(sourceFile, 0);
+    const char *destFilePath = env->GetStringUTFChars(destFile, 0);
+
+    const char *openError = decoder->open(sourceFilePath);
+
+    if (openError) {
+        log_print(ANDROID_LOG_DEBUG, "EditDub", "Open error: %s", openError);
+        delete decoder;
+        return;
+    };
+
+    double fromSample = (float) from * (float) decoder->durationSamples / total;
+    double toSample = (float) to * (float) decoder->durationSamples / total;
+
+    short int *intBuffer = (short int *) malloc(
+            decoder->samplesPerFrame * 2 * sizeof(short int) + 32768);
+
+    FILE *fd = createWAV(destFilePath, decoder->samplerate, 2);
+
+    decoder->seek((int64_t) fromSample, true);
 
 
-extern "C" JNIEXPORT void
-Java_com_hmomeni_canto_activities_DubsmashActivity_SetTempo(
-        JNIEnv *__unused env,
-        jobject __unused obj,
-        jdouble tempo
-) {
-    player->setTempo(tempo, true);
+    while (true) {
+        unsigned int samplesDecoded = decoder->samplesPerFrame;
+        if (decoder->decode(intBuffer, &samplesDecoded) == SUPERPOWEREDDECODER_ERROR) break;
+
+        if (samplesDecoded < 1) {
+            break;
+        }
+
+        fwrite(intBuffer, 1, samplesDecoded * 4, fd);
+
+        if (decoder->samplePosition >= toSample) {
+            break;
+        }
+    }
+
+    closeWAV(fd);
 }
