@@ -3,13 +3,16 @@ package com.hmomeni.canto.activities
 import android.app.ProgressDialog
 import android.content.Context
 import android.media.AudioManager
+import android.media.MediaPlayer
 import android.os.Bundle
 import android.os.Environment
 import android.support.v7.app.AppCompatActivity
+import android.view.SurfaceHolder
 import com.hmomeni.canto.R
 import com.hmomeni.canto.utils.getDuration
-import com.hmomeni.trimview.TrimView
+import com.hmomeni.canto.utils.views.TrimView
 import kotlinx.android.synthetic.main.activity_edit.*
+import timber.log.Timber
 import java.io.File
 import kotlin.concurrent.thread
 
@@ -18,19 +21,22 @@ class EditActivity : AppCompatActivity() {
         System.loadLibrary("Canto")
     }
 
+    private val mediaPlayer = MediaPlayer()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_edit)
         initAudio()
 
         val audioFile = File(Environment.getExternalStorageDirectory(), "dubsmash.wav")
-        val videoFile = File(filesDir, "dubsmash.mp4").absolutePath
+        val videoFile = File(Environment.getExternalStorageDirectory(), "dubsmash.mp4").absolutePath
 
         val duration = getDuration(audioFile.absolutePath)
         OpenFile(audioFile.absolutePath, audioFile.length().toInt())
 
         playBtn.setOnClickListener {
             StartAudio()
+            mediaPlayer.start()
         }
 
         trimView.max = 100
@@ -38,9 +44,22 @@ class EditActivity : AppCompatActivity() {
         trimView.minTrim = 20
 
         trimView.onTrimChangeListener = object : TrimView.TrimChangeListener() {
+            override fun onLeftEdgeChanged(trimStart: Int, trim: Int) {
+                val pos = trimStart * duration / trimView.max
+                SeekMS(pos.toDouble())
+                val vpos = trimStart * mediaPlayer.duration / trimView.max
+                mediaPlayer.seekTo(vpos)
+            }
+
+            override fun onRightEdgeChanged(trimStart: Int, trim: Int) {
+                super.onRightEdgeChanged(trimStart, trim)
+            }
+
             override fun onRangeChanged(trimStart: Int, trim: Int) {
                 val pos = trimStart * duration / trimView.max
                 SeekMS(pos.toDouble())
+                val vpos = trimStart * mediaPlayer.duration / trimView.max
+                mediaPlayer.seekTo(vpos.toLong(), MediaPlayer.SEEK_CLOSEST)
             }
         }
 
@@ -57,6 +76,22 @@ class EditActivity : AppCompatActivity() {
                 }
             }
         }
+
+        mediaPlayer.setDataSource(videoFile)
+        mediaPlayer.prepare()
+        surfaceView.holder.addCallback(object : SurfaceHolder.Callback {
+            override fun surfaceChanged(holder: SurfaceHolder, format: Int, width: Int, height: Int) {
+
+            }
+
+            override fun surfaceDestroyed(holder: SurfaceHolder) {
+            }
+
+            override fun surfaceCreated(holder: SurfaceHolder) {
+                Timber.d("Surface Ready!")
+                mediaPlayer.setSurface(holder.surface)
+            }
+        })
     }
 
     private var audioInitialized: Boolean = false

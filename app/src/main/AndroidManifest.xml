@@ -16,6 +16,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <service android:name=".DownloadService" />
+
         <activity android:name=".activities.MainActivity"></activity>
         <activity
             android:name=".activities.DubsmashActivity"
@@ -32,9 +34,10 @@
         <activity android:name=".activities.KaraokeActivity" />
         <activity android:name=".activities.SingingActivity" />
 
-        <service android:name=".DownloadService" />
 
-        <activity android:name=".activities.EditActivity"></activity>
+        <activity
+            android:name=".activities.EditActivity"
+            android:exported="true" />
     </application>
 
 </manifest>

@@ -21,7 +21,7 @@ static SuperpoweredDecoder *decoder;
 
 static float *playerBuffer;
 
-static bool audioProcessing(
+static bool ed_audioProcessing(
         void *__unused clientData, // custom pointer
         short int *audio,           // buffer of interleaved samples
         int numberOfFrames,         // number of frames to process
@@ -37,7 +37,7 @@ static bool audioProcessing(
 
 
 // Called by the player.
-static void playerEventCallback(
+static void ed_playerEventCallback(
         void __unused *clientData,
         SuperpoweredAdvancedAudioPlayerEvent event,
         void *value
@@ -49,6 +49,7 @@ static void playerEventCallback(
             log_print(ANDROID_LOG_ERROR, "PlayerExample", "Open error: %s", (char *) value);
             break;
         case SuperpoweredAdvancedAudioPlayerEvent_EOF:
+            player->pause(0, 0);
             //player->seek(0);    // loop track
             break;
     };
@@ -70,7 +71,7 @@ Java_com_hmomeni_canto_activities_EditActivity_InitAudio(
             bufferSize,
             false,
             true,
-            audioProcessing,
+            ed_audioProcessing,
             NULL,
             -1, -1,
             bufferSize * 2
@@ -78,7 +79,7 @@ Java_com_hmomeni_canto_activities_EditActivity_InitAudio(
 
     player = new SuperpoweredAdvancedAudioPlayer(
             env,
-            playerEventCallback,
+            ed_playerEventCallback,
             (unsigned int) sampleRate,
             0, 2, 3
     );

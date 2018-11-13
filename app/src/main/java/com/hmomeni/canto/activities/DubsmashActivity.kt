@@ -15,9 +15,9 @@ import com.hmomeni.canto.utils.app
 import com.hmomeni.canto.utils.getDuration
 import com.hmomeni.canto.utils.views.AutoFitTextureView
 import com.hmomeni.canto.utils.views.RecordButton
+import com.hmomeni.canto.utils.views.TrimView
 import com.hmomeni.canto.utils.views.VerticalSlider
 import com.hmomeni.canto.vms.DubsmashViewModel
-import com.hmomeni.trimview.TrimView
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.activity_dubsmash.*
@@ -33,7 +33,7 @@ class DubsmashActivity : CameraActivity() {
     override fun getTextureView(): AutoFitTextureView = textureView
 
     override fun getVideoFilePath(): String {
-        return File(filesDir, "dubsmash.mp4").absolutePath
+        return File(Environment.getExternalStorageDirectory(), "dubsmash.mp4").absolutePath
     }
 
     override fun onRecordStarted() {

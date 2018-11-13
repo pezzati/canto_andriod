@@ -57,7 +57,7 @@
         app:layout_constraintStart_toEndOf="@+id/switchCam"
         app:layout_constraintTop_toTopOf="@+id/recordBtn" />
 
-    <com.hmomeni.trimview.TrimView
+    <com.hmomeni.canto.utils.views.TrimView
         android:id="@+id/trimView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"

@@ -1,4 +1,4 @@
-package com.hmomeni.trimview
+package com.hmomeni.canto.utils.views
 
 import android.content.Context
 import android.content.res.Resources
@@ -10,6 +10,7 @@ import android.os.Build
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
+import timber.log.Timber
 
 class TrimView : View {
     constructor(context: Context) : super(context)
@@ -50,14 +51,14 @@ class TrimView : View {
     private val anchorWidth = dpToPx(24).toFloat()
     private val radius = dpToPx(5).toFloat()
 
-    var onTrimChangeListener: TrimView.TrimChangeListener? = null
+    var onTrimChangeListener: TrimChangeListener? = null
 
     var max: Int = 100
 
     var progress = 0
         set(value) {
-            if (value > max) {
-                throw RuntimeException("progress must not exceed max(${maxTrim - trimStart})")
+            if (value > trim) {
+                throw RuntimeException("progress must not exceed max ($trim)")
             }
             field = value
             calculateProgress()
@@ -83,13 +84,13 @@ class TrimView : View {
             bgLine.set(
                     anchorWidth,
                     (measuredHeight / 2f) - (mainLineHeight / 2),
-                    measuredWidth.toFloat() - anchorWidth,
+                    anchorWidth + maxPx,
                     (measuredHeight / 2f) + (mainLineHeight / 2)
             )
             mainLine.set(
                     anchorWidth,
                     (measuredHeight / 2f) - (mainLineHeight / 2),
-                    (trim * maxPx / max).toFloat(),
+                    anchorWidth + (trim * maxPx / max).toFloat(),
                     (measuredHeight / 2f) + (mainLineHeight / 2)
             )
             progressLine.set(
@@ -98,7 +99,7 @@ class TrimView : View {
                     anchorWidth + (trim * progress / 100f),
                     (measuredHeight / 2f) + (mainLineHeight / 2)
             )
-            leftAnchor.set(0f, 0f, measuredHeight.toFloat(), measuredHeight.toFloat())
+            leftAnchor.set(0f, 0f, anchorWidth, measuredHeight.toFloat())
             rightAnchor.set(
                     mainLine.right,
                     0f,
@@ -152,7 +153,7 @@ class TrimView : View {
                 when (captured) {
                     Captured.LEFT -> {
                         val newx = initlx + dx
-                        val newTrimStart = initTrimStart + (dx * max / (measuredWidth - 2 * anchorWidth)).toInt()
+                        val newTrimStart = initTrimStart + (dx * max / (maxPx)).toInt()
                         val newTrim = initTrim - newTrimStart + initTrimStart
                         if (
                                 newTrim in minTrim..maxTrim
@@ -166,7 +167,7 @@ class TrimView : View {
                     }
                     Captured.RIGHT -> {
                         val newx = initrx + dx
-                        val newTrim = initTrim + (dx * max / (measuredWidth - 2 * anchorWidth)).toInt()
+                        val newTrim = initTrim + (dx * max / (maxPx)).toInt()
                         if (
                                 newTrim in minTrim..maxTrim
                                 && newx + anchorWidth <= measuredWidth
@@ -190,7 +191,7 @@ class TrimView : View {
         return true
     }
 
-    private fun calculateLeftandRight() {
+    private fun calculateLeftandRight(invalidate: Boolean = true) {
         val trimStartPx = trimStart * maxPx / max
         val trimPx = trim * maxPx / max
 
@@ -198,17 +199,31 @@ class TrimView : View {
         leftAnchor.right = leftAnchor.left + anchorWidth
         mainLine.left = leftAnchor.right
 
-        rightAnchor.left = (trimStartPx + trimPx).toFloat()
+        rightAnchor.left = (trimStartPx + trimPx).toFloat() + anchorWidth
         rightAnchor.right = rightAnchor.left + anchorWidth
         mainLine.right = rightAnchor.left
-        invalidate()
+
+        calculateProgress(false)
+
+//        report()
+
+        if (invalidate)
+            invalidate()
     }
 
-    private fun calculateProgress() {
+    private fun calculateProgress(invalidate: Boolean = true) {
         val progressPx = progress * maxPx / max
         progressLine.left = mainLine.left
         progressLine.right = progressLine.left + progressPx
-        invalidate()
+
+//        report()
+
+        if (invalidate)
+            invalidate()
+    }
+
+    private fun report() {
+        Timber.d("trimStart=%d, trim=%d, progress=%d", trimStart, trim, progress)
     }
 
     enum class Captured {
@@ -222,4 +237,5 @@ class TrimView : View {
     }
 
     private fun dpToPx(dp: Int) = (dp * Resources.getSystem().displayMetrics.density).toInt()
+
 }
