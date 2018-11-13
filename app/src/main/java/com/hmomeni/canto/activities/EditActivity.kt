@@ -6,6 +6,7 @@ import android.media.AudioManager
 import android.media.MediaPlayer
 import android.os.Bundle
 import android.os.Environment
+import android.os.Handler
 import android.support.v7.app.AppCompatActivity
 import android.view.SurfaceHolder
 import com.hmomeni.canto.R
@@ -37,6 +38,7 @@ class EditActivity : AppCompatActivity() {
         playBtn.setOnClickListener {
             StartAudio()
             mediaPlayer.start()
+            timer()
         }
 
         trimView.max = 100
@@ -65,12 +67,14 @@ class EditActivity : AppCompatActivity() {
             }
 
             override fun onDragStopped(trimStart: Int, trim: Int) {
-                val pos = trimStart * duration / trimView.max
-                SeekMS(pos.toDouble())
+                trimView.progress = 0
                 val vpos = trimStart * mediaPlayer.duration / trimView.max
                 mediaPlayer.seekTo(vpos)
+                SeekMS(mediaPlayer.currentPosition.toDouble())
                 mediaPlayer.start()
                 StartAudio()
+                handler.removeCallbacksAndMessages(null)
+                timer()
             }
         }
 
@@ -105,6 +109,18 @@ class EditActivity : AppCompatActivity() {
         })
     }
 
+    private var handler = Handler()
+    private fun timer() {
+        val trimPos = GetProgressMS() * trimView.max / GetDurationMS()
+        Timber.d("pos=%f, trimPos=%f", GetProgressMS(), trimPos)
+        trimView.progress = (trimPos - trimView.trimStart).toInt()
+        if (IsPlaying()) {
+            handler.postDelayed({
+                timer()
+            }, 300)
+        }
+    }
+
     private var audioInitialized: Boolean = false
 
     private fun initAudio() {
@@ -135,5 +151,6 @@ class EditActivity : AppCompatActivity() {
     external fun GetDurationMS(): Double
     external fun Seek(percent: Double)
     external fun SeekMS(percent: Double)
+    external fun IsPlaying(): Boolean
     external fun CropSave(sourcePath: String, destPath: String, from: Long, to: Long, total: Long)
 }

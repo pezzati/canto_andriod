@@ -53,9 +53,6 @@ class TrimView : View {
 
     var progress = 0
         set(value) {
-            if (value > trim) {
-                throw RuntimeException("progress must not exceed max ($trim)")
-            }
             field = value
             calculateProgress()
             invalidate()
@@ -171,6 +168,9 @@ class TrimView : View {
                                 && newx + anchorWidth <= measuredWidth
                         ) {
                             trim = newTrim
+                            if (progress > trim) {
+                                progress = trim
+                            }
                             calculateLeftandRight()
                             onTrimChangeListener?.onRightEdgeChanged(trimStart, trim)
                         }
