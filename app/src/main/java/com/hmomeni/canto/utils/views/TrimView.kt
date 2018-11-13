@@ -25,10 +25,6 @@ class TrimView : View {
         color = Color.WHITE
         isAntiAlias = true
     }
-    private val glassPaint = Paint().apply {
-        color = Color.parseColor("#33ffffff")
-        isAntiAlias = true
-    }
     private val greenPaint = Paint().apply {
         color = Color.GREEN
         isAntiAlias = true
@@ -112,8 +108,8 @@ class TrimView : View {
     override fun onDraw(canvas: Canvas) {
         canvas.drawRoundRect(bgLine, radius, radius, bgPaint)
         canvas.drawRect(mainLine, whitePaint)
-        canvas.drawRoundRect(leftAnchor, radius, radius, glassPaint)
-        canvas.drawRoundRect(rightAnchor, radius, radius, glassPaint)
+        canvas.drawRoundRect(leftAnchor, radius, radius, whitePaint)
+        canvas.drawRoundRect(rightAnchor, radius, radius, whitePaint)
         canvas.drawRect(progressLine, greenPaint)
 //        canvas.drawText("[", leftAnchor.centerX() - anchorWidth / 2, leftAnchor.centerY() + anchorWidth, bracketPaint)
 //        canvas.drawText("]", rightAnchor.centerX() - anchorWidth / 2, rightAnchor.centerY() + anchorWidth, bracketPaint)
@@ -126,6 +122,7 @@ class TrimView : View {
     private var initx = 0f
     private var initrx = 0f
     private var initlx = 0f
+
     override fun onTouchEvent(event: MotionEvent): Boolean {
         when (event.action) {
             MotionEvent.ACTION_DOWN -> {
@@ -147,6 +144,7 @@ class TrimView : View {
                         Captured.WHOLE
                     }
                 }
+                onTrimChangeListener?.onDragStarted(trimStart, trim)
             }
             MotionEvent.ACTION_MOVE -> {
                 val dx = event.x - initx
@@ -185,6 +183,9 @@ class TrimView : View {
                         }
                     }
                 }
+            }
+            MotionEvent.ACTION_UP -> {
+                onTrimChangeListener?.onDragStopped(trimStart, trim)
             }
         }
 
@@ -231,9 +232,11 @@ class TrimView : View {
     }
 
     abstract class TrimChangeListener {
+        open fun onDragStarted(trimStart: Int, trim: Int) {}
         open fun onLeftEdgeChanged(trimStart: Int, trim: Int) {}
         open fun onRightEdgeChanged(trimStart: Int, trim: Int) {}
         open fun onRangeChanged(trimStart: Int, trim: Int) {}
+        open fun onDragStopped(trimStart: Int, trim: Int) {}
     }
 
     private fun dpToPx(dp: Int) = (dp * Resources.getSystem().displayMetrics.density).toInt()

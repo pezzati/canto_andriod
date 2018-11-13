@@ -44,22 +44,33 @@ class EditActivity : AppCompatActivity() {
         trimView.minTrim = 20
 
         trimView.onTrimChangeListener = object : TrimView.TrimChangeListener() {
+            override fun onDragStarted(trimStart: Int, trim: Int) {
+                StopAudio()
+                mediaPlayer.pause()
+            }
+
             override fun onLeftEdgeChanged(trimStart: Int, trim: Int) {
-                val pos = trimStart * duration / trimView.max
-                SeekMS(pos.toDouble())
                 val vpos = trimStart * mediaPlayer.duration / trimView.max
                 mediaPlayer.seekTo(vpos)
             }
 
             override fun onRightEdgeChanged(trimStart: Int, trim: Int) {
-                super.onRightEdgeChanged(trimStart, trim)
+                val vpos = trimStart + trim * mediaPlayer.duration / trimView.max
+                mediaPlayer.seekTo(vpos)
             }
 
             override fun onRangeChanged(trimStart: Int, trim: Int) {
+                val vpos = trimStart * mediaPlayer.duration / trimView.max
+                mediaPlayer.seekTo(vpos)
+            }
+
+            override fun onDragStopped(trimStart: Int, trim: Int) {
                 val pos = trimStart * duration / trimView.max
                 SeekMS(pos.toDouble())
                 val vpos = trimStart * mediaPlayer.duration / trimView.max
-                mediaPlayer.seekTo(vpos.toLong(), MediaPlayer.SEEK_CLOSEST)
+                mediaPlayer.seekTo(vpos)
+                mediaPlayer.start()
+                StartAudio()
             }
         }
 
