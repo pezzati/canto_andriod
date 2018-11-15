@@ -9,13 +9,15 @@ import android.os.Environment
 import android.os.Handler
 import android.support.v7.app.AppCompatActivity
 import android.view.SurfaceHolder
+import android.widget.SeekBar
+import android.widget.Toast
 import com.hmomeni.canto.R
 import com.hmomeni.canto.utils.getDuration
-import com.hmomeni.canto.utils.views.TrimView
 import kotlinx.android.synthetic.main.activity_edit.*
+import nl.bravobit.ffmpeg.FFcommandExecuteResponseHandler
+import nl.bravobit.ffmpeg.FFmpeg
 import timber.log.Timber
 import java.io.File
-import kotlin.concurrent.thread
 
 class EditActivity : AppCompatActivity() {
     init {
@@ -33,6 +35,9 @@ class EditActivity : AppCompatActivity() {
         val videoFile = File(Environment.getExternalStorageDirectory(), "dubsmash.mp4").absolutePath
 
         val duration = getDuration(audioFile.absolutePath)
+
+        Timber.d("FileDuration=%d", duration)
+
         OpenFile(audioFile.absolutePath, audioFile.length().toInt())
 
         playBtn.setOnClickListener {
@@ -41,55 +46,27 @@ class EditActivity : AppCompatActivity() {
             timer()
         }
 
-        trimView.max = 100
-        trimView.trim = 100
-        trimView.minTrim = 20
+        seekBar.max = duration.toInt()
 
-        trimView.onTrimChangeListener = object : TrimView.TrimChangeListener() {
-            override fun onDragStarted(trimStart: Int, trim: Int) {
-                StopAudio()
-                mediaPlayer.pause()
+        seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                if (fromUser) {
+                    mediaPlayer.seekTo(progress)
+                    SeekMS(progress.toDouble())
+                }
             }
 
-            override fun onLeftEdgeChanged(trimStart: Int, trim: Int) {
-                val vpos = trimStart * mediaPlayer.duration / trimView.max
-                mediaPlayer.seekTo(vpos)
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {
             }
 
-            override fun onRightEdgeChanged(trimStart: Int, trim: Int) {
-                val vpos = trimStart + trim * mediaPlayer.duration / trimView.max
-                mediaPlayer.seekTo(vpos)
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {
             }
-
-            override fun onRangeChanged(trimStart: Int, trim: Int) {
-                val vpos = trimStart * mediaPlayer.duration / trimView.max
-                mediaPlayer.seekTo(vpos)
-            }
-
-            override fun onDragStopped(trimStart: Int, trim: Int) {
-                trimView.progress = 0
-                val vpos = trimStart * mediaPlayer.duration / trimView.max
-                mediaPlayer.seekTo(vpos)
-                SeekMS(mediaPlayer.currentPosition.toDouble())
-                mediaPlayer.start()
-                StartAudio()
-                handler.removeCallbacksAndMessages(null)
-                timer()
-            }
-        }
+        })
 
         saveBtn.setOnClickListener {
             StopAudio()
-            val dialog = ProgressDialog(this)
-            dialog.show()
-            thread {
-                val from = trimView.trimStart * duration / trimView.max
-                val to = from + trimView.trim * duration / trimView.max
-                CropSave(audioFile.absolutePath, File(Environment.getExternalStorageDirectory(), "final.wav").absolutePath, from, to, duration)
-                runOnUiThread {
-                    dialog.dismiss()
-                }
-            }
+            mediaPlayer.stop()
+            doMux(videoFile, audioFile.absolutePath)
         }
 
         mediaPlayer.setDataSource(videoFile)
@@ -111,9 +88,7 @@ class EditActivity : AppCompatActivity() {
 
     private var handler = Handler()
     private fun timer() {
-        val trimPos = GetProgressMS() * trimView.max / GetDurationMS()
-        Timber.d("pos=%f, trimPos=%f", GetProgressMS(), trimPos)
-        trimView.progress = (trimPos - trimView.trimStart).toInt()
+        seekBar.progress = GetProgressMS().toInt()
         if (IsPlaying()) {
             handler.postDelayed({
                 timer()
@@ -140,6 +115,41 @@ class EditActivity : AppCompatActivity() {
                 sampleRate
         )
         audioInitialized = true
+    }
+
+    private fun doMux(videoFile: String, audioFile: String) {
+        val ffmpeg = FFmpeg.getInstance(this)
+        if (!ffmpeg.isSupported) {
+            Toast.makeText(this@EditActivity, "FFMPEG not supported!", Toast.LENGTH_SHORT).show()
+            return
+        }
+        val dialog = ProgressDialog(this)
+        dialog.show()
+        ffmpeg.execute(
+                arrayOf("-i", videoFile, "-i", audioFile, "-codec:a", "mp3", "-codec:v", "copy", "-map", "0:v:0", "-map", "1:a:0", "-shortest", File(Environment.getExternalStorageDirectory(), "out.mp4").absolutePath),
+//                arrayOf("-h"),
+                object : FFcommandExecuteResponseHandler {
+                    override fun onFinish() {
+                        dialog.dismiss()
+                    }
+
+                    override fun onSuccess(message: String?) {
+                        Timber.d(message)
+                        Toast.makeText(this@EditActivity, "Muxing done", Toast.LENGTH_SHORT).show()
+                    }
+
+                    override fun onFailure(message: String?) {
+                        Timber.e(message)
+                        Toast.makeText(this@EditActivity, "Muxing failed", Toast.LENGTH_SHORT).show()
+                    }
+
+                    override fun onProgress(message: String?) {
+                    }
+
+                    override fun onStart() {
+                    }
+                }
+        )
     }
 
     external fun InitAudio(bufferSize: Int, sampleRate: Int)

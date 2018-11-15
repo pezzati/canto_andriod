@@ -65,7 +65,12 @@ Java_com_hmomeni_canto_activities_EditActivity_InitAudio(
 ) {
 
     playerBuffer = (float *) malloc(sizeof(float) * 2 * bufferSize);
-
+    player = new SuperpoweredAdvancedAudioPlayer(
+            env,
+            ed_playerEventCallback,
+            (unsigned int) sampleRate,
+            0, 2, 3
+    );
     audioIO = new SuperpoweredAndroidAudioIO(
             sampleRate,
             bufferSize,
@@ -77,12 +82,6 @@ Java_com_hmomeni_canto_activities_EditActivity_InitAudio(
             bufferSize * 2
     );
 
-    player = new SuperpoweredAdvancedAudioPlayer(
-            env,
-            ed_playerEventCallback,
-            (unsigned int) sampleRate,
-            0, 2, 3
-    );
     decoder = new SuperpoweredDecoder();
 }
 
