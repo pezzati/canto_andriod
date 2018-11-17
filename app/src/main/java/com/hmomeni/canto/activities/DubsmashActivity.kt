@@ -74,7 +74,7 @@ class DubsmashActivity : CameraActivity() {
 
         setContentView(R.layout.activity_dubsmash)
 
-        fileUrl = "https://storage.backtory.com/cantotest/posts/Canto/karaokes/2018-8/K_125_Dreamon.mp3"
+        fileUrl = "https://storage.backtory.com/cantotest/posts/Canto/karaokes/2018-8/K_108.mp3"
         filePath = DownloadService.startDownload(this, fileUrl)
 
         recordBtn.setOnClickListener {
@@ -184,6 +184,10 @@ class DubsmashActivity : CameraActivity() {
         OpenFile(filePath, File(filePath).length().toInt())
     }
 
+    private var sampleRate: Int = 0
+
+    private var bufferSize: Int = 0
+
     private fun initAudio() {
         val audioManager = this.getSystemService(Context.AUDIO_SERVICE) as AudioManager
 
@@ -193,14 +197,17 @@ class DubsmashActivity : CameraActivity() {
         if (samplerateString == null) samplerateString = "48000"
         if (buffersizeString == null) buffersizeString = "480"
 
-        val sampleRate = Integer.parseInt(samplerateString)
-        val bufferSize = Integer.parseInt(buffersizeString)
+        sampleRate = Integer.parseInt(samplerateString)
+        bufferSize = Integer.parseInt(buffersizeString)
 
         InitAudio(
                 bufferSize,
                 sampleRate,
+                true,
                 File(Environment.getExternalStorageDirectory(), "dubsmash").absolutePath,
-                File(filesDir, "temp").absolutePath
+                File(filesDir, "temp").absolutePath,
+                File(Environment.getExternalStorageDirectory(), "dubsmash-mic").absolutePath,
+                File(filesDir, "tempmic").absolutePath
         )
         audioInitialized = true
     }
@@ -215,11 +222,10 @@ class DubsmashActivity : CameraActivity() {
         isPlaying = false
         StopAudio()
         stopRecordingVideo()
-
         startActivity(Intent(this, EditActivity::class.java))
     }
 
-    external fun InitAudio(bufferSize: Int, sampleRate: Int, outputPath: String, tempPath: String)
+    external fun InitAudio(bufferSize: Int, sampleRate: Int, isSinging: Boolean, outputPath: String, tempPath: String, outputPathMic: String, tempPathMic: String)
     external fun OpenFile(filePath: String, length: Int): Double
     external fun TogglePlayback()
     external fun StartAudio()

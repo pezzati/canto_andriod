@@ -15,6 +15,7 @@ add_library(
         src/main/cpp/Karaoke.cpp
         src/main/cpp/Singing.cpp
         src/main/cpp/EditDubsmash.cpp
+        #        src/main/cpp/EditSinging.cpp
         #        src/main/cpp/Player.cpp
         ${PATH_TO_SUPERPOWERED}/AndroidIO/SuperpoweredAndroidAudioIO.cpp
 )

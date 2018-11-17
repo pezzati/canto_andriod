@@ -1,8 +1,96 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activities.SingingActivity">
+    tools:context=".activities.DubsmashActivity">
 
+    <com.hmomeni.canto.utils.views.AutoFitTextureView
+        android:id="@+id/textureView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:transitionName="textureView"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <com.hmomeni.canto.utils.views.RecordButton
+        android:id="@+id/recordBtn"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="32dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <ImageView
+        android:id="@+id/settingsBtn"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:layout_marginEnd="24dp"
+        android:src="@drawable/ic_settings"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/recordBtn"
+        app:layout_constraintEnd_toStartOf="@+id/recordBtn"
+        app:layout_constraintTop_toTopOf="@+id/recordBtn" />
+
+    <ImageView
+        android:id="@+id/switchCam"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:layout_marginStart="24dp"
+        android:src="@drawable/ic_restore"
+        app:layout_constraintBottom_toBottomOf="@+id/recordBtn"
+        app:layout_constraintStart_toEndOf="@+id/recordBtn"
+        app:layout_constraintTop_toTopOf="@+id/recordBtn" />
+
+    <ImageView
+        android:id="@+id/switchRatio"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:layout_marginStart="24dp"
+        android:src="@drawable/ic_portrait"
+        app:layout_constraintBottom_toBottomOf="@+id/recordBtn"
+        app:layout_constraintStart_toEndOf="@+id/switchCam"
+        app:layout_constraintTop_toTopOf="@+id/recordBtn" />
+
+    <com.hmomeni.canto.utils.views.TrimView
+        android:id="@+id/trimView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="32dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@+id/recordBtn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <LinearLayout
+        android:id="@+id/slidersWrapper"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="32dp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@+id/trimView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <com.hmomeni.canto.utils.views.VerticalSlider
+            android:id="@+id/pitchSlider"
+            android:layout_width="80dp"
+            android:layout_height="145dp" />
+
+        <com.hmomeni.canto.utils.views.VerticalSlider
+            android:id="@+id/tempoSlider"
+            android:layout_width="80dp"
+            android:layout_height="145dp"
+            android:layout_marginStart="32dp" />
+
+    </LinearLayout>
 </android.support.constraint.ConstraintLayout>

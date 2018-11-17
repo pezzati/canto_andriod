@@ -8,6 +8,7 @@
 #include <SuperpoweredAdvancedAudioPlayer.h>
 #include <SuperpoweredCPU.h>
 #include <SuperpoweredSimple.h>
+#include <SuperpoweredReverb.h>
 
 #define log_write __android_log_write
 #define log_print __android_log_print
@@ -15,11 +16,16 @@
 static SuperpoweredAndroidAudioIO *audioIO;
 static SuperpoweredAdvancedAudioPlayer *player;
 static SuperpoweredDecoder *decoder;
+static SuperpoweredReverb *reverb;
 
 static float *playerBuffer;
 
+static int sampleRate, bufferSize;
 
-static bool ed_audioProcessing(
+static int appliedEffect = 0;
+
+
+static bool eds_audioProcessing(
         void *__unused clientData, // custom pointer
         short int *audio,           // buffer of interleaved samples
         int numberOfFrames,         // number of frames to process
@@ -36,7 +42,7 @@ static bool ed_audioProcessing(
 
 
 // Called by the player.
-static void ed_playerEventCallback(
+static void eds_playerEventCallback(
         void __unused *clientData,
         SuperpoweredAdvancedAudioPlayerEvent event,
         void *value
@@ -59,15 +65,16 @@ extern "C" JNIEXPORT void
 Java_com_hmomeni_canto_activities_EditActivity_InitAudio(
         JNIEnv *env,
         jobject  __unused jobj,
-        jint bufferSize,
-        jint sampleRate
+        jint bSize,
+        jint sRate
 ) {
-
+    sampleRate = sRate;
+    bufferSize = bSize;
 
     playerBuffer = (float *) malloc(sizeof(float) * 2 * bufferSize);
     player = new SuperpoweredAdvancedAudioPlayer(
             env,
-            ed_playerEventCallback,
+            eds_playerEventCallback,
             (unsigned int) sampleRate,
             0, 2, 3
     );
@@ -76,7 +83,7 @@ Java_com_hmomeni_canto_activities_EditActivity_InitAudio(
             bufferSize,
             false,
             true,
-            ed_audioProcessing,
+            eds_audioProcessing,
             NULL,
             -1, -1,
             bufferSize * 2
@@ -239,4 +246,26 @@ Java_com_hmomeni_canto_activities_EditActivity_CropSave(
     }
 
     closeWAV(fd);
+}
+
+
+extern "C" JNIEXPORT void
+Java_com_hmomeni_canto_activities_EditActivity_ApplyEffect(
+        JNIEnv *__unused env,
+        jobject __unused obj,
+        jint effect
+) {
+    switch (effect) {
+        default:
+        case 0: // no effect
+            appliedEffect = 0;
+            break;
+        case 1:
+            if (reverb == nullptr) {
+                reverb = new SuperpoweredReverb(sampleRate);
+            }
+            reverb->setMix(0.8);
+            break;
+
+    }
 }

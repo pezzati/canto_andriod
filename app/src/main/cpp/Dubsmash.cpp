@@ -20,11 +20,18 @@ const char *TAG = "DubsmashCPP";
 static SuperpoweredAndroidAudioIO *audioIO;
 static SuperpoweredAdvancedAudioPlayer *player;
 static SuperpoweredRecorder *recorder;
+static SuperpoweredRecorder *micRecorder;
 
 const char *outFilePath;
 const char *tempFilePath;
 
+const char *outFilePathMic;
+const char *tempFilePathMic;
+
+bool isSinging = false;
+
 static float *playerBuffer;
+static float *micBuffer;
 
 bool audioInitialized = false;
 bool playing = false;
@@ -35,6 +42,12 @@ static bool audioProcessing(
         int numberOfFrames,         // number of frames to process
         int __unused sampleRate     // sampling rate
 ) {
+
+    if (isSinging) {
+        SuperpoweredShortIntToFloat(audio, micBuffer, (unsigned int) numberOfFrames);
+        micRecorder->process(micBuffer, (unsigned int) numberOfFrames);
+    }
+
     if (player->playing && player->process(playerBuffer, false, (unsigned int) numberOfFrames, 1)) {
         recorder->process(playerBuffer, (unsigned int) numberOfFrames);
         SuperpoweredFloatToShortInt(playerBuffer, audio, (unsigned int) numberOfFrames);
@@ -75,13 +88,21 @@ Java_com_hmomeni_canto_activities_DubsmashActivity_InitAudio(
         jobject  __unused jobj,
         jint bufferSize,
         jint sampleRate,
+        jboolean isSing,
         jstring outputPath,
-        jstring tempPath
+        jstring tempPath,
+        jstring outputPathMic,
+        jstring tempPathMic
 ) {
+    isSinging = isSing;
     outFilePath = env->GetStringUTFChars(outputPath, 0);
     tempFilePath = env->GetStringUTFChars(tempPath, 0);
 
+    outFilePathMic = env->GetStringUTFChars(outputPathMic, 0);
+    tempFilePathMic = env->GetStringUTFChars(tempPathMic, 0);
+
     playerBuffer = (float *) malloc(sizeof(float) * 2 * bufferSize);
+    micBuffer = (float *) malloc(sizeof(float) * 2 * bufferSize);
 
     recorder = new SuperpoweredRecorder(
             tempFilePath,
@@ -93,16 +114,17 @@ Java_com_hmomeni_canto_activities_DubsmashActivity_InitAudio(
             NULL
     );
 
-    audioIO = new SuperpoweredAndroidAudioIO(
-            sampleRate,
-            bufferSize,
-            false,
-            true,
-            audioProcessing,
-            NULL,
-            -1, -1,
-            bufferSize * 2
-    );
+    if (isSinging) {
+        micRecorder = new SuperpoweredRecorder(
+                tempFilePathMic,
+                (unsigned int) sampleRate,
+                1,
+                2,
+                false,
+                recorderStopped,
+                NULL
+        );
+    }
 
     player = new SuperpoweredAdvancedAudioPlayer(
             env,
@@ -110,6 +132,19 @@ Java_com_hmomeni_canto_activities_DubsmashActivity_InitAudio(
             (unsigned int) sampleRate,
             0, 2, 3
     );
+
+    audioIO = new SuperpoweredAndroidAudioIO(
+            sampleRate,
+            bufferSize,
+            isSinging,
+            true,
+            audioProcessing,
+            NULL,
+            -1, -1,
+            bufferSize * 2
+    );
+
+
 }
 
 extern "C" JNIEXPORT jdouble
@@ -139,6 +174,9 @@ extern "C" JNIEXPORT void
 Java_com_hmomeni_canto_activities_DubsmashActivity_StartAudio(
         JNIEnv  __unused *env,
         jobject  __unused obj) {
+    if (isSinging) {
+        micRecorder->start(outFilePathMic);
+    }
     recorder->start(outFilePath);
     player->play(false);
 }
@@ -147,6 +185,9 @@ extern "C" JNIEXPORT void
 Java_com_hmomeni_canto_activities_DubsmashActivity_StopAudio(
         JNIEnv  __unused *env,
         jobject  __unused obj) {
+    if (isSinging) {
+        micRecorder->stop();
+    }
     recorder->stop();
     player->pause();
 }
