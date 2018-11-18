@@ -8,15 +8,24 @@
 #include <SuperpoweredAdvancedAudioPlayer.h>
 #include <SuperpoweredCPU.h>
 #include <SuperpoweredSimple.h>
+#include <SuperpoweredMixer.h>
 
 #define log_write __android_log_write
 #define log_print __android_log_print
 
 static SuperpoweredAndroidAudioIO *audioIO;
 static SuperpoweredAdvancedAudioPlayer *player;
+static SuperpoweredAdvancedAudioPlayer *micPlayer;
+static SuperpoweredStereoMixer *mixer;
 static SuperpoweredDecoder *decoder;
 
 static float *playerBuffer;
+static float *micBuffer;
+static float *floatBuffer;
+bool ed_isSinging = false;
+
+float iLevels[] = {1, 1, 8, 8};
+float oLevels[] = {1, 1};
 
 
 static bool ed_audioProcessing(
@@ -25,11 +34,35 @@ static bool ed_audioProcessing(
         int numberOfFrames,         // number of frames to process
         int __unused sampleRate     // sampling rate
 ) {
-    if (player->playing && player->process(playerBuffer, false, (unsigned int) numberOfFrames, 1)) {
+    if (ed_isSinging) {
+        if (player->playing) {
+            bool hasMusic = player->process(playerBuffer, false, (unsigned int) numberOfFrames);
+            bool hasMic = micPlayer->process(micBuffer, false, (unsigned int) numberOfFrames);
+            if (hasMusic || hasMic) {
 
-        SuperpoweredFloatToShortInt(playerBuffer, audio, (unsigned int) numberOfFrames);
-        return true;
+                float *inputs[4];
+                inputs[0] = playerBuffer;
+                inputs[1] = micBuffer;
+                inputs[2] = inputs[3] = NULL;
+
+                float *outputs[2];
+                outputs[0] = floatBuffer;
+                outputs[1] = NULL;
+
+                mixer->process(inputs, outputs, iLevels, oLevels, NULL, NULL,
+                               (unsigned int) numberOfFrames);
+                SuperpoweredFloatToShortInt(floatBuffer, audio, (unsigned int) numberOfFrames);
+                return true;
+            }
+        }
+    } else {
+        if (player->playing &&
+            player->process(playerBuffer, false, (unsigned int) numberOfFrames, 1)) {
+            SuperpoweredFloatToShortInt(playerBuffer, audio, (unsigned int) numberOfFrames);
+            return true;
+        }
     }
+
 
     return false;
 }
@@ -60,9 +93,10 @@ Java_com_hmomeni_canto_activities_EditActivity_InitAudio(
         JNIEnv *env,
         jobject  __unused jobj,
         jint bufferSize,
-        jint sampleRate
+        jint sampleRate,
+        jboolean isSing
 ) {
-
+    ed_isSinging = isSing;
 
     playerBuffer = (float *) malloc(sizeof(float) * 2 * bufferSize);
     player = new SuperpoweredAdvancedAudioPlayer(
@@ -71,6 +105,18 @@ Java_com_hmomeni_canto_activities_EditActivity_InitAudio(
             (unsigned int) sampleRate,
             0, 2, 3
     );
+    if (isSing) {
+        mixer = new SuperpoweredStereoMixer();
+        micBuffer = (float *) malloc(sizeof(float) * 2 * bufferSize);
+        floatBuffer = (float *) malloc(sizeof(float) * 2 * bufferSize);
+        micPlayer = new SuperpoweredAdvancedAudioPlayer(
+                env,
+                ed_playerEventCallback,
+                (unsigned int) sampleRate,
+                0, 2, 3
+        );
+    }
+
     audioIO = new SuperpoweredAndroidAudioIO(
             sampleRate,
             bufferSize,
@@ -90,11 +136,18 @@ Java_com_hmomeni_canto_activities_EditActivity_OpenFile(
         JNIEnv *env,
         jobject  __unused obj,
         jstring filePath,
-        jint length) {
+        jint length,
+        jstring micFilePath,
+        jint micLength) {
 
     const char *path = env->GetStringUTFChars(filePath, 0);
 
     player->open(path, 0, length);
+
+    if (ed_isSinging) {
+        const char *micPath = env->GetStringUTFChars(micFilePath, 0);
+        micPlayer->open(micPath, 0, micLength);
+    }
 
     return player->durationMs;
 }
@@ -104,6 +157,8 @@ Java_com_hmomeni_canto_activities_EditActivity_TogglePlayback(
         JNIEnv  __unused *env,
         jobject  __unused obj) {
     player->togglePlayback();
+    if (ed_isSinging)
+        micPlayer->togglePlayback();
     SuperpoweredCPU::setSustainedPerformanceMode(player->playing);  // prevent dropouts
 }
 
@@ -112,6 +167,8 @@ Java_com_hmomeni_canto_activities_EditActivity_StartAudio(
         JNIEnv  __unused *env,
         jobject  __unused obj) {
     player->play(false);
+    if (ed_isSinging)
+        micPlayer->play(false);
     SuperpoweredCPU::setSustainedPerformanceMode(true);
 }
 
@@ -120,6 +177,8 @@ Java_com_hmomeni_canto_activities_EditActivity_StopAudio(
         JNIEnv  __unused *env,
         jobject  __unused obj) {
     player->pause();
+    if (ed_isSinging)
+        micPlayer->pause();
     SuperpoweredCPU::setSustainedPerformanceMode(false);
 }
 
@@ -143,6 +202,8 @@ Java_com_hmomeni_canto_activities_EditActivity_Seek(
         jobject  __unused obj,
         jdouble percent) {
     player->seek(percent);
+    if (ed_isSinging)
+        micPlayer->seek(percent);
 }
 
 extern "C" JNIEXPORT void
@@ -151,6 +212,8 @@ Java_com_hmomeni_canto_activities_EditActivity_SeekMS(
         jobject  __unused obj,
         jdouble position) {
     player->setPosition(position, false, false);
+    if (ed_isSinging)
+        micPlayer->setPosition(position, false, false);
 }
 
 // onBackground - Put audio processing to sleep.
@@ -179,6 +242,7 @@ Java_com_hmomeni_canto_activities_EditActivity_Cleanup(
 ) {
     delete audioIO;
     delete player;
+    delete micPlayer;
     delete obj;
 }
 

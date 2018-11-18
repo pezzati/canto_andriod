@@ -32,17 +32,18 @@ class EditActivity : AppCompatActivity() {
         initAudio()
 
         val audioFile = File(Environment.getExternalStorageDirectory(), "dubsmash.wav")
+        val micFile = File(Environment.getExternalStorageDirectory(), "dubsmash-mic.wav")
         val videoFile = File(Environment.getExternalStorageDirectory(), "dubsmash.mp4").absolutePath
 
         val duration = getDuration(audioFile.absolutePath)
 
         Timber.d("FileDuration=%d", duration)
 
-        OpenFile(audioFile.absolutePath, audioFile.length().toInt())
+        OpenFile(audioFile.absolutePath, audioFile.length().toInt(), micFile.absolutePath, micFile.length().toInt())
 
         playBtn.setOnClickListener {
             StartAudio()
-            mediaPlayer.start()
+//            mediaPlayer.start()
             timer()
         }
 
@@ -51,7 +52,7 @@ class EditActivity : AppCompatActivity() {
         seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 if (fromUser) {
-                    mediaPlayer.seekTo(progress)
+//                    mediaPlayer.seekTo(progress)
                     SeekMS(progress.toDouble())
                 }
             }
@@ -65,12 +66,12 @@ class EditActivity : AppCompatActivity() {
 
         saveBtn.setOnClickListener {
             StopAudio()
-            mediaPlayer.stop()
+//            mediaPlayer.stop()
             doMux(videoFile, audioFile.absolutePath)
         }
 
-        mediaPlayer.setDataSource(videoFile)
-        mediaPlayer.prepare()
+        /*mediaPlayer.setDataSource(videoFile)
+        mediaPlayer.prepare()*/
         surfaceView.holder.addCallback(object : SurfaceHolder.Callback {
             override fun surfaceChanged(holder: SurfaceHolder, format: Int, width: Int, height: Int) {
 
@@ -81,7 +82,7 @@ class EditActivity : AppCompatActivity() {
 
             override fun surfaceCreated(holder: SurfaceHolder) {
                 Timber.d("Surface Ready!")
-                mediaPlayer.setSurface(holder.surface)
+//                mediaPlayer.setSurface(holder.surface)
             }
         })
     }
@@ -112,7 +113,8 @@ class EditActivity : AppCompatActivity() {
 
         InitAudio(
                 bufferSize,
-                sampleRate
+                sampleRate,
+                true
         )
         audioInitialized = true
     }
@@ -127,7 +129,6 @@ class EditActivity : AppCompatActivity() {
         dialog.show()
         ffmpeg.execute(
                 arrayOf("-i", videoFile, "-i", audioFile, "-codec:a", "mp3", "-codec:v", "copy", "-map", "0:v:0", "-map", "1:a:0", "-shortest", File(Environment.getExternalStorageDirectory(), "out.mp4").absolutePath),
-//                arrayOf("-h"),
                 object : FFcommandExecuteResponseHandler {
                     override fun onFinish() {
                         dialog.dismiss()
@@ -152,8 +153,8 @@ class EditActivity : AppCompatActivity() {
         )
     }
 
-    external fun InitAudio(bufferSize: Int, sampleRate: Int)
-    external fun OpenFile(filePath: String, length: Int): Double
+    external fun InitAudio(bufferSize: Int, sampleRate: Int, isSinging: Boolean = false)
+    external fun OpenFile(filePath: String, length: Int, micFilePath: String = "", micLength: Int = 0): Double
     external fun TogglePlayback()
     external fun StartAudio()
     external fun StopAudio()

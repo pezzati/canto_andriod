@@ -81,7 +81,7 @@ class DubsmashActivity : CameraActivity() {
             if (recordBtn.mode in arrayOf(RecordButton.Mode.Loading, RecordButton.Mode.Idle)) {
                 return@setOnClickListener
             }
-            if (isRecordingVideo) {
+            if (isPlaying) {
                 stopDubsmash()
                 recordBtn.mode = RecordButton.Mode.Ready
             } else {
@@ -215,26 +215,26 @@ class DubsmashActivity : CameraActivity() {
     private fun startDubsmash() {
         isPlaying = true
         StartAudio()
-        startRecordingVideo()
+//        startRecordingVideo()
     }
 
     private fun stopDubsmash() {
         isPlaying = false
         StopAudio()
-        stopRecordingVideo()
+//        stopRecordingVideo()
         startActivity(Intent(this, EditActivity::class.java))
     }
 
-    external fun InitAudio(bufferSize: Int, sampleRate: Int, isSinging: Boolean, outputPath: String, tempPath: String, outputPathMic: String, tempPathMic: String)
-    external fun OpenFile(filePath: String, length: Int): Double
-    external fun TogglePlayback()
-    external fun StartAudio()
-    external fun StopAudio()
-    external fun GetProgressMS(): Double
-    external fun GetDurationMS(): Double
-    external fun Seek(percent: Double)
-    external fun SeekMS(percent: Double)
+    private external fun InitAudio(bufferSize: Int, sampleRate: Int, isSinging: Boolean, outputPath: String, tempPath: String, outputPathMic: String, tempPathMic: String)
+    private external fun OpenFile(filePath: String, length: Int): Double
+    private external fun TogglePlayback()
+    private external fun StartAudio()
+    private external fun StopAudio()
+    private external fun GetProgressMS(): Double
+    private external fun GetDurationMS(): Double
+    private external fun Seek(percent: Double)
+    private external fun SeekMS(percent: Double)
     private external fun SetPitch(pitchShift: Int)
     private external fun SetTempo(tempo: Double)
-
+    private external fun IsPlaying(): Boolean
 }

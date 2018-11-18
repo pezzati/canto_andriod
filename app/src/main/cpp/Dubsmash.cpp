@@ -271,3 +271,11 @@ Java_com_hmomeni_canto_activities_DubsmashActivity_SetTempo(
 ) {
     player->setTempo(tempo, true);
 }
+
+extern "C" JNIEXPORT jboolean
+Java_com_hmomeni_canto_activities_DubsmashActivity_IsPlaying(
+        JNIEnv *__unused env,
+        jobject __unused obj
+) {
+    return player->playing ? (u_int8_t) 1 : (u_int8_t) 0;
+}
