@@ -9,6 +9,8 @@
 #include <SuperpoweredCPU.h>
 #include <SuperpoweredSimple.h>
 #include <SuperpoweredMixer.h>
+#include <SuperpoweredReverb.h>
+#include <SuperpoweredFlanger.h>
 
 #define log_write __android_log_write
 #define log_print __android_log_print
@@ -18,14 +20,20 @@ static SuperpoweredAdvancedAudioPlayer *player;
 static SuperpoweredAdvancedAudioPlayer *micPlayer;
 static SuperpoweredStereoMixer *mixer;
 static SuperpoweredDecoder *decoder;
+static SuperpoweredReverb *reverb;
+static SuperpoweredFlanger *flanger;
 
 static float *playerBuffer;
 static float *micBuffer;
 static float *floatBuffer;
 bool ed_isSinging = false;
 
-float iLevels[] = {1, 1, 8, 8};
+float iLevels[] = {1, 1, 4, 4};
 float oLevels[] = {1, 1};
+
+static int sampleRate, bufferSize;
+
+static int appliedEffect = 0;
 
 
 static bool ed_audioProcessing(
@@ -38,8 +46,14 @@ static bool ed_audioProcessing(
         if (player->playing) {
             bool hasMusic = player->process(playerBuffer, false, (unsigned int) numberOfFrames);
             bool hasMic = micPlayer->process(micBuffer, false, (unsigned int) numberOfFrames);
-            if (hasMusic || hasMic) {
 
+            if (hasMic && appliedEffect == 1) {
+                hasMic = reverb->process(micBuffer, micBuffer, (unsigned int) numberOfFrames);
+            }
+            if (hasMic && appliedEffect == 2) {
+                hasMic = flanger->process(micBuffer, micBuffer, (unsigned int) numberOfFrames);
+            }
+            if (hasMusic || hasMic) {
                 float *inputs[4];
                 inputs[0] = playerBuffer;
                 inputs[1] = micBuffer;
@@ -62,7 +76,6 @@ static bool ed_audioProcessing(
             return true;
         }
     }
-
 
     return false;
 }
@@ -92,10 +105,14 @@ extern "C" JNIEXPORT void
 Java_com_hmomeni_canto_activities_EditActivity_InitAudio(
         JNIEnv *env,
         jobject  __unused jobj,
-        jint bufferSize,
-        jint sampleRate,
+        jint bSize,
+        jint sRate,
         jboolean isSing
 ) {
+
+    sampleRate = sRate;
+    bufferSize = bSize;
+
     ed_isSinging = isSing;
 
     playerBuffer = (float *) malloc(sizeof(float) * 2 * bufferSize);
@@ -115,6 +132,8 @@ Java_com_hmomeni_canto_activities_EditActivity_InitAudio(
                 (unsigned int) sampleRate,
                 0, 2, 3
         );
+
+
     }
 
     audioIO = new SuperpoweredAndroidAudioIO(
@@ -303,4 +322,35 @@ Java_com_hmomeni_canto_activities_EditActivity_CropSave(
     }
 
     closeWAV(fd);
+}
+
+
+extern "C" JNIEXPORT void
+Java_com_hmomeni_canto_activities_EditActivity_ApplyEffect(
+        JNIEnv *__unused env,
+        jobject __unused obj,
+        jint effect
+) {
+    switch (effect) {
+        default:
+        case 0: // no effect
+            appliedEffect = effect;
+            break;
+        case 1: // reverb
+            if (reverb == nullptr) {
+                reverb = new SuperpoweredReverb((unsigned int) sampleRate);
+                reverb->enable(true);
+            }
+            reverb->setMix(0.8);
+            appliedEffect = effect;
+            break;
+        case 2: // flanger
+            if (flanger == nullptr) {
+                flanger = new SuperpoweredFlanger((unsigned int) sampleRate);
+                flanger->enable(true);
+            }
+            appliedEffect = effect;
+            break;
+
+    }
 }

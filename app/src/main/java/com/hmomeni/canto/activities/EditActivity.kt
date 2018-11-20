@@ -9,6 +9,7 @@ import android.os.Environment
 import android.os.Handler
 import android.support.v7.app.AppCompatActivity
 import android.view.SurfaceHolder
+import android.view.View
 import android.widget.SeekBar
 import android.widget.Toast
 import com.hmomeni.canto.R
@@ -19,7 +20,8 @@ import nl.bravobit.ffmpeg.FFmpeg
 import timber.log.Timber
 import java.io.File
 
-class EditActivity : AppCompatActivity() {
+class EditActivity : AppCompatActivity(), View.OnClickListener {
+
     init {
         System.loadLibrary("Canto")
     }
@@ -85,6 +87,19 @@ class EditActivity : AppCompatActivity() {
 //                mediaPlayer.setSurface(holder.surface)
             }
         })
+
+        noneBtn.setOnClickListener(this)
+        reverbBtn.setOnClickListener(this)
+        flangerBtn.setOnClickListener(this)
+
+    }
+
+    override fun onClick(v: View) {
+        when (v.id) {
+            R.id.noneBtn -> ApplyEffect(0)
+            R.id.reverbBtn -> ApplyEffect(1)
+            R.id.flangerBtn -> ApplyEffect(2)
+        }
     }
 
     private var handler = Handler()
@@ -164,4 +179,5 @@ class EditActivity : AppCompatActivity() {
     external fun SeekMS(percent: Double)
     external fun IsPlaying(): Boolean
     external fun CropSave(sourcePath: String, destPath: String, from: Long, to: Long, total: Long)
+    external fun ApplyEffect(effect: Int)
 }
