@@ -12,6 +12,7 @@
 #include <SuperpoweredCPU.h>
 #include <SuperpoweredSimple.h>
 
+
 #define log_write __android_log_write
 #define log_print __android_log_print
 
@@ -59,7 +60,7 @@ static bool audioProcessing(
 
 // This is called after the recorder closed the WAV file.
 static void recorderStopped(void *__unused clientdata) {
-    log_write(ANDROID_LOG_DEBUG, "RecorderExample", "Finished recording.");
+    log_write(ANDROID_LOG_DEBUG, TAG, "Finished recording.");
     delete recorder;
 }
 
@@ -73,7 +74,7 @@ static void playerEventCallback(
         case SuperpoweredAdvancedAudioPlayerEvent_LoadSuccess:
             break;
         case SuperpoweredAdvancedAudioPlayerEvent_LoadError:
-            log_print(ANDROID_LOG_ERROR, "PlayerExample", "Open error: %s", (char *) value);
+            log_print(ANDROID_LOG_ERROR, TAG, "Open error: %s", (char *) value);
             break;
         case SuperpoweredAdvancedAudioPlayerEvent_EOF:
             //player->seek(0);    // loop track
@@ -144,7 +145,6 @@ Java_com_hmomeni_canto_activities_DubsmashActivity_InitAudio(
             bufferSize * 2
     );
 
-
 }
 
 extern "C" JNIEXPORT jdouble
@@ -159,6 +159,9 @@ Java_com_hmomeni_canto_activities_DubsmashActivity_OpenFile(
     player->open(path, 0, length);
 
     audioInitialized = true;
+
+    log_print(ANDROID_LOG_DEBUG, TAG, "File Opened: %s", path);
+
     return 0;
 }
 
@@ -279,3 +282,4 @@ Java_com_hmomeni_canto_activities_DubsmashActivity_IsPlaying(
 ) {
     return player->playing ? (u_int8_t) 1 : (u_int8_t) 0;
 }
+

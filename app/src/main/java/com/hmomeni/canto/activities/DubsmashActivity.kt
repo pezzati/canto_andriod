@@ -27,7 +27,7 @@ import java.io.File
 class DubsmashActivity : CameraActivity() {
 
     init {
-        System.loadLibrary("Canto")
+        System.loadLibrary("Dubsmash")
     }
 
     override fun getTextureView(): AutoFitTextureView = textureView
@@ -74,7 +74,7 @@ class DubsmashActivity : CameraActivity() {
 
         setContentView(R.layout.activity_dubsmash)
 
-        fileUrl = "https://storage.backtory.com/cantotest/posts/Canto/karaokes/2018-8/K_108.mp3"
+        fileUrl = "http://dl.nex1music.ir/1397/09/04/Ali%20Zand%20Vakili%20-%20Donyaye%20Bi%20Rahm%20[128].mp3"
         filePath = DownloadService.startDownload(this, fileUrl)
 
         recordBtn.setOnClickListener {
@@ -214,14 +214,14 @@ class DubsmashActivity : CameraActivity() {
 
     private fun startDubsmash() {
         isPlaying = true
+        startRecordingVideo()
         StartAudio()
-//        startRecordingVideo()
     }
 
     private fun stopDubsmash() {
         isPlaying = false
+        stopRecordingVideo()
         StopAudio()
-//        stopRecordingVideo()
         startActivity(Intent(this, EditActivity::class.java))
     }
 

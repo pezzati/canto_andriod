@@ -23,7 +23,11 @@ import java.io.File
 class EditActivity : AppCompatActivity(), View.OnClickListener {
 
     init {
-        System.loadLibrary("Canto")
+        System.loadLibrary("avutil")
+        System.loadLibrary("swresample")
+        System.loadLibrary("avcodec")
+        System.loadLibrary("avformat")
+        System.loadLibrary("Edit")
     }
 
     private val mediaPlayer = MediaPlayer()
@@ -45,7 +49,7 @@ class EditActivity : AppCompatActivity(), View.OnClickListener {
 
         playBtn.setOnClickListener {
             StartAudio()
-//            mediaPlayer.start()
+            mediaPlayer.start()
             timer()
         }
 
@@ -54,7 +58,7 @@ class EditActivity : AppCompatActivity(), View.OnClickListener {
         seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 if (fromUser) {
-//                    mediaPlayer.seekTo(progress)
+                    mediaPlayer.seekTo(progress)
                     SeekMS(progress.toDouble())
                 }
             }
@@ -68,12 +72,12 @@ class EditActivity : AppCompatActivity(), View.OnClickListener {
 
         saveBtn.setOnClickListener {
             StopAudio()
-//            mediaPlayer.stop()
+            mediaPlayer.stop()
             doMux(videoFile, audioFile.absolutePath)
         }
 
-        /*mediaPlayer.setDataSource(videoFile)
-        mediaPlayer.prepare()*/
+        mediaPlayer.setDataSource(videoFile)
+        mediaPlayer.prepare()
         surfaceView.holder.addCallback(object : SurfaceHolder.Callback {
             override fun surfaceChanged(holder: SurfaceHolder, format: Int, width: Int, height: Int) {
 
@@ -84,7 +88,7 @@ class EditActivity : AppCompatActivity(), View.OnClickListener {
 
             override fun surfaceCreated(holder: SurfaceHolder) {
                 Timber.d("Surface Ready!")
-//                mediaPlayer.setSurface(holder.surface)
+                mediaPlayer.setSurface(holder.surface)
             }
         })
 
@@ -140,29 +144,34 @@ class EditActivity : AppCompatActivity(), View.OnClickListener {
             Toast.makeText(this@EditActivity, "FFMPEG not supported!", Toast.LENGTH_SHORT).show()
             return
         }
+
         val dialog = ProgressDialog(this)
         dialog.show()
         ffmpeg.execute(
-                arrayOf("-i", videoFile, "-i", audioFile, "-codec:a", "mp3", "-codec:v", "copy", "-map", "0:v:0", "-map", "1:a:0", "-shortest", File(Environment.getExternalStorageDirectory(), "out.mp4").absolutePath),
+                //-codec:a aac -codec:v libx264 -crf 23 -preset ultrafast -map 0:v:0 -map 1:a:0 -map 2:a:0 -shortest
+                arrayOf("-i", videoFile, "-i", audioFile, "-codec:a", "aac", "-codec:v", "libx264", "-crf", "30", "-preset", "ultrafast", "-map", "0:v:0", "-map", "1:a:0", "-shortest", "-y", File(Environment.getExternalStorageDirectory(), "out.mp4").absolutePath),
                 object : FFcommandExecuteResponseHandler {
                     override fun onFinish() {
+                        Timber.d("Mux finished")
                         dialog.dismiss()
                     }
 
                     override fun onSuccess(message: String?) {
-                        Timber.d(message)
+                        Timber.d("Mux successful: %s", message)
                         Toast.makeText(this@EditActivity, "Muxing done", Toast.LENGTH_SHORT).show()
                     }
 
                     override fun onFailure(message: String?) {
-                        Timber.e(message)
+                        Timber.e("Mux failed: %s", message)
                         Toast.makeText(this@EditActivity, "Muxing failed", Toast.LENGTH_SHORT).show()
                     }
 
                     override fun onProgress(message: String?) {
+                        Timber.d("Mux progress: %s", message)
                     }
 
                     override fun onStart() {
+                        Timber.d("Mux started")
                     }
                 }
         )
