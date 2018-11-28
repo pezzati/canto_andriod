@@ -19,7 +19,6 @@ static SuperpoweredAndroidAudioIO *audioIO;
 static SuperpoweredAdvancedAudioPlayer *player;
 static SuperpoweredAdvancedAudioPlayer *micPlayer;
 static SuperpoweredStereoMixer *mixer;
-static SuperpoweredDecoder *decoder;
 static SuperpoweredReverb *reverb;
 static SuperpoweredFlanger *flanger;
 
@@ -147,7 +146,6 @@ Java_com_hmomeni_canto_activities_EditActivity_InitAudio(
             bufferSize * 2
     );
 
-    decoder = new SuperpoweredDecoder();
 }
 
 extern "C" JNIEXPORT jdouble
@@ -283,6 +281,7 @@ Java_com_hmomeni_canto_activities_EditActivity_CropSave(
         jlong to,
         jlong total
 ) {
+    SuperpoweredDecoder *decoder = new SuperpoweredDecoder();
 
     const char *sourceFilePath = env->GetStringUTFChars(sourceFile, 0);
     const char *destFilePath = env->GetStringUTFChars(destFile, 0);
@@ -324,6 +323,72 @@ Java_com_hmomeni_canto_activities_EditActivity_CropSave(
     closeWAV(fd);
 }
 
+
+extern "C" JNIEXPORT void
+Java_com_hmomeni_canto_activities_EditActivity_SaveEffect(
+        JNIEnv *__unused env,
+        jobject __unused obj,
+        jstring sourceFile,
+        jstring destFile
+) {
+    SuperpoweredDecoder *decoder = new SuperpoweredDecoder();
+
+    const char *sourceFilePath = env->GetStringUTFChars(sourceFile, 0);
+    const char *destFilePath = env->GetStringUTFChars(destFile, 0);
+
+    const char *openError = decoder->open(sourceFilePath);
+
+    if (openError) {
+        log_print(ANDROID_LOG_DEBUG, "EditDub", "Open error: %s", openError);
+        delete decoder;
+        return;
+    };
+
+    short int *intBuffer = (short int *) malloc(
+            decoder->samplesPerFrame * 2 * sizeof(short int) + 32768);
+
+    float *floatBuffer = (float *) malloc(
+            decoder->samplesPerFrame * 2 * sizeof(floatBuffer) + 32768);
+
+    FILE *fd = createWAV(destFilePath, decoder->samplerate, 2);
+
+
+    while (true) {
+        unsigned int samplesDecoded = decoder->samplesPerFrame;
+        if (decoder->decode(intBuffer, &samplesDecoded) == SUPERPOWEREDDECODER_ERROR) break;
+        switch (appliedEffect) {
+            case 1: {
+                SuperpoweredShortIntToFloat(intBuffer, floatBuffer, samplesDecoded);
+                reverb->process(floatBuffer, floatBuffer, samplesDecoded);
+                SuperpoweredFloatToShortInt(floatBuffer, intBuffer, samplesDecoded);
+                break;
+            }
+            case 2: {
+                SuperpoweredShortIntToFloat(intBuffer, floatBuffer, samplesDecoded);
+                flanger->process(floatBuffer, floatBuffer, samplesDecoded);
+                SuperpoweredFloatToShortInt(floatBuffer, intBuffer, samplesDecoded);
+                break;
+            }
+            default:
+                break;
+        }
+        if (samplesDecoded < 1) {
+            break;
+        }
+
+        fwrite(intBuffer, 1, samplesDecoded * 4, fd);
+    }
+
+    closeWAV(fd);
+}
+
+extern "C" JNIEXPORT jint
+Java_com_hmomeni_canto_activities_EditActivity_Effect(
+        JNIEnv *__unused env,
+        jobject __unused obj
+) {
+    return appliedEffect;
+}
 
 extern "C" JNIEXPORT void
 Java_com_hmomeni_canto_activities_EditActivity_ApplyEffect(

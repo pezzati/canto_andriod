@@ -23,23 +23,23 @@ import java.io.File
 class EditActivity : AppCompatActivity(), View.OnClickListener {
 
     init {
-        System.loadLibrary("avutil")
-        System.loadLibrary("swresample")
-        System.loadLibrary("avcodec")
-        System.loadLibrary("avformat")
         System.loadLibrary("Edit")
     }
 
     private val mediaPlayer = MediaPlayer()
+
+    private lateinit var audioFile: File
+    private lateinit var micFile: File
+    private lateinit var videoFile: File
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_edit)
         initAudio()
 
-        val audioFile = File(Environment.getExternalStorageDirectory(), "dubsmash.wav")
-        val micFile = File(Environment.getExternalStorageDirectory(), "dubsmash-mic.wav")
-        val videoFile = File(Environment.getExternalStorageDirectory(), "dubsmash.mp4").absolutePath
+        audioFile = File(Environment.getExternalStorageDirectory(), "dubsmash.wav")
+        micFile = File(Environment.getExternalStorageDirectory(), "dubsmash-mic.wav")
+        videoFile = File(Environment.getExternalStorageDirectory(), "dubsmash.mp4")
 
         val duration = getDuration(audioFile.absolutePath)
 
@@ -73,10 +73,10 @@ class EditActivity : AppCompatActivity(), View.OnClickListener {
         saveBtn.setOnClickListener {
             StopAudio()
             mediaPlayer.stop()
-            doMux(videoFile, audioFile.absolutePath)
+            doMux(videoFile.absolutePath, audioFile.absolutePath)
         }
 
-        mediaPlayer.setDataSource(videoFile)
+        mediaPlayer.setDataSource(videoFile.absolutePath)
         mediaPlayer.prepare()
         surfaceView.holder.addCallback(object : SurfaceHolder.Callback {
             override fun surfaceChanged(holder: SurfaceHolder, format: Int, width: Int, height: Int) {
@@ -139,6 +139,12 @@ class EditActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun doMux(videoFile: String, audioFile: String) {
+        when (Effect()) {
+            1, 2 -> {
+                SaveEffect(micFile.absolutePath, File(Environment.getExternalStorageDirectory(), "mic-effect.wav").absolutePath)
+            }
+        }
+
         val ffmpeg = FFmpeg.getInstance(this)
         if (!ffmpeg.isSupported) {
             Toast.makeText(this@EditActivity, "FFMPEG not supported!", Toast.LENGTH_SHORT).show()
@@ -188,5 +194,7 @@ class EditActivity : AppCompatActivity(), View.OnClickListener {
     external fun SeekMS(percent: Double)
     external fun IsPlaying(): Boolean
     external fun CropSave(sourcePath: String, destPath: String, from: Long, to: Long, total: Long)
+    external fun SaveEffect(sourcePath: String, destPath: String)
+    external fun Effect(): Int
     external fun ApplyEffect(effect: Int)
 }
