@@ -11,7 +11,7 @@ import java.io.File
 
 class KaraokeActivity : AppCompatActivity() {
     init {
-        System.loadLibrary("Canto")
+        System.loadLibrary("Karaoke")
     }
 
     private lateinit var filePath: String

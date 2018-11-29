@@ -3,30 +3,41 @@ package com.hmomeni.canto.adapters.viewpager
 import android.support.v4.view.PagerAdapter
 import android.view.View
 import android.view.ViewGroup
+import android.widget.FrameLayout
 import android.widget.ImageView
 import com.bumptech.glide.Glide
+import com.hmomeni.canto.adapters.rcl.MainRclAdapter
 import com.hmomeni.canto.entities.Banner
 import com.hmomeni.canto.utils.GlideApp
 import com.hmomeni.canto.utils.dpToPx
 import com.hmomeni.canto.utils.rounded
+import io.reactivex.processors.PublishProcessor
 
-class BannerPagerAdapter(private val banners: List<Banner>) : PagerAdapter() {
+class BannerPagerAdapter(private val banners: List<Banner>, private val clickPublisher: PublishProcessor<MainRclAdapter.ClickEvent>) : PagerAdapter() {
     override fun instantiateItem(container: ViewGroup, position: Int): Any {
         val padding = dpToPx(8)
-        val imageView = ImageView(container.context).apply {
+        val frameLayout = FrameLayout(container.context).apply {
             layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
             setPadding(padding, padding, padding, padding)
+        }
+        val imageView = ImageView(container.context).apply {
+            layoutParams = FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
         }
         GlideApp.with(container.context)
                 .load(banners[position].file)
                 .rounded(dpToPx(15))
                 .into(imageView)
-        container.addView(imageView)
-        return imageView
+        frameLayout.addView(imageView)
+        container.addView(frameLayout)
+        frameLayout.tag = position
+        frameLayout.setOnClickListener {
+            clickPublisher.onNext(MainRclAdapter.ClickEvent(MainRclAdapter.ClickEvent.Type.BANNER, -1, it.tag as Int))
+        }
+        return frameLayout
     }
 
     override fun destroyItem(container: ViewGroup, position: Int, `object`: Any) {
-        Glide.with(`object` as ImageView).clear(`object`)
+        Glide.with(`object` as FrameLayout).clear(`object`.getChildAt(0) as ImageView)
         container.removeView(`object`)
     }
 

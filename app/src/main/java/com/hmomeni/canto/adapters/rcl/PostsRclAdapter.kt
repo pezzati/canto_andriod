@@ -9,11 +9,15 @@ import com.hmomeni.canto.entities.Post
 import com.hmomeni.canto.utils.GlideApp
 import com.hmomeni.canto.utils.dpToPx
 import com.hmomeni.canto.utils.rounded
+import io.reactivex.processors.PublishProcessor
 import kotlinx.android.synthetic.main.rcl_item_post_rect.view.*
 
 class PostsRclAdapter(private val posts: List<Post>) : RecyclerView.Adapter<PostsRclAdapter.PostHolder>() {
+
+    val clickPublisher: PublishProcessor<Int> = PublishProcessor.create()
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PostHolder {
-        return PostHolder(LayoutInflater.from(parent.context).inflate(R.layout.rcl_item_post_rect, parent, false))
+        return PostHolder(LayoutInflater.from(parent.context).inflate(R.layout.rcl_item_post_rect, parent, false), clickPublisher)
     }
 
     override fun getItemCount() = posts.size
@@ -22,7 +26,13 @@ class PostsRclAdapter(private val posts: List<Post>) : RecyclerView.Adapter<Post
         holder.bind(posts[position])
     }
 
-    class PostHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    class PostHolder(itemView: View, clickPublisher: PublishProcessor<Int>) : RecyclerView.ViewHolder(itemView) {
+        init {
+            itemView.setOnClickListener {
+                clickPublisher.onNext(adapterPosition)
+            }
+        }
+
         fun bind(post: Post) {
             post.coverPhoto?.let {
                 GlideApp.with(itemView)

@@ -18,10 +18,7 @@
         android:theme="@style/AppTheme">
         <service android:name=".DownloadService" />
 
-        <activity android:name=".activities.MainActivity"></activity>
-        <activity
-            android:name=".activities.DubsmashActivity"
-            android:exported="true">
+        <activity android:name=".activities.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -29,11 +26,15 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".activities.DubsmashActivity"
+            android:exported="true">
+
+        </activity>
+        <activity
             android:name=".activities.LoginActivity"
             android:exported="true" />
         <activity android:name=".activities.KaraokeActivity" />
         <activity android:name=".activities.SingingActivity" />
-
 
         <activity
             android:name=".activities.EditActivity"

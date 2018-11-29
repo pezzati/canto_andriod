@@ -49,6 +49,13 @@ add_library(
 )
 
 add_library(
+        Karaoke
+        SHARED
+        src/main/cpp/Karaoke.cpp
+        ${PATH_TO_SUPERPOWERED}/AndroidIO/SuperpoweredAndroidAudioIO.cpp
+)
+
+add_library(
         Edit
         SHARED
         src/main/cpp/EditDubsmash.cpp
@@ -58,6 +65,14 @@ add_library(
 # link the native library against the following libraries
 target_link_libraries(
         Dubsmash
+        ${PATH_TO_SUPERPOWERED}/libSuperpoweredAndroid${ANDROID_ABI}.a
+        OpenSLES
+        log
+        android
+)
+
+target_link_libraries(
+        Karaoke
         ${PATH_TO_SUPERPOWERED}/libSuperpoweredAndroid${ANDROID_ABI}.a
         OpenSLES
         log

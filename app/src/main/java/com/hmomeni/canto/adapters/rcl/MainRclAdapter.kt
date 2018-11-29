@@ -9,7 +9,9 @@ import com.hmomeni.canto.R
 import com.hmomeni.canto.adapters.viewpager.BannerPagerAdapter
 import com.hmomeni.canto.entities.Banner
 import com.hmomeni.canto.entities.Genre
+import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.processors.PublishProcessor
+import io.reactivex.rxkotlin.plusAssign
 import kotlinx.android.synthetic.main.rcl_item_banner.view.*
 import kotlinx.android.synthetic.main.rcl_item_genre.view.*
 
@@ -18,7 +20,7 @@ const val TYPE_GENRE = 1
 
 class MainRclAdapter(private val banners: List<Banner>, private val genres: List<Genre>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    val clickPublisher: PublishProcessor<Pair<Int, Int>> = PublishProcessor.create()
+    val clickPublisher: PublishProcessor<ClickEvent> = PublishProcessor.create()
 
     override fun getItemViewType(position: Int): Int {
         return when (position) {
@@ -29,7 +31,7 @@ class MainRclAdapter(private val banners: List<Banner>, private val genres: List
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
-            TYPE_BANNER -> BannerHolder(LayoutInflater.from(parent.context).inflate(R.layout.rcl_item_banner, parent, false))
+            TYPE_BANNER -> BannerHolder(LayoutInflater.from(parent.context).inflate(R.layout.rcl_item_banner, parent, false), clickPublisher)
             TYPE_GENRE -> GenreHolder(LayoutInflater.from(parent.context).inflate(R.layout.rcl_item_genre, parent, false), clickPublisher)
             else -> throw RuntimeException("Invalid Item ViewType")
         }
@@ -44,23 +46,47 @@ class MainRclAdapter(private val banners: List<Banner>, private val genres: List
         }
     }
 
-    class BannerHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        fun bind(banners: List<Banner>) {
-            itemView.bannerViewPager.adapter = BannerPagerAdapter(banners)
+    override fun onViewRecycled(holder: RecyclerView.ViewHolder) {
+        if (holder is GenreHolder) {
+            holder.clear()
         }
     }
 
-    class GenreHolder(itemView: View, clickPublisher: PublishProcessor<Pair<Int, Int>>) : RecyclerView.ViewHolder(itemView) {
+    class BannerHolder(itemView: View, private val clickPublisher: PublishProcessor<ClickEvent>) : RecyclerView.ViewHolder(itemView) {
+
+        fun bind(banners: List<Banner>) {
+            itemView.bannerViewPager.adapter = BannerPagerAdapter(banners, clickPublisher)
+        }
+    }
+
+    class GenreHolder(itemView: View, private val clickPublisher: PublishProcessor<ClickEvent>) : RecyclerView.ViewHolder(itemView) {
         init {
             itemView.moreBtn.setOnClickListener {
-                clickPublisher.onNext(Pair(adapterPosition, -1))
+                clickPublisher.onNext(ClickEvent(ClickEvent.Type.BANNER, adapterPosition, -1))
             }
         }
+
+        private val compositeDisposable = CompositeDisposable()
 
         fun bind(genre: Genre) {
             itemView.genreName.text = genre.name
             itemView.genresRecyclerView.layoutManager = LinearLayoutManager(itemView.context, LinearLayoutManager.HORIZONTAL, false)
-            itemView.genresRecyclerView.adapter = PostsRclAdapter(genre.posts!!)
+            itemView.genresRecyclerView.adapter = PostsRclAdapter(genre.posts!!).also {
+                compositeDisposable += it.clickPublisher.subscribe { pos ->
+                    clickPublisher.onNext(ClickEvent(ClickEvent.Type.GENRE, adapterPosition, pos))
+                }
+            }
+        }
+
+        fun clear() {
+            compositeDisposable.clear()
+        }
+
+    }
+
+    class ClickEvent(val type: Type, val row: Int, val item: Int) {
+        enum class Type {
+            BANNER, GENRE
         }
     }
 }

@@ -8,10 +8,7 @@ import androidx.navigation.findNavController
 import com.hmomeni.canto.App
 import com.hmomeni.canto.R
 import com.hmomeni.canto.fragments.ListFragment
-import com.hmomeni.canto.utils.navigation.BackEvent
-import com.hmomeni.canto.utils.navigation.ListNavEvent
-import com.hmomeni.canto.utils.navigation.NavEvent
-import com.hmomeni.canto.utils.navigation.SearchEvent
+import com.hmomeni.canto.utils.navigation.*
 import com.pixplicity.easyprefs.library.Prefs
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
@@ -58,6 +55,12 @@ class MainActivity : AppCompatActivity() {
                                 navController.popBackStack(R.id.mainFragment, false)
                             }
                             navController.navigate(R.id.action_mainFragment_to_searchFragment)
+                        }
+                        is PostNavEvent -> {
+                            if (navController.currentDestination!!.id != R.id.mainFragment) {
+                                navController.popBackStack(R.id.mainFragment, false)
+                            }
+                            navController.navigate(R.id.action_mainFragment_to_recorderFragment)
                         }
                     }
                 }

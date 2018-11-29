@@ -15,6 +15,7 @@ import com.hmomeni.canto.utils.ViewModelFactory
 import com.hmomeni.canto.utils.app
 import com.hmomeni.canto.utils.iomain
 import com.hmomeni.canto.utils.navigation.ListNavEvent
+import com.hmomeni.canto.utils.navigation.PostNavEvent
 import com.hmomeni.canto.vms.MainViewModel
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
@@ -77,13 +78,18 @@ class MainFragment : Fragment() {
         if (adapter == null) {
             adapter = MainRclAdapter(banners, genres).also {
                 it.clickPublisher.subscribe {
-                    when (it.first) {
-                        0 -> {
+                    when (it.type) {
+                        MainRclAdapter.ClickEvent.Type.BANNER -> {
                         }
-                        else -> {
-                            val pos = it.first - 1
+                        MainRclAdapter.ClickEvent.Type.GENRE -> {
+                            val pos = it.row - 1
                             val genre = genres[pos]
-                            viewModel.navEvents.onNext(ListNavEvent("genre", genre.filesLink.replace(Regex("[^\\d]"), "").toInt(), genre.name))
+                            if (it.item == -1) {
+                                viewModel.navEvents.onNext(ListNavEvent("genre", genre.filesLink.replace(Regex("[^\\d]"), "").toInt(), genre.name))
+                            } else {
+                                viewModel.navEvents.onNext(PostNavEvent(genre.posts!![it.item]))
+                            }
+
                         }
                     }
                 }.addTo(compositeDisposable)
