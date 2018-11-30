@@ -183,7 +183,7 @@ class RecorderFragment : Fragment() {
                     .doOnSubscribe { loadingDialog.show() }
                     .doAfterTerminate { loadingDialog.dismiss() }
                     .subscribe({
-                        startActivity(Intent(context, DubsmashActivity::class.java).putExtra("post", it.data))
+                        startActivity(Intent(context, DubsmashActivity::class.java).putExtra("post", it))
                     }, {
                         Timber.e(it)
                     })

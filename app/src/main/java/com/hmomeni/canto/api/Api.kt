@@ -27,6 +27,6 @@ interface Api {
     fun searchInGenres(@Query("key") query: String): Single<ApiResponse<List<Post>>>
 
     @GET("song/posts/{postId}")
-    fun getSinglePost(@Path("postId") postId: Int): Single<ApiResponse<FullPost>>
+    fun getSinglePost(@Path("postId") postId: Int): Single<FullPost>
 
 }

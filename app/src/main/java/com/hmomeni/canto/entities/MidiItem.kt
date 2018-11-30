@@ -8,7 +8,9 @@ data class MidiItem(
         @field:SerializedName("time")
         val time: Double,
         @field:SerializedName("text")
-        val text: String
+        val text: String,
+        @Transient
+        var active: Boolean = false
 ) : Parcelable {
     constructor(source: Parcel) : this(
             source.readDouble(),

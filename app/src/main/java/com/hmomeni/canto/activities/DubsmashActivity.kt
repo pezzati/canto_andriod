@@ -7,8 +7,12 @@ import android.media.AudioManager
 import android.os.Bundle
 import android.os.Environment
 import android.os.Handler
+import android.support.v7.widget.LinearLayoutManager
+import android.util.SparseIntArray
 import android.view.View
 import com.hmomeni.canto.*
+import com.hmomeni.canto.adapters.rcl.LyricRclAdapter
+import com.hmomeni.canto.entities.MidiItem
 import com.hmomeni.canto.utils.DownloadEvent
 import com.hmomeni.canto.utils.ViewModelFactory
 import com.hmomeni.canto.utils.app
@@ -23,6 +27,7 @@ import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.activity_dubsmash.*
 import timber.log.Timber
 import java.io.File
+
 
 class DubsmashActivity : CameraActivity() {
 
@@ -61,10 +66,16 @@ class DubsmashActivity : CameraActivity() {
 
     private var disposable: Disposable? = null
 
+    private lateinit var timeMap: SparseIntArray
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         viewModel = ViewModelProviders.of(this, ViewModelFactory(app()))[DubsmashViewModel::class.java]
+
+        viewModel.post = intent.getParcelableExtra("post")
+
+        timeMap = preProcessLyric(viewModel.post.content.midi)
 
         disposable = viewModel.dEvents()
                 .observeOn(AndroidSchedulers.mainThread())
@@ -74,7 +85,14 @@ class DubsmashActivity : CameraActivity() {
 
         setContentView(R.layout.activity_dubsmash)
 
-        fileUrl = "http://dl.nex1music.ir/1397/09/04/Ali%20Zand%20Vakili%20-%20Donyaye%20Bi%20Rahm%20[128].mp3"
+        with(viewModel.post.content) {
+            fileUrl = if (!originalFileUrl.isEmpty()) {
+                originalFileUrl
+            } else {
+                karaokeFileUrl
+            }
+        }
+
         filePath = DownloadService.startDownload(this, fileUrl)
 
         recordBtn.setOnClickListener {
@@ -120,18 +138,40 @@ class DubsmashActivity : CameraActivity() {
                 SetTempo((progress / 10f).toDouble())
             }
         }
+
+        lyricRecyclerVIew.layoutManager = LinearLayoutManager(this)
+        lyricRecyclerVIew.adapter = LyricRclAdapter(viewModel.post.content.midi)
+//        LinearSnapHelper().attachToRecyclerView(lyricRecyclerVIew)
+
     }
 
+    var lastPos = -2
     private var handler = Handler()
     private fun timer() {
         val trimPos = GetProgressMS() * trimView.max / GetDurationMS()
-        Timber.d("pos=%f, trimPos=%f", GetProgressMS(), trimPos)
         trimView.progress = (trimPos - trimView.trimStart).toInt()
+
+        val sec = (GetProgressMS() / 1000).toInt()
+
+        val pos = timeMap.get(sec, -1)
+
+        if (pos >= 0 && lastPos != pos) {
+            Timber.d("sec=%d, pos=%d, lastPos=%d", sec, pos, lastPos)
+            if (lastPos >= 0) {
+                viewModel.post.content.midi[lastPos].active = false
+                lyricRecyclerVIew.adapter.notifyItemChanged(lastPos)
+            }
+            viewModel.post.content.midi[pos].active = true
+            lyricRecyclerVIew.adapter.notifyItemChanged(pos)
+
+            lyricRecyclerVIew.scrollToPosition(pos)
+            lastPos = pos
+        }
         handler.postDelayed({
             if (isPlaying) {
                 timer()
             }
-        }, 1000)
+        }, 300)
     }
 
     override fun onStop() {
@@ -223,6 +263,14 @@ class DubsmashActivity : CameraActivity() {
         stopRecordingVideo()
         StopAudio()
         startActivity(Intent(this, EditActivity::class.java))
+    }
+
+    private fun preProcessLyric(midiItems: List<MidiItem>): SparseIntArray {
+        val timeMap = SparseIntArray(midiItems.size)
+        midiItems.forEachIndexed { i, v ->
+            timeMap.append(v.time.toInt(), i)
+        }
+        return timeMap
     }
 
     private external fun InitAudio(bufferSize: Int, sampleRate: Int, isSinging: Boolean, outputPath: String, tempPath: String, outputPathMic: String, tempPathMic: String)

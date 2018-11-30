@@ -20,7 +20,7 @@ class KaraokeActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_karaoke)
 
-        filePath = "/mnt/sdcard/Music/K_140_SomeoneLikeYou.mp3"
+        filePath = "/mnt/sdcard/Music/1.mp3"
 
         initAudio()
 

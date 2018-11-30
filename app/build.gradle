@@ -114,4 +114,6 @@ dependencies {
     }
 
     implementation 'nl.bravobit:android-ffmpeg:1.1.5'
+
+    implementation 'com.github.rubensousa:gravitysnaphelper:2.0'
 }

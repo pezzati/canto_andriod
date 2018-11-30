@@ -60,7 +60,7 @@ class MainActivity : AppCompatActivity() {
                             if (navController.currentDestination!!.id != R.id.mainFragment) {
                                 navController.popBackStack(R.id.mainFragment, false)
                             }
-                            navController.navigate(R.id.action_mainFragment_to_recorderFragment)
+                            navController.navigate(R.id.action_mainFragment_to_recorderFragment, Bundle().apply { putInt("post_id", it.post.id) })
                         }
                     }
                 }
