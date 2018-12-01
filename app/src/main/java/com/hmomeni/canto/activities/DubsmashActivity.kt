@@ -7,9 +7,10 @@ import android.media.AudioManager
 import android.os.Bundle
 import android.os.Environment
 import android.os.Handler
-import android.support.v7.widget.LinearLayoutManager
 import android.util.SparseIntArray
 import android.view.View
+import com.azoft.carousellayoutmanager.CarouselLayoutManager
+import com.azoft.carousellayoutmanager.CarouselZoomPostLayoutListener
 import com.hmomeni.canto.*
 import com.hmomeni.canto.adapters.rcl.LyricRclAdapter
 import com.hmomeni.canto.entities.MidiItem
@@ -143,9 +144,14 @@ class DubsmashActivity : CameraActivity() {
             }
         }
 
-        lyricRecyclerVIew.layoutManager = LinearLayoutManager(this)
+        lyricRecyclerVIew.layoutManager = object : CarouselLayoutManager(CarouselLayoutManager.VERTICAL) {
+            override fun canScrollVertically(): Boolean {
+                return false
+            }
+        }.apply {
+            setPostLayoutListener(CarouselZoomPostLayoutListener())
+        }
         lyricRecyclerVIew.adapter = LyricRclAdapter(midiItems)
-//        LinearSnapHelper().attachToRecyclerView(lyricRecyclerVIew)
 
     }
 
@@ -215,6 +221,10 @@ class DubsmashActivity : CameraActivity() {
         trimView.visibility = View.VISIBLE
         settingsBtn.visibility = View.VISIBLE
 
+        settingsBtn.setOnClickListener {
+            toggleSettings()
+        }
+
         trimView.onTrimChangeListener = object : TrimView.TrimChangeListener() {
             override fun onRangeChanged(trimStart: Int, trim: Int) {
                 val pos = trimStart * duration / trimView.max
@@ -275,6 +285,10 @@ class DubsmashActivity : CameraActivity() {
             timeMap.append(v.time.toInt(), i)
         }
         return timeMap
+    }
+
+    private fun toggleSettings() {
+        slidersWrapper.visibility = if (slidersWrapper.visibility == View.GONE) View.VISIBLE else View.GONE
     }
 
     private external fun InitAudio(bufferSize: Int, sampleRate: Int, isSinging: Boolean, outputPath: String, tempPath: String, outputPathMic: String, tempPathMic: String)
