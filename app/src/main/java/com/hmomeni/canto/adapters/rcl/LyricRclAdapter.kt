@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import com.hmomeni.canto.R
 import com.hmomeni.canto.entities.MidiItem
 import kotlinx.android.synthetic.main.rcl_item_midi.view.*
+import timber.log.Timber
 
 class LyricRclAdapter(private val midiItems: List<MidiItem>) : RecyclerView.Adapter<LyricRclAdapter.MidiHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MidiHolder {
@@ -22,6 +23,7 @@ class LyricRclAdapter(private val midiItems: List<MidiItem>) : RecyclerView.Adap
 
     class MidiHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         fun bind(midiItem: MidiItem) {
+            Timber.d("active=%b, verse=%s", midiItem.active, midiItem.text)
             itemView.textView.text = midiItem.text.trim('\n')
             if (midiItem.active) {
                 itemView.textView.setTextColor(Color.RED)

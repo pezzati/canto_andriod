@@ -68,6 +68,8 @@ class DubsmashActivity : CameraActivity() {
 
     private lateinit var timeMap: SparseIntArray
 
+    private lateinit var midiItems: List<MidiItem>
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -75,7 +77,9 @@ class DubsmashActivity : CameraActivity() {
 
         viewModel.post = intent.getParcelableExtra("post")
 
-        timeMap = preProcessLyric(viewModel.post.content.midi)
+        midiItems = viewModel.post.content.midi.filter { it.text != "\n" }
+
+        timeMap = preProcessLyric(midiItems)
 
         disposable = viewModel.dEvents()
                 .observeOn(AndroidSchedulers.mainThread())
@@ -140,12 +144,12 @@ class DubsmashActivity : CameraActivity() {
         }
 
         lyricRecyclerVIew.layoutManager = LinearLayoutManager(this)
-        lyricRecyclerVIew.adapter = LyricRclAdapter(viewModel.post.content.midi)
+        lyricRecyclerVIew.adapter = LyricRclAdapter(midiItems)
 //        LinearSnapHelper().attachToRecyclerView(lyricRecyclerVIew)
 
     }
 
-    var lastPos = -2
+    private var lastPos = -2
     private var handler = Handler()
     private fun timer() {
         val trimPos = GetProgressMS() * trimView.max / GetDurationMS()
@@ -158,10 +162,10 @@ class DubsmashActivity : CameraActivity() {
         if (pos >= 0 && lastPos != pos) {
             Timber.d("sec=%d, pos=%d, lastPos=%d", sec, pos, lastPos)
             if (lastPos >= 0) {
-                viewModel.post.content.midi[lastPos].active = false
+                midiItems[lastPos].active = false
                 lyricRecyclerVIew.adapter.notifyItemChanged(lastPos)
             }
-            viewModel.post.content.midi[pos].active = true
+            midiItems[pos].active = true
             lyricRecyclerVIew.adapter.notifyItemChanged(pos)
 
             lyricRecyclerVIew.scrollToPosition(pos)
