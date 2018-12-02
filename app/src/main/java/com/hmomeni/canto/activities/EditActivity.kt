@@ -1,6 +1,5 @@
 package com.hmomeni.canto.activities
 
-import android.app.ProgressDialog
 import android.content.Context
 import android.media.AudioManager
 import android.media.MediaPlayer
@@ -11,12 +10,9 @@ import android.support.v7.app.AppCompatActivity
 import android.view.SurfaceHolder
 import android.view.View
 import android.widget.SeekBar
-import android.widget.Toast
 import com.hmomeni.canto.R
 import com.hmomeni.canto.utils.getDuration
 import kotlinx.android.synthetic.main.activity_edit.*
-import nl.bravobit.ffmpeg.FFcommandExecuteResponseHandler
-import nl.bravobit.ffmpeg.FFmpeg
 import timber.log.Timber
 import java.io.File
 
@@ -73,7 +69,7 @@ class EditActivity : AppCompatActivity(), View.OnClickListener {
         saveBtn.setOnClickListener {
             StopAudio()
             mediaPlayer.stop()
-            doMux(videoFile.absolutePath, audioFile.absolutePath)
+            doMux()
         }
 
         mediaPlayer.setDataSource(videoFile.absolutePath)
@@ -140,51 +136,51 @@ class EditActivity : AppCompatActivity(), View.OnClickListener {
         audioInitialized = true
     }
 
-    private fun doMux(videoFile: String, audioFile: String) {
+    private fun doMux() {
         when (Effect()) {
             0 -> {
             }
             else -> {
-                SaveEffect(micFile.absolutePath, File(Environment.getExternalStorageDirectory(), "mic-effect.wav").absolutePath)
+                SaveEffect(audioFile.absolutePath, File(Environment.getExternalStorageDirectory(), "mic-effect.wav").absolutePath)
             }
         }
 
-        val ffmpeg = FFmpeg.getInstance(this)
-        if (!ffmpeg.isSupported) {
-            Toast.makeText(this@EditActivity, "FFMPEG not supported!", Toast.LENGTH_SHORT).show()
-            return
-        }
-
-        val dialog = ProgressDialog(this)
-        dialog.show()
-        ffmpeg.execute(
-                //-codec:a aac -codec:v libx264 -crf 23 -preset ultrafast -map 0:v:0 -map 1:a:0 -map 2:a:0 -shortest
-                arrayOf("-i", videoFile, "-i", audioFile, "-codec:a", "aac", "-codec:v", "libx264", "-crf", "30", "-preset", "ultrafast", "-map", "0:v:0", "-map", "1:a:0", "-shortest", "-y", File(Environment.getExternalStorageDirectory(), "out.mp4").absolutePath),
-                object : FFcommandExecuteResponseHandler {
-                    override fun onFinish() {
-                        Timber.d("Mux finished")
-                        dialog.dismiss()
-                    }
-
-                    override fun onSuccess(message: String?) {
-                        Timber.d("Mux successful: %s", message)
-                        Toast.makeText(this@EditActivity, "Muxing done", Toast.LENGTH_SHORT).show()
-                    }
-
-                    override fun onFailure(message: String?) {
-                        Timber.e("Mux failed: %s", message)
-                        Toast.makeText(this@EditActivity, "Muxing failed", Toast.LENGTH_SHORT).show()
-                    }
-
-                    override fun onProgress(message: String?) {
-                        Timber.d("Mux progress: %s", message)
-                    }
-
-                    override fun onStart() {
-                        Timber.d("Mux started")
-                    }
-                }
-        )
+//        val ffmpeg = FFmpeg.getInstance(this)
+//        if (!ffmpeg.isSupported) {
+//            Toast.makeText(this@EditActivity, "FFMPEG not supported!", Toast.LENGTH_SHORT).show()
+//            return
+//        }
+//
+//        val dialog = ProgressDialog(this)
+//        dialog.show()
+//        ffmpeg.execute(
+//                //-codec:a aac -codec:v libx264 -crf 23 -preset ultrafast -map 0:v:0 -map 1:a:0 -map 2:a:0 -shortest
+//                arrayOf("-i", videoFile.absolutePath, "-i", audioFile.absolutePath, "-codec:a", "aac", "-codec:v", "libx264", "-crf", "30", "-preset", "ultrafast", "-map", "0:v:0", "-map", "1:a:0", "-shortest", "-y", File(Environment.getExternalStorageDirectory(), "out.mp4").absolutePath),
+//                object : FFcommandExecuteResponseHandler {
+//                    override fun onFinish() {
+//                        Timber.d("Mux finished")
+//                        dialog.dismiss()
+//                    }
+//
+//                    override fun onSuccess(message: String?) {
+//                        Timber.d("Mux successful: %s", message)
+//                        Toast.makeText(this@EditActivity, "Muxing done", Toast.LENGTH_SHORT).show()
+//                    }
+//
+//                    override fun onFailure(message: String?) {
+//                        Timber.e("Mux failed: %s", message)
+//                        Toast.makeText(this@EditActivity, "Muxing failed", Toast.LENGTH_SHORT).show()
+//                    }
+//
+//                    override fun onProgress(message: String?) {
+//                        Timber.d("Mux progress: %s", message)
+//                    }
+//
+//                    override fun onStart() {
+//                        Timber.d("Mux started")
+//                    }
+//                }
+//        )
     }
 
     external fun InitAudio(bufferSize: Int, sampleRate: Int, isSinging: Boolean = false)

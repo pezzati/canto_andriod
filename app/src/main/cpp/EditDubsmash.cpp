@@ -332,11 +332,6 @@ Java_com_hmomeni_canto_activities_EditActivity_SaveEffect(
         jstring destFile
 ) {
 
-    SuperpoweredAudiopointerList *outputBuffers;
-
-    if (appliedEffect == 3) // we only need this for time stretching and pitch shift
-        outputBuffers = new SuperpoweredAudiopointerList(8, 16);
-
     SuperpoweredDecoder *decoder = new SuperpoweredDecoder();
 
     const char *sourceFilePath = env->GetStringUTFChars(sourceFile, 0);
@@ -349,8 +344,20 @@ Java_com_hmomeni_canto_activities_EditActivity_SaveEffect(
         delete decoder;
         return;
     };
+    SuperpoweredTimeStretching *timeStretch;
+    SuperpoweredAudiopointerList *outputBuffers;
+
+    if (appliedEffect == 3) {// we only need this for time stretching and pitch shift
+        outputBuffers = new SuperpoweredAudiopointerList(8, 16);
+        timeStretch = new SuperpoweredTimeStretching(
+                decoder->samplerate);
+        timeStretch->setRateAndPitchShift(1.0, 5);
+    }
+
 
     short int *intBuffer = (short int *) malloc(
+            decoder->samplesPerFrame * 2 * sizeof(short int) + 32768);
+    short int *intBuffer2 = (short int *) malloc(
             decoder->samplesPerFrame * 2 * sizeof(short int) + 32768);
 
     float *floatBuffer = (float *) malloc(
@@ -361,7 +368,10 @@ Java_com_hmomeni_canto_activities_EditActivity_SaveEffect(
 
     while (true) {
         unsigned int samplesDecoded = decoder->samplesPerFrame;
-        if (decoder->decode(intBuffer, &samplesDecoded) == SUPERPOWEREDDECODER_ERROR) break;
+        if (decoder->decode(intBuffer, &samplesDecoded) == SUPERPOWEREDDECODER_ERROR) {
+            log_print(ANDROID_LOG_DEBUG, "EditCPP", "Decoder Break");
+            break;
+        }
         switch (appliedEffect) {
             case 1: {
                 SuperpoweredShortIntToFloat(intBuffer, floatBuffer, samplesDecoded);
@@ -385,9 +395,6 @@ Java_com_hmomeni_canto_activities_EditActivity_SaveEffect(
                         samplesDecoded * 8 + 64);
                 inputBuffer.buffers[1] = inputBuffer.buffers[2] = inputBuffer.buffers[3] = NULL;
 
-                SuperpoweredTimeStretching *timeStretch = new SuperpoweredTimeStretching(
-                        decoder->samplerate);
-                timeStretch->setRateAndPitchShift(1.0, 5);
 
                 SuperpoweredShortIntToFloat(intBuffer, (float *) inputBuffer.buffers[0],
                                             samplesDecoded);
@@ -401,14 +408,18 @@ Java_com_hmomeni_canto_activities_EditActivity_SaveEffect(
                         int numSamples = 0;
                         float *timeStretchedAudio = (float *) outputBuffers->nextSliceItem(
                                 &numSamples);
-                        if (!timeStretchedAudio) break;
+                        if (!timeStretchedAudio) {
+                            log_print(ANDROID_LOG_DEBUG, "EditCPP", "TimeStretch Break");
+                            break;
+                        }
 
                         // Convert the time stretched PCM samples from 32-bit floating point to 16-bit integer.
-                        SuperpoweredFloatToShortInt(timeStretchedAudio, intBuffer,
+                        SuperpoweredFloatToShortInt(timeStretchedAudio, intBuffer2,
                                                     (unsigned int) numSamples);
 
+                        log_print(ANDROID_LOG_DEBUG, "EditCPP", "Writing to file");
                         // Write the audio to disk.
-                        fwrite(intBuffer, 1, (unsigned int) numSamples * 4, fd);
+                        fwrite(intBuffer2, 1, (unsigned int) numSamples * 4, fd);
                     };
 
                     // Clear the output buffer list.
@@ -427,6 +438,10 @@ Java_com_hmomeni_canto_activities_EditActivity_SaveEffect(
     }
 
     closeWAV(fd);
+    delete decoder;
+    if (appliedEffect == 3) {
+        delete outputBuffers;
+    }
 }
 
 extern "C" JNIEXPORT jint
@@ -479,7 +494,7 @@ Java_com_hmomeni_canto_activities_EditActivity_ApplyEffect(
             appliedEffect = effect;
             break;
 
-        case 3:
+        case 3: // pitch shift
             player->setPitchShift(5);
             if (ed_isSinging)
                 micPlayer->setPitchShift(5);
