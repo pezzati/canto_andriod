@@ -331,6 +331,12 @@ Java_com_hmomeni_canto_activities_EditActivity_SaveEffect(
         jstring sourceFile,
         jstring destFile
 ) {
+
+    SuperpoweredAudiopointerList *outputBuffers;
+
+    if (appliedEffect == 3) // we only need this for time stretching and pitch shift
+        outputBuffers = new SuperpoweredAudiopointerList(8, 16);
+
     SuperpoweredDecoder *decoder = new SuperpoweredDecoder();
 
     const char *sourceFilePath = env->GetStringUTFChars(sourceFile, 0);
@@ -369,6 +375,46 @@ Java_com_hmomeni_canto_activities_EditActivity_SaveEffect(
                 SuperpoweredFloatToShortInt(floatBuffer, intBuffer, samplesDecoded);
                 break;
             }
+            case 3: {
+                SuperpoweredAudiobufferlistElement inputBuffer;
+                inputBuffer.samplePosition = decoder->samplePosition;
+                inputBuffer.startSample = 0;
+                inputBuffer.samplesUsed = 0;
+                inputBuffer.endSample = samplesDecoded; // <-- Important!
+                inputBuffer.buffers[0] = SuperpoweredAudiobufferPool::getBuffer(
+                        samplesDecoded * 8 + 64);
+                inputBuffer.buffers[1] = inputBuffer.buffers[2] = inputBuffer.buffers[3] = NULL;
+
+                SuperpoweredTimeStretching *timeStretch = new SuperpoweredTimeStretching(
+                        decoder->samplerate);
+                timeStretch->setRateAndPitchShift(1.0, 5);
+
+                SuperpoweredShortIntToFloat(intBuffer, (float *) inputBuffer.buffers[0],
+                                            samplesDecoded);
+
+                timeStretch->process(&inputBuffer, outputBuffers);
+
+                if (outputBuffers->makeSlice(0, outputBuffers->sampleLength)) {
+
+                    while (true) { // Iterate on every output slice.
+                        // Get pointer to the output samples.
+                        int numSamples = 0;
+                        float *timeStretchedAudio = (float *) outputBuffers->nextSliceItem(
+                                &numSamples);
+                        if (!timeStretchedAudio) break;
+
+                        // Convert the time stretched PCM samples from 32-bit floating point to 16-bit integer.
+                        SuperpoweredFloatToShortInt(timeStretchedAudio, intBuffer,
+                                                    (unsigned int) numSamples);
+
+                        // Write the audio to disk.
+                        fwrite(intBuffer, 1, (unsigned int) numSamples * 4, fd);
+                    };
+
+                    // Clear the output buffer list.
+                    outputBuffers->clear();
+                };
+            }
             default:
                 break;
         }
@@ -376,7 +422,8 @@ Java_com_hmomeni_canto_activities_EditActivity_SaveEffect(
             break;
         }
 
-        fwrite(intBuffer, 1, samplesDecoded * 4, fd);
+        if (appliedEffect != 3) // since it's already been written
+            fwrite(intBuffer, 1, samplesDecoded * 4, fd);
     }
 
     closeWAV(fd);
@@ -399,6 +446,11 @@ Java_com_hmomeni_canto_activities_EditActivity_ApplyEffect(
     switch (effect) {
         default:
         case 0: // no effect
+
+            player->setPitchShift(0);
+            if (ed_isSinging)
+                micPlayer->setPitchShift(0);
+
             appliedEffect = effect;
             break;
         case 1: // reverb
@@ -407,6 +459,11 @@ Java_com_hmomeni_canto_activities_EditActivity_ApplyEffect(
                 reverb->enable(true);
             }
             reverb->setMix(0.8);
+
+            player->setPitchShift(0);
+            if (ed_isSinging)
+                micPlayer->setPitchShift(0);
+
             appliedEffect = effect;
             break;
         case 2: // flanger
@@ -414,6 +471,18 @@ Java_com_hmomeni_canto_activities_EditActivity_ApplyEffect(
                 flanger = new SuperpoweredFlanger((unsigned int) sampleRate);
                 flanger->enable(true);
             }
+
+            player->setPitchShift(0);
+            if (ed_isSinging)
+                micPlayer->setPitchShift(0);
+
+            appliedEffect = effect;
+            break;
+
+        case 3:
+            player->setPitchShift(5);
+            if (ed_isSinging)
+                micPlayer->setPitchShift(5);
             appliedEffect = effect;
             break;
 

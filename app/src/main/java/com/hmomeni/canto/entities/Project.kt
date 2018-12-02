@@ -5,6 +5,10 @@ import android.arch.persistence.room.Ignore
 import android.arch.persistence.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
 
+
+const val PROJECT_TYPE_SINGING = 1
+const val PROJECT_TYPE_DUBSMASH = 2
+
 @Entity
 class Project(
         @PrimaryKey

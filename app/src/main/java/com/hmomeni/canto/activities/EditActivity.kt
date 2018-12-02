@@ -95,6 +95,7 @@ class EditActivity : AppCompatActivity(), View.OnClickListener {
         noneBtn.setOnClickListener(this)
         reverbBtn.setOnClickListener(this)
         flangerBtn.setOnClickListener(this)
+        pitchBtn.setOnClickListener(this)
 
     }
 
@@ -103,6 +104,7 @@ class EditActivity : AppCompatActivity(), View.OnClickListener {
             R.id.noneBtn -> ApplyEffect(0)
             R.id.reverbBtn -> ApplyEffect(1)
             R.id.flangerBtn -> ApplyEffect(2)
+            R.id.pitchBtn -> ApplyEffect(3)
         }
     }
 
@@ -140,7 +142,9 @@ class EditActivity : AppCompatActivity(), View.OnClickListener {
 
     private fun doMux(videoFile: String, audioFile: String) {
         when (Effect()) {
-            1, 2 -> {
+            0 -> {
+            }
+            else -> {
                 SaveEffect(micFile.absolutePath, File(Environment.getExternalStorageDirectory(), "mic-effect.wav").absolutePath)
             }
         }
