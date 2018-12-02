@@ -1,10 +1,7 @@
 package com.hmomeni.canto
 
 import android.app.Application
-import com.hmomeni.canto.di.ApiModule
-import com.hmomeni.canto.di.AppModule
-import com.hmomeni.canto.di.DIComponent
-import com.hmomeni.canto.di.DaggerDIComponent
+import com.hmomeni.canto.di.*
 import com.pixplicity.easyprefs.library.Prefs
 import timber.log.Timber
 
@@ -19,6 +16,7 @@ class App : Application() {
         di = DaggerDIComponent.builder()
                 .appModule(AppModule(this))
                 .apiModule(ApiModule())
+                .roomModule(RoomModule(this))
                 .build()
         Prefs.Builder().setContext(this).setUseDefaultSharedPreference(true).build()
 

@@ -8,11 +8,12 @@ import dagger.Component
 import javax.inject.Singleton
 
 @Singleton
-@Component(modules = [AppModule::class, ApiModule::class])
+@Component(modules = [AppModule::class, ApiModule::class, RoomModule::class])
 interface DIComponent {
     interface Injectable {
         fun inject(diComponent: DIComponent)
     }
+
     fun inject(mainActivity: MainActivity)
     fun inject(mainActivity: LoginViewModel)
     fun inject(mainViewModel: MainViewModel)
