@@ -1,11 +1,9 @@
 package com.hmomeni.canto.activities
 
-import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.content.Intent
 import android.media.AudioManager
 import android.os.Bundle
-import android.os.Environment
 import android.os.Handler
 import android.util.SparseIntArray
 import android.view.View
@@ -13,21 +11,24 @@ import com.azoft.carousellayoutmanager.CarouselLayoutManager
 import com.azoft.carousellayoutmanager.CarouselZoomPostLayoutListener
 import com.hmomeni.canto.*
 import com.hmomeni.canto.adapters.rcl.LyricRclAdapter
+import com.hmomeni.canto.entities.FullPost
 import com.hmomeni.canto.entities.MidiItem
+import com.hmomeni.canto.entities.PROJECT_TYPE_DUBSMASH
+import com.hmomeni.canto.entities.PROJECT_TYPE_SINGING
 import com.hmomeni.canto.utils.DownloadEvent
-import com.hmomeni.canto.utils.ViewModelFactory
 import com.hmomeni.canto.utils.app
 import com.hmomeni.canto.utils.getDuration
 import com.hmomeni.canto.utils.views.AutoFitTextureView
 import com.hmomeni.canto.utils.views.RecordButton
 import com.hmomeni.canto.utils.views.TrimView
 import com.hmomeni.canto.utils.views.VerticalSlider
-import com.hmomeni.canto.vms.DubsmashViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
+import io.reactivex.processors.PublishProcessor
 import kotlinx.android.synthetic.main.activity_dubsmash.*
 import timber.log.Timber
 import java.io.File
+import javax.inject.Inject
 
 
 class DubsmashActivity : CameraActivity() {
@@ -39,7 +40,7 @@ class DubsmashActivity : CameraActivity() {
     override fun getTextureView(): AutoFitTextureView = textureView
 
     override fun getVideoFilePath(): String {
-        return File(Environment.getExternalStorageDirectory(), "dubsmash.mp4").absolutePath
+        return File(filesDir, "dubsmash.mp4").absolutePath
     }
 
     override fun onRecordStarted() {
@@ -61,28 +62,32 @@ class DubsmashActivity : CameraActivity() {
     private lateinit var fileUrl: String
     private var mRatio = RATIO_FULLSCREEN
 
-    private lateinit var viewModel: DubsmashViewModel
-
-    private var seekFraction = 0f
-
     private var disposable: Disposable? = null
 
     private lateinit var timeMap: SparseIntArray
 
     private lateinit var midiItems: List<MidiItem>
 
+    lateinit var post: FullPost
+
+    var type: Int = PROJECT_TYPE_DUBSMASH
+
+    @Inject
+    lateinit var downloadEvents: PublishProcessor<DownloadEvent>
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        viewModel = ViewModelProviders.of(this, ViewModelFactory(app()))[DubsmashViewModel::class.java]
+        app().di.inject(this)
 
-        viewModel.post = intent.getParcelableExtra("post")
+        type = intent.getIntExtra("type", type)
+        post = intent.getParcelableExtra("post")
 
-        midiItems = viewModel.post.content.midi.filter { it.text != "\n" }
+        midiItems = post.content.midi.filter { it.text != "\n" }
 
         timeMap = preProcessLyric(midiItems)
 
-        disposable = viewModel.dEvents()
+        disposable = downloadEvents
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
                     handleDownloadEvents(it)
@@ -90,7 +95,7 @@ class DubsmashActivity : CameraActivity() {
 
         setContentView(R.layout.activity_dubsmash)
 
-        with(viewModel.post.content) {
+        with(post.content) {
             fileUrl = if (!originalFileUrl.isEmpty()) {
                 originalFileUrl
             } else {
@@ -257,10 +262,10 @@ class DubsmashActivity : CameraActivity() {
         InitAudio(
                 bufferSize,
                 sampleRate,
-                true,
-                File(Environment.getExternalStorageDirectory(), "dubsmash").absolutePath,
+                type == PROJECT_TYPE_SINGING,
+                File(filesDir, "dubsmash").absolutePath,
                 File(filesDir, "temp").absolutePath,
-                File(Environment.getExternalStorageDirectory(), "dubsmash-mic").absolutePath,
+                File(filesDir, "dubsmash-mic").absolutePath,
                 File(filesDir, "tempmic").absolutePath
         )
         audioInitialized = true
@@ -276,7 +281,7 @@ class DubsmashActivity : CameraActivity() {
         isPlaying = false
         stopRecordingVideo()
         StopAudio()
-        startActivity(Intent(this, EditActivity::class.java))
+        startActivity(Intent(this, EditActivity::class.java).putExtra("type", type))
     }
 
     private fun preProcessLyric(midiItems: List<MidiItem>): SparseIntArray {

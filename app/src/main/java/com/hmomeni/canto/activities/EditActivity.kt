@@ -1,5 +1,6 @@
 package com.hmomeni.canto.activities
 
+import android.app.ProgressDialog
 import android.content.Context
 import android.media.AudioManager
 import android.media.MediaPlayer
@@ -10,9 +11,14 @@ import android.support.v7.app.AppCompatActivity
 import android.view.SurfaceHolder
 import android.view.View
 import android.widget.SeekBar
+import android.widget.Toast
 import com.hmomeni.canto.R
+import com.hmomeni.canto.entities.PROJECT_TYPE_DUBSMASH
+import com.hmomeni.canto.entities.PROJECT_TYPE_SINGING
 import com.hmomeni.canto.utils.getDuration
 import kotlinx.android.synthetic.main.activity_edit.*
+import nl.bravobit.ffmpeg.FFcommandExecuteResponseHandler
+import nl.bravobit.ffmpeg.FFmpeg
 import timber.log.Timber
 import java.io.File
 
@@ -28,14 +34,19 @@ class EditActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var micFile: File
     private lateinit var videoFile: File
 
+    var type: Int = PROJECT_TYPE_DUBSMASH
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_edit)
+
+        type = intent.getIntExtra("type", type)
+
         initAudio()
 
-        audioFile = File(Environment.getExternalStorageDirectory(), "dubsmash.wav")
-        micFile = File(Environment.getExternalStorageDirectory(), "dubsmash-mic.wav")
-        videoFile = File(Environment.getExternalStorageDirectory(), "dubsmash.mp4")
+        audioFile = File(filesDir, "dubsmash.wav")
+        micFile = File(filesDir, "dubsmash-mic.wav")
+        videoFile = File(filesDir, "dubsmash.mp4")
 
         val duration = getDuration(audioFile.absolutePath)
 
@@ -131,56 +142,104 @@ class EditActivity : AppCompatActivity(), View.OnClickListener {
         InitAudio(
                 bufferSize,
                 sampleRate,
-                true
+                type == PROJECT_TYPE_SINGING
         )
         audioInitialized = true
     }
 
     private fun doMux() {
+        val dialog = ProgressDialog.show(this, "Finalizing project", "Applying effects", true)
+
         when (Effect()) {
             0 -> {
             }
             else -> {
-                SaveEffect(audioFile.absolutePath, File(Environment.getExternalStorageDirectory(), "mic-effect.wav").absolutePath)
+                SaveEffect(micFile.absolutePath, File(filesDir, "mic-effect.wav").absolutePath)
             }
         }
 
-//        val ffmpeg = FFmpeg.getInstance(this)
-//        if (!ffmpeg.isSupported) {
-//            Toast.makeText(this@EditActivity, "FFMPEG not supported!", Toast.LENGTH_SHORT).show()
-//            return
-//        }
-//
-//        val dialog = ProgressDialog(this)
-//        dialog.show()
-//        ffmpeg.execute(
-//                //-codec:a aac -codec:v libx264 -crf 23 -preset ultrafast -map 0:v:0 -map 1:a:0 -map 2:a:0 -shortest
-//                arrayOf("-i", videoFile.absolutePath, "-i", audioFile.absolutePath, "-codec:a", "aac", "-codec:v", "libx264", "-crf", "30", "-preset", "ultrafast", "-map", "0:v:0", "-map", "1:a:0", "-shortest", "-y", File(Environment.getExternalStorageDirectory(), "out.mp4").absolutePath),
-//                object : FFcommandExecuteResponseHandler {
-//                    override fun onFinish() {
-//                        Timber.d("Mux finished")
-//                        dialog.dismiss()
-//                    }
-//
-//                    override fun onSuccess(message: String?) {
-//                        Timber.d("Mux successful: %s", message)
-//                        Toast.makeText(this@EditActivity, "Muxing done", Toast.LENGTH_SHORT).show()
-//                    }
-//
-//                    override fun onFailure(message: String?) {
-//                        Timber.e("Mux failed: %s", message)
-//                        Toast.makeText(this@EditActivity, "Muxing failed", Toast.LENGTH_SHORT).show()
-//                    }
-//
-//                    override fun onProgress(message: String?) {
-//                        Timber.d("Mux progress: %s", message)
-//                    }
-//
-//                    override fun onStart() {
-//                        Timber.d("Mux started")
-//                    }
-//                }
-//        )
+        dialog.setMessage("Producing output")
+
+        val ffmpeg = FFmpeg.getInstance(this)
+        if (!ffmpeg.isSupported) {
+            Toast.makeText(this@EditActivity, "FFMPEG not supported!", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        val commands = when (type) {
+            PROJECT_TYPE_DUBSMASH -> arrayOf(
+                    "-i", videoFile.absolutePath,
+                    "-i", audioFile.absolutePath,
+                    "-codec:a", "aac",
+                    "-codec:v", "libx264",
+                    "-crf", "30",
+                    "-preset", "ultrafast",
+                    "-map", "0:v:0",
+                    "-map", "1:a:0",
+                    "-shortest", "-y", File(Environment.getExternalStorageDirectory(), "out.mp4").absolutePath
+            )
+            PROJECT_TYPE_SINGING -> if (Effect() == 0) {
+                arrayOf(
+                        "-i", videoFile.absolutePath,
+                        "-i", audioFile.absolutePath,
+                        "-i", micFile.absolutePath,
+                        "-filter_complex", "[1:0][2:0]  amix=inputs=2:duration=longest",
+                        "-codec:a", "aac",
+                        "-codec:v", "libx264",
+                        "-crf", "30",
+                        "-preset", "ultrafast",
+                        "-map", "0:v",
+                        "-map", "1:a:0",
+                        "-map", "2:a:0",
+                        "-shortest", "-y", File(Environment.getExternalStorageDirectory(), "out.mp4").absolutePath
+                )
+            } else {
+                arrayOf(
+                        "-i", videoFile.absolutePath,
+                        "-i", audioFile.absolutePath,
+                        "-i", File(filesDir, "mic-effect.wav").absolutePath,
+                        "-filter_complex", "[1:0][2:0]  amix=inputs=2:duration=longest",
+                        "-codec:a", "aac",
+                        "-codec:v", "libx264",
+                        "-crf", "30",
+                        "-preset", "ultrafast",
+                        "-map", "0:v",
+                        "-map", "1:a:0",
+                        "-map", "2:a:0",
+                        "-shortest", "-y", File(Environment.getExternalStorageDirectory(), "out.mp4").absolutePath
+                )
+            }
+            else -> null
+        }
+
+
+        ffmpeg.execute(
+                commands,
+                object : FFcommandExecuteResponseHandler {
+                    override fun onFinish() {
+                        Timber.d("Mux finished")
+                        dialog.dismiss()
+                    }
+
+                    override fun onSuccess(message: String?) {
+                        Timber.d("Mux successful: %s", message)
+                        Toast.makeText(this@EditActivity, "Muxing done", Toast.LENGTH_SHORT).show()
+                    }
+
+                    override fun onFailure(message: String?) {
+                        Timber.e("Mux failed: %s", message)
+                        Toast.makeText(this@EditActivity, "Muxing failed", Toast.LENGTH_SHORT).show()
+                    }
+
+                    override fun onProgress(message: String?) {
+                        Timber.d("Mux progress: %s", message)
+                    }
+
+                    override fun onStart() {
+                        Timber.d("Mux started")
+                    }
+                }
+        )
     }
 
     external fun InitAudio(bufferSize: Int, sampleRate: Int, isSinging: Boolean = false)

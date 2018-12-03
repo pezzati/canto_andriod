@@ -2,6 +2,7 @@ package com.hmomeni.canto.di
 
 import com.hmomeni.canto.App
 import com.hmomeni.canto.DownloadService
+import com.hmomeni.canto.activities.DubsmashActivity
 import com.hmomeni.canto.activities.MainActivity
 import com.hmomeni.canto.fragments.RecorderFragment
 import com.hmomeni.canto.vms.*
@@ -24,4 +25,5 @@ interface DIComponent {
     fun inject(downloadService: DownloadService)
     fun inject(dubsmashViewModel: DubsmashViewModel)
     fun inject(app: App)
+    fun inject(dubsmashActivity: DubsmashActivity)
 }

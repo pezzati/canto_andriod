@@ -30,6 +30,8 @@ import com.hmomeni.canto.activities.DubsmashActivity
 import com.hmomeni.canto.activities.KaraokeActivity
 import com.hmomeni.canto.adapters.viewpager.ModePagerAdapter
 import com.hmomeni.canto.api.Api
+import com.hmomeni.canto.entities.PROJECT_TYPE_DUBSMASH
+import com.hmomeni.canto.entities.PROJECT_TYPE_SINGING
 import com.hmomeni.canto.utils.*
 import com.hmomeni.canto.utils.views.AutoFitTextureView
 import com.karumi.dexter.Dexter
@@ -183,7 +185,20 @@ class RecorderFragment : Fragment() {
                     .doOnSubscribe { loadingDialog.show() }
                     .doAfterTerminate { loadingDialog.dismiss() }
                     .subscribe({
-                        startActivity(Intent(context, DubsmashActivity::class.java).putExtra("post", it))
+                        startActivity(Intent(context, DubsmashActivity::class.java).putExtra("post", it).putExtra("type", PROJECT_TYPE_DUBSMASH))
+                    }, {
+                        Timber.e(it)
+                    })
+        }
+
+        textureView2.setOnClickListener {
+            val loadingDialog = ProgressDialog(context)
+            api.getSinglePost(postId = selectPostId)
+                    .iomain()
+                    .doOnSubscribe { loadingDialog.show() }
+                    .doAfterTerminate { loadingDialog.dismiss() }
+                    .subscribe({
+                        startActivity(Intent(context, DubsmashActivity::class.java).putExtra("post", it).putExtra("type", PROJECT_TYPE_SINGING))
                     }, {
                         Timber.e(it)
                     })
