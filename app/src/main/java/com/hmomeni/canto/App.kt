@@ -1,11 +1,20 @@
 package com.hmomeni.canto
 
 import android.app.Application
+import com.google.gson.Gson
 import com.hmomeni.canto.di.*
 import com.pixplicity.easyprefs.library.Prefs
 import timber.log.Timber
+import javax.inject.Inject
 
 class App : Application() {
+
+    companion object {
+        lateinit var gson: Gson
+    }
+
+    @Inject
+    lateinit var iGson: Gson
 
     lateinit var di: DIComponent
     override fun onCreate() {
@@ -18,6 +27,10 @@ class App : Application() {
                 .apiModule(ApiModule())
                 .roomModule(RoomModule(this))
                 .build()
+
+        di.inject(this)
+        gson = iGson
+
         Prefs.Builder().setContext(this).setUseDefaultSharedPreference(true).build()
 
     }

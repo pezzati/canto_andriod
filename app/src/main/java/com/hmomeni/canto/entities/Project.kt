@@ -17,7 +17,9 @@ class Project(
         @SerializedName("name")
         var name: String,
         @SerializedName("type")
-        var type: Int
+        var type: Int,
+        @SerializedName("post_id")
+        var postId: Int
 ) {
     @Ignore
     @SerializedName("tracks")

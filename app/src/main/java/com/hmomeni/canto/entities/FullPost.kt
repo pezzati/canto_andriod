@@ -1,39 +1,43 @@
 package com.hmomeni.canto.entities
 
+import android.arch.persistence.room.Entity
+import android.arch.persistence.room.PrimaryKey
 import android.os.Parcel
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
 
+@Entity
 data class FullPost(
-        @field:SerializedName("id")
+        @PrimaryKey(autoGenerate = false)
+        @SerializedName("id")
         val id: Int,
-        @field:SerializedName("name")
+        @SerializedName("name")
         val name: String = "",
-        @field:SerializedName("description")
+        @SerializedName("description")
         val description: String = "",
-        @field:SerializedName("type")
+        @SerializedName("type")
         val type: String,
-        @field:SerializedName("is_premium")
+        @SerializedName("is_premium")
         val isPremium: Boolean = false,
-        @field:SerializedName("is_favorite")
+        @SerializedName("is_favorite")
         val isFavorite: Boolean = false,
-        @field:SerializedName("like")
+        @SerializedName("like")
         val like: Int = 0,
-        @field:SerializedName("popularity_rate")
+        @SerializedName("popularity_rate")
         val popularityRate: Int = 0,
-        @field:SerializedName("link")
+        @SerializedName("link")
         val link: String? = null,
-        @field:SerializedName("created_date")
+        @SerializedName("created_date")
         val createdDate: String? = null,
-        @field:SerializedName("liked_it")
+        @SerializedName("liked_it")
         val likedIt: Boolean = false,
-        @field:SerializedName("artist")
+        @SerializedName("artist")
         val artist: Artist,
-        @field:SerializedName("content")
+        @SerializedName("content")
         val content: Content,
-        @field:SerializedName("genre")
+        @SerializedName("genre")
         val genre: Genre? = null,
-        @field:SerializedName("cover_photo")
+        @SerializedName("cover_photo")
         val coverPhoto: CoverPhoto? = null
 ) : Parcelable {
     constructor(source: Parcel) : this(
