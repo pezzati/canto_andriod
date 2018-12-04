@@ -29,4 +29,7 @@
     <string name="you_must_play_the_song_first">You must play the song first!</string>
     <string name="recording_started">Recording started</string>
     <string name="recording_stopped">Recording stopped</string>
+    <string name="download_failed_try_again">Download failed, try again.</string>
+    <string name="saving_project_failed">Saving project failed!</string>
+    <string name="saving_project_done">Project save to your user space.</string>
 </resources>

@@ -4,9 +4,11 @@ import android.content.Context
 import android.content.Intent
 import android.media.AudioManager
 import android.os.Bundle
+import android.os.Environment
 import android.os.Handler
 import android.util.SparseIntArray
 import android.view.View
+import android.widget.Toast
 import com.azoft.carousellayoutmanager.CarouselLayoutManager
 import com.azoft.carousellayoutmanager.CarouselZoomPostLayoutListener
 import com.hmomeni.canto.*
@@ -40,7 +42,7 @@ class DubsmashActivity : CameraActivity() {
     override fun getTextureView(): AutoFitTextureView = textureView
 
     override fun getVideoFilePath(): String {
-        return File(filesDir, "dubsmash.mp4").absolutePath
+        return File(baseFile, "dubsmash.mp4").absolutePath
     }
 
     override fun onRecordStarted() {
@@ -70,6 +72,9 @@ class DubsmashActivity : CameraActivity() {
 
     lateinit var post: FullPost
 
+    lateinit var baseFile: File
+
+
     var type: Int = PROJECT_TYPE_DUBSMASH
 
     @Inject
@@ -77,6 +82,8 @@ class DubsmashActivity : CameraActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        baseFile = Environment.getExternalStorageDirectory()
 
         app().di.inject(this)
 
@@ -88,6 +95,7 @@ class DubsmashActivity : CameraActivity() {
         timeMap = preProcessLyric(midiItems)
 
         disposable = downloadEvents
+                .onBackpressureDrop()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
                     handleDownloadEvents(it)
@@ -207,7 +215,7 @@ class DubsmashActivity : CameraActivity() {
                 prepare()
             }
             ACTION_DOWNLOAD_FAILED -> {
-
+                Toast.makeText(this, R.string.download_failed_try_again, Toast.LENGTH_SHORT).show()
             }
             ACTION_DOWNLOAD_CANCEL -> {
 
@@ -263,10 +271,10 @@ class DubsmashActivity : CameraActivity() {
                 bufferSize,
                 sampleRate,
                 type == PROJECT_TYPE_SINGING,
-                File(filesDir, "dubsmash").absolutePath,
-                File(filesDir, "temp").absolutePath,
-                File(filesDir, "dubsmash-mic").absolutePath,
-                File(filesDir, "tempmic").absolutePath
+                File(baseFile, "dubsmash").absolutePath,
+                File(baseFile, "temp").absolutePath,
+                File(baseFile, "dubsmash-mic").absolutePath,
+                File(baseFile, "tempmic").absolutePath
         )
         audioInitialized = true
     }
@@ -281,7 +289,7 @@ class DubsmashActivity : CameraActivity() {
         isPlaying = false
         stopRecordingVideo()
         StopAudio()
-        startActivity(Intent(this, EditActivity::class.java).putExtra("type", type))
+        startActivity(Intent(this, EditActivity::class.java).putExtra("type", type).putExtra("post", post))
     }
 
     private fun preProcessLyric(midiItems: List<MidiItem>): SparseIntArray {

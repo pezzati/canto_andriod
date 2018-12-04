@@ -34,6 +34,8 @@ static int sampleRate, bufferSize;
 
 static int appliedEffect = 0;
 
+bool isAudioStarted = false;
+bool isAudioInitialized = false;
 
 static bool ed_audioProcessing(
         void *__unused clientData, // custom pointer
@@ -146,6 +148,8 @@ Java_com_hmomeni_canto_activities_EditActivity_InitAudio(
             bufferSize * 2
     );
 
+    isAudioInitialized = true;
+
 }
 
 extern "C" JNIEXPORT jdouble
@@ -187,16 +191,20 @@ Java_com_hmomeni_canto_activities_EditActivity_StartAudio(
     if (ed_isSinging)
         micPlayer->play(false);
     SuperpoweredCPU::setSustainedPerformanceMode(true);
+    isAudioStarted = true;
 }
 
 extern "C" JNIEXPORT void
 Java_com_hmomeni_canto_activities_EditActivity_StopAudio(
         JNIEnv  __unused *env,
         jobject  __unused obj) {
-    player->pause();
-    if (ed_isSinging)
-        micPlayer->pause();
-    SuperpoweredCPU::setSustainedPerformanceMode(false);
+    if (isAudioStarted) {
+        player->pause();
+        if (ed_isSinging)
+            micPlayer->pause();
+        SuperpoweredCPU::setSustainedPerformanceMode(false);
+        isAudioStarted = false;
+    }
 }
 
 extern "C" JNIEXPORT jdouble
@@ -239,7 +247,8 @@ Java_com_hmomeni_canto_activities_EditActivity_onBackground(
         JNIEnv *__unused env,
         jobject __unused obj
 ) {
-    audioIO->onBackground();
+    if (audioIO != nullptr)
+        audioIO->onBackground();
 }
 
 // onForeground - Resume audio processing.
@@ -248,7 +257,8 @@ Java_com_hmomeni_canto_activities_EditActivity_onForeground(
         JNIEnv *__unused env,
         jobject __unused obj
 ) {
-    audioIO->onForeground();
+    if (audioIO != nullptr)
+        audioIO->onForeground();
 }
 
 // Cleanup - Free resources.

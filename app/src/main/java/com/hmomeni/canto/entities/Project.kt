@@ -13,7 +13,7 @@ const val PROJECT_TYPE_DUBSMASH = 2
 class Project(
         @PrimaryKey
         @SerializedName("id")
-        var id: Int,
+        var id: Int? = null,
         @SerializedName("name")
         var name: String,
         @SerializedName("type")

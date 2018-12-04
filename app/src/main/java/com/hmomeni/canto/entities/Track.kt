@@ -27,7 +27,7 @@ const val TRACK_TYPE_FINAL = 3
 class Track(
         @PrimaryKey
         @SerializedName("id")
-        var id: Int,
+        var id: Int? = null,
         @SerializedName("project_id")
         var projectId: Int,
         @SerializedName("type")
