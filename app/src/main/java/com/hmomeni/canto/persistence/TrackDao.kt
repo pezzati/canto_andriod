@@ -5,12 +5,11 @@ import android.arch.persistence.room.Delete
 import android.arch.persistence.room.Insert
 import android.arch.persistence.room.Update
 import com.hmomeni.canto.entities.Track
-import io.reactivex.Single
 
 @Dao
 interface TrackDao {
     @Insert
-    fun insert(track: Track): Single<Int>
+    fun insert(track: Track): Long
 
     @Update
     fun update(track: Track)

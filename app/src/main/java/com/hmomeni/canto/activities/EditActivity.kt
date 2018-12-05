@@ -48,7 +48,9 @@ class EditActivity : AppCompatActivity(), View.OnClickListener {
     private var type: Int = PROJECT_TYPE_SINGING
     private lateinit var post: FullPost
 
-    private lateinit var baseFile: File
+    private lateinit var baseDir: File
+
+    private var ratio: Int = RATIO_FULLSCREEN
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,17 +58,18 @@ class EditActivity : AppCompatActivity(), View.OnClickListener {
 
         viewModel = ViewModelProviders.of(this, ViewModelFactory(app()))[EditViewModel::class.java]
 
-        baseFile = Environment.getExternalStorageDirectory()
+        baseDir = Environment.getExternalStorageDirectory()
 
         type = intent.getIntExtra("type", type)
         post = intent.getParcelableExtra("post")
+        ratio = intent.getIntExtra("ratio", RATIO_FULLSCREEN)
 
 
         initAudio()
 
-        audioFile = File(baseFile, "dubsmash.wav")
-        micFile = File(baseFile, "dubsmash-mic.wav")
-        videoFile = File(baseFile, "dubsmash.mp4")
+        audioFile = File(baseDir, "dubsmash.wav")
+        micFile = File(baseDir, "dubsmash-mic.wav")
+        videoFile = File(baseDir, "dubsmash.mp4")
 
         val duration = getDuration(audioFile.absolutePath)
 
@@ -106,8 +109,18 @@ class EditActivity : AppCompatActivity(), View.OnClickListener {
         mediaPlayer.setDataSource(videoFile.absolutePath)
         mediaPlayer.prepare()
         surfaceView.holder.addCallback(object : SurfaceHolder.Callback {
-            override fun surfaceChanged(holder: SurfaceHolder, format: Int, width: Int, height: Int) {
-
+            override fun surfaceChanged(holder: SurfaceHolder, format: Int, w: Int, h: Int) {
+                if (ratio == RATIO_SQUARE) {
+                    cropTop.layoutParams = cropTop.layoutParams.apply {
+                        height = h / 2 - w / 2
+                    }
+                    cropBottom.layoutParams = cropBottom.layoutParams.apply {
+                        height = h / 2 - w / 2
+                    }
+                } else {
+                    cropTop.visibility = View.GONE
+                    cropBottom.visibility = View.GONE
+                }
             }
 
             override fun surfaceDestroyed(holder: SurfaceHolder) {
@@ -126,7 +139,13 @@ class EditActivity : AppCompatActivity(), View.OnClickListener {
 
     }
 
+    override fun onResume() {
+        super.onResume()
+        onForeground()
+    }
+
     override fun onPause() {
+        onBackground()
         super.onPause()
     }
 
@@ -182,8 +201,8 @@ class EditActivity : AppCompatActivity(), View.OnClickListener {
             0 -> {
             }
             else -> {
-                SaveEffect(micFile.absolutePath, File(baseFile, "mic-effect.wav").absolutePath)
-                SaveEffect(audioFile.absolutePath, File(baseFile, "dubsmash-effect.wav").absolutePath)
+                SaveEffect(micFile.absolutePath, File(baseDir, "mic-effect.wav").absolutePath)
+                SaveEffect(audioFile.absolutePath, File(baseDir, "dubsmash-effect.wav").absolutePath)
             }
         }
     }
@@ -213,7 +232,7 @@ class EditActivity : AppCompatActivity(), View.OnClickListener {
                             "-preset", "ultrafast",
                             "-map", "0:v:0",
                             "-map", "1:a:0",
-                            "-shortest", "-y", File(baseFile, "out.mp4").absolutePath
+                            "-shortest", "-y", File(baseDir, "out.mp4").absolutePath
                     )
                     PROJECT_TYPE_SINGING -> if (Effect() == 0) {
                         arrayOf(
@@ -228,13 +247,13 @@ class EditActivity : AppCompatActivity(), View.OnClickListener {
                                 "-map", "0:v",
                                 "-map", "1:a:0",
                                 "-map", "2:a:0",
-                                "-shortest", "-y", File(baseFile, "out.mp4").absolutePath
+                                "-shortest", "-y", File(baseDir, "out.mp4").absolutePath
                         )
                     } else {
                         arrayOf(
                                 "-i", videoFile.absolutePath,
-                                "-i", File(baseFile, "dubsmash-effect.wav").absolutePath,
-                                "-i", File(baseFile, "mic-effect.wav").absolutePath,
+                                "-i", File(baseDir, "dubsmash-effect.wav").absolutePath,
+                                "-i", File(baseDir, "mic-effect.wav").absolutePath,
                                 "-filter_complex", "[1:0][2:0]  amix=inputs=2:duration=longest",
                                 "-codec:a", "aac",
                                 "-codec:v", "libx264",
@@ -243,7 +262,7 @@ class EditActivity : AppCompatActivity(), View.OnClickListener {
                                 "-map", "0:v",
                                 "-map", "1:a:0",
                                 "-map", "2:a:0",
-                                "-shortest", "-y", File(baseFile, "out.mp4").absolutePath
+                                "-shortest", "-y", File(baseDir, "out.mp4").absolutePath
                         )
                     }
                     else -> null
@@ -287,9 +306,9 @@ class EditActivity : AppCompatActivity(), View.OnClickListener {
 
     private fun saveProject() {
         disposable = if (type == PROJECT_TYPE_SINGING) {
-            viewModel.saveSinging(File(baseFile, "out.mp4"), post)
+            viewModel.saveSinging(File(baseDir, "out.mp4"), post)
         } else {
-            viewModel.saveSinging(File(baseFile, "out.mp4"), post)
+            viewModel.saveDubsmash(File(baseDir, "out.mp4"), post)
         }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

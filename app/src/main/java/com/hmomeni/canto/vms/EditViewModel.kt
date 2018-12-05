@@ -34,16 +34,16 @@ class EditViewModel : ViewModel(), DIComponent.Injectable {
                     postId = post.id
             )
 
-            val pId = projectDao.insert(project).blockingGet()
+            val pId = projectDao.insert(project)
 
             val videoTrack = Track(
-                    projectId = pId,
+                    projectId = pId.toInt(),
                     type = TRACK_TYPE_FINAL,
                     index = 0,
                     filePath = finalFile.absolutePath
             )
 
-            trackDao.insert(videoTrack).blockingGet()
+            trackDao.insert(videoTrack)
 
             it.onComplete()
         }
@@ -60,16 +60,16 @@ class EditViewModel : ViewModel(), DIComponent.Injectable {
                     postId = post.id
             )
 
-            val pId = projectDao.insert(project).blockingGet()
+            val pId = projectDao.insert(project)
 
             val videoTrack = Track(
-                    projectId = pId,
+                    projectId = pId.toInt(),
                     type = TRACK_TYPE_FINAL,
                     index = 0,
                     filePath = finalFile.absolutePath
             )
 
-            trackDao.insert(videoTrack).blockingGet()
+            trackDao.insert(videoTrack)
 
             it.onComplete()
         }

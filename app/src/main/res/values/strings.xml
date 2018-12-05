@@ -32,4 +32,7 @@
     <string name="download_failed_try_again">Download failed, try again.</string>
     <string name="saving_project_failed">Saving project failed!</string>
     <string name="saving_project_done">Project save to your user space.</string>
+    <string name="profile">Profile</string>
+    <string name="posts">Posts</string>
+    <string name="story">Story</string>
 </resources>

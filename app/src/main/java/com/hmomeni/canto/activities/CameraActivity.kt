@@ -44,6 +44,7 @@ abstract class CameraActivity : AppCompatActivity() {
     abstract fun onRecordStarted()
     abstract fun onRecordStopped()
     abstract fun onRecordError()
+    abstract fun onTextureAvailable(width: Int, height: Int)
 
     val CAMERA_FRONT = "1"
     val CAMERA_BACK = "0"
@@ -81,6 +82,7 @@ abstract class CameraActivity : AppCompatActivity() {
 
         override fun onSurfaceTextureAvailable(texture: SurfaceTexture, width: Int, height: Int) {
             openCamera(width, height)
+            onTextureAvailable(width, height)
         }
 
         override fun onSurfaceTextureSizeChanged(texture: SurfaceTexture, width: Int, height: Int) {

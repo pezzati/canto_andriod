@@ -32,8 +32,11 @@ import timber.log.Timber
 import java.io.File
 import javax.inject.Inject
 
+const val RATIO_FULLSCREEN = 1
+const val RATIO_SQUARE = 2
 
 class DubsmashActivity : CameraActivity() {
+
 
     init {
         System.loadLibrary("Dubsmash")
@@ -54,15 +57,22 @@ class DubsmashActivity : CameraActivity() {
     override fun onRecordError() {
     }
 
-    val RATIO_FULLSCREEN = 1
-    val RATIO_SQUARE = 2
+    override fun onTextureAvailable(w: Int, h: Int) {
+        cropTop.layoutParams = cropTop.layoutParams.apply {
+            height = h / 2 - w / 2
+        }
+        cropBottom.layoutParams = cropBottom.layoutParams.apply {
+            height = h / 2 - w / 2
+        }
+    }
+
 
     private var audioInitialized: Boolean = false
     private var isPlaying: Boolean = false
 
     private lateinit var filePath: String
     private lateinit var fileUrl: String
-    private var mRatio = RATIO_FULLSCREEN
+    private var mRatio = RATIO_SQUARE
 
     private var disposable: Disposable? = null
 
@@ -131,12 +141,13 @@ class DubsmashActivity : CameraActivity() {
             switchCamera()
         }
         switchRatio.setOnClickListener {
-            closeCamera()
             if (mRatio == RATIO_FULLSCREEN) {
-                ratio = 4 / 3f
+                cropTop.visibility = View.GONE
+                cropBottom.visibility = View.GONE
                 mRatio = RATIO_SQUARE
             } else {
-                ratio = 16 / 9f
+                cropTop.visibility = View.VISIBLE
+                cropBottom.visibility = View.VISIBLE
                 mRatio = RATIO_FULLSCREEN
             }
         }
@@ -289,7 +300,7 @@ class DubsmashActivity : CameraActivity() {
         isPlaying = false
         stopRecordingVideo()
         StopAudio()
-        startActivity(Intent(this, EditActivity::class.java).putExtra("type", type).putExtra("post", post))
+        startActivity(Intent(this, EditActivity::class.java).putExtra("type", type).putExtra("post", post).putExtra("ratio", mRatio))
     }
 
     private fun preProcessLyric(midiItems: List<MidiItem>): SparseIntArray {
