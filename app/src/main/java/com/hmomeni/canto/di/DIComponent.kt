@@ -27,4 +27,5 @@ interface DIComponent {
     fun inject(app: App)
     fun inject(dubsmashActivity: DubsmashActivity)
     fun inject(editViewModel: EditViewModel)
+    fun inject(profileViewModel: ProfileViewModel)
 }

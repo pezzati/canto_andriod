@@ -35,5 +35,7 @@ class Track(
         @SerializedName("index")
         var index: Int,
         @SerializedName("file_path")
-        var filePath: String
+        var filePath: String,
+        @SerializedName("ratio")
+        var ratio: Int
 )

@@ -329,9 +329,9 @@ class EditActivity : AppCompatActivity(), View.OnClickListener {
 
     private fun saveProject() {
         disposable = if (type == PROJECT_TYPE_SINGING) {
-            viewModel.saveSinging(File(baseDir, "out.mp4"), post)
+            viewModel.saveSinging(File(baseDir, "out.mp4"), post, ratio)
         } else {
-            viewModel.saveDubsmash(File(baseDir, "out.mp4"), post)
+            viewModel.saveDubsmash(File(baseDir, "out.mp4"), post, ratio)
         }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

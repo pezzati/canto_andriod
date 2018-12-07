@@ -23,7 +23,7 @@ class EditViewModel : ViewModel(), DIComponent.Injectable {
     @Inject
     lateinit var trackDao: TrackDao
 
-    fun saveDubsmash(finalFile: File, post: FullPost): Completable {
+    fun saveDubsmash(finalFile: File, post: FullPost, ratio: Int): Completable {
         return Completable.create {
 
             postDao.insertIgnore(post)
@@ -40,7 +40,8 @@ class EditViewModel : ViewModel(), DIComponent.Injectable {
                     projectId = pId.toInt(),
                     type = TRACK_TYPE_FINAL,
                     index = 0,
-                    filePath = finalFile.absolutePath
+                    filePath = finalFile.absolutePath,
+                    ratio = ratio
             )
 
             trackDao.insert(videoTrack)
@@ -49,7 +50,7 @@ class EditViewModel : ViewModel(), DIComponent.Injectable {
         }
     }
 
-    fun saveSinging(finalFile: File, post: FullPost): Completable {
+    fun saveSinging(finalFile: File, post: FullPost, ratio: Int): Completable {
         return Completable.create {
 
             postDao.insert(post)
@@ -66,7 +67,8 @@ class EditViewModel : ViewModel(), DIComponent.Injectable {
                     projectId = pId.toInt(),
                     type = TRACK_TYPE_FINAL,
                     index = 0,
-                    filePath = finalFile.absolutePath
+                    filePath = finalFile.absolutePath,
+                    ratio = ratio
             )
 
             trackDao.insert(videoTrack)
