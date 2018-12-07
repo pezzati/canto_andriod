@@ -26,7 +26,7 @@ class EditViewModel : ViewModel(), DIComponent.Injectable {
     fun saveDubsmash(finalFile: File, post: FullPost): Completable {
         return Completable.create {
 
-            postDao.insert(post)
+            postDao.insertIgnore(post)
 
             val project = Project(
                     name = post.name,

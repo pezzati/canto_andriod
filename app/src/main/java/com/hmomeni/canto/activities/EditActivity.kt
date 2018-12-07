@@ -221,24 +221,40 @@ class EditActivity : AppCompatActivity(), View.OnClickListener {
                     dialog.dismiss()
                     return@runOnUiThread
                 }
-
-                val commands = when (type) {
-                    PROJECT_TYPE_DUBSMASH -> arrayOf(
-                            "-i", videoFile.absolutePath,
-                            "-i", audioFile.absolutePath,
-                            "-codec:a", "aac",
-                            "-codec:v", "libx264",
-                            "-crf", "30",
-                            "-preset", "ultrafast",
-                            "-map", "0:v:0",
-                            "-map", "1:a:0",
-                            "-shortest", "-y", File(baseDir, "out.mp4").absolutePath
-                    )
+                val commands: MutableList<String> = mutableListOf()
+                when (type) {
+                    PROJECT_TYPE_DUBSMASH -> {
+                        commands += listOf(
+                                "-i", videoFile.absolutePath,
+                                "-i", audioFile.absolutePath
+                        )
+                        if (ratio == RATIO_SQUARE) {
+                            commands.addAll(listOf(
+                                    "-filter:v", "crop=in_w:in_h-${surfaceView.height - surfaceView.width}"
+                            ))
+                        }
+                        commands.addAll(listOf(
+                                "-codec:a", "aac",
+                                "-codec:v", "libx264",
+                                "-crf", "30",
+                                "-preset", "ultrafast",
+                                "-map", "0:v:0",
+                                "-map", "1:a:0",
+                                "-shortest", "-y", File(baseDir, "out.mp4").absolutePath
+                        ))
+                    }
                     PROJECT_TYPE_SINGING -> if (Effect() == 0) {
-                        arrayOf(
+                        commands += listOf(
                                 "-i", videoFile.absolutePath,
                                 "-i", audioFile.absolutePath,
-                                "-i", micFile.absolutePath,
+                                "-i", micFile.absolutePath
+                        )
+                        if (ratio == RATIO_SQUARE) {
+                            commands.addAll(listOf(
+                                    "-filter:v", "crop=in_w:in_h-${surfaceView.height - surfaceView.width}"
+                            ))
+                        }
+                        commands.addAll(listOf(
                                 "-filter_complex", "[1:0][2:0]  amix=inputs=2:duration=longest",
                                 "-codec:a", "aac",
                                 "-codec:v", "libx264",
@@ -248,12 +264,20 @@ class EditActivity : AppCompatActivity(), View.OnClickListener {
                                 "-map", "1:a:0",
                                 "-map", "2:a:0",
                                 "-shortest", "-y", File(baseDir, "out.mp4").absolutePath
-                        )
+                        ))
                     } else {
-                        arrayOf(
+
+                        commands += listOf(
                                 "-i", videoFile.absolutePath,
                                 "-i", File(baseDir, "dubsmash-effect.wav").absolutePath,
-                                "-i", File(baseDir, "mic-effect.wav").absolutePath,
+                                "-i", File(baseDir, "mic-effect.wav").absolutePath
+                        )
+                        if (ratio == RATIO_SQUARE) {
+                            commands.addAll(listOf(
+                                    "-filter:v", "crop=in_w:in_h-${surfaceView.height - surfaceView.width}"
+                            ))
+                        }
+                        commands.addAll(listOf(
                                 "-filter_complex", "[1:0][2:0]  amix=inputs=2:duration=longest",
                                 "-codec:a", "aac",
                                 "-codec:v", "libx264",
@@ -263,14 +287,13 @@ class EditActivity : AppCompatActivity(), View.OnClickListener {
                                 "-map", "1:a:0",
                                 "-map", "2:a:0",
                                 "-shortest", "-y", File(baseDir, "out.mp4").absolutePath
-                        )
+                        ))
                     }
-                    else -> null
                 }
 
 
                 ffmpeg.execute(
-                        commands,
+                        commands.toTypedArray(),
                         object : FFcommandExecuteResponseHandler {
                             override fun onFinish() {
                                 Timber.d("Mux finished")
