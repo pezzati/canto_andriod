@@ -13,13 +13,13 @@ const val PROJECT_TYPE_DUBSMASH = 2
 class Project(
         @PrimaryKey
         @SerializedName("id")
-        var id: Int? = null,
+        var id: Long? = null,
         @SerializedName("name")
         var name: String,
         @SerializedName("type")
         var type: Int,
         @SerializedName("post_id")
-        var postId: Int
+        var postId: Long
 ) {
     @Ignore
     @SerializedName("tracks")

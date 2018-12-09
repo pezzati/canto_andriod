@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "4fbcf4ffdb0406494136a7c40df1043b",
+    "identityHash": "7464614b94175001ac1a2b218a0458e3",
     "entities": [
       {
         "tableName": "Project",
@@ -44,7 +44,7 @@
       },
       {
         "tableName": "Track",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER, `projectId` INTEGER NOT NULL, `type` INTEGER NOT NULL, `index` INTEGER NOT NULL, `filePath` TEXT NOT NULL, PRIMARY KEY(`id`), FOREIGN KEY(`projectId`) REFERENCES `Project`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION DEFERRABLE INITIALLY DEFERRED)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER, `projectId` INTEGER NOT NULL, `type` INTEGER NOT NULL, `index` INTEGER NOT NULL, `filePath` TEXT NOT NULL, `ratio` INTEGER NOT NULL, PRIMARY KEY(`id`), FOREIGN KEY(`projectId`) REFERENCES `Project`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION DEFERRABLE INITIALLY DEFERRED)",
         "fields": [
           {
             "fieldPath": "id",
@@ -74,6 +74,12 @@
             "fieldPath": "filePath",
             "columnName": "filePath",
             "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "ratio",
+            "columnName": "ratio",
+            "affinity": "INTEGER",
             "notNull": true
           }
         ],
@@ -214,7 +220,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"4fbcf4ffdb0406494136a7c40df1043b\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"7464614b94175001ac1a2b218a0458e3\")"
     ]
   }
 }

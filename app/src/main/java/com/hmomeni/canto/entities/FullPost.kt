@@ -10,7 +10,7 @@ import com.google.gson.annotations.SerializedName
 data class FullPost(
         @PrimaryKey(autoGenerate = false)
         @SerializedName("id")
-        val id: Int,
+        val id: Long,
         @SerializedName("name")
         val name: String = "",
         @SerializedName("description")
@@ -41,7 +41,7 @@ data class FullPost(
         val coverPhoto: CoverPhoto? = null
 ) : Parcelable {
     constructor(source: Parcel) : this(
-            source.readInt(),
+            source.readLong(),
             source.readString(),
             source.readString(),
             source.readString(),
@@ -61,7 +61,7 @@ data class FullPost(
     override fun describeContents() = 0
 
     override fun writeToParcel(dest: Parcel, flags: Int) = with(dest) {
-        writeInt(id)
+        writeLong(id)
         writeString(name)
         writeString(description)
         writeString(type)

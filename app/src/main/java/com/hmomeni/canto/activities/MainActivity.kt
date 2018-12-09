@@ -62,6 +62,12 @@ class MainActivity : AppCompatActivity() {
                             }
                             navController.navigate(R.id.action_mainFragment_to_recorderFragment, Bundle().apply { putInt("post_id", it.post.id) })
                         }
+                        is ProfileEvent -> {
+                            if (navController.currentDestination!!.id != R.id.mainFragment) {
+                                navController.popBackStack(R.id.mainFragment, false)
+                            }
+                            navController.navigate(R.id.action_mainFragment_to_profileFragment)
+                        }
                     }
                 }
         var userNavFired = false
@@ -77,8 +83,7 @@ class MainActivity : AppCompatActivity() {
                 R.id.navSearch -> {
                     navEvents.onNext(SearchEvent())
                 }
-                else -> {
-                }
+                else -> navEvents.onNext(ProfileEvent())
             }
             return@setOnNavigationItemSelectedListener true
         }

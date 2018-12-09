@@ -37,7 +37,7 @@ class EditViewModel : ViewModel(), DIComponent.Injectable {
             val pId = projectDao.insert(project)
 
             val videoTrack = Track(
-                    projectId = pId.toInt(),
+                    projectId = pId,
                     type = TRACK_TYPE_FINAL,
                     index = 0,
                     filePath = finalFile.absolutePath,
@@ -64,7 +64,7 @@ class EditViewModel : ViewModel(), DIComponent.Injectable {
             val pId = projectDao.insert(project)
 
             val videoTrack = Track(
-                    projectId = pId.toInt(),
+                    projectId = pId,
                     type = TRACK_TYPE_FINAL,
                     index = 0,
                     filePath = finalFile.absolutePath,

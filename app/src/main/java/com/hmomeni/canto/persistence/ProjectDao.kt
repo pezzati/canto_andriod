@@ -1,10 +1,10 @@
 package com.hmomeni.canto.persistence
 
-import android.arch.persistence.room.Dao
-import android.arch.persistence.room.Delete
-import android.arch.persistence.room.Insert
-import android.arch.persistence.room.Update
+import android.arch.persistence.room.*
+import com.hmomeni.canto.entities.CompleteProject
 import com.hmomeni.canto.entities.Project
+import com.hmomeni.canto.entities.TRACK_TYPE_FINAL
+import io.reactivex.Single
 
 @Dao
 interface ProjectDao {
@@ -16,4 +16,10 @@ interface ProjectDao {
 
     @Delete
     fun delete(project: Project)
+
+    @Query("SELECT * FROM Project")
+    fun fetchProjects(): Single<List<Project>>
+
+    @Query("SELECT F.*, T.filePath, T.ratio FROM Project as P INNER JOIN FullPost as F ON F.id = P.postId INNER JOIN Track as T ON T.projectId = P.id WHERE T.type = $TRACK_TYPE_FINAL")
+    fun fetchCompleteProjects(): Single<List<CompleteProject>>
 }

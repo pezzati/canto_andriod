@@ -1,10 +1,8 @@
 package com.hmomeni.canto.persistence
 
-import android.arch.persistence.room.Dao
-import android.arch.persistence.room.Delete
-import android.arch.persistence.room.Insert
-import android.arch.persistence.room.Update
+import android.arch.persistence.room.*
 import com.hmomeni.canto.entities.Track
+import io.reactivex.Single
 
 @Dao
 interface TrackDao {
@@ -16,4 +14,7 @@ interface TrackDao {
 
     @Delete
     fun delete(track: Track)
+
+    @Query("SELECT * FROM Track WHERE projectId = :projectId")
+    fun fetchTracksForProject(projectId: Long): Single<List<Track>>
 }
