@@ -72,7 +72,7 @@ class DubsmashActivity : CameraActivity() {
 
     private lateinit var filePath: String
     private lateinit var fileUrl: String
-    private var mRatio = RATIO_SQUARE
+    private var mRatio = RATIO_FULLSCREEN
 
     private var disposable: Disposable? = null
 

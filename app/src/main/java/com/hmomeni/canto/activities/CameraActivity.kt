@@ -300,7 +300,7 @@ abstract class CameraActivity : AppCompatActivity() {
             Timber.d("Selected Video Size=%s", videoSize)
             previewSize = chooseOptimalSize(map.getOutputSizes(SurfaceTexture::class.java),
                     width, height, videoSize)
-            Timber.d("Selected Preview Video Size=%s", videoSize)
+            Timber.d("Selected Preview Video Size=%s", previewSize)
 
             if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
                 getTextureView().setAspectRatio(previewSize.width, previewSize.height)
@@ -553,7 +553,7 @@ abstract class CameraActivity : AppCompatActivity() {
      */
     private fun chooseVideoSize(choices: Array<Size>) = choices.firstOrNull {
         it.width == (it.height * ratio).toInt()
-    } ?: choices[choices.size - 1]
+    } ?: choices[0]
 
     /**
      * Given [choices] of [Size]s supported by a camera, chooses the smallest one whose

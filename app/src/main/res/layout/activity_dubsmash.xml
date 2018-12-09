@@ -20,6 +20,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/md_black_1000"
+        android:visibility="gone"
         app:layout_constraintTop_toTopOf="parent" />
 
     <View
@@ -27,6 +28,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/md_black_1000"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent" />
 
     <com.hmomeni.canto.utils.views.RecordButton
@@ -67,6 +69,7 @@
         android:layout_height="36dp"
         android:layout_marginStart="24dp"
         android:src="@drawable/ic_portrait"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@+id/recordBtn"
         app:layout_constraintStart_toEndOf="@+id/switchCam"
         app:layout_constraintTop_toTopOf="@+id/recordBtn" />

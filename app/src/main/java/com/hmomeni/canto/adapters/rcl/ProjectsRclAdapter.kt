@@ -9,6 +9,8 @@ import com.hmomeni.canto.R
 import com.hmomeni.canto.activities.RATIO_FULLSCREEN
 import com.hmomeni.canto.activities.RATIO_SQUARE
 import com.hmomeni.canto.entities.CompleteProject
+import com.hmomeni.canto.utils.dpToPx
+import com.hmomeni.canto.utils.rounded
 import kotlinx.android.synthetic.main.rcl_item_project_portrait.view.*
 import java.io.File
 
@@ -40,6 +42,7 @@ class ProjectsRclAdapter(private val projects: List<CompleteProject>) : Recycler
             Glide
                     .with(itemView.preview)
                     .load(File(project.filePath))
+                    .rounded(dpToPx(15))
                     .into(itemView.preview)
 
             itemView.artistName.text = project.post.artist.name
@@ -52,11 +55,13 @@ class ProjectsRclAdapter(private val projects: List<CompleteProject>) : Recycler
             Glide
                     .with(itemView.preview)
                     .load(File(project.filePath))
+                    .rounded(dpToPx(15))
                     .into(itemView.preview)
 
             Glide
                     .with(itemView.postImageView)
                     .load(project.post.coverPhoto)
+                    .rounded(dpToPx(15))
                     .into(itemView.postImageView)
 
             itemView.artistName.text = project.post.artist.name

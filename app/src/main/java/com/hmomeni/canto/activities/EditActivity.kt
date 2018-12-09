@@ -111,6 +111,8 @@ class EditActivity : AppCompatActivity(), View.OnClickListener {
         surfaceView.holder.addCallback(object : SurfaceHolder.Callback {
             override fun surfaceChanged(holder: SurfaceHolder, format: Int, w: Int, h: Int) {
                 if (ratio == RATIO_SQUARE) {
+                    cropTop.visibility = View.VISIBLE
+                    cropBottom.visibility = View.VISIBLE
                     cropTop.layoutParams = cropTop.layoutParams.apply {
                         height = h / 2 - w / 2
                     }

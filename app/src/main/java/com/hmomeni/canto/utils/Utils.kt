@@ -9,6 +9,7 @@ import android.graphics.drawable.Drawable
 import android.media.MediaMetadataRetriever
 import android.view.View
 import android.view.WindowManager
+import com.bumptech.glide.RequestBuilder
 import com.hmomeni.canto.App
 import io.reactivex.*
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -99,6 +100,9 @@ fun setViewDimension(view: View, dimension: Dimension) {
 fun dpToPx(dp: Int) = (dp * Resources.getSystem().displayMetrics.density).toInt()
 
 fun validatePhoneNumber(string: String) = string.matches(Regex("^(0?9|989)[0-9]{9}$"))
+
+fun RequestBuilder<Drawable>.rounded(radius: Int, margin: Int = 3): RequestBuilder<Drawable> =
+        this.apply(com.bumptech.glide.request.RequestOptions().transform(RoundedCornersTransformation(radius, margin)))
 
 fun GlideRequest<Drawable>.rounded(radius: Int, margin: Int = 3): GlideRequest<Drawable> =
         this.apply(com.bumptech.glide.request.RequestOptions().transform(RoundedCornersTransformation(radius, margin)))
