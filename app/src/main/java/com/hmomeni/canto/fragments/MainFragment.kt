@@ -48,9 +48,8 @@ class MainFragment : Fragment() {
                             }
                             .subscribe({
                                 it.forEach { genre ->
-                                    val genreId = genre.filesLink.replace(Regex("[^\\d]"), "").toInt()
                                     viewModel.api
-                                            .getGenrePosts(genreId)
+                                            .getGenrePosts(genre.filesLink)
                                             .map { it.data }
                                             .iomain()
                                             .subscribe({
@@ -85,7 +84,7 @@ class MainFragment : Fragment() {
                             val pos = it.row - 1
                             val genre = genres[pos]
                             if (it.item == -1) {
-                                viewModel.navEvents.onNext(ListNavEvent("genre", genre.filesLink.replace(Regex("[^\\d]"), "").toInt(), genre.name))
+                                viewModel.navEvents.onNext(ListNavEvent("url_path", 0, genre.name, genre.filesLink))
                             } else {
                                 viewModel.navEvents.onNext(PostNavEvent(genre.posts!![it.item]))
                             }

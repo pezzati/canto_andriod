@@ -23,20 +23,12 @@ import timber.log.Timber
 class ListFragment : Fragment() {
 
     companion object {
-        fun newInstance(type: String, objectId: Int): ListFragment {
-            val bundle = Bundle()
-            bundle.putString("type", type)
-            bundle.putInt("object_id", objectId)
-            return ListFragment().apply {
-                arguments = bundle
-            }
-        }
-
-        fun getBundle(type: String, objectId: Int, title: String): Bundle {
+        fun getBundle(type: String, objectId: Int, title: String, urlPath: String): Bundle {
             return Bundle().apply {
                 putString("type", type)
                 putString("title", title)
                 putInt("object_id", objectId)
+                putString("url_path", urlPath)
             }
         }
     }
@@ -55,7 +47,7 @@ class ListFragment : Fragment() {
         arguments?.let {
             title = it.getString("title")
             viewModel.type = it.getString("type")
-            viewModel.objectId = it.getInt("object_id")
+            viewModel.urlPath = it.getString("url_path")
         }
     }
 

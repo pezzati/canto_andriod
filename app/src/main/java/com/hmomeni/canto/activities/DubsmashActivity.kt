@@ -177,6 +177,15 @@ class DubsmashActivity : CameraActivity() {
         }
         lyricRecyclerVIew.adapter = LyricRclAdapter(midiItems)
 
+
+        toggleLyricsBtn.setOnClickListener {
+            if (lyricRecyclerVIew.visibility == View.GONE) {
+                lyricRecyclerVIew.visibility = View.VISIBLE
+            } else {
+                lyricRecyclerVIew.visibility = View.GONE
+            }
+        }
+
     }
 
     private var lastPos = -2

@@ -20,8 +20,8 @@ interface Api {
     @GET("song/genre")
     fun getGenres(): Single<ApiResponse<List<Genre>>>
 
-    @GET("song/genre/{genreId}/karaokes")
-    fun getGenrePosts(@Path("genreId") genreId: Int): Single<ApiResponse<List<Post>>>
+    @GET
+    fun getGenrePosts(@Url path: String): Single<ApiResponse<List<Post>>>
 
     @GET("song/karaokes/search")
     fun searchInGenres(@Query("key") query: String): Single<ApiResponse<List<Post>>>

@@ -15,6 +15,7 @@ class ListViewModel : ViewModel(), DIComponent.Injectable {
     }
 
     lateinit var type: String
+    var urlPath: String = ""
     var objectId: Int = 0
 
     @Inject
@@ -28,7 +29,7 @@ class ListViewModel : ViewModel(), DIComponent.Injectable {
 
     fun loadPosts(): Completable {
         return api
-                .getGenrePosts(objectId)
+                .getGenrePosts(urlPath)
                 .map { it.data }
                 .doOnSuccess {
                     posts.addAll(it)

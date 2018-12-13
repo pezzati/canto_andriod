@@ -33,7 +33,7 @@ import com.hmomeni.canto.api.Api
 import com.hmomeni.canto.entities.PROJECT_TYPE_DUBSMASH
 import com.hmomeni.canto.entities.PROJECT_TYPE_SINGING
 import com.hmomeni.canto.utils.*
-import com.hmomeni.canto.utils.views.AutoFitTextureView
+import com.hmomeni.canto.utils.views.RoundedAutoFitTextureView
 import com.karumi.dexter.Dexter
 import com.karumi.dexter.MultiplePermissionsReport
 import com.karumi.dexter.PermissionToken
@@ -155,18 +155,18 @@ class RecorderFragment : Fragment() {
 
     }
 
-    private lateinit var textureView: AutoFitTextureView
-    private lateinit var textureView2: AutoFitTextureView
+    private lateinit var textureView: RoundedAutoFitTextureView
+    private lateinit var textureView2: RoundedAutoFitTextureView
 
     private var mediaRecorder: MediaRecorder? = null
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
             inflater.inflate(R.layout.fragment_recorder, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        textureView = AutoFitTextureView(context!!).apply {
+        textureView = RoundedAutoFitTextureView(context!!).apply {
             layoutParams = ViewGroup.LayoutParams(dpToPx(365), dpToPx(200))
         }
-        textureView2 = AutoFitTextureView(context!!).apply {
+        textureView2 = RoundedAutoFitTextureView(context!!).apply {
             layoutParams = ViewGroup.LayoutParams(dpToPx(365), dpToPx(200))
         }
 
