@@ -182,10 +182,11 @@ class DubsmashActivity : CameraActivity() {
     private var lastPos = -2
     private var handler = Handler()
     private fun timer() {
-        val trimPos = GetProgressMS() * trimView.max / GetDurationMS()
+        val progressMs = GetProgressMS()
+        val trimPos = progressMs * trimView.max / GetDurationMS()
         trimView.progress = (trimPos - trimView.trimStart).toInt()
 
-        val sec = (GetProgressMS() / 1000).toInt()
+        val sec = (progressMs / 1000).toInt()
 
         val pos = timeMap.get(sec, -1)
 

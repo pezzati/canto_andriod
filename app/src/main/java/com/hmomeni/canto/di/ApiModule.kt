@@ -5,7 +5,7 @@ import com.google.gson.GsonBuilder
 import com.hmomeni.canto.App
 import com.hmomeni.canto.api.Api
 import com.hmomeni.canto.utils.BASE_URL
-import com.pixplicity.easyprefs.library.Prefs
+import com.hmomeni.canto.utils.UserSession
 import dagger.Module
 import dagger.Provides
 import okhttp3.OkHttpClient
@@ -26,7 +26,7 @@ class ApiModule {
 
     @Provides
     @Singleton
-    fun providesRetrofit(app: App, gson: Gson): Retrofit = Retrofit.Builder()
+    fun providesRetrofit(app: App, gson: Gson, userSession: UserSession): Retrofit = Retrofit.Builder()
             .baseUrl(BASE_URL)
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
             .addConverterFactory(ScalarsConverterFactory.create())
@@ -37,9 +37,8 @@ class ApiModule {
 //                            .readTimeout(30, TimeUnit.SECONDS)
                             .addNetworkInterceptor {
                                 val builder = it.request().newBuilder()
-                                val token = Prefs.getString("token", "")
-                                if (token.isNotEmpty()) {
-                                    builder.addHeader("USERTOKEN", token)
+                                if (userSession.isUser()) {
+                                    builder.addHeader("USERTOKEN", userSession.user!!.token)
                                 }
                                 builder.addHeader("deviceType", "android")
                                 it.proceed(builder.build())

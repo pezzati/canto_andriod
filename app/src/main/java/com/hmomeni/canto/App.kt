@@ -6,6 +6,7 @@ import com.hmomeni.canto.di.*
 import com.hmomeni.canto.persistence.UserDao
 import com.hmomeni.canto.utils.UserSession
 import com.pixplicity.easyprefs.library.Prefs
+import io.reactivex.schedulers.Schedulers
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -38,13 +39,13 @@ class App : Application() {
         gson = iGson
 
         Prefs.Builder().setContext(this).setUseDefaultSharedPreference(true).build()
-
-        try {
-            val user = userDao.getCurrentUser().blockingGet()
-            userSession.user = user
-        } catch (e: Exception) {
-
-        }
+        userDao.getCurrentUser()
+                .subscribeOn(Schedulers.io())
+                .subscribe({
+                    userSession.user = it
+                }, {
+                    Timber.e(it)
+                })
 
     }
 }

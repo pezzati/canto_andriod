@@ -25,7 +25,7 @@ class TrimView : View {
         color = Color.WHITE
         isAntiAlias = true
     }
-    private val greenPaint = Paint().apply {
+    private val progressPaint = Paint().apply {
         color = Color.GREEN
         isAntiAlias = true
         strokeCap = Paint.Cap.ROUND
@@ -54,8 +54,7 @@ class TrimView : View {
     var progress = 0
         set(value) {
             field = value
-            calculateProgress()
-            invalidate()
+            calculateProgress(true)
         }
 
     var trim: Int = max / 3
@@ -80,25 +79,30 @@ class TrimView : View {
                     anchorWidth + maxPx,
                     (measuredHeight / 2f) + (mainLineHeight / 2)
             )
+
             mainLine.set(
-                    anchorWidth,
+                    0f,
                     (measuredHeight / 2f) - (mainLineHeight / 2),
-                    anchorWidth + (trim * maxPx / max).toFloat(),
+                    0f,
                     (measuredHeight / 2f) + (mainLineHeight / 2)
             )
             progressLine.set(
-                    anchorWidth,
+                    0f,
                     (measuredHeight / 2f) - (mainLineHeight / 2),
-                    anchorWidth + (trim * progress / 100f),
+                    0f,
                     (measuredHeight / 2f) + (mainLineHeight / 2)
             )
-            leftAnchor.set(0f, 0f, anchorWidth, measuredHeight.toFloat())
+            leftAnchor.set(0f, 0f, 0f, measuredHeight.toFloat())
             rightAnchor.set(
-                    mainLine.right,
                     0f,
-                    mainLine.right + anchorWidth,
+                    0f,
+                    0f,
                     measuredHeight.toFloat()
             )
+
+            calculateLeftandRight(false)
+            calculateProgress(false)
+
         }
     }
 
@@ -107,7 +111,7 @@ class TrimView : View {
         canvas.drawRect(mainLine, whitePaint)
         canvas.drawRoundRect(leftAnchor, radius, radius, whitePaint)
         canvas.drawRoundRect(rightAnchor, radius, radius, whitePaint)
-        canvas.drawRect(progressLine, greenPaint)
+        canvas.drawRect(progressLine, progressPaint)
 //        canvas.drawText("[", leftAnchor.centerX() - anchorWidth / 2, leftAnchor.centerY() + anchorWidth, bracketPaint)
 //        canvas.drawText("]", rightAnchor.centerX() - anchorWidth / 2, rightAnchor.centerY() + anchorWidth, bracketPaint)
     }
@@ -212,12 +216,10 @@ class TrimView : View {
             invalidate()
     }
 
-    private fun calculateProgress(invalidate: Boolean = true) {
+    private fun calculateProgress(invalidate: Boolean) {
         val progressPx = progress * maxPx / max
         progressLine.left = mainLine.left
         progressLine.right = progressLine.left + progressPx
-
-//        report()
 
         if (invalidate)
             invalidate()

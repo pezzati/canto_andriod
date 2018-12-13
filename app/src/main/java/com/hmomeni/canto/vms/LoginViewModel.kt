@@ -40,7 +40,7 @@ class LoginViewModel : ViewModel(), DIComponent.Injectable {
                 .doOnSuccess {
                     val token = it["token"].asString
                     val user = User(
-                            0, it["username"].asString, "", "", token
+                            0, phone, "", "", token, true
                     )
                     userDao.insert(user)
                     userSession.user = user

@@ -17,6 +17,7 @@ data class User(
         var lastName: String,
         @SerializedName("token")
         var token: String,
-        @Transient
         var current: Boolean = false
-)
+) {
+        constructor() : this(0, "", "", "", "", false)
+}

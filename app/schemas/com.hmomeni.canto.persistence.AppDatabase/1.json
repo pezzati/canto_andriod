@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "3865999ba37a582807bda6d29d42f599",
+    "identityHash": "e4ece29e6c1c6a8c93364621991ac613",
     "entities": [
       {
         "tableName": "Project",
@@ -219,7 +219,7 @@
       },
       {
         "tableName": "User",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `username` TEXT NOT NULL, `firstName` TEXT NOT NULL, `lastName` TEXT NOT NULL, `token` TEXT NOT NULL, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `username` TEXT NOT NULL, `firstName` TEXT NOT NULL, `lastName` TEXT NOT NULL, `token` TEXT NOT NULL, `current` INTEGER NOT NULL, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "id",
@@ -250,6 +250,12 @@
             "columnName": "token",
             "affinity": "TEXT",
             "notNull": true
+          },
+          {
+            "fieldPath": "current",
+            "columnName": "current",
+            "affinity": "INTEGER",
+            "notNull": true
           }
         ],
         "primaryKey": {
@@ -264,7 +270,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"3865999ba37a582807bda6d29d42f599\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"e4ece29e6c1c6a8c93364621991ac613\")"
     ]
   }
 }
