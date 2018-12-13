@@ -10,7 +10,6 @@ import android.util.SparseIntArray
 import android.view.View
 import android.widget.Toast
 import com.azoft.carousellayoutmanager.CarouselLayoutManager
-import com.azoft.carousellayoutmanager.CarouselZoomPostLayoutListener
 import com.hmomeni.canto.*
 import com.hmomeni.canto.adapters.rcl.LyricRclAdapter
 import com.hmomeni.canto.entities.FullPost
@@ -173,7 +172,7 @@ class DubsmashActivity : CameraActivity() {
                 return false
             }
         }.apply {
-            setPostLayoutListener(CarouselZoomPostLayoutListener())
+            //            setPostLayoutListener(CarouselZoomPostLayoutListener())
         }
         lyricRecyclerVIew.adapter = LyricRclAdapter(midiItems)
 

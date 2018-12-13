@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity
 import android.view.View
 import android.view.ViewTreeObserver
 import android.widget.Toast
+import com.bumptech.glide.Glide
 import com.hmomeni.canto.R
 import com.hmomeni.canto.utils.MyAnimatorListener
 import com.hmomeni.canto.utils.ViewModelFactory
@@ -27,9 +28,14 @@ class LoginActivity : AppCompatActivity() {
     private var step = 0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         viewModel = ViewModelProviders.of(this, ViewModelFactory(app()))[LoginViewModel::class.java]
 
         setContentView(R.layout.activity_login)
+
+        Glide.with(this)
+                .load(R.drawable.splash_screen)
+                .into(splashBackground)
 
         phoneBtn.setOnClickListener {
             when (step) {

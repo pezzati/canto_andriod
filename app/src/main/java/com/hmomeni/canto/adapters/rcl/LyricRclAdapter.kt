@@ -22,13 +22,15 @@ class LyricRclAdapter(private val midiItems: List<MidiItem>) : RecyclerView.Adap
     }
 
     class MidiHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        private val activeColor = Color.parseColor("#FFFFFFFF")
+        private val inActiveColor = Color.parseColor("#88FFFFFF")
         fun bind(midiItem: MidiItem) {
             Timber.d("active=%b, verse=%s", midiItem.active, midiItem.text)
             itemView.textView.text = midiItem.text.trim('\n')
             if (midiItem.active) {
-                itemView.textView.setTextColor(Color.RED)
+                itemView.textView.setTextColor(activeColor)
             } else {
-                itemView.textView.setTextColor(Color.WHITE)
+                itemView.textView.setTextColor(inActiveColor)
             }
         }
     }
