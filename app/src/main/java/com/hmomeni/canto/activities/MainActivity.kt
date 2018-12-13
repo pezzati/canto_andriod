@@ -8,8 +8,8 @@ import androidx.navigation.findNavController
 import com.hmomeni.canto.App
 import com.hmomeni.canto.R
 import com.hmomeni.canto.fragments.ListFragment
+import com.hmomeni.canto.utils.UserSession
 import com.hmomeni.canto.utils.navigation.*
-import com.pixplicity.easyprefs.library.Prefs
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.processors.PublishProcessor
@@ -19,9 +19,9 @@ import javax.inject.Inject
 class MainActivity : AppCompatActivity() {
 
     @Inject
-    lateinit var app: App
-    @Inject
     lateinit var navEvents: PublishProcessor<NavEvent>
+    @Inject
+    lateinit var userSession: UserSession
 
     private lateinit var navController: NavController
 
@@ -30,13 +30,13 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        if (Prefs.getString("token", "").isEmpty()) {
+        (application as App).di.inject(this)
+
+        if (!userSession.isUser()) {
             startActivity(Intent(this, LoginActivity::class.java))
             finish()
             return
         }
-
-        (application as App).di.inject(this)
 
         setContentView(R.layout.activity_main)
         navController = findNavController(R.id.mainNav)

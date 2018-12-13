@@ -2,6 +2,7 @@ package com.hmomeni.canto.di
 
 import com.hmomeni.canto.App
 import com.hmomeni.canto.utils.DownloadEvent
+import com.hmomeni.canto.utils.UserSession
 import com.hmomeni.canto.utils.navigation.NavEvent
 import dagger.Module
 import dagger.Provides
@@ -12,6 +13,10 @@ import javax.inject.Singleton
 class AppModule(private val app: App) {
     @Provides
     fun providesApp() = app
+
+    @Provides
+    @Singleton
+    fun providesUserSession(): UserSession = UserSession()
 
     @Provides
     @Singleton

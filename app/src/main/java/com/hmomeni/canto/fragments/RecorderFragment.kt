@@ -370,7 +370,7 @@ class RecorderFragment : Fragment() {
 
         val manager = cameraActivity.getSystemService(Context.CAMERA_SERVICE) as CameraManager
         try {
-            if (!cameraOpenCloseLock.tryAcquire(2500, TimeUnit.MILLISECONDS)) {
+            if (!cameraOpenCloseLock.tryAcquire(5500, TimeUnit.MILLISECONDS)) {
                 throw RuntimeException("Time out waiting to lock camera opening.")
             }
             val cameraId = manager.cameraIdList[0]

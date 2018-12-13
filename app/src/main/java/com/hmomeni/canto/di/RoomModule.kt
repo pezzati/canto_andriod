@@ -2,10 +2,7 @@ package com.hmomeni.canto.di
 
 import android.arch.persistence.room.Room
 import com.hmomeni.canto.App
-import com.hmomeni.canto.persistence.AppDatabase
-import com.hmomeni.canto.persistence.PostDao
-import com.hmomeni.canto.persistence.ProjectDao
-import com.hmomeni.canto.persistence.TrackDao
+import com.hmomeni.canto.persistence.*
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
@@ -21,12 +18,15 @@ class RoomModule(app: App) {
     fun providesAppDatabase(): AppDatabase = appDatabase
 
     @Provides
-    fun providesProjectDao(): ProjectDao = appDatabase.projectDap()
+    fun providesProjectDao(): ProjectDao = appDatabase.projectDao()
 
     @Provides
-    fun providesTrackDao(): TrackDao = appDatabase.trackDap()
+    fun providesTrackDao(): TrackDao = appDatabase.trackDao()
 
     @Provides
     fun providesPostDao(): PostDao = appDatabase.postDao()
+
+    @Provides
+    fun providesUserDao(): UserDao = appDatabase.userDao()
 }
 

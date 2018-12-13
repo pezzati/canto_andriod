@@ -3,9 +3,11 @@ package com.hmomeni.canto.vms
 import android.arch.lifecycle.ViewModel
 import com.hmomeni.canto.api.Api
 import com.hmomeni.canto.di.DIComponent
+import com.hmomeni.canto.entities.User
+import com.hmomeni.canto.persistence.UserDao
+import com.hmomeni.canto.utils.UserSession
 import com.hmomeni.canto.utils.makeMap
 import com.hmomeni.canto.utils.toBody
-import com.pixplicity.easyprefs.library.Prefs
 import io.reactivex.Completable
 import javax.inject.Inject
 
@@ -16,6 +18,10 @@ class LoginViewModel : ViewModel(), DIComponent.Injectable {
 
     @Inject
     lateinit var api: Api
+    @Inject
+    lateinit var userDao: UserDao
+    @Inject
+    lateinit var userSession: UserSession
 
     lateinit var phone: String
 
@@ -33,8 +39,11 @@ class LoginViewModel : ViewModel(), DIComponent.Injectable {
         return api.verify(map.body())
                 .doOnSuccess {
                     val token = it["token"].asString
-                    val newUser = it["new_user"].asBoolean
-                    Prefs.putString("token", token)
+                    val user = User(
+                            0, it["username"].asString, "", "", token
+                    )
+                    userDao.insert(user)
+                    userSession.user = user
                 }
                 .ignoreElement()
     }

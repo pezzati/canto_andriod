@@ -6,15 +6,17 @@ import android.arch.persistence.room.TypeConverters
 import com.hmomeni.canto.entities.FullPost
 import com.hmomeni.canto.entities.Project
 import com.hmomeni.canto.entities.Track
+import com.hmomeni.canto.entities.User
 import com.hmomeni.canto.persistence.typeconvertors.PostTypeConvertor
 
 @Database(
-        entities = [Project::class, Track::class, FullPost::class],
+        entities = [Project::class, Track::class, FullPost::class, User::class],
         version = 1
 )
 @TypeConverters(PostTypeConvertor::class)
 abstract class AppDatabase : RoomDatabase() {
-    abstract fun projectDap(): ProjectDao
-    abstract fun trackDap(): TrackDao
+    abstract fun projectDao(): ProjectDao
+    abstract fun trackDao(): TrackDao
     abstract fun postDao(): PostDao
+    abstract fun userDao(): UserDao
 }
