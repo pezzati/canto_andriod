@@ -19,7 +19,9 @@ import com.hmomeni.canto.entities.PROJECT_TYPE_DUBSMASH
 import com.hmomeni.canto.entities.PROJECT_TYPE_SINGING
 import com.hmomeni.canto.utils.ViewModelFactory
 import com.hmomeni.canto.utils.app
+import com.hmomeni.canto.utils.getBitmapFromVectorDrawable
 import com.hmomeni.canto.utils.getDuration
+import com.hmomeni.canto.utils.views.VerticalSlider
 import com.hmomeni.canto.vms.EditViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
@@ -78,9 +80,16 @@ class EditActivity : AppCompatActivity(), View.OnClickListener {
         OpenFile(audioFile.absolutePath, audioFile.length().toInt(), micFile.absolutePath, micFile.length().toInt())
 
         playBtn.setOnClickListener {
-            StartAudio()
-            mediaPlayer.start()
-            timer()
+            if (IsPlaying()) {
+                StopAudio()
+                mediaPlayer.pause()
+                playBtn.setImageResource(R.drawable.ic_play_circle)
+            } else {
+                StartAudio()
+                mediaPlayer.start()
+                timer()
+                playBtn.setImageResource(R.drawable.ic_pause_circle)
+            }
         }
 
         seekBar.max = duration.toInt()
@@ -138,7 +147,33 @@ class EditActivity : AppCompatActivity(), View.OnClickListener {
         reverbBtn.setOnClickListener(this)
         flangerBtn.setOnClickListener(this)
         pitchBtn.setOnClickListener(this)
+        echoBtn.setOnClickListener(this)
+        openSettingBtn.setOnClickListener(this)
+        closeSettingBtn.setOnClickListener(this)
 
+        micVolume.lowIcon = getBitmapFromVectorDrawable(this, R.drawable.ic_mic_low)
+        micVolume.midIcon = getBitmapFromVectorDrawable(this, R.drawable.ic_mic_mid)
+        micVolume.hiIcon = getBitmapFromVectorDrawable(this, R.drawable.ic_mic_mid)
+
+        musicVolume.lowIcon = getBitmapFromVectorDrawable(this, R.drawable.ic_music_volume_low)
+        musicVolume.midIcon = getBitmapFromVectorDrawable(this, R.drawable.ic_music_volume_mid)
+        musicVolume.hiIcon = getBitmapFromVectorDrawable(this, R.drawable.ic_music_volume_hi)
+
+        musicVolume.max = 40
+        musicVolume.progress = 10
+        musicVolume.onProgressChangeListener = object : VerticalSlider.OnSliderProgressChangeListener {
+            override fun onChanged(progress: Int, max: Int) {
+                SetMusicVol(progress / 10f)
+            }
+        }
+
+        micVolume.max = 40
+        micVolume.progress = 10
+        micVolume.onProgressChangeListener = object : VerticalSlider.OnSliderProgressChangeListener {
+            override fun onChanged(progress: Int, max: Int) {
+                SetMicVol(progress / 10f)
+            }
+        }
     }
 
     override fun onResume() {
@@ -158,12 +193,40 @@ class EditActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     override fun onClick(v: View) {
+        resetAllBtns()
         when (v.id) {
-            R.id.noneBtn -> ApplyEffect(0)
-            R.id.reverbBtn -> ApplyEffect(1)
-            R.id.flangerBtn -> ApplyEffect(2)
-            R.id.pitchBtn -> ApplyEffect(3)
+            R.id.noneBtn -> {
+                noneBtn.setImageResource(R.drawable.ic_ef_none)
+                ApplyEffect(0)
+            }
+            R.id.reverbBtn -> {
+                reverbBtn.setImageResource(R.drawable.ic_ef_reverb)
+                ApplyEffect(1)
+            }
+            R.id.flangerBtn -> {
+                flangerBtn.setImageResource(R.drawable.ic_ef_flanger)
+                ApplyEffect(2)
+            }
+            R.id.pitchBtn -> {
+                pitchBtn.setImageResource(R.drawable.ic_ef_pitch)
+                ApplyEffect(3)
+            }
+            R.id.echoBtn -> {
+                echoBtn.setImageResource(R.drawable.ic_ef_echo)
+                ApplyEffect(4)
+            }
+            R.id.openSettingBtn -> settingsWrapper.visibility = View.VISIBLE
+            R.id.closeSettingBtn -> settingsWrapper.visibility = View.GONE
+
         }
+    }
+
+    private fun resetAllBtns() {
+        noneBtn.setImageResource(R.drawable.ic_ef_none_disabled)
+        echoBtn.setImageResource(R.drawable.ic_ef_echo_disabled)
+        reverbBtn.setImageResource(R.drawable.ic_ef_reverb_disabled)
+        flangerBtn.setImageResource(R.drawable.ic_ef_flanger_disabled)
+        pitchBtn.setImageResource(R.drawable.ic_ef_pitch_disabled)
     }
 
     private var handler = Handler()
@@ -362,4 +425,6 @@ class EditActivity : AppCompatActivity(), View.OnClickListener {
     external fun onBackground()
     external fun onForeground()
     external fun Cleanup()
+    external fun SetMusicVol(musicVol: Float)
+    external fun SetMicVol(micVol: Float)
 }

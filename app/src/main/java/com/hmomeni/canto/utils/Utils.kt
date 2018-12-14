@@ -4,9 +4,11 @@ import android.app.Application
 import android.content.Context
 import android.content.res.Resources
 import android.graphics.Bitmap
+import android.graphics.Canvas
 import android.graphics.Point
 import android.graphics.drawable.Drawable
 import android.media.MediaMetadataRetriever
+import android.support.v4.content.ContextCompat
 import android.view.View
 import android.view.WindowManager
 import com.bumptech.glide.RequestBuilder
@@ -115,4 +117,16 @@ fun getDuration(filePath: String): Long {
     mediaMetadataRetriever.setDataSource(filePath)
     val durationStr = mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)
     return durationStr.toLong()
+}
+
+fun getBitmapFromVectorDrawable(context: Context, drawableId: Int): Bitmap {
+    val drawable = ContextCompat.getDrawable(context, drawableId)
+
+    val bitmap = Bitmap.createBitmap(drawable!!.intrinsicWidth,
+            drawable.intrinsicHeight, Bitmap.Config.ARGB_8888)
+    val canvas = Canvas(bitmap)
+    drawable.setBounds(0, 0, canvas.width, canvas.height)
+    drawable.draw(canvas)
+
+    return bitmap
 }

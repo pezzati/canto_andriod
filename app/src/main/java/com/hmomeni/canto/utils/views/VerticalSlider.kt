@@ -1,10 +1,7 @@
 package com.hmomeni.canto.utils.views
 
 import android.content.Context
-import android.graphics.Canvas
-import android.graphics.Color
-import android.graphics.Paint
-import android.graphics.RectF
+import android.graphics.*
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
@@ -14,6 +11,12 @@ class VerticalSlider : View {
     constructor(context: Context) : super(context)
     constructor(context: Context, attributeSet: AttributeSet) : super(context, attributeSet)
 
+    var hiIcon: Bitmap? = null
+    var midIcon: Bitmap? = null
+    var lowIcon: Bitmap? = null
+
+    private val iconWidth = dpToPx(36)
+    private val iconRect: RectF = RectF()
     private val layoutRect: RectF = RectF(0f, 0f, measuredWidth.toFloat(), measuredHeight.toFloat())
     private val layoutPaint = Paint().apply {
         color = Color.parseColor("#55ffffff")
@@ -24,6 +27,9 @@ class VerticalSlider : View {
         color = Color.WHITE
         isAntiAlias = true
     }
+    private val radius = dpToPx(15).toFloat()
+
+    private val path = Path()
 
     var onProgressChangeListener: OnSliderProgressChangeListener? = null
     var max: Int = 10
@@ -43,12 +49,29 @@ class VerticalSlider : View {
         if (measuredHeight > 0 && measuredWidth > 0) {
             layoutRect.set(0f, 0f, measuredWidth.toFloat(), measuredHeight.toFloat())
             progressRect.set(0f, (1 - calculateProgress()) * measuredHeight, measuredWidth.toFloat(), measuredHeight.toFloat())
+            iconRect.set(measuredWidth / 2f - iconWidth / 2, measuredHeight / 2f - iconWidth / 2, measuredWidth / 2f + iconWidth / 2, measuredHeight / 2f + iconWidth / 2)
+            path.addRoundRect(layoutRect, radius, radius, Path.Direction.CW)
         }
     }
 
     override fun onDraw(canvas: Canvas) {
-        canvas.drawRoundRect(layoutRect, dpToPx(15).toFloat(), dpToPx(15).toFloat(), layoutPaint)
-        canvas.drawRoundRect(progressRect, dpToPx(15).toFloat(), dpToPx(15).toFloat(), progressPaint)
+        canvas.clipPath(path)
+        canvas.drawRect(layoutRect, layoutPaint)
+        canvas.drawRect(progressRect, progressPaint)
+
+        if (lowIcon != null && midIcon != null && hiIcon != null) {
+            when {
+                progress < max / 3 -> {
+                    canvas.drawBitmap(lowIcon, null, iconRect, null)
+                }
+                progress < max * 2 / 3 -> {
+                    canvas.drawBitmap(midIcon, null, iconRect, null)
+                }
+                else -> {
+                    canvas.drawBitmap(hiIcon, null, iconRect, null)
+                }
+            }
+        }
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {

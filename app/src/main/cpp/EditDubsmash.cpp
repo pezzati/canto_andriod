@@ -11,6 +11,7 @@
 #include <SuperpoweredMixer.h>
 #include <SuperpoweredReverb.h>
 #include <SuperpoweredFlanger.h>
+#include <SuperpoweredEcho.h>
 
 #define log_write __android_log_write
 #define log_print __android_log_print
@@ -21,6 +22,7 @@ static SuperpoweredAdvancedAudioPlayer *micPlayer;
 static SuperpoweredStereoMixer *mixer;
 static SuperpoweredReverb *reverb;
 static SuperpoweredFlanger *flanger;
+static SuperpoweredEcho *echo;
 
 static float *playerBuffer;
 static float *micBuffer;
@@ -33,6 +35,9 @@ float oLevels[] = {1, 1};
 static int sampleRate, bufferSize;
 
 static int appliedEffect = 0;
+
+float musicVolume = 1.0;
+float micVolume = 1.0;
 
 bool isAudioStarted = false;
 bool isAudioInitialized = false;
@@ -54,6 +59,9 @@ static bool ed_audioProcessing(
             if (hasMic && appliedEffect == 2) {
                 hasMic = flanger->process(micBuffer, micBuffer, (unsigned int) numberOfFrames);
             }
+            if (hasMic && appliedEffect == 4) {
+                hasMic = echo->process(micBuffer, micBuffer, (unsigned int) numberOfFrames);
+            }
             if (hasMusic || hasMic) {
                 float *inputs[4];
                 inputs[0] = playerBuffer;
@@ -72,7 +80,7 @@ static bool ed_audioProcessing(
         }
     } else {
         if (player->playing &&
-            player->process(playerBuffer, false, (unsigned int) numberOfFrames, 1)) {
+            player->process(playerBuffer, false, (unsigned int) numberOfFrames, musicVolume)) {
             SuperpoweredFloatToShortInt(playerBuffer, audio, (unsigned int) numberOfFrames);
             return true;
         }
@@ -271,6 +279,10 @@ Java_com_hmomeni_canto_activities_EditActivity_Cleanup(
     delete player;
     delete micPlayer;
     delete obj;
+    delete echo;
+    delete reverb;
+    delete flanger;
+    delete mixer;
 }
 
 extern "C" JNIEXPORT jboolean
@@ -395,6 +407,12 @@ Java_com_hmomeni_canto_activities_EditActivity_SaveEffect(
                 SuperpoweredFloatToShortInt(floatBuffer, intBuffer, samplesDecoded);
                 break;
             }
+            case 4: {
+                SuperpoweredShortIntToFloat(intBuffer, floatBuffer, samplesDecoded);
+                echo->process(floatBuffer, floatBuffer, samplesDecoded);
+                SuperpoweredFloatToShortInt(floatBuffer, intBuffer, samplesDecoded);
+                break;
+            }
             case 3: {
                 SuperpoweredAudiobufferlistElement inputBuffer;
                 inputBuffer.samplePosition = decoder->samplePosition;
@@ -505,11 +523,51 @@ Java_com_hmomeni_canto_activities_EditActivity_ApplyEffect(
             break;
 
         case 3: // pitch shift
-            player->setPitchShift(5);
+            player->setPitchShift(8);
             if (ed_isSinging)
-                micPlayer->setPitchShift(5);
+                micPlayer->setPitchShift(8);
+            appliedEffect = effect;
+            break;
+
+        case 4: // echo
+            if (echo == nullptr) {
+                echo = new SuperpoweredEcho((unsigned int) sampleRate);
+                echo->enable(true);
+            }
+
+            player->setPitchShift(0);
+            if (ed_isSinging)
+                micPlayer->setPitchShift(0);
+
             appliedEffect = effect;
             break;
 
     }
+}
+
+extern "C" JNIEXPORT void
+Java_com_hmomeni_canto_activities_EditActivity_SetMicVol(
+        JNIEnv *__unused env,
+        jobject __unused obj,
+        jfloat micVol
+) {
+    micVolume = micVol;
+    iLevels[0] = musicVolume;
+    iLevels[1] = musicVolume;
+    iLevels[2] = micVolume;
+    iLevels[3] = micVolume;
+}
+
+
+extern "C" JNIEXPORT void
+Java_com_hmomeni_canto_activities_EditActivity_SetMusicVol(
+        JNIEnv *__unused env,
+        jobject __unused obj,
+        jfloat musicVol
+) {
+    musicVolume = musicVol;
+    iLevels[0] = musicVolume;
+    iLevels[1] = musicVolume;
+    iLevels[2] = micVolume;
+    iLevels[3] = micVolume;
 }

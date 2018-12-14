@@ -36,10 +36,10 @@
         android:layout_width="36dp"
         android:layout_height="36dp"
         android:layout_marginStart="8dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginBottom="32dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:srcCompat="@drawable/ic_download" />
+        app:srcCompat="@drawable/ic_save" />
 
     <ImageView
         android:id="@+id/playBtn"
@@ -47,11 +47,11 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginBottom="32dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:srcCompat="@drawable/ic_play_circle_filled_white_48dp" />
+        app:srcCompat="@drawable/ic_play_circle" />
 
     <SeekBar
         android:id="@+id/seekBar"
@@ -64,35 +64,137 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:orientation="horizontal"
-        app:layout_constraintBottom_toTopOf="@+id/seekBar">
+    <ImageView
+        android:id="@+id/openSettingBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="24dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:srcCompat="@drawable/ic_arrow_up" />
 
-        <Button
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/settingsWrapper"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="#aaa"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        android:weightSum="5"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/guideline2">
+
+        <ImageView
+            android:id="@+id/closeSettingBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="24dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_arrow_down" />
+
+        <ImageView
             android:id="@+id/noneBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="None" />
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_weight="1"
+            android:contentDescription="None"
+            android:src="@drawable/ic_ef_none_disabled"
+            app:layout_constraintEnd_toStartOf="@+id/reverbBtn"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/closeSettingBtn" />
 
-        <Button
+        <ImageView
             android:id="@+id/reverbBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Reverb" />
+            android:layout_marginStart="8dp"
+            android:layout_weight="1"
+            android:contentDescription="Reverb"
+            android:src="@drawable/ic_ef_reverb_disabled"
+            app:layout_constraintEnd_toStartOf="@+id/flangerBtn"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/noneBtn"
+            app:layout_constraintTop_toTopOf="@+id/noneBtn" />
 
-        <Button
+        <ImageView
             android:id="@+id/flangerBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Flanger" />
+            android:layout_marginStart="8dp"
+            android:layout_weight="1"
+            android:contentDescription="Flanger"
+            android:src="@drawable/ic_ef_flanger_disabled"
+            app:layout_constraintEnd_toStartOf="@+id/pitchBtn"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/reverbBtn"
+            app:layout_constraintTop_toTopOf="@+id/reverbBtn" />
 
-        <Button
+        <ImageView
             android:id="@+id/pitchBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Pitch" />
-    </LinearLayout>
+            android:layout_marginStart="8dp"
+            android:layout_weight="1"
+            android:contentDescription="Pitch"
+            android:src="@drawable/ic_ef_pitch_disabled"
+            app:layout_constraintEnd_toStartOf="@+id/echoBtn"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/flangerBtn"
+            app:layout_constraintTop_toTopOf="@+id/flangerBtn" />
+
+        <ImageView
+            android:id="@+id/echoBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_weight="1"
+            android:contentDescription="Echo"
+            android:src="@drawable/ic_ef_echo_disabled"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/pitchBtn"
+            app:layout_constraintTop_toTopOf="@+id/pitchBtn" />
+
+        <com.hmomeni.canto.utils.views.VerticalSlider
+            android:id="@+id/musicVolume"
+            android:layout_width="80dp"
+            android:layout_height="145dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/micVolume"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/noneBtn" />
+
+        <com.hmomeni.canto.utils.views.VerticalSlider
+            android:id="@+id/micVolume"
+            android:layout_width="80dp"
+            android:layout_height="145dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/musicVolume"
+            app:layout_constraintTop_toTopOf="@+id/musicVolume" />
+    </android.support.constraint.ConstraintLayout>
+
+    <android.support.constraint.Guideline
+        android:id="@+id/guideline2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.36" />
+
+
 </android.support.constraint.ConstraintLayout>

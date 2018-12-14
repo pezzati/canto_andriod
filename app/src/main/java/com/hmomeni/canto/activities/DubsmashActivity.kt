@@ -18,6 +18,7 @@ import com.hmomeni.canto.entities.PROJECT_TYPE_DUBSMASH
 import com.hmomeni.canto.entities.PROJECT_TYPE_SINGING
 import com.hmomeni.canto.utils.DownloadEvent
 import com.hmomeni.canto.utils.app
+import com.hmomeni.canto.utils.getBitmapFromVectorDrawable
 import com.hmomeni.canto.utils.getDuration
 import com.hmomeni.canto.utils.views.AutoFitTextureView
 import com.hmomeni.canto.utils.views.RecordButton
@@ -151,6 +152,10 @@ class DubsmashActivity : CameraActivity() {
             }
         }
 
+        pitchSlider.lowIcon = getBitmapFromVectorDrawable(this, R.drawable.ic_pitch_low)
+        pitchSlider.midIcon = getBitmapFromVectorDrawable(this, R.drawable.ic_pitch_mid)
+        pitchSlider.hiIcon = getBitmapFromVectorDrawable(this, R.drawable.ic_pitch_hi)
+
         pitchSlider.max = 20
         pitchSlider.progress = 10
         pitchSlider.onProgressChangeListener = object : VerticalSlider.OnSliderProgressChangeListener {
@@ -158,6 +163,10 @@ class DubsmashActivity : CameraActivity() {
                 SetPitch(progress - 10)
             }
         }
+
+        tempoSlider.lowIcon = getBitmapFromVectorDrawable(this, R.drawable.ic_speed_low)
+        tempoSlider.midIcon = getBitmapFromVectorDrawable(this, R.drawable.ic_speed_mid)
+        tempoSlider.hiIcon = getBitmapFromVectorDrawable(this, R.drawable.ic_speed_hi)
 
         tempoSlider.max = 20
         tempoSlider.progress = 10
@@ -171,8 +180,6 @@ class DubsmashActivity : CameraActivity() {
             override fun canScrollVertically(): Boolean {
                 return false
             }
-        }.apply {
-            //            setPostLayoutListener(CarouselZoomPostLayoutListener())
         }
         lyricRecyclerVIew.adapter = LyricRclAdapter(midiItems)
 
