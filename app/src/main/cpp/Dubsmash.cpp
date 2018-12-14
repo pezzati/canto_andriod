@@ -254,6 +254,9 @@ Java_com_hmomeni_canto_DubsmashActivity_Cleanup(
     delete audioIO;
     delete player;
     delete obj;
+    delete micBuffer;
+    delete micRecorder;
+    delete playerBuffer;
 }
 
 extern "C" JNIEXPORT void

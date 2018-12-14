@@ -229,6 +229,11 @@ class DubsmashActivity : CameraActivity() {
         super.onStop()
     }
 
+    override fun onDestroy() {
+        Cleanup()
+        super.onDestroy()
+    }
+
     private fun handleDownloadEvents(event: DownloadEvent) {
         when (event.action) {
             ACTION_DOWNLOAD_START -> {
@@ -317,6 +322,7 @@ class DubsmashActivity : CameraActivity() {
         stopRecordingVideo()
         StopAudio()
         startActivity(Intent(this, EditActivity::class.java).putExtra("type", type).putExtra("post", post).putExtra("ratio", mRatio))
+        finish()
     }
 
     private fun preProcessLyric(midiItems: List<MidiItem>): SparseIntArray {
@@ -343,4 +349,6 @@ class DubsmashActivity : CameraActivity() {
     private external fun SetPitch(pitchShift: Int)
     private external fun SetTempo(tempo: Double)
     private external fun IsPlaying(): Boolean
+    private external fun Cleanup()
+
 }
