@@ -402,6 +402,7 @@ class EditActivity : AppCompatActivity(), View.OnClickListener {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
                     Toast.makeText(this@EditActivity, R.string.saving_project_done, Toast.LENGTH_SHORT).show()
+                    finish()
                 }, {
                     Timber.e(it)
                     Toast.makeText(this@EditActivity, R.string.saving_project_failed, Toast.LENGTH_SHORT).show()
