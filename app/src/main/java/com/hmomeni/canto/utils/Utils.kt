@@ -1,5 +1,6 @@
 package com.hmomeni.canto.utils
 
+import android.annotation.SuppressLint
 import android.app.Application
 import android.content.Context
 import android.content.res.Resources
@@ -8,6 +9,7 @@ import android.graphics.Canvas
 import android.graphics.Point
 import android.graphics.drawable.Drawable
 import android.media.MediaMetadataRetriever
+import android.provider.Settings
 import android.support.v4.content.ContextCompat
 import android.view.View
 import android.view.WindowManager
@@ -130,3 +132,6 @@ fun getBitmapFromVectorDrawable(context: Context, drawableId: Int): Bitmap {
 
     return bitmap
 }
+
+@SuppressLint("HardwareIds")
+fun getDeviceId(context: Context): String = Settings.Secure.getString(context.contentResolver, Settings.Secure.ANDROID_ID)

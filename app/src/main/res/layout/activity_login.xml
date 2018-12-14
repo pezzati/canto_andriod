@@ -48,6 +48,14 @@
             android:text="@string/sing_by_canto" />
     </LinearLayout>
 
+    <android.support.constraint.Group
+        android:id="@+id/group2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:alpha="0"
+        android:visibility="gone"
+        app:constraint_referenced_ids="continueWith,phoneBtn,emailBtn,googleBtn" />
+
     <TextView
         android:id="@+id/continueWith"
         android:layout_width="wrap_content"

@@ -8,6 +8,9 @@ import okhttp3.RequestBody
 import retrofit2.http.*
 
 interface Api {
+    @POST("handshake")
+    fun handshake(@Body requestBody: RequestBody): Single<JsonObject>
+
     @POST("user/signup")
     fun signUp(@Body requestBody: RequestBody): Completable
 

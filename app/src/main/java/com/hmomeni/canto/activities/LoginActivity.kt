@@ -11,10 +11,7 @@ import android.view.ViewTreeObserver
 import android.widget.Toast
 import com.bumptech.glide.Glide
 import com.hmomeni.canto.R
-import com.hmomeni.canto.utils.MyAnimatorListener
-import com.hmomeni.canto.utils.ViewModelFactory
-import com.hmomeni.canto.utils.app
-import com.hmomeni.canto.utils.iomain
+import com.hmomeni.canto.utils.*
 import com.hmomeni.canto.vms.LoginViewModel
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
@@ -44,6 +41,25 @@ class LoginActivity : AppCompatActivity() {
                 2 -> submitCode()
             }
         }
+
+        cantoWrapper.translationY += getScreenDimensions(this).height / 8
+
+        viewModel.handshake()
+                .iomain()
+                .subscribe({
+                    when (it) {
+                        0 -> prepareLogin()
+                        2 -> {
+                            startActivity(Intent(this, MainActivity::class.java))
+                            finish()
+                        }
+                        1 -> {
+                            // display update dialog
+                        }
+                    }
+                }, {
+                    Timber.e(it)
+                }).addTo(compositeDisposable)
     }
 
     override fun onStop() {
@@ -57,6 +73,15 @@ class LoginActivity : AppCompatActivity() {
             1 -> backToOriginFromPhone()
             2 -> backToPhoneInput()
         }
+    }
+
+    private fun prepareLogin() {
+        val height = getScreenDimensions(this).height
+        cantoWrapper.animate().translationYBy(-height / 8f)
+        group2.postDelayed({
+            group2.visibility = View.VISIBLE
+            group2.animate().alpha(1f)
+        }, 300)
     }
 
     private var phoneOriginalY = 0f
