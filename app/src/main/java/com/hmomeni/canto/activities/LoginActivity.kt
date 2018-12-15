@@ -8,7 +8,6 @@ import android.net.Uri
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.View
-import android.view.ViewTreeObserver
 import android.widget.Toast
 import com.bumptech.glide.Glide
 import com.hmomeni.canto.R
@@ -19,7 +18,9 @@ import io.reactivex.rxkotlin.addTo
 import kotlinx.android.synthetic.main.activity_login.*
 import timber.log.Timber
 
-class LoginActivity : AppCompatActivity() {
+class LoginActivity : AppCompatActivity(), View.OnClickListener {
+
+
     private lateinit var viewModel: LoginViewModel
     private val compositeDisposable = CompositeDisposable()
 
@@ -35,15 +36,11 @@ class LoginActivity : AppCompatActivity() {
                 .load(R.drawable.splash_screen)
                 .into(splashBackground)
 
-        phoneBtn.setOnClickListener {
-            when (step) {
-                0 -> goToPhoneInput()
-                1 -> submitPhone()
-                2 -> submitCode()
-            }
-        }
+        phoneBtn.setOnClickListener(this)
+        loginBtn.setOnClickListener(this)
+        verifyBtn.setOnClickListener(this)
 
-        cantoWrapper.translationY += getScreenDimensions(this).height / 8
+        cantoWrapper.translationY += getScreenDimensions(this).height / 6
 
         viewModel.handshake()
                 .iomain()
@@ -84,68 +81,52 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
+    override fun onClick(v: View) {
+        when (v.id) {
+            R.id.phoneBtn -> goToPhoneInput()
+            R.id.loginBtn -> submitPhone()
+            R.id.verifyBtn -> submitCode()
+        }
+    }
+
     private fun prepareLogin() {
         val height = getScreenDimensions(this).height
-        cantoWrapper.animate().translationYBy(-height / 8f)
-        group2.postDelayed({
-            group2.visibility = View.VISIBLE
-            group2.animate().alpha(1f)
+        cantoWrapper.animate().translationYBy(-height / 6f)
+        buttonsWrapper.postDelayed({
+            buttonsWrapper.visibility = View.VISIBLE
+            buttonsWrapper.animate().alpha(1f)
         }, 300)
     }
 
-    private var phoneOriginalY = 0f
-    private lateinit var phoneInputWrapperGlobalLayoutListener: ViewTreeObserver.OnGlobalLayoutListener
     private fun goToPhoneInput() {
-        phoneOriginalY = phoneBtn.y
-        phoneInputWrapperGlobalLayoutListener = ViewTreeObserver.OnGlobalLayoutListener {
-            if (phoneInputWrapper.measuredHeight > 0 && step == 0) {
-                step = 1
-                phoneInputWrapper.animate().alpha(1f)
-                cantoWrapper.animate().scaleX(0.8f).scaleY(0.8f).translationYBy(-100f)
-                googleBtn.animate().alpha(0f)
-                continueWith.animate().alpha(0f)
-                emailBtn.animate().alpha(0f)
-
-                phoneBtn.animate().y(phoneInputWrapper.y + phoneInputWrapper.height + 50).setListener(object : MyAnimatorListener() {
-                    override fun onAnimationEnd(animation: Animator?) {
-                        googleBtn.visibility = View.GONE
-                        emailBtn.visibility = View.GONE
-                        continueWith.visibility = View.GONE
-                        phoneBtn.text = getString(R.string.send)
-                    }
-                })
-                phoneInputWrapper.viewTreeObserver.removeOnGlobalLayoutListener(phoneInputWrapperGlobalLayoutListener)
+        step = 1
+        phoneInputWrapper.animate().alpha(1f)
+        cantoWrapper.animate().scaleX(0.8f).scaleY(0.8f).translationYBy(-100f)
+        buttonsWrapper.animate().alpha(0f).setListener(object : MyAnimatorListener() {
+            override fun onAnimationEnd(animation: Animator?) {
+                buttonsWrapper.visibility = View.GONE
             }
-        }
-        phoneInputWrapper.viewTreeObserver.addOnGlobalLayoutListener(phoneInputWrapperGlobalLayoutListener)
+        })
+
         phoneInputWrapper.visibility = View.VISIBLE
     }
 
-    private lateinit var codeInputWrapperGlobalLayoutListener: ViewTreeObserver.OnGlobalLayoutListener
     private fun goToCodeInput() {
-        codeInputWrapperGlobalLayoutListener = ViewTreeObserver.OnGlobalLayoutListener {
-            if (codeInputWrapper.measuredHeight > 0 && step == 1) {
-                step = 2
-                phoneInputWrapper.animate().alpha(0f)
-                codeInputWrapper.animate().alpha(1f)
-                phoneBtn.animate().y(codeInputWrapper.y + codeInputWrapper.height + 50).setListener(object : MyAnimatorListener() {
-                    override fun onAnimationEnd(animation: Animator?) {
-                        phoneInputWrapper.visibility = View.GONE
-                    }
-                })
-                codeInputWrapper.viewTreeObserver.removeOnGlobalLayoutListener(codeInputWrapperGlobalLayoutListener)
-            }
-        }
-        codeInputWrapper.viewTreeObserver.addOnGlobalLayoutListener(codeInputWrapperGlobalLayoutListener)
+        step = 2
         codeInputWrapper.visibility = View.VISIBLE
+        phoneInputWrapper.animate().alpha(0f)
+        codeInputWrapper.animate().alpha(1f).setListener(object : MyAnimatorListener() {
+            override fun onAnimationEnd(animation: Animator?) {
+                phoneInputWrapper.visibility = View.GONE
+            }
+        })
     }
 
     private fun backToPhoneInput() {
         step = 1
         phoneInputWrapper.visibility = View.VISIBLE
         phoneInputWrapper.animate().alpha(1f)
-        codeInputWrapper.animate().alpha(0f)
-        phoneBtn.animate().y(phoneInputWrapper.y + phoneInputWrapper.height + 50).setListener(object : MyAnimatorListener() {
+        codeInputWrapper.animate().alpha(0f).setListener(object : MyAnimatorListener() {
             override fun onAnimationEnd(animation: Animator?) {
                 codeInputWrapper.visibility = View.GONE
             }
@@ -154,20 +135,15 @@ class LoginActivity : AppCompatActivity() {
 
     private fun backToOriginFromPhone() {
         step = 0
-        googleBtn.visibility = View.VISIBLE
-        emailBtn.visibility = View.VISIBLE
-        continueWith.visibility = View.VISIBLE
+        buttonsWrapper.visibility = View.VISIBLE
         phoneInputWrapper.animate().alpha(0f)
         cantoWrapper.animate().scaleX(1f).scaleY(1f).translationY(0f)
-        googleBtn.animate().alpha(1f)
-        continueWith.animate().alpha(1f)
-        emailBtn.animate().alpha(1f)
-        phoneBtn.text = getString(R.string.send)
-        phoneBtn.animate().y(phoneOriginalY).setListener(object : MyAnimatorListener() {
+        buttonsWrapper.animate().alpha(1f).setListener(object : MyAnimatorListener() {
             override fun onAnimationEnd(animation: Animator?) {
                 phoneInputWrapper.visibility = View.GONE
             }
         })
+
     }
 
     private fun submitPhone() {

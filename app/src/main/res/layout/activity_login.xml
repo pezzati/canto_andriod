@@ -48,72 +48,75 @@
             android:text="@string/sing_by_canto" />
     </LinearLayout>
 
-    <android.support.constraint.Group
-        android:id="@+id/group2"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/buttonsWrapper"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
         android:alpha="0"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
         android:visibility="gone"
-        app:constraint_referenced_ids="continueWith,phoneBtn,emailBtn,googleBtn" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.85">
 
-    <TextView
-        android:id="@+id/continueWith"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        android:text="@string/continue_with"
-        android:visibility="visible"
-        app:layout_constraintBottom_toTopOf="@+id/phoneBtn"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cantoWrapper"
-        app:layout_constraintVertical_bias="0.7" />
+        <TextView
+            android:id="@+id/continueWith"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:text="@string/continue_with"
+            android:visibility="visible" />
 
-    <Button
-        android:id="@+id/phoneBtn"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="64dp"
-        android:layout_marginEnd="32dp"
-        android:background="@drawable/login_phone_btn_bg"
-        android:text="@string/phone_number"
-        android:textAllCaps="false"
-        android:visibility="visible"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cantoWrapper" />
+        <Button
+            android:id="@+id/phoneBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="32dp"
+            android:background="@drawable/login_phone_btn_bg"
+            android:text="@string/phone_number"
+            android:textAllCaps="false"
+            android:visibility="visible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/cantoWrapper" />
 
-    <Button
-        android:id="@+id/emailBtn"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="32dp"
-        android:background="@drawable/login_email_btn_bg"
-        android:text="@string/email"
-        android:textAllCaps="false"
-        android:visibility="visible"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/phoneBtn" />
+        <Button
+            android:id="@+id/emailBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="32dp"
+            android:background="@drawable/login_email_btn_bg"
+            android:text="@string/email"
+            android:textAllCaps="false"
+            android:visibility="visible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/phoneBtn" />
 
-    <Button
-        android:id="@+id/googleBtn"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="32dp"
-        android:background="@drawable/login_google_btn_bg"
-        android:text="@string/google"
-        android:textAllCaps="false"
-        android:visibility="visible"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/emailBtn" />
+        <Button
+            android:id="@+id/googleBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="32dp"
+            android:background="@drawable/login_google_btn_bg"
+            android:text="@string/google"
+            android:textAllCaps="false"
+            android:visibility="visible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/emailBtn" />
+    </LinearLayout>
+
 
     <LinearLayout
         android:id="@+id/phoneInputWrapper"
@@ -129,8 +132,8 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cantoWrapper"
-        app:layout_constraintVertical_bias="0.100000024">
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.75">
 
         <TextView
             android:layout_width="wrap_content"
@@ -146,7 +149,7 @@
             android:id="@+id/phoneInput"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="64dp"
+            android:layout_marginTop="16dp"
             android:hint="@string/phone_number"
             android:inputType="phone" />
 
@@ -155,6 +158,21 @@
             android:layout_height="wrap_content"
             android:enabled="true"
             android:text="@string/accept_the_terms" />
+
+        <Button
+            android:id="@+id/loginBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="32dp"
+            android:background="@drawable/login_phone_btn_bg"
+            android:text="@string/send"
+            android:textAllCaps="false"
+            android:visibility="visible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/cantoWrapper" />
     </LinearLayout>
 
     <LinearLayout
@@ -172,8 +190,8 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cantoWrapper"
-        app:layout_constraintVertical_bias="0.100000024">
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.75">
 
         <TextView
             android:layout_width="wrap_content"
@@ -201,7 +219,7 @@
             android:id="@+id/codeInput"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="28dp"
+            android:layout_marginTop="16dp"
             android:gravity="center"
             android:hint="- - - -"
             android:inputType="number"
@@ -236,6 +254,21 @@
             android:layout_gravity="start"
             android:layout_marginTop="8dp"
             android:text="@string/wrong_phone_number" />
+
+        <Button
+            android:id="@+id/verifyBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="32dp"
+            android:background="@drawable/login_phone_btn_bg"
+            android:text="@string/send"
+            android:textAllCaps="false"
+            android:visibility="visible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/cantoWrapper" />
     </LinearLayout>
 
 
