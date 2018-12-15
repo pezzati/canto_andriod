@@ -26,17 +26,21 @@ class TrimView : View {
         isAntiAlias = true
     }
     private val progressPaint = Paint().apply {
-        color = Color.GREEN
+        color = Color.parseColor("#007AFF")
         isAntiAlias = true
         strokeCap = Paint.Cap.ROUND
     }
     private val bracketPaint = Paint().apply {
-        color = Color.BLACK
+        color = Color.WHITE
         textSize = dpToPx(14).toFloat()
         isAntiAlias = true
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
             textAlignment = View.TEXT_ALIGNMENT_CENTER
         }
+    }
+    private val anchorPaint = Paint().apply {
+        color = Color.parseColor("#FB861F")
+        isAntiAlias = true
     }
     private val bgLine = RectF()
     private val mainLine = RectF()
@@ -68,6 +72,8 @@ class TrimView : View {
 
     private var maxPx = 0
 
+    private val anchorCompensate = 20f
+
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
         setMeasuredDimension(measuredWidth, anchorWidth.toInt())
@@ -75,22 +81,22 @@ class TrimView : View {
             maxPx = (measuredWidth - (2 * anchorWidth)).toInt()
             bgLine.set(
                     anchorWidth,
-                    (measuredHeight / 2f) - (mainLineHeight / 2),
+                    0f,
                     anchorWidth + maxPx,
-                    (measuredHeight / 2f) + (mainLineHeight / 2)
+                    measuredHeight.toFloat()
             )
 
             mainLine.set(
+                    -anchorCompensate,
                     0f,
-                    (measuredHeight / 2f) - (mainLineHeight / 2),
-                    0f,
-                    (measuredHeight / 2f) + (mainLineHeight / 2)
+                    -anchorCompensate,
+                    measuredHeight.toFloat()
             )
             progressLine.set(
+                    -anchorCompensate,
                     0f,
-                    (measuredHeight / 2f) - (mainLineHeight / 2),
-                    0f,
-                    (measuredHeight / 2f) + (mainLineHeight / 2)
+                    -anchorCompensate,
+                    measuredHeight.toFloat()
             )
             leftAnchor.set(0f, 0f, 0f, measuredHeight.toFloat())
             rightAnchor.set(
@@ -109,11 +115,11 @@ class TrimView : View {
     override fun onDraw(canvas: Canvas) {
         canvas.drawRoundRect(bgLine, radius, radius, bgPaint)
         canvas.drawRect(mainLine, whitePaint)
-        canvas.drawRoundRect(leftAnchor, radius, radius, whitePaint)
-        canvas.drawRoundRect(rightAnchor, radius, radius, whitePaint)
         canvas.drawRect(progressLine, progressPaint)
-//        canvas.drawText("[", leftAnchor.centerX() - anchorWidth / 2, leftAnchor.centerY() + anchorWidth, bracketPaint)
-//        canvas.drawText("]", rightAnchor.centerX() - anchorWidth / 2, rightAnchor.centerY() + anchorWidth, bracketPaint)
+        canvas.drawRoundRect(leftAnchor, radius, radius, anchorPaint)
+        canvas.drawRoundRect(rightAnchor, radius, radius, anchorPaint)
+        canvas.drawText("[", leftAnchor.centerX() - anchorWidth / 2, leftAnchor.centerY() + anchorWidth, bracketPaint)
+        canvas.drawText("]", rightAnchor.centerX() - anchorWidth / 2, rightAnchor.centerY() + anchorWidth, bracketPaint)
     }
 
     private var captured: Captured = Captured.WHOLE
@@ -202,11 +208,11 @@ class TrimView : View {
 
         leftAnchor.left = trimStartPx.toFloat()
         leftAnchor.right = leftAnchor.left + anchorWidth
-        mainLine.left = leftAnchor.right
+        mainLine.left = leftAnchor.right - anchorCompensate
 
         rightAnchor.left = (trimStartPx + trimPx).toFloat() + anchorWidth
         rightAnchor.right = rightAnchor.left + anchorWidth
-        mainLine.right = rightAnchor.left
+        mainLine.right = rightAnchor.left + anchorCompensate
 
         calculateProgress(false)
 
@@ -219,7 +225,7 @@ class TrimView : View {
     private fun calculateProgress(invalidate: Boolean) {
         val progressPx = progress * maxPx / max
         progressLine.left = mainLine.left
-        progressLine.right = progressLine.left + progressPx
+        progressLine.right = progressLine.left + progressPx + anchorCompensate
 
         if (invalidate)
             invalidate()
