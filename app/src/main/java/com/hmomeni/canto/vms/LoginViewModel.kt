@@ -31,7 +31,7 @@ class LoginViewModel : ViewModel(), DIComponent.Injectable {
 
     lateinit var phone: String
 
-    fun handshake(): Single<Int> {
+    fun handshake(): Single<Pair<Int, String?>> {
         val map = mutableMapOf<String, Any>()
         map["build_version"] = BuildConfig.VERSION_CODE
         map["device_type"] = "android"
@@ -40,9 +40,10 @@ class LoginViewModel : ViewModel(), DIComponent.Injectable {
         map["bundle"] = BuildConfig.APPLICATION_ID
         return api.handshake(map.toBody()).map {
             return@map when {
-                it["force_update"].asBoolean -> 1
-                it["token"].asString.startsWith("guest") -> 2
-                else -> 0
+                it["force_update"].asBoolean -> Pair(1, it["url"].asString)
+                it["suggest_update"].asBoolean -> Pair(2, it["url"].asString)
+                it["token"].asString.startsWith("guest") -> Pair(3, null)
+                else -> Pair(0, null)
             }
         }
     }

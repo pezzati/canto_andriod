@@ -4,6 +4,7 @@ import android.animation.Animator
 import android.app.ProgressDialog
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.View
@@ -46,16 +47,24 @@ class LoginActivity : AppCompatActivity() {
 
         viewModel.handshake()
                 .iomain()
-                .subscribe({
-                    when (it) {
+                .subscribe({ p ->
+                    when (p.first) {
                         0 -> prepareLogin()
-                        2 -> {
+                        3 -> {
                             startActivity(Intent(this, MainActivity::class.java))
                             finish()
                         }
-                        1 -> {
-                            // display update dialog
+                        2 -> {
+                            prepareLogin()
+                            CantoDialog(this, getString(R.string.update_required), getString(R.string.update_rationale), autoDismiss = false, positiveListener = {
+                                startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(p.second)))
+                            }, showNegativeButton = true, negativeListener = { d -> d.dismiss() }).show()
                         }
+                        1 -> CantoDialog(this, getString(R.string.update_required), getString(R.string.update_rationale), autoDismiss = false, positiveListener = {
+                            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(p.second)))
+                        }).apply {
+                            setCanceledOnTouchOutside(false)
+                        }.show()
                     }
                 }, {
                     Timber.e(it)

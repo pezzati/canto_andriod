@@ -35,4 +35,8 @@
     <string name="profile">Profile</string>
     <string name="posts">Posts</string>
     <string name="story">Story</string>
+    <string name="ok">Ok</string>
+    <string name="cancel">Cancel</string>
+    <string name="update_required">Update Required</string>
+    <string name="update_rationale">There is a new version of Canto available in market. Please upgrade now.</string>
 </resources>

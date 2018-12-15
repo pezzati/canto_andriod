@@ -6,4 +6,7 @@
     <color name="transparent">#00FFFFFF</color>
 
     <color name="secondaryText">#80ffffff</color>
+
+    <color name="buttonDefault">#007AFF</color>
+    <color name="dialogDivider">#22FFFFFF</color>
 </resources>
