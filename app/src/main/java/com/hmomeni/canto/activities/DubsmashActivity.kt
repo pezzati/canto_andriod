@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.media.AudioManager
 import android.os.Bundle
-import android.os.Environment
 import android.os.Handler
 import android.util.SparseIntArray
 import android.view.View
@@ -28,7 +27,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.processors.PublishProcessor
 import kotlinx.android.synthetic.main.activity_dubsmash.*
-import timber.log.Timber
 import java.io.File
 import javax.inject.Inject
 
@@ -94,7 +92,7 @@ class DubsmashActivity : CameraActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        baseFile = Environment.getExternalStorageDirectory()
+        baseFile = filesDir
 
         app().di.inject(this)
 
@@ -138,7 +136,9 @@ class DubsmashActivity : CameraActivity() {
         }
 
         switchCam.setOnClickListener {
-            switchCamera()
+            if (!isRecording) {
+                switchCamera()
+            }
         }
         switchRatio.setOnClickListener {
             if (mRatio == RATIO_FULLSCREEN) {
@@ -204,7 +204,7 @@ class DubsmashActivity : CameraActivity() {
         val pos = timeMap.get(sec, -1)
 
         if (pos >= 0 && lastPos != pos) {
-            Timber.d("sec=%d, pos=%d, lastPos=%d", sec, pos, lastPos)
+//            Timber.d("sec=%d, pos=%d, lastPos=%d", sec, pos, lastPos)
             if (lastPos >= 0) {
                 midiItems[lastPos].active = false
                 lyricRecyclerVIew.adapter.notifyItemChanged(lastPos)
@@ -333,6 +333,7 @@ class DubsmashActivity : CameraActivity() {
         StartRecording()
         trimView.visibility = View.GONE
         timerText.visibility = View.VISIBLE
+        switchCam.alpha = 0.3f
     }
 
     private fun stopDubsmash() {

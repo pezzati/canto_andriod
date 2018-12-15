@@ -32,16 +32,6 @@
         app:layout_constraintBottom_toBottomOf="parent" />
 
     <ImageView
-        android:id="@+id/saveBtn"
-        android:layout_width="36dp"
-        android:layout_height="36dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginBottom="32dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:srcCompat="@drawable/ic_save" />
-
-    <ImageView
         android:id="@+id/playBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -79,7 +69,7 @@
         android:id="@+id/settingsWrapper"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:background="#aaa"
+        android:background="#88000000"
         android:orientation="horizontal"
         android:visibility="gone"
         android:weightSum="5"
@@ -188,6 +178,16 @@
             app:layout_constraintStart_toEndOf="@+id/musicVolume"
             app:layout_constraintTop_toTopOf="@+id/musicVolume" />
     </android.support.constraint.ConstraintLayout>
+
+    <ImageView
+        android:id="@+id/saveBtn"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginBottom="32dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:srcCompat="@drawable/ic_save" />
 
     <android.support.constraint.Guideline
         android:id="@+id/guideline2"

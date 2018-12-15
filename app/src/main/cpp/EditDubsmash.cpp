@@ -500,7 +500,6 @@ Java_com_hmomeni_canto_activities_EditActivity_ApplyEffect(
         default:
         case 0: // no effect
 
-            player->setPitchShift(0);
             if (ed_isSinging)
                 micPlayer->setPitchShift(0);
 
@@ -513,7 +512,6 @@ Java_com_hmomeni_canto_activities_EditActivity_ApplyEffect(
             }
             reverb->setMix(0.8);
 
-            player->setPitchShift(0);
             if (ed_isSinging)
                 micPlayer->setPitchShift(0);
 
@@ -525,7 +523,6 @@ Java_com_hmomeni_canto_activities_EditActivity_ApplyEffect(
                 flanger->enable(true);
             }
 
-            player->setPitchShift(0);
             if (ed_isSinging)
                 micPlayer->setPitchShift(0);
 
@@ -533,7 +530,6 @@ Java_com_hmomeni_canto_activities_EditActivity_ApplyEffect(
             break;
 
         case 3: // pitch shift
-            player->setPitchShift(8);
             if (ed_isSinging)
                 micPlayer->setPitchShift(12);
             appliedEffect = effect;
@@ -545,7 +541,6 @@ Java_com_hmomeni_canto_activities_EditActivity_ApplyEffect(
                 echo->enable(true);
             }
 
-            player->setPitchShift(0);
             if (ed_isSinging)
                 micPlayer->setPitchShift(0);
 

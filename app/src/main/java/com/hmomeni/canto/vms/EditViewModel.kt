@@ -1,12 +1,15 @@
 package com.hmomeni.canto.vms
 
 import android.arch.lifecycle.ViewModel
+import android.arch.persistence.db.SimpleSQLiteQuery
 import com.hmomeni.canto.di.DIComponent
 import com.hmomeni.canto.entities.*
 import com.hmomeni.canto.persistence.PostDao
 import com.hmomeni.canto.persistence.ProjectDao
 import com.hmomeni.canto.persistence.TrackDao
 import io.reactivex.Completable
+import io.reactivex.Single
+import io.reactivex.schedulers.Schedulers
 import java.io.File
 import javax.inject.Inject
 
@@ -22,6 +25,13 @@ class EditViewModel : ViewModel(), DIComponent.Injectable {
     lateinit var postDao: PostDao
     @Inject
     lateinit var trackDao: TrackDao
+
+    fun getNextProjectId(): Single<Int> {
+        return Single.create<Int> {
+            val id = projectDao.getNextProjectId(SimpleSQLiteQuery("SELECT seq FROM SQLITE_SEQUENCE WHERE name = 'Project' LIMIT 1;"))
+            it.onSuccess(id)
+        }.subscribeOn(Schedulers.io())
+    }
 
     fun saveDubsmash(finalFile: File, post: FullPost, ratio: Int): Completable {
         return Completable.create {

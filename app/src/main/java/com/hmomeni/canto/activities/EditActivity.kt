@@ -51,6 +51,7 @@ class EditActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var post: FullPost
 
     private lateinit var baseDir: File
+    private lateinit var outFile: File
 
     private var ratio: Int = RATIO_FULLSCREEN
 
@@ -60,7 +61,15 @@ class EditActivity : AppCompatActivity(), View.OnClickListener {
 
         viewModel = ViewModelProviders.of(this, ViewModelFactory(app()))[EditViewModel::class.java]
 
-        baseDir = Environment.getExternalStorageDirectory()
+        baseDir = filesDir
+        val outDir = File(Environment.getExternalStorageDirectory(), "Canto")
+
+        outDir.mkdirs()
+
+        outFile = File(outDir, "Canto_%s_%d.mp4".format(
+                if (type == PROJECT_TYPE_SINGING) "singing" else "dubsmash",
+                System.currentTimeMillis()
+        ))
 
         type = intent.getIntExtra("type", type)
         post = intent.getParcelableExtra("post")
@@ -174,6 +183,10 @@ class EditActivity : AppCompatActivity(), View.OnClickListener {
                 SetMicVol(progress / 10f)
             }
         }
+
+        if (type == PROJECT_TYPE_DUBSMASH) {
+            openSettingBtn.visibility = View.GONE
+        }
     }
 
     override fun onResume() {
@@ -267,7 +280,7 @@ class EditActivity : AppCompatActivity(), View.OnClickListener {
             }
             else -> {
                 SaveEffect(micFile.absolutePath, File(baseDir, "mic-effect.wav").absolutePath)
-                SaveEffect(audioFile.absolutePath, File(baseDir, "dubsmash-effect.wav").absolutePath)
+//                SaveEffect(audioFile.absolutePath, File(baseDir, "dubsmash-effect.wav").absolutePath)
             }
         }
     }
@@ -305,7 +318,7 @@ class EditActivity : AppCompatActivity(), View.OnClickListener {
                                 "-preset", "ultrafast",
                                 "-map", "0:v:0",
                                 "-map", "1:a:0",
-                                "-shortest", "-y", File(baseDir, "out.mp4").absolutePath
+                                "-shortest", "-y", outFile.absolutePath
                         ))
                     }
                     PROJECT_TYPE_SINGING -> if (Effect() == 0) {
@@ -328,13 +341,13 @@ class EditActivity : AppCompatActivity(), View.OnClickListener {
                                 "-map", "0:v",
                                 "-map", "1:a:0",
                                 "-map", "2:a:0",
-                                "-shortest", "-y", File(baseDir, "out.mp4").absolutePath
+                                "-shortest", "-y", outFile.absolutePath
                         ))
                     } else {
 
                         commands += listOf(
                                 "-i", videoFile.absolutePath,
-                                "-i", File(baseDir, "dubsmash-effect.wav").absolutePath,
+                                "-i", audioFile.absolutePath,
                                 "-i", File(baseDir, "mic-effect.wav").absolutePath
                         )
                         if (ratio == RATIO_SQUARE) {
@@ -351,7 +364,7 @@ class EditActivity : AppCompatActivity(), View.OnClickListener {
                                 "-map", "0:v",
                                 "-map", "1:a:0",
                                 "-map", "2:a:0",
-                                "-shortest", "-y", File(baseDir, "out.mp4").absolutePath
+                                "-shortest", "-y", outFile.absolutePath
                         ))
                     }
                 }
@@ -394,9 +407,9 @@ class EditActivity : AppCompatActivity(), View.OnClickListener {
 
     private fun saveProject() {
         disposable = if (type == PROJECT_TYPE_SINGING) {
-            viewModel.saveSinging(File(baseDir, "out.mp4"), post, ratio)
+            viewModel.saveSinging(outFile, post, ratio)
         } else {
-            viewModel.saveDubsmash(File(baseDir, "out.mp4"), post, ratio)
+            viewModel.saveDubsmash(outFile, post, ratio)
         }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
