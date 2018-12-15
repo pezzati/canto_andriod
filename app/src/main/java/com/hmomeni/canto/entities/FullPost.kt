@@ -2,9 +2,11 @@ package com.hmomeni.canto.entities
 
 import android.arch.persistence.room.Entity
 import android.arch.persistence.room.PrimaryKey
+import android.arch.persistence.room.TypeConverters
 import android.os.Parcel
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
+import com.hmomeni.canto.persistence.typeconvertors.PostTypeConvertor
 
 @Entity
 data class FullPost(
@@ -31,12 +33,16 @@ data class FullPost(
         val createdDate: String? = null,
         @SerializedName("liked_it")
         val likedIt: Boolean = false,
+        @TypeConverters(PostTypeConvertor::class)
         @SerializedName("artist")
         val artist: Artist,
+        @TypeConverters(PostTypeConvertor::class)
         @SerializedName("content")
         val content: Content,
+        @TypeConverters(PostTypeConvertor::class)
         @SerializedName("genre")
         val genre: Genre? = null,
+        @TypeConverters(PostTypeConvertor::class)
         @SerializedName("cover_photo")
         val coverPhoto: CoverPhoto? = null
 ) : Parcelable {
