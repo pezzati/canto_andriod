@@ -19,7 +19,7 @@ class VerticalSlider : View {
     private val iconRect: RectF = RectF()
     private val layoutRect: RectF = RectF(0f, 0f, measuredWidth.toFloat(), measuredHeight.toFloat())
     private val layoutPaint = Paint().apply {
-        color = Color.parseColor("#55ffffff")
+        color = Color.parseColor("#55000000")
         isAntiAlias = true
     }
     private val progressRect: RectF = RectF(0f, 0f, measuredWidth.toFloat(), measuredHeight.toFloat())
