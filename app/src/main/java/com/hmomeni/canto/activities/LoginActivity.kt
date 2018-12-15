@@ -105,12 +105,13 @@ class LoginActivity : AppCompatActivity() {
                 googleBtn.animate().alpha(0f)
                 continueWith.animate().alpha(0f)
                 emailBtn.animate().alpha(0f)
-                phoneBtn.text = getString(R.string.send)
+
                 phoneBtn.animate().y(phoneInputWrapper.y + phoneInputWrapper.height + 50).setListener(object : MyAnimatorListener() {
                     override fun onAnimationEnd(animation: Animator?) {
                         googleBtn.visibility = View.GONE
                         emailBtn.visibility = View.GONE
                         continueWith.visibility = View.GONE
+                        phoneBtn.text = getString(R.string.send)
                     }
                 })
                 phoneInputWrapper.viewTreeObserver.removeOnGlobalLayoutListener(phoneInputWrapperGlobalLayoutListener)

@@ -227,7 +227,7 @@ Java_com_hmomeni_canto_activities_DubsmashActivity_SeekMS(
 
 // onBackground - Put audio processing to sleep.
 extern "C" JNIEXPORT void
-Java_com_hmomeni_canto_DubsmashActivity_onBackground(
+Java_com_hmomeni_canto_activities_DubsmashActivity_onBackground(
         JNIEnv *__unused env,
         jobject __unused obj
 ) {
@@ -237,7 +237,7 @@ Java_com_hmomeni_canto_DubsmashActivity_onBackground(
 
 // onForeground - Resume audio processing.
 extern "C" JNIEXPORT void
-Java_com_hmomeni_canto_DubsmashActivity_onForeground(
+Java_com_hmomeni_canto_activities_DubsmashActivity_onForeground(
         JNIEnv *__unused env,
         jobject __unused obj
 ) {
@@ -247,16 +247,21 @@ Java_com_hmomeni_canto_DubsmashActivity_onForeground(
 
 // Cleanup - Free resources.
 extern "C" JNIEXPORT void
-Java_com_hmomeni_canto_DubsmashActivity_Cleanup(
+Java_com_hmomeni_canto_activities_DubsmashActivity_Cleanup(
         JNIEnv *__unused env,
         jobject __unused obj
 ) {
-    delete audioIO;
-    delete player;
-    delete obj;
-    delete micBuffer;
-    delete micRecorder;
-    delete playerBuffer;
+    if (audioIO != nullptr)
+        delete audioIO;
+    if (player != nullptr)
+        delete player;
+    if (recorder != nullptr)
+        delete recorder;
+    if (micRecorder != nullptr)
+        delete micRecorder;
+
+    free(playerBuffer);
+    free(micBuffer);
 }
 
 extern "C" JNIEXPORT void

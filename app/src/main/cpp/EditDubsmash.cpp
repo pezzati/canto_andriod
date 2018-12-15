@@ -275,14 +275,24 @@ Java_com_hmomeni_canto_activities_EditActivity_Cleanup(
         JNIEnv *__unused env,
         jobject __unused obj
 ) {
-    delete audioIO;
-    delete player;
-    delete micPlayer;
-    delete obj;
-    delete echo;
-    delete reverb;
-    delete flanger;
-    delete mixer;
+    if (audioIO != nullptr)
+        delete audioIO;
+    if (player != nullptr)
+        delete player;
+    if (micPlayer != nullptr)
+        delete micPlayer;
+    if (echo != nullptr)
+        delete echo;
+    if (reverb != nullptr)
+        delete reverb;
+    if (flanger != nullptr)
+        delete flanger;
+    if (mixer != nullptr)
+        delete mixer;
+
+    free(micBuffer);
+    free(playerBuffer);
+    free(floatBuffer);
 }
 
 extern "C" JNIEXPORT jboolean
