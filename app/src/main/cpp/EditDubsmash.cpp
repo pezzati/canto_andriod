@@ -535,7 +535,7 @@ Java_com_hmomeni_canto_activities_EditActivity_ApplyEffect(
         case 3: // pitch shift
             player->setPitchShift(8);
             if (ed_isSinging)
-                micPlayer->setPitchShift(8);
+                micPlayer->setPitchShift(12);
             appliedEffect = effect;
             break;
 

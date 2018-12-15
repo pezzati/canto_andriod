@@ -153,7 +153,7 @@ class EditActivity : AppCompatActivity(), View.OnClickListener {
 
         micVolume.lowIcon = getBitmapFromVectorDrawable(this, R.drawable.ic_mic_low)
         micVolume.midIcon = getBitmapFromVectorDrawable(this, R.drawable.ic_mic_mid)
-        micVolume.hiIcon = getBitmapFromVectorDrawable(this, R.drawable.ic_mic_mid)
+        micVolume.hiIcon = getBitmapFromVectorDrawable(this, R.drawable.ic_mic_hi)
 
         musicVolume.lowIcon = getBitmapFromVectorDrawable(this, R.drawable.ic_music_volume_low)
         musicVolume.midIcon = getBitmapFromVectorDrawable(this, R.drawable.ic_music_volume_mid)

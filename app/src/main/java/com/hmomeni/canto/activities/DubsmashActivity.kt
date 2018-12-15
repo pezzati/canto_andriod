@@ -69,6 +69,7 @@ class DubsmashActivity : CameraActivity() {
 
     private var audioInitialized: Boolean = false
     private var isPlaying: Boolean = false
+    private var isRecording: Boolean = false
 
     private lateinit var filePath: String
     private lateinit var fileUrl: String
@@ -127,13 +128,12 @@ class DubsmashActivity : CameraActivity() {
             if (recordBtn.mode in arrayOf(RecordButton.Mode.Loading, RecordButton.Mode.Idle)) {
                 return@setOnClickListener
             }
-            if (isPlaying) {
+            if (isRecording) {
                 stopDubsmash()
                 recordBtn.mode = RecordButton.Mode.Ready
             } else {
                 startDubsmash()
                 recordBtn.mode = RecordButton.Mode.Recording
-                timer()
             }
         }
 
@@ -198,8 +198,6 @@ class DubsmashActivity : CameraActivity() {
     private var handler = Handler()
     private fun timer() {
         val progressMs = GetProgressMS()
-        val trimPos = progressMs * trimView.max / GetDurationMS()
-        trimView.progress = (trimPos - trimView.trimStart).toInt()
 
         val sec = (progressMs / 1000).toInt()
 
@@ -217,6 +215,15 @@ class DubsmashActivity : CameraActivity() {
             lyricRecyclerVIew.scrollToPosition(pos)
             lastPos = pos
         }
+
+        if (!isRecording) {
+            val trimPos = progressMs * trimView.max / GetDurationMS()
+            trimView.progress = (trimPos - trimView.trimStart).toInt()
+        } else {
+            val diff = (System.currentTimeMillis() - recordStartTime) / 1000
+            timerText.text = "%d:%02d".format(diff / 60, diff % 60)
+        }
+
         handler.postDelayed({
             if (isPlaying) {
                 timer()
@@ -281,6 +288,7 @@ class DubsmashActivity : CameraActivity() {
         recordBtn.mode = RecordButton.Mode.Ready
         initAudio()
         OpenFile(filePath, File(filePath).length().toInt())
+        startPlayBack()
     }
 
     private var sampleRate: Int = 0
@@ -311,14 +319,25 @@ class DubsmashActivity : CameraActivity() {
         audioInitialized = true
     }
 
-    private fun startDubsmash() {
+    private fun startPlayBack() {
         isPlaying = true
-        startRecordingVideo()
         StartAudio()
+        timer()
+    }
+
+    private var recordStartTime = 0L
+    private fun startDubsmash() {
+        recordStartTime = System.currentTimeMillis()
+        isRecording = true
+        startRecordingVideo()
+        StartRecording()
+        trimView.visibility = View.GONE
+        timerText.visibility = View.VISIBLE
     }
 
     private fun stopDubsmash() {
         isPlaying = false
+        isRecording = false
         stopRecordingVideo()
         StopAudio()
         startActivity(Intent(this, EditActivity::class.java).putExtra("type", type).putExtra("post", post).putExtra("ratio", mRatio))
@@ -341,6 +360,7 @@ class DubsmashActivity : CameraActivity() {
     private external fun OpenFile(filePath: String, length: Int): Double
     private external fun TogglePlayback()
     private external fun StartAudio()
+    private external fun StartRecording()
     private external fun StopAudio()
     private external fun GetProgressMS(): Double
     private external fun GetDurationMS(): Double

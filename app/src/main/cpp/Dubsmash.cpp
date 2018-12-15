@@ -18,10 +18,10 @@
 
 const char *TAG = "DubsmashCPP";
 
-static SuperpoweredAndroidAudioIO *audioIO;
-static SuperpoweredAdvancedAudioPlayer *player;
-static SuperpoweredRecorder *recorder;
-static SuperpoweredRecorder *micRecorder;
+static SuperpoweredAndroidAudioIO *audioIO = nullptr;
+static SuperpoweredAdvancedAudioPlayer *player = nullptr;
+static SuperpoweredRecorder *recorder = nullptr;
+static SuperpoweredRecorder *micRecorder = nullptr;
 
 const char *outFilePath;
 const char *tempFilePath;
@@ -60,8 +60,8 @@ static bool audioProcessing(
 
 // This is called after the recorder closed the WAV file.
 static void recorderStopped(void *__unused clientdata) {
-    log_write(ANDROID_LOG_DEBUG, TAG, "Finished recording.");
-    delete recorder;
+    /*log_write(ANDROID_LOG_DEBUG, TAG, "Finished recording.");
+    delete recorder;*/
 }
 
 // Called by the player.
@@ -177,11 +177,21 @@ extern "C" JNIEXPORT void
 Java_com_hmomeni_canto_activities_DubsmashActivity_StartAudio(
         JNIEnv  __unused *env,
         jobject  __unused obj) {
+
+    player->play(false);
+}
+
+extern "C" JNIEXPORT void
+Java_com_hmomeni_canto_activities_DubsmashActivity_StartRecording(
+        JNIEnv  __unused *env,
+        jobject  __unused obj) {
     if (isSinging) {
         micRecorder->start(outFilePathMic);
     }
     recorder->start(outFilePath);
-    player->play(false);
+    if (!player->playing) {
+        player->play(false);
+    }
 }
 
 extern "C" JNIEXPORT void
