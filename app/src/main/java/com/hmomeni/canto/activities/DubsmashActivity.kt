@@ -327,6 +327,8 @@ class DubsmashActivity : CameraActivity() {
 
     private var recordStartTime = 0L
     private fun startDubsmash() {
+        val pos = trimView.trimStart * GetDurationMS() / trimView.max
+        SeekMS(pos)
         recordStartTime = System.currentTimeMillis()
         isRecording = true
         startRecordingVideo()
