@@ -11,10 +11,13 @@ import com.hmomeni.canto.entities.CompleteProject
 import com.hmomeni.canto.utils.GlideApp
 import com.hmomeni.canto.utils.dpToPx
 import com.hmomeni.canto.utils.rounded
+import io.reactivex.processors.PublishProcessor
 import kotlinx.android.synthetic.main.rcl_item_project_portrait.view.*
 import java.io.File
 
 class ProjectsRclAdapter(private val projects: List<CompleteProject>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+
+    val clickPublisher: PublishProcessor<Int> = PublishProcessor.create()
 
     override fun getItemViewType(position: Int): Int {
         return projects[position].ratio
@@ -22,8 +25,8 @@ class ProjectsRclAdapter(private val projects: List<CompleteProject>) : Recycler
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
-            RATIO_SQUARE -> SquareHolder(LayoutInflater.from(parent.context).inflate(R.layout.rcl_item_project_square, parent, false))
-            RATIO_FULLSCREEN -> PortraitHolder(LayoutInflater.from(parent.context).inflate(R.layout.rcl_item_project_portrait, parent, false))
+            RATIO_SQUARE -> SquareHolder(LayoutInflater.from(parent.context).inflate(R.layout.rcl_item_project_square, parent, false), clickPublisher)
+            RATIO_FULLSCREEN -> PortraitHolder(LayoutInflater.from(parent.context).inflate(R.layout.rcl_item_project_portrait, parent, false), clickPublisher)
             else -> throw RuntimeException("Invalid ViewType")
         }
     }
@@ -37,7 +40,13 @@ class ProjectsRclAdapter(private val projects: List<CompleteProject>) : Recycler
         }
     }
 
-    class SquareHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    class SquareHolder(itemView: View, clickPublisher: PublishProcessor<Int>) : RecyclerView.ViewHolder(itemView) {
+        init {
+            itemView.setOnClickListener {
+                clickPublisher.onNext(adapterPosition)
+            }
+        }
+
         fun bind(project: CompleteProject) {
             GlideApp.with(itemView.preview)
                     .load(File(project.filePath))
@@ -49,7 +58,13 @@ class ProjectsRclAdapter(private val projects: List<CompleteProject>) : Recycler
         }
     }
 
-    class PortraitHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    class PortraitHolder(itemView: View, clickPublisher: PublishProcessor<Int>) : RecyclerView.ViewHolder(itemView) {
+        init {
+            itemView.setOnClickListener {
+                clickPublisher.onNext(adapterPosition)
+            }
+        }
+
         fun bind(project: CompleteProject) {
             GlideApp.with(itemView.preview)
                     .load(File(project.filePath))

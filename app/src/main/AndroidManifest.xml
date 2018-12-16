@@ -16,6 +16,17 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="com.hmomeni.canto.fileprovider"
+            android:grantUriPermissions="true"
+            android:exported="false">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/filepaths" />
+        </provider>
+
         <service android:name=".DownloadService" />
 
         <activity android:name=".activities.MainActivity">
@@ -38,6 +49,7 @@
         <activity
             android:name=".activities.EditActivity"
             android:exported="true" />
+        <activity android:name=".activities.VideoPlayActivity" />
     </application>
 
 </manifest>

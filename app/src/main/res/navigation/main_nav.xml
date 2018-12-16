@@ -36,5 +36,17 @@
     <fragment
         android:id="@+id/profileFragment"
         android:name="com.hmomeni.canto.fragments.ProfileFragment"
-        android:label="ProfileFragment" />
+        android:label="ProfileFragment">
+        <action
+            android:id="@+id/action_profileFragment_to_videoPlayActivity"
+            app:destination="@id/videoPlayActivity" />
+    </fragment>
+    <activity
+        android:id="@+id/videoPlayActivity"
+        android:name="com.hmomeni.canto.activities.VideoPlayActivity"
+        android:label="VideoPlayActivity">
+        <argument
+            android:name="project"
+            app:argType="integer" />
+    </activity>
 </navigation>

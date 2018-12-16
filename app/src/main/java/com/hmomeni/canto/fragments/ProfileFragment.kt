@@ -12,9 +12,9 @@ import com.hmomeni.canto.adapters.rcl.ProjectsRclAdapter
 import com.hmomeni.canto.utils.ViewModelFactory
 import com.hmomeni.canto.utils.app
 import com.hmomeni.canto.utils.iomain
+import com.hmomeni.canto.utils.navigation.ProjectEvent
 import com.hmomeni.canto.vms.ProfileViewModel
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.functions.Consumer
 import io.reactivex.rxkotlin.addTo
 import kotlinx.android.synthetic.main.fragment_profile.*
 
@@ -38,9 +38,13 @@ class ProfileFragment : Fragment() {
         viewModel.projectDao
                 .fetchCompleteProjects()
                 .iomain()
-                .subscribe(Consumer {
-                    recyclerView.adapter = ProjectsRclAdapter(it)
-                }).addTo(compositeDisposable)
+                .subscribe { l ->
+                    recyclerView.adapter = ProjectsRclAdapter(l).also {
+                        it.clickPublisher.subscribe { pos ->
+                            viewModel.navEvents.onNext(ProjectEvent(l[pos].projectId))
+                        }
+                    }
+                }.addTo(compositeDisposable)
     }
 
     override fun onDestroyView() {

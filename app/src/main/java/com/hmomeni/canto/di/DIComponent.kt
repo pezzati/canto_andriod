@@ -4,6 +4,7 @@ import com.hmomeni.canto.App
 import com.hmomeni.canto.DownloadService
 import com.hmomeni.canto.activities.DubsmashActivity
 import com.hmomeni.canto.activities.MainActivity
+import com.hmomeni.canto.activities.VideoPlayActivity
 import com.hmomeni.canto.fragments.RecorderFragment
 import com.hmomeni.canto.vms.*
 import dagger.Component
@@ -28,4 +29,5 @@ interface DIComponent {
     fun inject(dubsmashActivity: DubsmashActivity)
     fun inject(editViewModel: EditViewModel)
     fun inject(profileViewModel: ProfileViewModel)
+    fun inject(videoPlayActivity: VideoPlayActivity)
 }
