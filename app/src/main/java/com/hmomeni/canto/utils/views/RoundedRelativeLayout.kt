@@ -5,10 +5,10 @@ import android.graphics.Canvas
 import android.graphics.Path
 import android.graphics.RectF
 import android.util.AttributeSet
-import android.widget.FrameLayout
+import android.widget.RelativeLayout
 import com.hmomeni.canto.utils.dpToPx
 
-class RoundedFrameLayout : FrameLayout {
+class RoundedRelativeLayout : RelativeLayout {
     constructor(context: Context) : super(context)
     constructor(context: Context, attributeSet: AttributeSet) : super(context, attributeSet)
 

@@ -5,7 +5,7 @@
     <string name="description_info">Info</string>
     <string name="permission_request">This sample needs permission for camera and audio recording.</string>
     <string name="camera_error">This device doesn\'t support Camera2 API.</string>
-    <string name="sing_by_canto">Sing! by Canto</string>
+    <string name="sing_by_canto" translatable="false">Sing! by Canto</string>
     <string name="continue_with">Continue with</string>
     <string name="phone_number">Phone number</string>
     <string name="email">Email</string>
@@ -25,7 +25,7 @@
     <string name="failed_requstin_verification">Failed requesting verification</string>
     <string name="home">Home</string>
     <string name="search">Search</string>
-    <string name="search_hint">Start typing to search...</string>
+    <string name="search_hint">Start typing to search…</string>
     <string name="you_must_play_the_song_first">You must play the song first!</string>
     <string name="recording_started">Recording started</string>
     <string name="recording_stopped">Recording stopped</string>

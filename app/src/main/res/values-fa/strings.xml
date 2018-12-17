@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Canto</string>
+    <string name="record">ضبط</string>
+    <string name="stop">توقف</string>
+    <string name="description_info">اطلاعات</string>
+    <string name="permission_request">این برنامه نیاز به دسترسی به دوربین و ضبط صدا دارد.</string>
+    <string name="camera_error">این دستگاه از Camera 2 API پشتیبانی نمی‌کند.</string>
+    <string name="continue_with">ادامه</string>
+    <string name="phone_number">شماره تلفن</string>
+    <string name="email">ایمیل</string>
+    <string name="google">گوگل</string>
+    <string name="login_by_phone_number">ورود با \n شماره تلفن</string>
+    <string name="accept_the_terms">من قوانین را خوانده و آنها را قبول دارم.</string>
+    <string name="send">ارسال</string>
+    <string name="code_was_sent_to_the_following_number">رمز تأیید به شناسه زیر ارسال شد:</string>
+    <string name="didnt_receive_code">رمزی دریافت نکردید؟</string>
+    <string name="wrong_phone_number">شماره تلفن اشتباه است؟</string>
+    <string name="dubsmash">دابسمش</string>
+    <string name="dubsmash_desc">دابسمش</string>
+    <string name="sing">خوانندگی</string>
+    <string name="sing_desc">خوانندگی</string>
+    <string name="karaoke">کارائوکی</string>
+    <string name="karaoke_desc">کارائوکی</string>
+    <string name="failed_requstin_verification">درخواست تأیید با مشکل روبرو شد</string>
+    <string name="home">خانه</string>
+    <string name="search">جستجو</string>
+    <string name="search_hint">برای دیدن نتایج شروع به نوشتن کنید…</string>
+    <string name="you_must_play_the_song_first">شما ابتدا باید آهنگ را شروع کنید!</string>
+    <string name="recording_started">ضبط شروع شد</string>
+    <string name="recording_stopped">ضبط متوقف شد</string>
+    <string name="download_failed_try_again">دریافت با مشکل مواجه شد، دوباره تلاش کنید.</string>
+    <string name="saving_project_failed">ذخیره سازی پروژه با مشکل روبرو شد!</string>
+    <string name="saving_project_done">پروژه در فضای کاربری شما ذخیره شد.</string>
+    <string name="profile">پروفایل</string>
+    <string name="posts">پست‌ها</string>
+    <string name="story">استوری</string>
+    <string name="ok">باشه</string>
+    <string name="update_required">نیازمند بروزرسانی</string>
+    <string name="update_rationale">نسخه جدید از کانتو در مارکت موجود است. لطفا به روزرسانی کنید.</string>
+    <string name="login_by_email">ورود با \n ایمیل</string>
+    <string name="invalid_phone_number">شماره نامعتبر است (درست: 09123456789)</string>
+    <string name="invalid_email_address">ایمیل نامعتبر است</string>
+    <string name="cancel">لغو</string>
+</resources>

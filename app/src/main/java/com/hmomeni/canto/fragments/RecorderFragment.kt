@@ -25,6 +25,7 @@ import android.util.Size
 import android.view.*
 import android.widget.Toast
 import android.widget.Toast.LENGTH_SHORT
+import com.example.android.camera2video.CompareSizesByArea
 import com.hmomeni.canto.R
 import com.hmomeni.canto.activities.DubsmashActivity
 import com.hmomeni.canto.activities.KaraokeActivity
@@ -42,6 +43,7 @@ import com.karumi.dexter.listener.multi.MultiplePermissionsListener
 import com.tmall.ultraviewpager.transformer.UltraScaleTransformer
 import kotlinx.android.synthetic.main.fragment_recorder.*
 import timber.log.Timber
+import java.util.*
 import java.util.concurrent.Semaphore
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -50,7 +52,10 @@ import javax.inject.Inject
 class RecorderFragment : Fragment() {
     private val FRAGMENT_DIALOG = "dialog"
 
-    var selectPostId: Int = 1085
+    private var selectPostId: Int = 1085
+
+    private val CAMERA_FRONT = "1"
+    private val CAMERA_BACK = "0"
 
     @Inject
     lateinit var api: Api
@@ -70,7 +75,7 @@ class RecorderFragment : Fragment() {
     private val surfaceTextureListener = object : TextureView.SurfaceTextureListener {
 
         override fun onSurfaceTextureAvailable(texture: SurfaceTexture, width: Int, height: Int) {
-            openCamera(width, height)
+            openCamera(9, 16)
         }
 
         override fun onSurfaceTextureSizeChanged(texture: SurfaceTexture, width: Int, height: Int) {
@@ -296,7 +301,7 @@ class RecorderFragment : Fragment() {
         // a camera and start preview from here (otherwise, we wait until the surface is ready in
         // the SurfaceTextureListener).
         if (textureView.isAvailable) {
-            openCamera(textureView.width, textureView.height)
+            openCamera(9, 16)
         } else {
             textureView.surfaceTextureListener = surfaceTextureListener
         }
@@ -342,7 +347,7 @@ class RecorderFragment : Fragment() {
                 .withListener(object : MultiplePermissionsListener {
                     override fun onPermissionsChecked(report: MultiplePermissionsReport) {
                         if (report.grantedPermissionResponses.size == 3) {
-                            openCamera(textureView.width, textureView.height)
+                            openCamera(9, 16)
                         }
                     }
 
@@ -372,7 +377,7 @@ class RecorderFragment : Fragment() {
             if (!cameraOpenCloseLock.tryAcquire(5500, TimeUnit.MILLISECONDS)) {
                 throw RuntimeException("Time out waiting to lock camera opening.")
             }
-            val cameraId = manager.cameraIdList[0]
+            val cameraId = manager.cameraIdList.firstOrNull { it == CAMERA_FRONT } ?: CAMERA_BACK
 
             // Choose the sizes for camera preview and video recording
             val characteristics = manager.getCameraCharacteristics(cameraId)
@@ -380,7 +385,8 @@ class RecorderFragment : Fragment() {
                     ?: throw RuntimeException("Cannot get available preview/video sizes")
             sensorOrientation = characteristics.get(SENSOR_ORIENTATION)
             videoSize = chooseVideoSize(map.getOutputSizes(MediaRecorder::class.java))
-            previewSize = Size(dpToPx(365), dpToPx(200))
+            previewSize = chooseOptimalSize(map.getOutputSizes(SurfaceTexture::class.java),
+                    width, height, videoSize)
 
             if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
                 textureView.setAspectRatio(previewSize.width, previewSize.height)
@@ -529,7 +535,40 @@ class RecorderFragment : Fragment() {
      * @return The video size
      */
     private fun chooseVideoSize(choices: Array<Size>) = choices.firstOrNull {
-        it.width == it.height * 4 / 3 && it.width <= 1080
+        it.width == it.height * 16 / 9
     } ?: choices[choices.size - 1]
+
+    /**
+     * Given [choices] of [Size]s supported by a camera, chooses the smallest one whose
+     * width and height are at least as large as the respective requested values, and whose aspect
+     * ratio matches with the specified value.
+     *
+     * @param choices     The list of sizes that the camera supports for the intended output class
+     * @param width       The minimum desired width
+     * @param height      The minimum desired height
+     * @param aspectRatio The aspect ratio
+     * @return The optimal [Size], or an arbitrary one if none were big enough
+     */
+    private fun chooseOptimalSize(
+            choices: Array<Size>,
+            width: Int,
+            height: Int,
+            aspectRatio: Size
+    ): Size {
+
+        // Collect the supported resolutions that are at least as big as the preview Surface
+        val w = aspectRatio.width
+        val h = aspectRatio.height
+        val bigEnough = choices.filter {
+            it.height == it.width * h / w && it.width >= width && it.height >= height
+        }
+
+        // Pick the smallest of those, assuming we found any
+        return if (bigEnough.isNotEmpty()) {
+            Collections.min(bigEnough, CompareSizesByArea())
+        } else {
+            choices[0]
+        }
+    }
 
 }

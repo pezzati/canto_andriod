@@ -27,6 +27,12 @@ class App : Application() {
     override fun onCreate() {
         super.onCreate()
 
+        /*val conf = resources.configuration
+        val locale = Locale(FA_LANG.toLowerCase())
+        Locale.setDefault(locale)
+        conf.setLocale(locale)
+        createConfigurationContext(conf)*/
+
         Timber.plant(Timber.DebugTree())
 
         di = DaggerDIComponent.builder()

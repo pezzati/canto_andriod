@@ -46,10 +46,10 @@ abstract class CameraActivity : AppCompatActivity() {
     abstract fun onRecordError()
     abstract fun onTextureAvailable(width: Int, height: Int)
 
-    val CAMERA_FRONT = "1"
-    val CAMERA_BACK = "0"
+    private val CAMERA_FRONT = "1"
+    private val CAMERA_BACK = "0"
 
-    private var cameraId = CAMERA_BACK
+    private var cameraId = CAMERA_FRONT
 
     private val FRAGMENT_DIALOG = "dialog"
     private val SENSOR_ORIENTATION_DEFAULT_DEGREES = 90
