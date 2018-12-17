@@ -13,7 +13,7 @@
     <string name="login_by_phone_number">Login by \n Phone Number</string>
     <string name="accept_the_terms">I have read and accepted the terms and conditions</string>
     <string name="send">Send</string>
-    <string name="code_was_sent_to_the_following_number">Code was send to the number:</string>
+    <string name="code_was_sent_to_the_following_number">Code was send to:</string>
     <string name="didnt_receive_code">Didn\'t receive code?</string>
     <string name="wrong_phone_number">Wrong phone number?</string>
     <string name="dubsmash">Dubsmash</string>
@@ -40,4 +40,6 @@
     <string name="update_required">Update Required</string>
     <string name="update_rationale">There is a new version of Canto available in market. Please upgrade now.</string>
     <string name="login_by_email">Login by \n Email</string>
+    <string name="invalid_phone_number">Invalid phone number (correct: 09123456789)</string>
+    <string name="invalid_email_address">Invalid email address</string>
 </resources>

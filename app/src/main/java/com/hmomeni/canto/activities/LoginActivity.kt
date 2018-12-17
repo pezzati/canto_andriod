@@ -8,6 +8,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.text.InputType
+import android.util.Patterns
 import android.view.View
 import android.widget.Toast
 import com.bumptech.glide.Glide
@@ -18,6 +19,7 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
 import kotlinx.android.synthetic.main.activity_login.*
 import timber.log.Timber
+import java.util.regex.Pattern
 
 class LoginActivity : AppCompatActivity(), View.OnClickListener {
 
@@ -41,6 +43,9 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
         emailBtn.setOnClickListener(this)
         loginBtn.setOnClickListener(this)
         verifyBtn.setOnClickListener(this)
+        wrongPhoneBtn.setOnClickListener(this)
+        noCodeBtn.setOnClickListener(this)
+
 
         cantoWrapper.translationY += getScreenDimensions(this).height / 6
 
@@ -89,6 +94,8 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
             R.id.emailBtn -> goToPhoneInput(true)
             R.id.loginBtn -> submitPhone()
             R.id.verifyBtn -> submitCode()
+            R.id.wrongPhoneBtn -> backToPhoneInput()
+            R.id.noCodeBtn -> submitPhone()
         }
     }
 
@@ -126,6 +133,8 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun goToCodeInput() {
+        if (step == 2) return
+
         step = 2
         codeInputWrapper.visibility = View.VISIBLE
         phoneInputWrapper.animate().alpha(0f)
@@ -137,6 +146,7 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun backToPhoneInput() {
+        timerCanceled = true
         step = 1
         phoneInputWrapper.visibility = View.VISIBLE
         phoneInputWrapper.animate().alpha(1f)
@@ -161,6 +171,12 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun submitPhone() {
+
+        if (!verifyInput(phoneInput.text.toString(), viewModel.signupMode)) {
+            showErrorMessage(viewModel.signupMode)
+            return
+        }
+
         val progressDialog = ProgressDialog(this).apply {
             isIndeterminate = true
         }
@@ -170,7 +186,11 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
                 .doOnSubscribe { progressDialog.show() }
                 .doAfterTerminate { progressDialog.dismiss() }
                 .subscribe({
+                    phoneNumberView.text = phoneInput.text
+                    noCodeBtn.isClickable = false
                     goToCodeInput()
+                    timerCanceled = false
+                    startCountDownTimer(45)
                 }, {
                     Toast.makeText(this, R.string.failed_requstin_verification, Toast.LENGTH_SHORT).show()
                     Timber.e(it)
@@ -195,5 +215,36 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
                 }).addTo(compositeDisposable)
     }
 
+    private var timerCanceled = false
+    private fun startCountDownTimer(start: Int = 45) {
+        codeTimer.text = "%02d:%02d".format(start / 60, start % 60)
+        if (start > 0 && !timerCanceled) {
+            codeTimer.postDelayed({
+                startCountDownTimer(start - 1)
+            }, 1000)
+        } else {
+            noCodeBtn.isClickable = true
+        }
+    }
+
+    private fun verifyInput(input: String, mode: LoginViewModel.SignupMode): Boolean {
+        return when (mode) {
+            LoginViewModel.SignupMode.EMAIL -> Patterns.EMAIL_ADDRESS.matcher(input).matches()
+            LoginViewModel.SignupMode.PHONE -> Pattern.compile("^09(\\d){9}").matcher(input).matches()
+        }
+    }
+
+    private fun showErrorMessage(mode: LoginViewModel.SignupMode) {
+        when (mode) {
+            LoginViewModel.SignupMode.EMAIL -> phoneInput.apply {
+                error = getString(R.string.invalid_email_address)
+                requestFocus()
+            }
+            LoginViewModel.SignupMode.PHONE -> phoneInput.apply {
+                error = getString(R.string.invalid_phone_number)
+                requestFocus()
+            }
+        }
+    }
 
 }
