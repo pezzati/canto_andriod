@@ -39,4 +39,5 @@
     <string name="cancel">Cancel</string>
     <string name="update_required">Update Required</string>
     <string name="update_rationale">There is a new version of Canto available in market. Please upgrade now.</string>
+    <string name="login_by_email">Login by \n Email</string>
 </resources>

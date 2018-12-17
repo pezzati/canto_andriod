@@ -29,7 +29,9 @@ class LoginViewModel : ViewModel(), DIComponent.Injectable {
     @Inject
     lateinit var userSession: UserSession
 
-    lateinit var phone: String
+    lateinit var login: String
+
+    lateinit var signupMode: SignupMode
 
     fun handshake(): Single<Pair<Int, String?>> {
         val map = mutableMapOf<String, Any>()
@@ -48,26 +50,40 @@ class LoginViewModel : ViewModel(), DIComponent.Injectable {
         }
     }
 
-    fun signUpPhone(phone: String): Completable {
-        this.phone = phone
+    fun signUp(login: String): Completable {
+        this.login = login
         val map = mutableMapOf<String, Any>()
-        map["mobile"] = phone
+        if (signupMode == SignupMode.EMAIL) {
+            map["email"] = login
+        } else {
+            map["mobile"] = login
+        }
         return api.signUp(map.toBody())
     }
 
-    fun verifyPhone(code: String): Completable {
-        val map = makeMap()
-                .add("mobile", phone)
-                .add("code", code)
+    fun verify(code: String): Completable {
+        val map = makeMap().apply {
+            if (signupMode == SignupMode.EMAIL) {
+                add("email", login)
+            } else {
+                add("mobile", login)
+            }
+            add("code", code)
+        }
+
         return api.verify(map.body())
                 .doOnSuccess {
                     val token = it["token"].asString
                     val user = User(
-                            0, phone, "", "", token, true
+                            0, login, "", "", token, true
                     )
                     userDao.insert(user)
                     userSession.user = user
                 }
                 .ignoreElement()
+    }
+
+    enum class SignupMode {
+        EMAIL, PHONE
     }
 }

@@ -7,6 +7,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.text.InputType
 import android.view.View
 import android.widget.Toast
 import com.bumptech.glide.Glide
@@ -37,6 +38,7 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
                 .into(splashBackground)
 
         phoneBtn.setOnClickListener(this)
+        emailBtn.setOnClickListener(this)
         loginBtn.setOnClickListener(this)
         verifyBtn.setOnClickListener(this)
 
@@ -84,6 +86,7 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
     override fun onClick(v: View) {
         when (v.id) {
             R.id.phoneBtn -> goToPhoneInput()
+            R.id.emailBtn -> goToPhoneInput(true)
             R.id.loginBtn -> submitPhone()
             R.id.verifyBtn -> submitCode()
         }
@@ -98,7 +101,18 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
         }, 300)
     }
 
-    private fun goToPhoneInput() {
+    private fun goToPhoneInput(email: Boolean = false) {
+        if (email) {
+            viewModel.signupMode = LoginViewModel.SignupMode.EMAIL
+            loginTitle.setText(R.string.login_by_email)
+            phoneInput.inputType = InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS
+            phoneInput.setHint(R.string.email)
+        } else {
+            viewModel.signupMode = LoginViewModel.SignupMode.PHONE
+            loginTitle.setText(R.string.login_by_phone_number)
+            phoneInput.inputType = InputType.TYPE_CLASS_PHONE
+            phoneInput.setHint(R.string.phone_number)
+        }
         step = 1
         phoneInputWrapper.animate().alpha(1f)
         cantoWrapper.animate().scaleX(0.8f).scaleY(0.8f).translationYBy(-100f)
@@ -151,7 +165,7 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
             isIndeterminate = true
         }
 
-        viewModel.signUpPhone(phoneInput.text.toString())
+        viewModel.signUp(phoneInput.text.toString())
                 .iomain()
                 .doOnSubscribe { progressDialog.show() }
                 .doAfterTerminate { progressDialog.dismiss() }
@@ -168,7 +182,7 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
             isIndeterminate = true
         }
 
-        viewModel.verifyPhone(codeInput.text.toString())
+        viewModel.verify(codeInput.text.toString())
                 .iomain()
                 .doOnSubscribe { progressDialog.show() }
                 .doAfterTerminate { progressDialog.dismiss() }
