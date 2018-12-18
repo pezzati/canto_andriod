@@ -17,7 +17,7 @@ android {
         minSdkVersion 21
         targetSdkVersion 28
         versionCode 1
-        versionName "0.2.2"
+        versionName "0.3"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         externalNativeBuild {
             cmake {
@@ -64,19 +64,19 @@ android {
     packagingOptions {
         exclude 'META-INF/proguard/androidx-annotations.pro'
     }
-    
+
     aaptOptions {
-        ignoreAssetsPattern "!*ffprobe"
-//        ignoreAssetsPattern "!*ffprobe:!x86"
+//        ignoreAssetsPattern "!*ffprobe"
+        ignoreAssetsPattern "!*ffprobe:!x86"
     }
-    /*splits {
+    splits {
         abi {
             enable true
             reset()
             include "armeabi-v7a", "arm64-v8a"
-            universalApk true
+            universalApk false
         }
-    }*/
+    }
 
 //    sourceSets.main.jniLibs.srcDirs = ['./jniLibs/']
 }
