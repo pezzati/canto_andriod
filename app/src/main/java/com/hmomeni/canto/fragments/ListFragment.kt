@@ -71,7 +71,7 @@ class ListFragment : Fragment() {
                     progressBar?.visibility = View.GONE
                 }
                 .subscribe({
-                    recyclerView.adapter.notifyItemRangeInserted(0, viewModel.posts.size)
+                    recyclerView.adapter!!.notifyItemRangeInserted(0, viewModel.posts.size)
                 }, {
                     Timber.e(it)
                 })

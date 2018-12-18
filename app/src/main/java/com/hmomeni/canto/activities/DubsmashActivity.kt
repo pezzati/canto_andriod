@@ -207,10 +207,10 @@ class DubsmashActivity : CameraActivity() {
 //            Timber.d("sec=%d, pos=%d, lastPos=%d", sec, pos, lastPos)
             if (lastPos >= 0) {
                 midiItems[lastPos].active = false
-                lyricRecyclerVIew.adapter.notifyItemChanged(lastPos)
+                lyricRecyclerVIew.adapter!!.notifyItemChanged(lastPos)
             }
             midiItems[pos].active = true
-            lyricRecyclerVIew.adapter.notifyItemChanged(pos)
+            lyricRecyclerVIew.adapter!!.notifyItemChanged(pos)
 
             lyricRecyclerVIew.scrollToPosition(pos)
             lastPos = pos
