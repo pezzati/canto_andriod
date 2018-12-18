@@ -18,9 +18,9 @@ import android.util.Size
 import android.util.SparseIntArray
 import android.view.Surface
 import android.view.TextureView
-import android.view.Window
-import android.view.WindowManager
+import android.view.View
 import android.widget.Toast
+import com.crashlytics.android.Crashlytics
 import com.example.android.camera2video.CompareSizesByArea
 import com.hmomeni.canto.R
 import com.hmomeni.canto.utils.ErrorDialog
@@ -78,7 +78,7 @@ abstract class CameraActivity : AppCompatActivity() {
      * [TextureView.SurfaceTextureListener] handles several lifecycle events on a
      * [TextureView].
      */
-    val surfaceTextureListener = object : TextureView.SurfaceTextureListener {
+    private val surfaceTextureListener = object : TextureView.SurfaceTextureListener {
 
         override fun onSurfaceTextureAvailable(texture: SurfaceTexture, width: Int, height: Int) {
             openCamera(width, height)
@@ -159,7 +159,7 @@ abstract class CameraActivity : AppCompatActivity() {
     /**
      * [CameraDevice.StateCallback] is called when [CameraDevice] changes its status.
      */
-    val stateCallback = object : CameraDevice.StateCallback() {
+    private val stateCallback = object : CameraDevice.StateCallback() {
 
         override fun onOpened(cameraDevice: CameraDevice) {
             cameraOpenCloseLock.release()
@@ -190,9 +190,14 @@ abstract class CameraActivity : AppCompatActivity() {
     private var mediaRecorder: MediaRecorder? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        requestWindowFeature(Window.FEATURE_NO_TITLE)
+        /*requestWindowFeature(Window.FEATURE_NO_TITLE)
         window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN)
+                WindowManager.LayoutParams.FLAG_FULLSCREEN)*/
+
+        val uiOptions = window.decorView.systemUiVisibility
+        val newUiOptions = uiOptions or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or View.SYSTEM_UI_FLAG_FULLSCREEN
+        window.decorView.systemUiVisibility = newUiOptions
+
     }
 
     override fun onResume() {
@@ -273,7 +278,11 @@ abstract class CameraActivity : AppCompatActivity() {
      * Lint suppression - permission is checked in [hasPermissionsGranted]
      */
     @SuppressLint("MissingPermission")
-    protected fun openCamera(width: Int, height: Int): Boolean {
+    protected fun openCamera(w: Int, h: Int): Boolean {
+
+        val width = h
+        val height = w
+
         if (!hasPermissionsGranted(VIDEO_PERMISSIONS.toTypedArray())) {
             requestVideoPermissions()
             return false
@@ -284,7 +293,10 @@ abstract class CameraActivity : AppCompatActivity() {
         val manager = cameraActivity.getSystemService(Context.CAMERA_SERVICE) as CameraManager
         try {
             if (!cameraOpenCloseLock.tryAcquire(2500, TimeUnit.MILLISECONDS)) {
-                throw RuntimeException("Time out waiting to lock camera opening.")
+                Timber.e("Acquiring camera lock failed, retrying openCamera")
+                Crashlytics.logException(CameraAccessException(CameraAccessException.CAMERA_ERROR, "Acquiring camera lock failed, retrying openCamera"))
+                openCamera(width, height)
+                return false
             }
 
             if (!manager.cameraIdList.contains(cameraId)) {
@@ -369,11 +381,12 @@ abstract class CameraActivity : AppCompatActivity() {
                         }
 
                         override fun onConfigureFailed(session: CameraCaptureSession) {
-                            showToast("Failed")
+                            Timber.e("Camera Capture Session configure failed")
                         }
                     }, backgroundHandler)
         } catch (e: CameraAccessException) {
             Timber.e(e)
+            Crashlytics.logException(e)
         }
 
     }
@@ -552,7 +565,7 @@ abstract class CameraActivity : AppCompatActivity() {
      * @return The video size
      */
     private fun chooseVideoSize(choices: Array<Size>) = choices.firstOrNull {
-        it.width == (it.height * ratio).toInt()
+        it.width == it.height * 16 / 9
     } ?: choices[0]
 
     /**
@@ -577,7 +590,7 @@ abstract class CameraActivity : AppCompatActivity() {
         val w = aspectRatio.width
         val h = aspectRatio.height
         val bigEnough = choices.filter {
-            it.height == it.width * h / w
+            it.height == it.width * h / w && it.width >= width && it.height >= height
         }
 
         // Pick the smallest of those, assuming we found any

@@ -457,7 +457,7 @@ class RecorderFragment : Fragment() {
                         }
 
                         override fun onConfigureFailed(session: CameraCaptureSession) {
-                            if (activity != null) showToast("Failed")
+
                         }
                     }, backgroundHandler)
         } catch (e: CameraAccessException) {
@@ -536,7 +536,7 @@ class RecorderFragment : Fragment() {
      */
     private fun chooseVideoSize(choices: Array<Size>) = choices.firstOrNull {
         it.width == it.height * 16 / 9
-    } ?: choices[choices.size - 1]
+    } ?: choices[0]
 
     /**
      * Given [choices] of [Size]s supported by a camera, chooses the smallest one whose

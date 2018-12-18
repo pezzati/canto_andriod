@@ -31,7 +31,7 @@ class ModePagerAdapter(private val context: Context, private val views: Array<Vi
         if (position in 0..1) {
             roundedLayout.addView(View(context).apply {
                 layoutParams = RelativeLayout.LayoutParams(dpToPx(203), dpToPx(75)).apply {
-                    addRule(RelativeLayout.ALIGN_PARENT_BOTTOM)
+                    addRule(RelativeLayout.ALIGN_BOTTOM, targetView.id)
                     addRule(RelativeLayout.CENTER_HORIZONTAL)
                 }
                 setBackgroundResource(R.drawable.ic_record_model)

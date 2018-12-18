@@ -2,15 +2,15 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/navHome"
-        android:icon="@drawable/ic_home_white_24dp"
-        android:title="@string/home" />
+        android:icon="@drawable/ic_home"
+        android:title="" />
     <item
         android:id="@+id/navSearch"
-        android:icon="@drawable/ic_search_white_24dp"
-        android:title="@string/search" />
+        android:icon="@drawable/ic_search"
+        android:title="" />
 
     <item
         android:id="@+id/navRecord"
-        android:icon="@drawable/ic_record_white_24dp"
-        android:title="@string/record" />
+        android:icon="@drawable/ic_profile"
+        android:title="" />
 </menu>
