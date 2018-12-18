@@ -10,7 +10,7 @@
         android:title="@string/search" />
 
     <item
-        android:id="@+id/navRecord"
+        android:id="@+id/navProfile"
         android:icon="@drawable/ic_profile"
         android:title="@string/profile" />
 </menu>

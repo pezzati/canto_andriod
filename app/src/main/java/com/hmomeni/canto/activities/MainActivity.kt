@@ -80,18 +80,13 @@ class MainActivity : AppCompatActivity() {
                 return@setOnNavigationItemSelectedListener true
             }
             when (it.itemId) {
-                R.id.navHome -> {
-                    navController.popBackStack(R.id.mainFragment, false)
-                }
-                R.id.navSearch -> {
-                    navEvents.onNext(SearchEvent())
-                }
-                else -> navEvents.onNext(ProfileEvent())
+                R.id.navHome -> navController.popBackStack(R.id.mainFragment, false)
+                R.id.navSearch -> navEvents.onNext(SearchEvent())
+                R.id.navProfile -> navEvents.onNext(ProfileEvent())
             }
             return@setOnNavigationItemSelectedListener true
         }
-
-        navController.addOnNavigatedListener { _, destination ->
+        navController.addOnDestinationChangedListener { _, destination, _ ->
             when (destination.id) {
                 R.id.mainFragment -> {
                     userNavFired = true
@@ -100,6 +95,10 @@ class MainActivity : AppCompatActivity() {
                 R.id.searchFragment -> {
                     userNavFired = true
                     bottomNav.selectedItemId = R.id.navSearch
+                }
+                R.id.profileFragment -> {
+                    userNavFired = true
+                    bottomNav.selectedItemId = R.id.navProfile
                 }
             }
         }
