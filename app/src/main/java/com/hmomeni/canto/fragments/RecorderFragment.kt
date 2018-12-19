@@ -5,7 +5,6 @@ import android.app.ProgressDialog
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager.PERMISSION_GRANTED
-import android.content.res.Configuration
 import android.graphics.Matrix
 import android.graphics.RectF
 import android.graphics.SurfaceTexture
@@ -34,7 +33,6 @@ import com.hmomeni.canto.api.Api
 import com.hmomeni.canto.entities.PROJECT_TYPE_DUBSMASH
 import com.hmomeni.canto.entities.PROJECT_TYPE_SINGING
 import com.hmomeni.canto.utils.*
-import com.hmomeni.canto.utils.views.AutoFitTextureView
 import com.karumi.dexter.Dexter
 import com.karumi.dexter.MultiplePermissionsReport
 import com.karumi.dexter.PermissionToken
@@ -75,7 +73,7 @@ class RecorderFragment : Fragment() {
     private val surfaceTextureListener = object : TextureView.SurfaceTextureListener {
 
         override fun onSurfaceTextureAvailable(texture: SurfaceTexture, width: Int, height: Int) {
-            openCamera(9, 16)
+            openCamera(width, height)
         }
 
         override fun onSurfaceTextureSizeChanged(texture: SurfaceTexture, width: Int, height: Int) {
@@ -160,16 +158,16 @@ class RecorderFragment : Fragment() {
 
     }
 
-    private lateinit var textureView: AutoFitTextureView
-    private lateinit var textureView2: AutoFitTextureView
+    private lateinit var textureView: TextureView
+    private lateinit var textureView2: TextureView
 
     private var mediaRecorder: MediaRecorder? = null
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
             inflater.inflate(R.layout.fragment_recorder, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        textureView = AutoFitTextureView(context!!)
-        textureView2 = AutoFitTextureView(context!!)
+        textureView = TextureView(context!!)
+        textureView2 = TextureView(context!!)
 
         val karaokeView = View(context!!).apply {
             setBackgroundColor(context!!.resources.getColor(R.color.md_green_400))
@@ -301,7 +299,7 @@ class RecorderFragment : Fragment() {
         // a camera and start preview from here (otherwise, we wait until the surface is ready in
         // the SurfaceTextureListener).
         if (textureView.isAvailable) {
-            openCamera(9, 16)
+            openCamera(textureView.width, textureView.height)
         } else {
             textureView.surfaceTextureListener = surfaceTextureListener
         }
@@ -347,7 +345,7 @@ class RecorderFragment : Fragment() {
                 .withListener(object : MultiplePermissionsListener {
                     override fun onPermissionsChecked(report: MultiplePermissionsReport) {
                         if (report.grantedPermissionResponses.size == 3) {
-                            openCamera(9, 16)
+                            openCamera(textureView.width, textureView.height)
                         }
                     }
 
@@ -388,13 +386,13 @@ class RecorderFragment : Fragment() {
             previewSize = chooseOptimalSize(map.getOutputSizes(SurfaceTexture::class.java),
                     width, height, videoSize)
 
-            if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            /*if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
                 textureView.setAspectRatio(previewSize.width, previewSize.height)
                 textureView2.setAspectRatio(previewSize.width, previewSize.height)
             } else {
                 textureView.setAspectRatio(previewSize.height, previewSize.width)
                 textureView2.setAspectRatio(previewSize.height, previewSize.width)
-            }
+            }*/
             configureTransform(width, height)
             mediaRecorder = MediaRecorder()
             manager.openCamera(cameraId, stateCallback, null)
@@ -515,6 +513,15 @@ class RecorderFragment : Fragment() {
                 postRotate((90 * (rotation - 2)).toFloat(), centerX, centerY)
             }
         }
+        if (viewRect.height() / viewRect.width() != bufferRect.height() / bufferRect.width()) {
+            val df = viewRect.height() / bufferRect.height()
+
+            val sx = bufferRect.width() * df / viewRect.width()
+            val sy = bufferRect.height() * df / viewRect.height()
+
+            matrix.setScale(sx, sy, viewRect.centerX(), viewRect.centerY())
+        }
+
         textureView.setTransform(matrix)
         textureView2.setTransform(matrix)
     }

@@ -6,7 +6,6 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.RectF
-import android.os.Build
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
@@ -34,9 +33,9 @@ class TrimView : View {
         color = Color.WHITE
         textSize = dpToPx(14).toFloat()
         isAntiAlias = true
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-            textAlignment = View.TEXT_ALIGNMENT_CENTER
-        }
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+//            textAlignment = View.TEXT_ALIGNMENT_CENTER
+//        }
     }
     private val anchorPaint = Paint().apply {
         color = Color.parseColor("#FB861F")
@@ -108,7 +107,6 @@ class TrimView : View {
 
             calculateLeftandRight(false)
             calculateProgress(false)
-
         }
     }
 
@@ -118,8 +116,8 @@ class TrimView : View {
         canvas.drawRect(progressLine, progressPaint)
         canvas.drawRoundRect(leftAnchor, radius, radius, anchorPaint)
         canvas.drawRoundRect(rightAnchor, radius, radius, anchorPaint)
-        canvas.drawText("[", leftAnchor.centerX() - anchorWidth / 2, leftAnchor.centerY() + anchorWidth, bracketPaint)
-        canvas.drawText("]", rightAnchor.centerX() - anchorWidth / 2, rightAnchor.centerY() + anchorWidth, bracketPaint)
+        canvas.drawText("[", leftAnchor.right - anchorWidth / 2, leftAnchor.bottom - anchorWidth / 2, bracketPaint)
+        canvas.drawText("]", rightAnchor.right - anchorWidth / 2, rightAnchor.bottom - anchorWidth / 2, bracketPaint)
     }
 
     private var captured: Captured = Captured.WHOLE
