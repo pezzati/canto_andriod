@@ -4,10 +4,12 @@ import android.app.Application
 import com.google.gson.Gson
 import com.hmomeni.canto.di.*
 import com.hmomeni.canto.persistence.UserDao
+import com.hmomeni.canto.utils.FA_LANG
 import com.hmomeni.canto.utils.UserSession
 import com.pixplicity.easyprefs.library.Prefs
 import io.reactivex.schedulers.Schedulers
 import timber.log.Timber
+import java.util.*
 import javax.inject.Inject
 
 class App : Application() {
@@ -25,13 +27,14 @@ class App : Application() {
 
     lateinit var di: DIComponent
     override fun onCreate() {
-        super.onCreate()
-
-        /*val conf = resources.configuration
+        val dm = resources.displayMetrics
+        val conf = resources.configuration
         val locale = Locale(FA_LANG.toLowerCase())
         Locale.setDefault(locale)
         conf.setLocale(locale)
-        createConfigurationContext(conf)*/
+        resources.updateConfiguration(conf, dm)
+
+        super.onCreate()
 
         Timber.plant(Timber.DebugTree())
 

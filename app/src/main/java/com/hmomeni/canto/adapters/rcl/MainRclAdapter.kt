@@ -62,7 +62,7 @@ class MainRclAdapter(private val banners: List<Banner>, private val genres: List
     class GenreHolder(itemView: View, private val clickPublisher: PublishProcessor<ClickEvent>) : RecyclerView.ViewHolder(itemView) {
         init {
             itemView.moreBtn.setOnClickListener {
-                clickPublisher.onNext(ClickEvent(ClickEvent.Type.BANNER, adapterPosition, -1))
+                clickPublisher.onNext(ClickEvent(ClickEvent.Type.GENRE, adapterPosition, -1))
             }
         }
 
