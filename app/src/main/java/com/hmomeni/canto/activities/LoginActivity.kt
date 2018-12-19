@@ -100,12 +100,26 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun prepareLogin() {
-        val height = getScreenDimensions(this).height
-        cantoWrapper.animate().translationYBy(-height / 6f)
-        buttonsWrapper.postDelayed({
-            buttonsWrapper.visibility = View.VISIBLE
-            buttonsWrapper.animate().alpha(1f)
-        }, 300)
+        if (!viewModel.isFFMpegAvailable()) {
+            progressBar.visibility = View.VISIBLE
+            viewModel.downloadFFMpeg()
+                    .iomain()
+                    .subscribe({
+                        progressBar.progress = it
+                    }, {
+                        progressBar.visibility = View.GONE
+                    }, {
+                        progressBar.visibility = View.GONE
+                        prepareLogin()
+                    })
+        } else {
+            val height = getScreenDimensions(this).height
+            cantoWrapper.animate().translationYBy(-height / 6f)
+            buttonsWrapper.postDelayed({
+                buttonsWrapper.visibility = View.VISIBLE
+                buttonsWrapper.animate().alpha(1f)
+            }, 300)
+        }
     }
 
     private fun goToPhoneInput(email: Boolean = false) {

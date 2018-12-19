@@ -9,3 +9,5 @@ val VIDEO_PERMISSIONS = listOf(Manifest.permission.CAMERA, Manifest.permission.R
 
 const val FA_LANG = "fa"
 const val EN_LANG = "en"
+
+const val FFMPEG_URL = "http://185.208.175.123/ffmpeg/{arch}/ffmpeg"

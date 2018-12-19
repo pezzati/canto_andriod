@@ -19,6 +19,8 @@ import com.hmomeni.canto.entities.PROJECT_TYPE_DUBSMASH
 import com.hmomeni.canto.entities.PROJECT_TYPE_SINGING
 import com.hmomeni.canto.utils.ViewModelFactory
 import com.hmomeni.canto.utils.app
+import com.hmomeni.canto.utils.ffmpeg.FFcommandExecuteResponseHandler
+import com.hmomeni.canto.utils.ffmpeg.FFmpeg
 import com.hmomeni.canto.utils.getBitmapFromVectorDrawable
 import com.hmomeni.canto.utils.getDuration
 import com.hmomeni.canto.utils.views.VerticalSlider
@@ -27,8 +29,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_edit.*
-import nl.bravobit.ffmpeg.FFcommandExecuteResponseHandler
-import nl.bravobit.ffmpeg.FFmpeg
 import timber.log.Timber
 import java.io.File
 import kotlin.concurrent.thread

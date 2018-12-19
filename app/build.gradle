@@ -65,18 +65,14 @@ android {
         exclude 'META-INF/proguard/androidx-annotations.pro'
     }
 
-    aaptOptions {
-//        ignoreAssetsPattern "!*ffprobe"
-        ignoreAssetsPattern "!*ffprobe:!x86"
-    }
-    splits {
+    /*splits {
         abi {
             enable true
             reset()
             include "armeabi-v7a", "arm64-v8a"
             universalApk false
         }
-    }
+    }*/
 
 //    sourceSets.main.jniLibs.srcDirs = ['./jniLibs/']
 }
@@ -140,7 +136,7 @@ dependencies {
         transitive = true
     }
 
-    implementation 'nl.bravobit:android-ffmpeg:1.1.5'
+//    implementation 'nl.bravobit:android-ffmpeg:1.1.5'
 
     implementation 'com.azoft.carousellayoutmanager:carousel:1.2.4'
 }
