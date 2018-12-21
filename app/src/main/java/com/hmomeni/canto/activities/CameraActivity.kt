@@ -3,7 +3,6 @@ package com.hmomeni.canto.activities
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.pm.PackageManager
-import android.content.res.Configuration
 import android.graphics.Matrix
 import android.graphics.RectF
 import android.graphics.SurfaceTexture
@@ -40,7 +39,7 @@ import java.util.concurrent.TimeUnit
 
 @SuppressLint("Registered")
 abstract class CameraActivity : AppCompatActivity() {
-    abstract fun getTextureView(): AutoFitTextureView
+    abstract fun getTextureView(): TextureView
     abstract fun onRecordStarted()
     abstract fun onRecordStopped()
     abstract fun onRecordError()
@@ -314,11 +313,11 @@ abstract class CameraActivity : AppCompatActivity() {
                     width, height, videoSize)
             Timber.d("Selected Preview Video Size=%s", previewSize)
 
-            if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            /*if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
                 getTextureView().setAspectRatio(previewSize.width, previewSize.height)
             } else {
                 getTextureView().setAspectRatio(previewSize.height, previewSize.width)
-            }
+            }*/
             configureTransform(width, height)
             mediaRecorder = MediaRecorder()
             manager.openCamera(cameraId, stateCallback, null)
@@ -439,6 +438,16 @@ abstract class CameraActivity : AppCompatActivity() {
                 postRotate((90 * (rotation - 2)).toFloat(), centerX, centerY)
             }
         }
+
+        if (viewRect.height() / viewRect.width() != bufferRect.height() / bufferRect.width()) {
+            val df = viewRect.height() / bufferRect.height()
+
+            val sx = bufferRect.width() * df / viewRect.width()
+            val sy = bufferRect.height() * df / viewRect.height()
+
+            matrix.setScale(sx, sy, viewRect.centerX(), viewRect.centerY())
+        }
+
         getTextureView().setTransform(matrix)
     }
 

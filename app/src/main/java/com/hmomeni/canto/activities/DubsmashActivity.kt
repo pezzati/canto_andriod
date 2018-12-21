@@ -6,6 +6,7 @@ import android.media.AudioManager
 import android.os.Bundle
 import android.os.Handler
 import android.util.SparseIntArray
+import android.view.TextureView
 import android.view.View
 import android.widget.Toast
 import com.azoft.carousellayoutmanager.CarouselLayoutManager
@@ -19,7 +20,6 @@ import com.hmomeni.canto.utils.DownloadEvent
 import com.hmomeni.canto.utils.app
 import com.hmomeni.canto.utils.getBitmapFromVectorDrawable
 import com.hmomeni.canto.utils.getDuration
-import com.hmomeni.canto.utils.views.AutoFitTextureView
 import com.hmomeni.canto.utils.views.RecordButton
 import com.hmomeni.canto.utils.views.TrimView
 import com.hmomeni.canto.utils.views.VerticalSlider
@@ -40,7 +40,7 @@ class DubsmashActivity : CameraActivity() {
         System.loadLibrary("Dubsmash")
     }
 
-    override fun getTextureView(): AutoFitTextureView = textureView
+    override fun getTextureView(): TextureView = textureView
 
     override fun getVideoFilePath(): String {
         return File(baseFile, "dubsmash.mp4").absolutePath
@@ -79,9 +79,9 @@ class DubsmashActivity : CameraActivity() {
 
     private lateinit var midiItems: List<MidiItem>
 
-    lateinit var post: FullPost
+    private lateinit var post: FullPost
 
-    lateinit var baseFile: File
+    private lateinit var baseFile: File
 
 
     var type: Int = PROJECT_TYPE_DUBSMASH

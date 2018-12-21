@@ -6,8 +6,8 @@
     android:layout_height="match_parent"
     tools:context=".activities.EditActivity">
 
-    <SurfaceView
-        android:id="@+id/surfaceView"
+    <TextureView
+        android:id="@+id/textureView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_constraintBottom_toBottomOf="parent"

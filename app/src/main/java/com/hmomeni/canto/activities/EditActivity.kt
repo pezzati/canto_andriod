@@ -3,13 +3,16 @@ package com.hmomeni.canto.activities
 import android.app.ProgressDialog
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
+import android.graphics.Matrix
+import android.graphics.SurfaceTexture
 import android.media.AudioManager
 import android.media.MediaPlayer
 import android.os.Bundle
 import android.os.Environment
 import android.os.Handler
 import android.support.v7.app.AppCompatActivity
-import android.view.SurfaceHolder
+import android.view.Surface
+import android.view.TextureView
 import android.view.View
 import android.widget.SeekBar
 import android.widget.Toast
@@ -125,32 +128,35 @@ class EditActivity : AppCompatActivity(), View.OnClickListener {
         }
 
         mediaPlayer.setDataSource(videoFile.absolutePath)
-        mediaPlayer.prepare()
-        surfaceView.holder.addCallback(object : SurfaceHolder.Callback {
-            override fun surfaceChanged(holder: SurfaceHolder, format: Int, w: Int, h: Int) {
-                if (ratio == RATIO_SQUARE) {
-                    cropTop.visibility = View.VISIBLE
-                    cropBottom.visibility = View.VISIBLE
-                    cropTop.layoutParams = cropTop.layoutParams.apply {
-                        height = h / 2 - w / 2
-                    }
-                    cropBottom.layoutParams = cropBottom.layoutParams.apply {
-                        height = h / 2 - w / 2
-                    }
-                } else {
-                    cropTop.visibility = View.GONE
-                    cropBottom.visibility = View.GONE
+
+        mediaPlayer.setOnPreparedListener {
+            applyTransformation()
+        }
+
+        mediaPlayer.prepareAsync()
+
+        if (textureView.isAvailable) {
+            mediaPlayer.setSurface(Surface(textureView.surfaceTexture))
+            applyTransformation()
+        } else {
+            textureView.surfaceTextureListener = object : TextureView.SurfaceTextureListener {
+                override fun onSurfaceTextureSizeChanged(surface: SurfaceTexture?, width: Int, height: Int) {
+
+                }
+
+                override fun onSurfaceTextureUpdated(surface: SurfaceTexture?) {
+                }
+
+                override fun onSurfaceTextureDestroyed(surface: SurfaceTexture?): Boolean {
+                    return true
+                }
+
+                override fun onSurfaceTextureAvailable(surface: SurfaceTexture?, width: Int, height: Int) {
+                    mediaPlayer.setSurface(Surface(surface))
+                    applyTransformation()
                 }
             }
-
-            override fun surfaceDestroyed(holder: SurfaceHolder) {
-            }
-
-            override fun surfaceCreated(holder: SurfaceHolder) {
-                Timber.d("Surface Ready!")
-                mediaPlayer.setSurface(holder.surface)
-            }
-        })
+        }
 
         noneBtn.setOnClickListener(this)
         reverbBtn.setOnClickListener(this)
@@ -234,6 +240,25 @@ class EditActivity : AppCompatActivity(), View.OnClickListener {
         }
     }
 
+    private fun applyTransformation() {
+        if (0 in arrayOf(textureView.width, textureView.height, mediaPlayer.videoHeight, mediaPlayer.videoWidth)) {
+            return
+        }
+        if (textureView.height.toFloat() / textureView.width != mediaPlayer.videoHeight.toFloat() / mediaPlayer.videoWidth) {
+            val matrix = Matrix()
+            val df = textureView.height / mediaPlayer.videoHeight.toFloat()
+
+            val sx = mediaPlayer.videoWidth * df / textureView.width
+            val sy = mediaPlayer.videoHeight * df / textureView.height
+
+            val cx = textureView.width / 2f
+            val cy = textureView.height / 2f
+
+            matrix.setScale(sx, sy, cx, cy)
+            textureView.setTransform(matrix)
+        }
+    }
+
     private fun resetAllBtns() {
         noneBtn.setImageResource(R.drawable.ic_ef_none_disabled)
         echoBtn.setImageResource(R.drawable.ic_ef_echo_disabled)
@@ -308,7 +333,7 @@ class EditActivity : AppCompatActivity(), View.OnClickListener {
                         )
                         if (ratio == RATIO_SQUARE) {
                             commands.addAll(listOf(
-                                    "-filter:v", "crop=in_w:in_h-${surfaceView.height - surfaceView.width}"
+                                    "-filter:v", "crop=in_w:in_h-${textureView.height - textureView.width}"
                             ))
                         }
                         commands.addAll(listOf(
@@ -329,7 +354,7 @@ class EditActivity : AppCompatActivity(), View.OnClickListener {
                         )
                         if (ratio == RATIO_SQUARE) {
                             commands.addAll(listOf(
-                                    "-filter:v", "crop=in_w:in_h-${surfaceView.height - surfaceView.width}"
+                                    "-filter:v", "crop=in_w:in_h-${textureView.height - textureView.width}"
                             ))
                         }
                         commands.addAll(listOf(
@@ -352,7 +377,7 @@ class EditActivity : AppCompatActivity(), View.OnClickListener {
                         )
                         if (ratio == RATIO_SQUARE) {
                             commands.addAll(listOf(
-                                    "-filter:v", "crop=in_w:in_h-${surfaceView.height - surfaceView.width}"
+                                    "-filter:v", "crop=in_w:in_h-${textureView.height - textureView.width}"
                             ))
                         }
                         commands.addAll(listOf(
