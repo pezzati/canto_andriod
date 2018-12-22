@@ -561,7 +561,7 @@ abstract class CameraActivity : AppCompatActivity() {
             reset()
         }
         nextVideoAbsolutePath = null
-        startPreview()
+//        startPreview()
     }
 
     private fun showToast(message: String) = Toast.makeText(this, message, Toast.LENGTH_SHORT).show()

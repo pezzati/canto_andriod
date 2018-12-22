@@ -240,13 +240,14 @@ class EditActivity : AppCompatActivity(), View.OnClickListener {
         }
     }
 
+    private var df = 1f
     private fun applyTransformation() {
         if (0 in arrayOf(textureView.width, textureView.height, mediaPlayer.videoHeight, mediaPlayer.videoWidth)) {
             return
         }
         if (textureView.height.toFloat() / textureView.width != mediaPlayer.videoHeight.toFloat() / mediaPlayer.videoWidth) {
             val matrix = Matrix()
-            val df = textureView.height / mediaPlayer.videoHeight.toFloat()
+            df = textureView.height / mediaPlayer.videoHeight.toFloat()
 
             val sx = mediaPlayer.videoWidth * df / textureView.width
             val sy = mediaPlayer.videoHeight * df / textureView.height
@@ -324,6 +325,13 @@ class EditActivity : AppCompatActivity(), View.OnClickListener {
                     dialog.dismiss()
                     return@runOnUiThread
                 }
+
+                val cropCommands = if (mediaPlayer.videoHeight / mediaPlayer.videoWidth.toFloat() != 16 / 9f) {
+                    val w = mediaPlayer.videoHeight / (16 / 9f)
+                    listOf("-filter:v", "crop=$w:${mediaPlayer.videoHeight}")
+                } else {
+                    listOf()
+                }
                 val commands: MutableList<String> = mutableListOf()
                 when (type) {
                     PROJECT_TYPE_DUBSMASH -> {
@@ -336,6 +344,9 @@ class EditActivity : AppCompatActivity(), View.OnClickListener {
                                     "-filter:v", "crop=in_w:in_h-${textureView.height - textureView.width}"
                             ))
                         }
+                        if (cropCommands.isNotEmpty()) {
+                            commands.addAll(cropCommands)
+                        }
                         commands.addAll(listOf(
                                 "-codec:a", "aac",
                                 "-codec:v", "libx264",
@@ -346,7 +357,9 @@ class EditActivity : AppCompatActivity(), View.OnClickListener {
                                 "-shortest", "-y", outFile.absolutePath
                         ))
                     }
-                    PROJECT_TYPE_SINGING -> if (Effect() == 0) {
+                    PROJECT_TYPE_SINGING -> {
+                        val micFile = if (Effect() == 0) micFile else File(baseDir, "mic-effect.wav")
+
                         commands += listOf(
                                 "-i", videoFile.absolutePath,
                                 "-i", audioFile.absolutePath,
@@ -357,28 +370,8 @@ class EditActivity : AppCompatActivity(), View.OnClickListener {
                                     "-filter:v", "crop=in_w:in_h-${textureView.height - textureView.width}"
                             ))
                         }
-                        commands.addAll(listOf(
-                                "-filter_complex", "[1:0][2:0]  amix=inputs=2:duration=longest",
-                                "-codec:a", "aac",
-                                "-codec:v", "libx264",
-                                "-crf", "30",
-                                "-preset", "ultrafast",
-                                "-map", "0:v",
-                                "-map", "1:a:0",
-                                "-map", "2:a:0",
-                                "-shortest", "-y", outFile.absolutePath
-                        ))
-                    } else {
-
-                        commands += listOf(
-                                "-i", videoFile.absolutePath,
-                                "-i", audioFile.absolutePath,
-                                "-i", File(baseDir, "mic-effect.wav").absolutePath
-                        )
-                        if (ratio == RATIO_SQUARE) {
-                            commands.addAll(listOf(
-                                    "-filter:v", "crop=in_w:in_h-${textureView.height - textureView.width}"
-                            ))
+                        if (cropCommands.isNotEmpty()) {
+                            commands.addAll(cropCommands)
                         }
                         commands.addAll(listOf(
                                 "-filter_complex", "[1:0][2:0]  amix=inputs=2:duration=longest",
@@ -388,7 +381,6 @@ class EditActivity : AppCompatActivity(), View.OnClickListener {
                                 "-preset", "ultrafast",
                                 "-map", "0:v",
                                 "-map", "1:a:0",
-                                "-map", "2:a:0",
                                 "-shortest", "-y", outFile.absolutePath
                         ))
                     }
