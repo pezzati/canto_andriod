@@ -36,6 +36,8 @@ class App : Application() {
 
         super.onCreate()
 
+        Prefs.Builder().setContext(this).setUseDefaultSharedPreference(true).build()
+
         Timber.plant(Timber.DebugTree())
 
         di = DaggerDIComponent.builder()
@@ -47,7 +49,10 @@ class App : Application() {
         di.inject(this)
         gson = iGson
 
-        Prefs.Builder().setContext(this).setUseDefaultSharedPreference(true).build()
+        if (Prefs.contains("token")) {
+            userSession.token = Prefs.getString("token", null)
+        }
+
         userDao.getCurrentUser()
                 .subscribeOn(Schedulers.io())
                 .subscribe({

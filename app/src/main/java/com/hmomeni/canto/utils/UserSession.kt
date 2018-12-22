@@ -3,7 +3,8 @@ package com.hmomeni.canto.utils
 import com.hmomeni.canto.entities.User
 
 class UserSession(
-        var user: User? = null
+        var user: User? = null,
+        var token: String? = null
 ) {
-    fun isUser() = user != null
+    fun isUser() = token != null
 }

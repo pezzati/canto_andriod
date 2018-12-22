@@ -38,7 +38,7 @@ class ApiModule {
                             .addNetworkInterceptor {
                                 val builder = it.request().newBuilder()
                                 if (userSession.isUser()) {
-                                    builder.addHeader("USERTOKEN", userSession.user!!.token)
+                                    builder.addHeader("USERTOKEN", userSession.token!!)
                                 }
                                 builder.addHeader("deviceType", "android")
                                 it.proceed(builder.build())

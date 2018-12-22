@@ -24,6 +24,7 @@ import android.util.Size
 import android.view.*
 import android.widget.Toast
 import android.widget.Toast.LENGTH_SHORT
+import com.crashlytics.android.Crashlytics
 import com.example.android.camera2video.CompareSizesByArea
 import com.hmomeni.canto.R
 import com.hmomeni.canto.activities.DubsmashActivity
@@ -372,8 +373,10 @@ class RecorderFragment : Fragment() {
 
         val manager = cameraActivity.getSystemService(Context.CAMERA_SERVICE) as CameraManager
         try {
-            if (!cameraOpenCloseLock.tryAcquire(5500, TimeUnit.MILLISECONDS)) {
-                throw RuntimeException("Time out waiting to lock camera opening.")
+            if (!cameraOpenCloseLock.tryAcquire(2500, TimeUnit.MILLISECONDS)) {
+                Timber.e("Acquiring camera lock failed, retrying openCamera ")
+                Crashlytics.logException(CameraAccessException(CameraAccessException.CAMERA_ERROR, "Acquiring camera lock failed, retrying openCamera"))
+                return
             }
             val cameraId = manager.cameraIdList.firstOrNull { it == CAMERA_FRONT } ?: CAMERA_BACK
 

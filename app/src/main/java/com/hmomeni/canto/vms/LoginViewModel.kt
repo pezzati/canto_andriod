@@ -5,11 +5,11 @@ import com.hmomeni.canto.App
 import com.hmomeni.canto.BuildConfig
 import com.hmomeni.canto.api.Api
 import com.hmomeni.canto.di.DIComponent
-import com.hmomeni.canto.entities.User
 import com.hmomeni.canto.persistence.UserDao
 import com.hmomeni.canto.utils.*
 import com.hmomeni.canto.utils.ffmpeg.CpuArch
 import com.hmomeni.canto.utils.ffmpeg.CpuArchHelper
+import com.pixplicity.easyprefs.library.Prefs
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Completable
 import io.reactivex.Flowable
@@ -81,11 +81,8 @@ class LoginViewModel : ViewModel(), DIComponent.Injectable {
         return api.verify(map.body())
                 .doOnSuccess {
                     val token = it["token"].asString
-                    val user = User(
-                            0, login, "", "", token, true
-                    )
-                    userDao.insert(user)
-                    userSession.user = user
+                    userSession.token = token
+                    Prefs.putString("token", token)
                 }
                 .ignoreElement()
     }
