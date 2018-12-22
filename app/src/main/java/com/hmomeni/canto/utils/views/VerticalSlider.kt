@@ -5,11 +5,35 @@ import android.graphics.*
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
+import com.hmomeni.canto.R
 import com.hmomeni.canto.utils.dpToPx
+import com.hmomeni.canto.utils.getBitmapFromVectorDrawable
+import kotlin.concurrent.thread
 
 class VerticalSlider : View {
     constructor(context: Context) : super(context)
-    constructor(context: Context, attributeSet: AttributeSet) : super(context, attributeSet)
+    constructor(context: Context, attributeSet: AttributeSet) : super(context, attributeSet) {
+        val a = context.theme.obtainStyledAttributes(
+                attributeSet,
+                R.styleable.VerticalSlider,
+                0, 0)
+
+        try {
+            val iconLoResId = a.getResourceId(R.styleable.VerticalSlider_vs_iconLow, -1)
+            val iconMedResId = a.getResourceId(R.styleable.VerticalSlider_vs_iconMedium, -1)
+            val iconHiResId = a.getResourceId(R.styleable.VerticalSlider_vs_iconHigh, -1)
+            thread {
+                if (iconHiResId != -1)
+                    hiIcon = getBitmapFromVectorDrawable(context, iconHiResId)
+                if (iconMedResId != -1)
+                    midIcon = getBitmapFromVectorDrawable(context, iconMedResId)
+                if (iconLoResId != -1)
+                    lowIcon = getBitmapFromVectorDrawable(context, iconLoResId)
+            }
+        } finally {
+            a.recycle()
+        }
+    }
 
     var hiIcon: Bitmap? = null
     var midIcon: Bitmap? = null

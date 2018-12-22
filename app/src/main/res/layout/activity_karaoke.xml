@@ -40,6 +40,9 @@
     <com.hmomeni.canto.utils.views.VerticalSlider
         android:id="@+id/pitchSlider"
         android:layout_width="80dp"
+        app:vs_iconHigh="@drawable/ic_pitch_hi"
+        app:vs_iconLow="@drawable/ic_pitch_low"
+        app:vs_iconMedium="@drawable/ic_pitch_mid"
         android:layout_height="145dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="64dp"
@@ -56,7 +59,10 @@
         app:layout_constraintBottom_toBottomOf="@+id/pitchSlider"
         app:layout_constraintEnd_toStartOf="@+id/pitchSlider"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/volumeSlider" />
+        app:layout_constraintStart_toEndOf="@+id/volumeSlider"
+        app:vs_iconHigh="@drawable/ic_speed_hi"
+        app:vs_iconLow="@drawable/ic_speed_low"
+        app:vs_iconMedium="@drawable/ic_speed_mid" />
 
     <com.hmomeni.canto.utils.views.VerticalSlider
         android:id="@+id/volumeSlider"
@@ -67,5 +73,8 @@
         app:layout_constraintBottom_toBottomOf="@+id/pitchSlider"
         app:layout_constraintEnd_toStartOf="@+id/tempoSlider"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:vs_iconHigh="@drawable/ic_music_volume_hi"
+        app:vs_iconLow="@drawable/ic_music_volume_low"
+        app:vs_iconMedium="@drawable/ic_music_volume_mid" />
 </android.support.constraint.ConstraintLayout>

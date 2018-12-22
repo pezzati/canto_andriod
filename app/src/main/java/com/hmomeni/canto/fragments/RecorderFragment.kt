@@ -376,6 +376,7 @@ class RecorderFragment : Fragment() {
             if (!cameraOpenCloseLock.tryAcquire(2500, TimeUnit.MILLISECONDS)) {
                 Timber.e("Acquiring camera lock failed, retrying openCamera ")
                 Crashlytics.logException(CameraAccessException(CameraAccessException.CAMERA_ERROR, "Acquiring camera lock failed, retrying openCamera"))
+                Toast.makeText(context, R.string.camera_open_failed, Toast.LENGTH_SHORT).show()
                 return
             }
             val cameraId = manager.cameraIdList.firstOrNull { it == CAMERA_FRONT } ?: CAMERA_BACK

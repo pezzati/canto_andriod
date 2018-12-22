@@ -42,4 +42,5 @@
     <string name="invalid_phone_number">شماره نامعتبر است (درست: 09123456789)</string>
     <string name="invalid_email_address">ایمیل نامعتبر است</string>
     <string name="cancel">لغو</string>
+    <string name="camera_open_failed">موفق به دسترسی به دوربین دستگاه نشدیم. لطفا دوباره امتحان کنید.</string>
 </resources>

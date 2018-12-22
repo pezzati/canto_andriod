@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="VerticalSlider">
+        <attr name="vs_iconLow" format="reference" />
+        <attr name="vs_iconMedium" format="reference" />
+        <attr name="vs_iconHigh" format="reference" />
+    </declare-styleable>
+</resources>
