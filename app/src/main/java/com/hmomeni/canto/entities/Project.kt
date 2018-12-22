@@ -8,6 +8,7 @@ import com.google.gson.annotations.SerializedName
 
 const val PROJECT_TYPE_SINGING = 1
 const val PROJECT_TYPE_DUBSMASH = 2
+const val PROJECT_TYPE_KARAOKE = 3
 
 @Entity
 class Project(

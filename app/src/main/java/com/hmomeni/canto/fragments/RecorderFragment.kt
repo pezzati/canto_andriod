@@ -32,6 +32,7 @@ import com.hmomeni.canto.activities.KaraokeActivity
 import com.hmomeni.canto.adapters.viewpager.ModePagerAdapter
 import com.hmomeni.canto.api.Api
 import com.hmomeni.canto.entities.PROJECT_TYPE_DUBSMASH
+import com.hmomeni.canto.entities.PROJECT_TYPE_KARAOKE
 import com.hmomeni.canto.entities.PROJECT_TYPE_SINGING
 import com.hmomeni.canto.utils.*
 import com.karumi.dexter.Dexter
@@ -182,33 +183,15 @@ class RecorderFragment : Fragment() {
         viewPager.adapter = ModePagerAdapter(context!!, arrayOf(textureView, textureView2, karaokeView))
 
         textureView.setOnClickListener {
-            val loadingDialog = ProgressDialog(context)
-            api.getSinglePost(postId = selectPostId)
-                    .iomain()
-                    .doOnSubscribe { loadingDialog.show() }
-                    .doAfterTerminate { loadingDialog.dismiss() }
-                    .subscribe({
-                        startActivity(Intent(context, DubsmashActivity::class.java).putExtra("post", it).putExtra("type", PROJECT_TYPE_DUBSMASH))
-                    }, {
-                        Timber.e(it)
-                    })
+            openActivity(PROJECT_TYPE_DUBSMASH)
         }
 
         textureView2.setOnClickListener {
-            val loadingDialog = ProgressDialog(context)
-            api.getSinglePost(postId = selectPostId)
-                    .iomain()
-                    .doOnSubscribe { loadingDialog.show() }
-                    .doAfterTerminate { loadingDialog.dismiss() }
-                    .subscribe({
-                        startActivity(Intent(context, DubsmashActivity::class.java).putExtra("post", it).putExtra("type", PROJECT_TYPE_SINGING))
-                    }, {
-                        Timber.e(it)
-                    })
+            openActivity(PROJECT_TYPE_SINGING)
         }
 
         karaokeView.setOnClickListener {
-            startActivity(Intent(context!!, KaraokeActivity::class.java))
+            openActivity(PROJECT_TYPE_KARAOKE)
         }
 
         nextTabTitle.alpha = 0f
@@ -581,5 +564,23 @@ class RecorderFragment : Fragment() {
             choices[0]
         }
     }
+
+    private fun openActivity(mode: Int) {
+        val loadingDialog = ProgressDialog(context)
+        api.getSinglePost(postId = selectPostId)
+                .iomain()
+                .doOnSubscribe { loadingDialog.show() }
+                .doAfterTerminate { loadingDialog.dismiss() }
+                .subscribe({
+                    when (mode) {
+                        PROJECT_TYPE_SINGING -> startActivity(Intent(context, DubsmashActivity::class.java).putExtra("post", it).putExtra("type", PROJECT_TYPE_SINGING))
+                        PROJECT_TYPE_DUBSMASH -> startActivity(Intent(context, DubsmashActivity::class.java).putExtra("post", it).putExtra("type", PROJECT_TYPE_SINGING))
+                        PROJECT_TYPE_KARAOKE -> startActivity(Intent(context, KaraokeActivity::class.java).putExtra("post", it))
+                    }
+                }, {
+                    Timber.e(it)
+                })
+    }
+
 
 }

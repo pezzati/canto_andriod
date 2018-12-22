@@ -18,6 +18,7 @@ import android.util.SparseIntArray
 import android.view.Surface
 import android.view.TextureView
 import android.view.View
+import android.view.WindowManager
 import android.widget.Toast
 import com.crashlytics.android.Crashlytics
 import com.example.android.camera2video.CompareSizesByArea
@@ -196,6 +197,7 @@ abstract class CameraActivity : AppCompatActivity() {
         val uiOptions = window.decorView.systemUiVisibility
         val newUiOptions = uiOptions or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or View.SYSTEM_UI_FLAG_FULLSCREEN
         window.decorView.systemUiVisibility = newUiOptions
+        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 
     }
 

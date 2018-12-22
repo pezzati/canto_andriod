@@ -8,6 +8,7 @@ import android.support.v4.content.FileProvider
 import android.support.v7.app.AppCompatActivity
 import android.view.SurfaceHolder
 import android.view.View
+import android.view.WindowManager
 import com.hmomeni.canto.R
 import com.hmomeni.canto.entities.FullPost
 import com.hmomeni.canto.entities.Project
@@ -39,6 +40,8 @@ class VideoPlayActivity : AppCompatActivity(), View.OnClickListener {
         super.onCreate(savedInstanceState)
         app().di.inject(this)
         setContentView(R.layout.activity_video_play)
+        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+
         val args = VideoPlayActivityArgs.fromBundle(intent.extras)
         projectDao
                 .getProject(args.project.toLong())

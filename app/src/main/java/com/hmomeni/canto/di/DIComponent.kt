@@ -3,6 +3,7 @@ package com.hmomeni.canto.di
 import com.hmomeni.canto.App
 import com.hmomeni.canto.DownloadService
 import com.hmomeni.canto.activities.DubsmashActivity
+import com.hmomeni.canto.activities.KaraokeActivity
 import com.hmomeni.canto.activities.MainActivity
 import com.hmomeni.canto.activities.VideoPlayActivity
 import com.hmomeni.canto.fragments.RecorderFragment
@@ -30,4 +31,5 @@ interface DIComponent {
     fun inject(editViewModel: EditViewModel)
     fun inject(profileViewModel: ProfileViewModel)
     fun inject(videoPlayActivity: VideoPlayActivity)
+    fun inject(karaokeActivity: KaraokeActivity)
 }

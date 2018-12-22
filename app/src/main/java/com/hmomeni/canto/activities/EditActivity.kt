@@ -14,6 +14,7 @@ import android.support.v7.app.AppCompatActivity
 import android.view.Surface
 import android.view.TextureView
 import android.view.View
+import android.view.WindowManager
 import android.widget.SeekBar
 import android.widget.Toast
 import com.hmomeni.canto.R
@@ -61,6 +62,7 @@ class EditActivity : AppCompatActivity(), View.OnClickListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_edit)
+        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 
         viewModel = ViewModelProviders.of(this, ViewModelFactory(app()))[EditViewModel::class.java]
 

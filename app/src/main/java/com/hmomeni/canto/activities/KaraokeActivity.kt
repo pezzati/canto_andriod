@@ -4,10 +4,21 @@ import android.content.Context
 import android.media.AudioManager
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import com.hmomeni.canto.R
+import android.view.View
+import android.view.WindowManager
+import android.widget.Toast
+import com.hmomeni.canto.*
+import com.hmomeni.canto.entities.FullPost
+import com.hmomeni.canto.utils.DownloadEvent
+import com.hmomeni.canto.utils.app
+import com.hmomeni.canto.utils.views.RecordButton
 import com.hmomeni.canto.utils.views.VerticalSlider
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
+import io.reactivex.processors.PublishProcessor
 import kotlinx.android.synthetic.main.activity_karaoke.*
 import java.io.File
+import javax.inject.Inject
 
 class KaraokeActivity : AppCompatActivity() {
     init {
@@ -15,17 +26,47 @@ class KaraokeActivity : AppCompatActivity() {
     }
 
     private lateinit var filePath: String
+    private lateinit var post: FullPost
+    private var disposable: Disposable? = null
+
+    @Inject
+    lateinit var downloadEvents: PublishProcessor<DownloadEvent>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_karaoke)
+        app().di.inject(this)
 
-        filePath = "/mnt/sdcard/Music/1.mp3"
+        setContentView(R.layout.activity_karaoke)
+        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+
+        post = intent.getParcelableExtra("post")
+
+        disposable = downloadEvents
+                .onBackpressureDrop()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe {
+                    handleDownloadEvents(it)
+                }
+
+        with(post.content) {
+            val fileUrl = if (!originalFileUrl.isEmpty()) {
+                originalFileUrl
+            } else {
+                karaokeFileUrl
+            }
+
+            filePath = DownloadService.startDownload(this@KaraokeActivity, fileUrl)
+        }
 
         initAudio()
 
         playBtn.setOnClickListener {
             TogglePlayback()
+            if (IsPlaying()) {
+                playBtn.setImageResource(R.drawable.ic_pause_circle)
+            } else {
+                playBtn.setImageResource(R.drawable.ic_play_circle)
+            }
         }
         seekBar.max = 20
 
@@ -67,13 +108,14 @@ class KaraokeActivity : AppCompatActivity() {
     }
 
     override fun onPause() {
-        super.onPause()
         onBackground()
+        super.onPause()
     }
 
     override fun onDestroy() {
-        super.onDestroy()
         Cleanup()
+        disposable?.dispose()
+        super.onDestroy()
     }
 
     private fun initAudio() {
@@ -90,6 +132,28 @@ class KaraokeActivity : AppCompatActivity() {
 
         StartAudio(sampleRate, bufferSize)
         OpenFile(filePath, 0, File(filePath).length().toInt())
+    }
+
+    private fun handleDownloadEvents(event: DownloadEvent) {
+        when (event.action) {
+            ACTION_DOWNLOAD_START -> {
+                recordBtn.mode = RecordButton.Mode.Loading
+            }
+            ACTION_DOWNLOAD_PROGRESS -> {
+                recordBtn.mode = RecordButton.Mode.Loading
+                recordBtn.progress = event.progress
+            }
+            ACTION_DOWNLOAD_FINISH -> {
+                recordBtn.visibility = View.GONE
+                playBtn.visibility = View.VISIBLE
+            }
+            ACTION_DOWNLOAD_FAILED -> {
+                Toast.makeText(this, R.string.download_failed_try_again, Toast.LENGTH_SHORT).show()
+            }
+            ACTION_DOWNLOAD_CANCEL -> {
+
+            }
+        }
     }
 
     private external fun StartAudio(samplerate: Int, buffersize: Int)
