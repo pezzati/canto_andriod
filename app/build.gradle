@@ -65,14 +65,14 @@ android {
         exclude 'META-INF/proguard/androidx-annotations.pro'
     }
 
-    splits {
+    /*splits {
         abi {
             enable true
             reset()
             include "armeabi-v7a", "arm64-v8a"
             universalApk false
         }
-    }
+    }*/
 
 //    sourceSets.main.jniLibs.srcDirs = ['./jniLibs/']
 }
@@ -125,8 +125,8 @@ dependencies {
 
     implementation 'com.jakewharton.timber:timber:4.7.1'
 
-    implementation "android.arch.navigation:navigation-fragment-ktx:1.0.0-alpha08"
-    implementation "android.arch.navigation:navigation-ui-ktx:1.0.0-alpha08"
+    implementation "android.arch.navigation:navigation-fragment-ktx:1.0.0-alpha09"
+    implementation "android.arch.navigation:navigation-ui-ktx:1.0.0-alpha09"
 
     implementation 'com.karumi:dexter:5.0.0'
     implementation 'com.github.angads25:filepicker:1.1.1'

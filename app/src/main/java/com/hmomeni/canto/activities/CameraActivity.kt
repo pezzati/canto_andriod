@@ -13,6 +13,7 @@ import android.os.Handler
 import android.os.HandlerThread
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
+import android.util.Range
 import android.util.Size
 import android.util.SparseIntArray
 import android.view.Surface
@@ -281,9 +282,6 @@ abstract class CameraActivity : AppCompatActivity() {
     @SuppressLint("MissingPermission")
     protected fun openCamera(w: Int, h: Int): Boolean {
 
-        val width = h
-        val height = w
-
         if (!hasPermissionsGranted(VIDEO_PERMISSIONS.toTypedArray())) {
             requestVideoPermissions()
             return false
@@ -296,7 +294,7 @@ abstract class CameraActivity : AppCompatActivity() {
             if (!cameraOpenCloseLock.tryAcquire(2500, TimeUnit.MILLISECONDS)) {
                 Timber.e("Acquiring camera lock failed, retrying openCamera")
                 Crashlytics.logException(CameraAccessException(CameraAccessException.CAMERA_ERROR, "Acquiring camera lock failed, retrying openCamera"))
-                openCamera(width, height)
+                openCamera(h, w)
                 return false
             }
 
@@ -312,15 +310,10 @@ abstract class CameraActivity : AppCompatActivity() {
             videoSize = chooseVideoSize(map.getOutputSizes(MediaRecorder::class.java))
             Timber.d("Selected Video Size=%s", videoSize)
             previewSize = chooseOptimalSize(map.getOutputSizes(SurfaceTexture::class.java),
-                    width, height, videoSize)
+                    h, w, videoSize)
             Timber.d("Selected Preview Video Size=%s", previewSize)
 
-            /*if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-                getTextureView().setAspectRatio(previewSize.width, previewSize.height)
-            } else {
-                getTextureView().setAspectRatio(previewSize.height, previewSize.width)
-            }*/
-            configureTransform(width, height)
+            configureTransform(h, w)
             mediaRecorder = MediaRecorder()
             manager.openCamera(cameraId, stateCallback, null)
             return true
@@ -329,8 +322,6 @@ abstract class CameraActivity : AppCompatActivity() {
             cameraActivity.finish()
             return false
         } catch (e: NullPointerException) {
-            // Currently an NPE is thrown when the Camera2API is used but not supported on the
-            // device this code runs.
             ErrorDialog.newInstance(getString(R.string.camera_error))
                     .show(supportFragmentManager, FRAGMENT_DIALOG)
             return false
@@ -369,6 +360,8 @@ abstract class CameraActivity : AppCompatActivity() {
             val texture = getTextureView().surfaceTexture
             texture.setDefaultBufferSize(previewSize.width, previewSize.height)
             previewRequestBuilder = cameraDevice!!.createCaptureRequest(CameraDevice.TEMPLATE_PREVIEW)
+
+            previewRequestBuilder.set(CaptureRequest.CONTROL_AE_TARGET_FPS_RANGE, getRange())
 
             val previewSurface = Surface(texture)
             previewRequestBuilder.addTarget(previewSurface)
@@ -610,6 +603,32 @@ abstract class CameraActivity : AppCompatActivity() {
         } else {
             choices[0]
         }
+    }
+
+    private fun getRange(): Range<Int>? {
+
+        val manager = getSystemService(Context.CAMERA_SERVICE) as CameraManager
+        val chars = manager.getCameraCharacteristics(cameraId)
+        val ranges = chars.get(CameraCharacteristics.CONTROL_AE_AVAILABLE_TARGET_FPS_RANGES)!!
+
+        var result: Range<Int>? = null
+
+        for (range in ranges) {
+            val upper = range.upper
+
+            // 10 - min range upper for my needs
+            if (upper >= 10) {
+                if (result == null || upper < result.upper) {
+                    result = range
+                }
+            }
+        }
+
+        if (result == null) {
+            result = ranges[0]
+        }
+
+        return result
     }
 
 }

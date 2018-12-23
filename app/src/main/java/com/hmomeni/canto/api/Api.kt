@@ -17,6 +17,9 @@ interface Api {
     @POST("user/profile/verify")
     fun verify(@Body requestBody: RequestBody): Single<JsonObject>
 
+    @GET("v2/song/home")
+    fun getHomeFeed(): Single<List<HomeFeed>>
+
     @GET("analysis/banners")
     fun getBanners(): Single<ApiResponse<List<Banner>>>
 
