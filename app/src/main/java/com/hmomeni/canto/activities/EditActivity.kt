@@ -66,7 +66,7 @@ class EditActivity : AppCompatActivity(), View.OnClickListener {
 
         viewModel = ViewModelProviders.of(this, ViewModelFactory(app()))[EditViewModel::class.java]
 
-        baseDir = filesDir
+        baseDir = cacheDir
         val outDir = File(Environment.getExternalStorageDirectory(), "Canto")
 
         outDir.mkdirs()

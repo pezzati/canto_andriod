@@ -92,7 +92,7 @@ class DubsmashActivity : CameraActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        baseFile = filesDir
+        baseFile = cacheDir
 
         app().di.inject(this)
 
