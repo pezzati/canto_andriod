@@ -25,7 +25,6 @@ import com.hmomeni.canto.utils.ViewModelFactory
 import com.hmomeni.canto.utils.app
 import com.hmomeni.canto.utils.ffmpeg.FFcommandExecuteResponseHandler
 import com.hmomeni.canto.utils.ffmpeg.FFmpeg
-import com.hmomeni.canto.utils.getBitmapFromVectorDrawable
 import com.hmomeni.canto.utils.getDuration
 import com.hmomeni.canto.utils.views.VerticalSlider
 import com.hmomeni.canto.vms.EditViewModel
@@ -173,14 +172,6 @@ class EditActivity : BaseFullActivity(), View.OnClickListener {
         echoBtn.setOnClickListener(this)
         openSettingBtn.setOnClickListener(this)
         closeSettingBtn.setOnClickListener(this)
-
-        micVolume.lowIcon = getBitmapFromVectorDrawable(this, R.drawable.ic_mic_low)
-        micVolume.midIcon = getBitmapFromVectorDrawable(this, R.drawable.ic_mic_mid)
-        micVolume.hiIcon = getBitmapFromVectorDrawable(this, R.drawable.ic_mic_hi)
-
-        musicVolume.lowIcon = getBitmapFromVectorDrawable(this, R.drawable.ic_music_volume_low)
-        musicVolume.midIcon = getBitmapFromVectorDrawable(this, R.drawable.ic_music_volume_mid)
-        musicVolume.hiIcon = getBitmapFromVectorDrawable(this, R.drawable.ic_music_volume_hi)
 
         musicVolume.max = 40
         musicVolume.progress = 10

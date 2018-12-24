@@ -165,7 +165,10 @@
             app:layout_constraintEnd_toStartOf="@+id/micVolume"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/noneBtn" />
+            app:layout_constraintTop_toBottomOf="@+id/noneBtn"
+            app:vs_iconHigh="@drawable/ic_music_volume_hi"
+            app:vs_iconLow="@drawable/ic_music_volume_low"
+            app:vs_iconMedium="@drawable/ic_music_volume_mid" />
 
         <com.hmomeni.canto.utils.views.VerticalSlider
             android:id="@+id/micVolume"
@@ -176,7 +179,10 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/musicVolume"
-            app:layout_constraintTop_toTopOf="@+id/musicVolume" />
+            app:layout_constraintTop_toTopOf="@+id/musicVolume"
+            app:vs_iconHigh="@drawable/ic_sing_hi"
+            app:vs_iconLow="@drawable/ic_sing_low"
+            app:vs_iconMedium="@drawable/ic_sing_mid" />
     </android.support.constraint.ConstraintLayout>
 
     <ImageView

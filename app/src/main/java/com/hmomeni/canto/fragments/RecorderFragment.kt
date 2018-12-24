@@ -576,7 +576,7 @@ class RecorderFragment : Fragment() {
                 .doAfterTerminate { loadingDialog.dismiss() }
                 .subscribe({
                     when (mode) {
-                        PROJECT_TYPE_SINGING -> startActivity(Intent(context, DubsmashActivity::class.java).putExtra(INTENT_EXTRA_POST, it).putExtra(INTENT_EXTRA_TYPE, PROJECT_TYPE_SINGING))
+                        PROJECT_TYPE_SINGING -> startActivity(Intent(context, DubsmashActivity::class.java).putExtra(INTENT_EXTRA_POST, App.gson.toJson(it)).putExtra(INTENT_EXTRA_TYPE, PROJECT_TYPE_SINGING))
                         PROJECT_TYPE_DUBSMASH -> startActivity(Intent(context, DubsmashActivity::class.java).putExtra(INTENT_EXTRA_POST, App.gson.toJson(it)).putExtra(INTENT_EXTRA_TYPE, PROJECT_TYPE_DUBSMASH))
                         PROJECT_TYPE_KARAOKE -> startActivity(Intent(context, KaraokeActivity::class.java).putExtra(INTENT_EXTRA_POST, it))
                     }
