@@ -14,9 +14,9 @@ data class FullPost(
         @SerializedName("id")
         val id: Long,
         @SerializedName("name")
-        val name: String = "",
+        val name: String,
         @SerializedName("description")
-        val description: String = "",
+        val description: String,
         @SerializedName("type")
         val type: String,
         @SerializedName("is_premium")
@@ -28,7 +28,7 @@ data class FullPost(
         @SerializedName("popularity_rate")
         val popularityRate: Int = 0,
         @SerializedName("link")
-        val link: String? = null,
+        val link: String,
         @SerializedName("created_date")
         val createdDate: String? = null,
         @SerializedName("liked_it")

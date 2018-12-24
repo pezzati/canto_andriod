@@ -40,32 +40,28 @@ class MainFragment : Fragment() {
                 .subscribe({
                     banners.addAll(it)
                     adapter?.notifyDataSetChanged()
-                    viewModel.api.getGenres()
-                            .map { it.data }
-                            .iomain()
-                            .doAfterTerminate {
-                                progressBar?.visibility = View.GONE
-                            }
-                            .subscribe({
-                                it.forEach { genre ->
-                                    viewModel.api
-                                            .getGenrePosts(genre.filesLink)
-                                            .map { it.data }
-                                            .iomain()
-                                            .subscribe({
-                                                genre.posts = it
-                                                genres.add(genre)
-                                                adapter?.notifyDataSetChanged()
-                                            }, {
-                                                Timber.e(it)
-                                            }).addTo(compositeDisposable)
-
-                                }
-                            }, {
-                                Timber.e(it)
-                            }).addTo(compositeDisposable)
                 }, {
-                    Timber.e(it)
+                    Timber.e(it, "Failed loading banners")
+                }).addTo(compositeDisposable)
+
+        viewModel.api.getHomeFeed()
+                .iomain()
+                .doAfterTerminate {
+                    progressBar?.visibility = View.GONE
+                }
+                .subscribe({
+                    it.forEach { f ->
+                        val genre = Genre(
+                                filesLink = f.moreUrl,
+                                link = f.moreUrl,
+                                name = f.name,
+                                posts = f.posts
+                        )
+                        genres.add(genre)
+                    }
+                    adapter?.notifyDataSetChanged()
+                }, {
+                    Timber.e(it, "Failed loading genres")
                 }).addTo(compositeDisposable)
     }
 

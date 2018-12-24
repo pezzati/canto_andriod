@@ -23,8 +23,8 @@ data class Post(
         val type: String? = null,
         @field:SerializedName("content")
         val content: String? = null,
-        @field:SerializedName("tags")
-        val tags: List<String>? = null,
+        /*@field:SerializedName("tags")
+        val tags: List<String>? = null,*/
         @field:SerializedName("is_premium")
         val isPremium: Boolean = false,
         @field:SerializedName("created_date")
@@ -48,7 +48,7 @@ data class Post(
             source.readString(),
             source.readString(),
             source.readString(),
-            source.createStringArrayList(),
+//            source.createStringArrayList(),
             1 == source.readInt(),
             source.readString(),
             1 == source.readInt(),
@@ -69,7 +69,7 @@ data class Post(
         writeString(description)
         writeString(type)
         writeString(content)
-        writeStringList(tags)
+//        writeStringList(tags)
         writeInt((if (isPremium) 1 else 0))
         writeString(createdDate)
         writeInt((if (likedIt) 1 else 0))

@@ -40,21 +40,15 @@
         </activity>
         <activity
             android:name=".activities.DubsmashActivity"
-            android:exported="true"
-            android:screenOrientation="portrait">
-
-        </activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.LoginActivity"
-            android:exported="true"
             android:screenOrientation="portrait" />
         <activity
             android:name=".activities.KaraokeActivity"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".activities.EditActivity"
-            android:exported="true"
             android:screenOrientation="portrait" />
         <activity
             android:name=".activities.VideoPlayActivity"

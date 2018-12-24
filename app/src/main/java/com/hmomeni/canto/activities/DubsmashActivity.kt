@@ -33,6 +33,9 @@ import javax.inject.Inject
 const val RATIO_FULLSCREEN = 1
 const val RATIO_SQUARE = 2
 
+const val INTENT_EXTRA_POST = "record_post"
+const val INTENT_EXTRA_TYPE = "record_type"
+
 class DubsmashActivity : CameraActivity() {
 
 
@@ -91,13 +94,15 @@ class DubsmashActivity : CameraActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         baseFile = cacheDir
 
         app().di.inject(this)
 
-        type = intent.getIntExtra("type", type)
-        post = intent.getParcelableExtra("post")
+        val extras = intent.extras!!
+
+        type = extras.getInt(INTENT_EXTRA_TYPE, type)
+        post = App.gson.fromJson(extras.getString(INTENT_EXTRA_POST), FullPost::class.java)
+
 
         midiItems = post.content.midi.filter { it.text != "\n" }
 

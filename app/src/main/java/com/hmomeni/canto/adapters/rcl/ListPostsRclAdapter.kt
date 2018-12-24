@@ -22,10 +22,12 @@ class ListPostsRclAdapter(private val posts: List<Post>, private val layoutResId
 
     class ListPostHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         fun bind(post: Post) {
-            GlideApp.with(itemView)
-                    .load(post.coverPhoto!!.link)
-                    .rounded(dpToPx(15))
-                    .into(itemView.postImageView)
+            post.coverPhoto?.let {
+                GlideApp.with(itemView)
+                        .load(it.link)
+                        .rounded(dpToPx(15))
+                        .into(itemView.postImageView)
+            }
 
             itemView.artistName.text = post.artist!!.name
             itemView.trackName.text = post.name

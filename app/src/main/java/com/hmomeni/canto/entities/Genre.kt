@@ -8,13 +8,13 @@ data class Genre(
         @field:SerializedName("files_link")
         val filesLink: String,
         @field:SerializedName("cover_photo")
-        val coverPhoto: String?,
+        val coverPhoto: String? = null,
         @field:SerializedName("link")
         val link: String,
         @field:SerializedName("name")
         val name: String,
         @field:SerializedName("liked_it")
-        val likedIt: Boolean,
+        val likedIt: Boolean = false,
         var posts: List<Post>? = null
 ) : Parcelable {
     constructor(source: Parcel) : this(

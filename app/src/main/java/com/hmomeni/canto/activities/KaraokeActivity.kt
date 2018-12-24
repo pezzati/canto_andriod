@@ -39,7 +39,7 @@ class KaraokeActivity : AppCompatActivity() {
         setContentView(R.layout.activity_karaoke)
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 
-        post = intent.getParcelableExtra("post")
+        post = intent.getParcelableExtra(INTENT_EXTRA_POST)
 
         disposable = downloadEvents
                 .onBackpressureDrop()

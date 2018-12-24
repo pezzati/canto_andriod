@@ -26,8 +26,11 @@ import android.widget.Toast
 import android.widget.Toast.LENGTH_SHORT
 import com.crashlytics.android.Crashlytics
 import com.example.android.camera2video.CompareSizesByArea
+import com.hmomeni.canto.App
 import com.hmomeni.canto.R
 import com.hmomeni.canto.activities.DubsmashActivity
+import com.hmomeni.canto.activities.INTENT_EXTRA_POST
+import com.hmomeni.canto.activities.INTENT_EXTRA_TYPE
 import com.hmomeni.canto.activities.KaraokeActivity
 import com.hmomeni.canto.adapters.viewpager.ModePagerAdapter
 import com.hmomeni.canto.api.Api
@@ -573,9 +576,9 @@ class RecorderFragment : Fragment() {
                 .doAfterTerminate { loadingDialog.dismiss() }
                 .subscribe({
                     when (mode) {
-                        PROJECT_TYPE_SINGING -> startActivity(Intent(context, DubsmashActivity::class.java).putExtra("post", it).putExtra("type", PROJECT_TYPE_SINGING))
-                        PROJECT_TYPE_DUBSMASH -> startActivity(Intent(context, DubsmashActivity::class.java).putExtra("post", it).putExtra("type", PROJECT_TYPE_SINGING))
-                        PROJECT_TYPE_KARAOKE -> startActivity(Intent(context, KaraokeActivity::class.java).putExtra("post", it))
+                        PROJECT_TYPE_SINGING -> startActivity(Intent(context, DubsmashActivity::class.java).putExtra(INTENT_EXTRA_POST, it).putExtra(INTENT_EXTRA_TYPE, PROJECT_TYPE_SINGING))
+                        PROJECT_TYPE_DUBSMASH -> startActivity(Intent(context, DubsmashActivity::class.java).putExtra(INTENT_EXTRA_POST, App.gson.toJson(it)).putExtra(INTENT_EXTRA_TYPE, PROJECT_TYPE_DUBSMASH))
+                        PROJECT_TYPE_KARAOKE -> startActivity(Intent(context, KaraokeActivity::class.java).putExtra(INTENT_EXTRA_POST, it))
                     }
                 }, {
                     Timber.e(it)
