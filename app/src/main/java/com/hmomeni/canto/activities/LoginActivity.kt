@@ -6,7 +6,6 @@ import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
 import android.text.InputType
 import android.util.Patterns
 import android.view.View
@@ -21,7 +20,7 @@ import kotlinx.android.synthetic.main.activity_login.*
 import timber.log.Timber
 import java.util.regex.Pattern
 
-class LoginActivity : AppCompatActivity(), View.OnClickListener {
+class LoginActivity : BaseActivity(), View.OnClickListener {
 
 
     private lateinit var viewModel: LoginViewModel

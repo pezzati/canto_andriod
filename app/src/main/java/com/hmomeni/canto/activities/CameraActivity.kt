@@ -8,18 +8,14 @@ import android.graphics.RectF
 import android.graphics.SurfaceTexture
 import android.hardware.camera2.*
 import android.media.MediaRecorder
-import android.os.Bundle
 import android.os.Handler
 import android.os.HandlerThread
 import android.support.v4.content.ContextCompat
-import android.support.v7.app.AppCompatActivity
 import android.util.Range
 import android.util.Size
 import android.util.SparseIntArray
 import android.view.Surface
 import android.view.TextureView
-import android.view.View
-import android.view.WindowManager
 import android.widget.Toast
 import com.crashlytics.android.Crashlytics
 import com.example.android.camera2video.CompareSizesByArea
@@ -40,7 +36,7 @@ import java.util.concurrent.Semaphore
 import java.util.concurrent.TimeUnit
 
 @SuppressLint("Registered")
-abstract class CameraActivity : AppCompatActivity() {
+abstract class CameraActivity : BaseFullActivity() {
     abstract fun getTextureView(): TextureView
     abstract fun onRecordStarted()
     abstract fun onRecordStopped()
@@ -189,18 +185,7 @@ abstract class CameraActivity : AppCompatActivity() {
     private var nextVideoAbsolutePath: String? = null
 
     private var mediaRecorder: MediaRecorder? = null
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        /*requestWindowFeature(Window.FEATURE_NO_TITLE)
-        window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN)*/
 
-        val uiOptions = window.decorView.systemUiVisibility
-        val newUiOptions = uiOptions or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or View.SYSTEM_UI_FLAG_FULLSCREEN
-        window.decorView.systemUiVisibility = newUiOptions
-        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
-
-    }
 
     override fun onResume() {
         super.onResume()

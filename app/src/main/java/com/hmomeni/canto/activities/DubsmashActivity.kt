@@ -35,6 +35,7 @@ const val RATIO_SQUARE = 2
 
 const val INTENT_EXTRA_POST = "record_post"
 const val INTENT_EXTRA_TYPE = "record_type"
+const val INTENT_EXTRA_RATIO = "record_ratio"
 
 class DubsmashActivity : CameraActivity() {
 
@@ -348,7 +349,7 @@ class DubsmashActivity : CameraActivity() {
         isRecording = false
         stopRecordingVideo()
         StopAudio()
-        startActivity(Intent(this, EditActivity::class.java).putExtra("type", type).putExtra("post", post).putExtra("ratio", mRatio))
+        startActivity(Intent(this, EditActivity::class.java).putExtra(INTENT_EXTRA_TYPE, type).putExtra(INTENT_EXTRA_POST, App.gson.toJson(post)).putExtra(INTENT_EXTRA_RATIO, mRatio))
         finish()
     }
 

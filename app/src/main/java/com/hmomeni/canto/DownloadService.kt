@@ -31,7 +31,7 @@ class DownloadService : Service() {
             context.startService(Intent(context, DownloadService::class.java)
                     .putExtra("action", ACTION_DOWNLOAD_START)
                     .putExtra("file_url", fileUrl))
-            return File(context.filesDir, uri.lastPathSegment).absolutePath
+            return File(context.cacheDir, uri.lastPathSegment).absolutePath
         }
     }
 
@@ -72,7 +72,7 @@ class DownloadService : Service() {
 
     private fun downloadFile() {
         val fileName = Uri.parse(downloadUrl).lastPathSegment
-        val finalFile = File(filesDir, fileName)
+        val finalFile = File(cacheDir, fileName)
         if (finalFile.exists()) {
             onDownloadFinished()
             return
@@ -85,7 +85,7 @@ class DownloadService : Service() {
 
             if (c.responseCode != 200) throw Exception("Error in connection")
 
-            val downloadFile = File(filesDir, "tempFile")
+            val downloadFile = File(cacheDir, "tempFile")
 
             val fileOutput = FileOutputStream(downloadFile)
             val inputStream = c.inputStream

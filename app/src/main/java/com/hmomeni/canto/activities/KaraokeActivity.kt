@@ -3,7 +3,6 @@ package com.hmomeni.canto.activities
 import android.content.Context
 import android.media.AudioManager
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
 import android.view.View
 import android.view.WindowManager
 import android.widget.Toast
@@ -20,7 +19,7 @@ import kotlinx.android.synthetic.main.activity_karaoke.*
 import java.io.File
 import javax.inject.Inject
 
-class KaraokeActivity : AppCompatActivity() {
+class KaraokeActivity : BaseActivity() {
     init {
         System.loadLibrary("Karaoke")
     }

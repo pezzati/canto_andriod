@@ -2,7 +2,6 @@ package com.hmomeni.canto.activities
 
 import android.content.Intent
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import com.hmomeni.canto.App
@@ -16,7 +15,7 @@ import io.reactivex.processors.PublishProcessor
 import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : BaseActivity() {
 
     @Inject
     lateinit var navEvents: PublishProcessor<NavEvent>

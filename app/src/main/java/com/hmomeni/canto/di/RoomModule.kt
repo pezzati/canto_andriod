@@ -11,6 +11,7 @@ import javax.inject.Singleton
 class RoomModule(app: App) {
 
     private val appDatabase = Room.databaseBuilder(app.applicationContext, AppDatabase::class.java, "canto")
+            .allowMainThreadQueries()
             .build()
 
     @Provides

@@ -10,13 +10,13 @@ import android.media.MediaPlayer
 import android.os.Bundle
 import android.os.Environment
 import android.os.Handler
-import android.support.v7.app.AppCompatActivity
 import android.view.Surface
 import android.view.TextureView
 import android.view.View
 import android.view.WindowManager
 import android.widget.SeekBar
 import android.widget.Toast
+import com.hmomeni.canto.App
 import com.hmomeni.canto.R
 import com.hmomeni.canto.entities.FullPost
 import com.hmomeni.canto.entities.PROJECT_TYPE_DUBSMASH
@@ -37,7 +37,7 @@ import timber.log.Timber
 import java.io.File
 import kotlin.concurrent.thread
 
-class EditActivity : AppCompatActivity(), View.OnClickListener {
+class EditActivity : BaseFullActivity(), View.OnClickListener {
 
     init {
         System.loadLibrary("Edit")
@@ -61,6 +61,12 @@ class EditActivity : AppCompatActivity(), View.OnClickListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        val uiOptions = window.decorView.systemUiVisibility
+        val newUiOptions = uiOptions or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or View.SYSTEM_UI_FLAG_FULLSCREEN
+        window.decorView.systemUiVisibility = newUiOptions
+        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+
         setContentView(R.layout.activity_edit)
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 
@@ -76,9 +82,9 @@ class EditActivity : AppCompatActivity(), View.OnClickListener {
                 System.currentTimeMillis()
         ))
 
-        type = intent.getIntExtra("type", type)
-        post = intent.getParcelableExtra("post")
-        ratio = intent.getIntExtra("ratio", RATIO_FULLSCREEN)
+        type = intent.getIntExtra(INTENT_EXTRA_TYPE, type)
+        post = App.gson.fromJson(intent.getStringExtra(INTENT_EXTRA_POST), FullPost::class.java)
+        ratio = intent.getIntExtra(INTENT_EXTRA_RATIO, RATIO_FULLSCREEN)
 
 
         initAudio()

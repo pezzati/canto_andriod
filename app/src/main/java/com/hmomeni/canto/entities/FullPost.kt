@@ -16,7 +16,7 @@ data class FullPost(
         @SerializedName("name")
         val name: String,
         @SerializedName("description")
-        val description: String,
+        val description: String?,
         @SerializedName("type")
         val type: String,
         @SerializedName("is_premium")
