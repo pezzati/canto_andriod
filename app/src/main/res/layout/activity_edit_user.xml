@@ -26,7 +26,7 @@
         android:layout_marginTop="16dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView2"
-        tools:srcCompat="@tools:sample/avatars[11]" />
+        android:src="@drawable/ic_user_place_holder" />
 
     <EditText
         android:id="@+id/userName"
@@ -89,7 +89,6 @@
         android:background="@drawable/confirm_btn_bg"
         android:text="@string/confirm"
         android:textSize="11dp"
-        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
