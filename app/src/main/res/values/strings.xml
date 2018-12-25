@@ -43,4 +43,8 @@
     <string name="invalid_phone_number">Invalid phone number (correct: 09123456789)</string>
     <string name="invalid_email_address">Invalid email address</string>
     <string name="camera_open_failed">Openning your device\'s camera failed, please try again.</string>
+    <string name="select_avatar">Select Avatar</string>
+    <string name="your_name">Your Name</string>
+    <string name="username_already_taken">UserName already taken</string>
+    <string name="confirm">Confirm</string>
 </resources>

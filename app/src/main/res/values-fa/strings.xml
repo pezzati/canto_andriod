@@ -43,4 +43,8 @@
     <string name="invalid_email_address">ایمیل نامعتبر است</string>
     <string name="cancel">لغو</string>
     <string name="camera_open_failed">موفق به دسترسی به دوربین دستگاه نشدیم. لطفا دوباره امتحان کنید.</string>
+    <string name="select_avatar">انتخاب آواتار</string>
+    <string name="your_name">نام شما</string>
+    <string name="username_already_taken">نام کاربری قبلا استفاده شده است</string>
+    <string name="confirm">تأیید</string>
 </resources>
