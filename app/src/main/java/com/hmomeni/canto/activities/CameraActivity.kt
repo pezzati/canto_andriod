@@ -18,8 +18,8 @@ import android.view.Surface
 import android.view.TextureView
 import android.widget.Toast
 import com.crashlytics.android.Crashlytics
-import com.example.android.camera2video.CompareSizesByArea
 import com.hmomeni.canto.R
+import com.hmomeni.canto.utils.CompareSizesByArea
 import com.hmomeni.canto.utils.ErrorDialog
 import com.hmomeni.canto.utils.VIDEO_PERMISSIONS
 import com.hmomeni.canto.utils.views.AutoFitTextureView

@@ -25,7 +25,6 @@ import android.view.*
 import android.widget.Toast
 import android.widget.Toast.LENGTH_SHORT
 import com.crashlytics.android.Crashlytics
-import com.example.android.camera2video.CompareSizesByArea
 import com.hmomeni.canto.App
 import com.hmomeni.canto.R
 import com.hmomeni.canto.activities.DubsmashActivity

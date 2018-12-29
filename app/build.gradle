@@ -56,7 +56,12 @@ android {
             } else {
                 buildType = ""
             }
-            def newApkName = project + SEP + "v" + version + buildType + "-" + output.getFilter(com.android.build.OutputFile.ABI) + ".apk"
+            def buildAbi = ""
+            def abi = output.getFilter(com.android.build.OutputFile.ABI)
+            if (abi != null) {
+                buildAbi = "-" + output.getFilter(com.android.build.OutputFile.ABI)
+            }
+            def newApkName = project + SEP + "v" + version + buildType + buildAbi + ".apk"
             output.outputFileName = newApkName
         }
     }
@@ -136,9 +141,8 @@ dependencies {
         transitive = true
     }
 
-//    implementation 'nl.bravobit:android-ffmpeg:1.1.5'
-
     implementation 'com.azoft.carousellayoutmanager:carousel:1.2.4'
 }
 
 apply plugin: 'com.google.gms.google-services'
+apply plugin: 'com.getkeepsafe.dexcount'

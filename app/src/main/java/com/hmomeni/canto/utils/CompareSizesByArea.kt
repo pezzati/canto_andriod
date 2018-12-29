@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.example.android.camera2video
+package com.hmomeni.canto.utils
 
 import android.util.Size
 import java.lang.Long.signum
