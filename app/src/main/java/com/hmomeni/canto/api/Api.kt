@@ -35,4 +35,7 @@ interface Api {
     @GET("song/posts/{postId}")
     fun getSinglePost(@Path("postId") postId: Int): Single<FullPost>
 
+    @POST("/song/posts/{postId}/sing/")
+    fun sing(@Path("postId") postId: Int): Completable
+
 }

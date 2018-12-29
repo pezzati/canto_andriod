@@ -11,15 +11,14 @@ import com.hmomeni.canto.R
 import com.hmomeni.canto.adapters.rcl.MainRclAdapter
 import com.hmomeni.canto.entities.Banner
 import com.hmomeni.canto.entities.Genre
-import com.hmomeni.canto.utils.ViewModelFactory
-import com.hmomeni.canto.utils.app
-import com.hmomeni.canto.utils.iomain
+import com.hmomeni.canto.utils.*
 import com.hmomeni.canto.utils.navigation.ListNavEvent
 import com.hmomeni.canto.utils.navigation.PostNavEvent
 import com.hmomeni.canto.vms.MainViewModel
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
 import kotlinx.android.synthetic.main.fragment_main.*
+import retrofit2.HttpException
 import timber.log.Timber
 
 class MainFragment : Fragment() {
@@ -82,7 +81,26 @@ class MainFragment : Fragment() {
                             if (it.item == -1) {
                                 viewModel.navEvents.onNext(ListNavEvent("url_path", 0, genre.name, genre.filesLink))
                             } else {
-                                viewModel.navEvents.onNext(PostNavEvent(genre.posts!![it.item]))
+                                val post = genre.posts!![it.item]
+                                val dialog = ProgressDialog(context!!)
+                                viewModel
+                                        .api
+                                        .sing(post.id)
+                                        .iomain()
+                                        .doOnSubscribe { dialog.show() }
+                                        .doAfterTerminate { dialog.dismiss() }
+                                        .subscribe({
+                                            viewModel.navEvents.onNext(PostNavEvent(post))
+                                        }, {
+                                            if (it is HttpException) {
+                                                when (it.code()) {
+                                                    HTTP_ERROR_PAYMENT_REQUIRED -> {
+                                                        PaymentDialog(context!!, showNegativeButton = true).show()
+                                                    }
+                                                }
+                                            }
+                                            Timber.e(it)
+                                        }).addTo(compositeDisposable)
                             }
 
                         }

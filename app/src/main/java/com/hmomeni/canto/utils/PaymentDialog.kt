@@ -6,32 +6,44 @@ import android.os.Bundle
 import android.view.View
 import android.view.WindowManager
 import com.hmomeni.canto.R
-import kotlinx.android.synthetic.main.dialog_alert.*
+import kotlinx.android.synthetic.main.dialog_payment.*
 
-class CantoDialog(
+class PaymentDialog(
         context: Context,
-        var title: String,
-        var content: String,
+        var title: String? = null,
+        var content: String? = null,
+        var imageUrl: String? = null,
         var showNegativeButton: Boolean = false,
         var positiveButtonText: String? = null,
         var negativeButtonText: String? = null,
         var autoDismiss: Boolean = true,
-        var positiveListener: ((CantoDialog) -> Unit)? = null,
-        var negativeListener: ((CantoDialog) -> Unit)? = null
+        var positiveListener: ((PaymentDialog) -> Unit)? = null,
+        var negativeListener: ((PaymentDialog) -> Unit)? = null
 ) : Dialog(context) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.dialog_alert)
+        setContentView(R.layout.dialog_payment)
 
         window.setLayout(context.resources.getDimensionPixelSize(R.dimen.dialog_width), WindowManager.LayoutParams.WRAP_CONTENT)
         window.setBackgroundDrawableResource(android.R.color.transparent)
 
-        dialogTitle.text = title
-        dialogContent.text = content
+
+        title?.let {
+            dialogTitle.text = it
+        }
+        content?.let {
+            dialogContent.text = it
+        }
+
+        imageUrl?.let {
+            GlideApp.with(context)
+                    .load(it)
+                    .rounded(dpToPx(3))
+                    .into(dialogImage)
+        }
 
         if (showNegativeButton) {
-            vr.visibility = View.VISIBLE
             negativeButton.visibility = View.VISIBLE
         }
 
@@ -41,7 +53,6 @@ class CantoDialog(
         negativeButtonText?.let {
             negativeButton.text = it
         }
-
         positiveButton.setOnClickListener {
             positiveListener?.invoke(this)
             if (autoDismiss) {

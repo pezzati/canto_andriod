@@ -47,4 +47,8 @@
     <string name="your_name">Your Name</string>
     <string name="username_already_taken">UserName already taken</string>
     <string name="confirm">Confirm</string>
+    <string name="canto">Canto</string>
+    <string name="go_to_shop">Go to shop</string>
+    <string name="you_dont_have_enough_credit">You don\'t have enough credit to continue. You can buy one of the coupon packages.</string>
+    <string name="please_wait">Please wait...</string>
 </resources>

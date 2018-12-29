@@ -22,7 +22,6 @@ import com.hmomeni.canto.R
 import com.hmomeni.canto.utils.CompareSizesByArea
 import com.hmomeni.canto.utils.ErrorDialog
 import com.hmomeni.canto.utils.VIDEO_PERMISSIONS
-import com.hmomeni.canto.utils.views.AutoFitTextureView
 import com.karumi.dexter.Dexter
 import com.karumi.dexter.MultiplePermissionsReport
 import com.karumi.dexter.PermissionToken
@@ -71,10 +70,6 @@ abstract class CameraActivity : BaseFullActivity() {
             openCamera(textureView.width, textureView.height)
         }
 
-    /**
-     * [TextureView.SurfaceTextureListener] handles several lifecycle events on a
-     * [TextureView].
-     */
     private val surfaceTextureListener = object : TextureView.SurfaceTextureListener {
 
         override fun onSurfaceTextureAvailable(texture: SurfaceTexture, width: Int, height: Int) {
@@ -92,40 +87,15 @@ abstract class CameraActivity : BaseFullActivity() {
 
     }
 
-    /**
-     * An [AutoFitTextureView] for camera preview.
-     */
-//    private lateinit var textureView: AutoFitTextureView
 
-    /**
-     * Button to record video
-     */
-//    private lateinit var videoButton: Button
-
-    /**
-     * A reference to the opened [android.hardware.camera2.CameraDevice].
-     */
     private var cameraDevice: CameraDevice? = null
 
-    /**
-     * A reference to the current [android.hardware.camera2.CameraCaptureSession] for
-     * preview.
-     */
     private var captureSession: CameraCaptureSession? = null
 
-    /**
-     * The [android.util.Size] of camera preview.
-     */
     private lateinit var previewSize: Size
 
-    /**
-     * The [android.util.Size] of video recording.
-     */
     private lateinit var videoSize: Size
 
-    /**
-     * Whether the app is recording video now
-     */
     protected var isRecordingVideo = false
 
     /**
@@ -143,14 +113,9 @@ abstract class CameraActivity : BaseFullActivity() {
      */
     private val cameraOpenCloseLock = Semaphore(1)
 
-    /**
-     * [CaptureRequest.Builder] for the camera preview
-     */
     private lateinit var previewRequestBuilder: CaptureRequest.Builder
 
-    /**
-     * Orientation of the camera sensor
-     */
+
     private var sensorOrientation = 0
 
     /**
@@ -179,9 +144,7 @@ abstract class CameraActivity : BaseFullActivity() {
         }
 
     }
-    /**
-     * Output file for video
-     */
+
     private var nextVideoAbsolutePath: String? = null
 
     private var mediaRecorder: MediaRecorder? = null
@@ -316,9 +279,6 @@ abstract class CameraActivity : BaseFullActivity() {
 
     }
 
-    /**
-     * Close the [CameraDevice].
-     */
     protected fun closeCamera() {
         try {
             cameraOpenCloseLock.acquire()
@@ -334,9 +294,6 @@ abstract class CameraActivity : BaseFullActivity() {
         }
     }
 
-    /**
-     * Start the camera preview.
-     */
     private fun startPreview() {
         if (cameraDevice == null || !getTextureView().isAvailable) return
 
@@ -462,17 +419,6 @@ abstract class CameraActivity : BaseFullActivity() {
     }
 
     abstract fun getVideoFilePath(): String
-
-    /*private fun getVideoFilePath(context: Context?): String {
-        val filename = "${System.currentTimeMillis()}.mp4"
-        val dir = context?.getExternalFilesDir(null)
-
-        return if (dir == null) {
-            filename
-        } else {
-            "${dir.absolutePath}/$filename"
-        }
-    }*/
 
     protected fun startRecordingVideo() {
         if (cameraDevice == null || !getTextureView().isAvailable) return
