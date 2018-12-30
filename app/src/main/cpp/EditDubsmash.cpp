@@ -13,7 +13,6 @@
 #include <SuperpoweredFlanger.h>
 #include <SuperpoweredEcho.h>
 
-#define log_write __android_log_write
 #define log_print __android_log_print
 
 static SuperpoweredAndroidAudioIO *audioIO;

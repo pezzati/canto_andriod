@@ -50,5 +50,8 @@
     <string name="canto">Canto</string>
     <string name="go_to_shop">Go to shop</string>
     <string name="you_dont_have_enough_credit">You don\'t have enough credit to continue. You can buy one of the coupon packages.</string>
-    <string name="please_wait">Please wait...</string>
+    <string name="please_wait">Please wait…</string>
+    <string name="payment_successful">Successful Payment</string>
+    <string name="you_purchased_pack_x">You successfully purchased the %s pack.</string>
+    <string name="back">Back</string>
 </resources>

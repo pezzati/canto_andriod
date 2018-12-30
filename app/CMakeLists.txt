@@ -62,6 +62,12 @@ add_library(
         ${PATH_TO_SUPERPOWERED}/AndroidIO/SuperpoweredAndroidAudioIO.cpp
 )
 
+add_library(
+        Store
+        SHARED
+        src/main/cpp/Store.cpp
+)
+
 # link the native library against the following libraries
 target_link_libraries(
         Dubsmash
@@ -81,11 +87,14 @@ target_link_libraries(
 
 target_link_libraries(
         Edit
-        #        avutil
-        #        avformat
-        #        avcodec
         ${PATH_TO_SUPERPOWERED}/libSuperpoweredAndroid${ANDROID_ABI}.a
         OpenSLES
+        log
+        android
+)
+
+target_link_libraries(
+        Store
         log
         android
 )

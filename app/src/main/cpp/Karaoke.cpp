@@ -14,7 +14,6 @@
 #include <SuperpoweredMixer.h>
 #include <SuperpoweredReverb.h>
 
-#define log_write __android_log_write
 #define log_print __android_log_print
 
 const char *KTAG = "KaraokeCPP";

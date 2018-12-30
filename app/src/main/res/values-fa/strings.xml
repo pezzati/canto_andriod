@@ -47,4 +47,8 @@
     <string name="your_name">نام شما</string>
     <string name="username_already_taken">نام کاربری قبلا استفاده شده است</string>
     <string name="confirm">تأیید</string>
+    <string name="canto">کانتو</string>
+    <string name="go_to_shop">برو به فروشگاه</string>
+    <string name="you_dont_have_enough_credit">اعتبار شما برای خواندن این آهنگ کافی نیست. برای ادامه یکی از تعرفه‌ها رو خرید نمایید.</string>
+    <string name="please_wait">لطفا صبر کنید…</string>
 </resources>

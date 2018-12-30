@@ -1,4 +1,4 @@
-#include <tar.h>//
+//
 // Created by hamed on 10/4/18.
 //
 #include <jni.h>
@@ -12,8 +12,6 @@
 #include <SuperpoweredCPU.h>
 #include <SuperpoweredSimple.h>
 
-
-#define log_write __android_log_write
 #define log_print __android_log_print
 
 const char *TAG = "DubsmashCPP";
