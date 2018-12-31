@@ -4,7 +4,7 @@
 #include <jni.h>
 #include <string>
 
-static const char *CAFEBAZAAR_KEY = "";
+static const char *CAFEBAZAAR_KEY = "MIHNMA0GCSqGSIb3DQEBAQUAA4G7ADCBtwKBrwCxRYGrEGg1KPkWrISv6voZqsic/vJDENa/girT8IWn1oUqZIx3a7xJlsRbEtvH/DIW23wpPX4St8A9haTTvZXs0fSLTL8S7jl+3kCyfi9JdHOrlnY6OvooUFJPz4ffNXSSbdKJsbnavFELYeX7M/5H/GQWkwND+yLTkkkONmAKY9V8952TwksF/YwyDA2/0xcbNi6Nk4RbD/oNDLf//c0kC6WY66lDoyg0OPCFDCMCAwEAAQ==";
 
 extern "C" JNIEXPORT jstring
 Java_com_hmomeni_canto_activities_PaymentActivity_getPaymentKey(
@@ -13,7 +13,7 @@ Java_com_hmomeni_canto_activities_PaymentActivity_getPaymentKey(
         jstring market
 ) {
     const char *m = env->GetStringUTFChars(market, 0);
-    if (m == "cafebazaar") {
+    if (strcmp(m, "cafebazaar") == 0) {
         return env->NewStringUTF(CAFEBAZAAR_KEY);
     }
 

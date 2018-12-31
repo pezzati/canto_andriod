@@ -1,27 +1,27 @@
 {
   "project_info": {
-    "project_number": "877807168986",
-    "firebase_url": "https://personal-dac37.firebaseio.com",
-    "project_id": "personal-dac37",
-    "storage_bucket": "personal-dac37.appspot.com"
+    "project_number": "846781616423",
+    "firebase_url": "https://canto-7ebf8.firebaseio.com",
+    "project_id": "canto-7ebf8",
+    "storage_bucket": "canto-7ebf8.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:877807168986:android:454b85f7fb86f3c9",
+        "mobilesdk_app_id": "1:846781616423:android:1d8d47364586b119",
         "android_client_info": {
-          "package_name": "com.hmomeni.canto"
+          "package_name": "ir.canto_app.android"
         }
       },
       "oauth_client": [
         {
-          "client_id": "877807168986-ftjc2354rubd6lc0rt76h38ii6l782ds.apps.googleusercontent.com",
+          "client_id": "846781616423-v3f92os3p2m4m7ckf918f9orjahmdqaf.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyB-p4eCHtH6lTwck_gCCjdyFGzRCGLkfV0"
+          "current_key": "AIzaSyB4nXqIoIPjIa8bSbcJ_GV6kXOFHVMiU-Q"
         }
       ],
       "services": {
