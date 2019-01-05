@@ -38,4 +38,13 @@ interface Api {
     @POST("/song/posts/{postId}/sing/")
     fun sing(@Path("postId") postId: Int): Completable
 
+    @GET("finance/packages")
+    fun getPaymentPacks(): Single<ApiResponse<List<PaymentPackage>>>
+
+    @POST("finance/purchase")
+    fun createInvoice(@Body requestBody: RequestBody): Single<JsonObject>
+
+    @POST("finance/bazzar_paymnet")
+    fun verifyPayment(@Body requestBody: RequestBody): Single<JsonObject>
+
 }

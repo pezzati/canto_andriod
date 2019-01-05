@@ -32,4 +32,5 @@ interface DIComponent {
     fun inject(profileViewModel: ProfileViewModel)
     fun inject(videoPlayActivity: VideoPlayActivity)
     fun inject(karaokeActivity: KaraokeActivity)
+    fun inject(paymentViewModel: PaymentViewModel)
 }

@@ -54,4 +54,7 @@
     <string name="payment_successful">Successful Payment</string>
     <string name="you_purchased_pack_x">You successfully purchased the %s pack.</string>
     <string name="back">Back</string>
+    <string name="packages">Packages</string>
+    <string name="payment_in_progress">Payment in Progress</string>
+    <string name="payment_failed">Payment Failed</string>
 </resources>

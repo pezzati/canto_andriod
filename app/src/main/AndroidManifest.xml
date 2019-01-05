@@ -7,7 +7,6 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.CAMERA" />
-
     <uses-permission android:name="com.android.vending.BILLING" />
     <uses-permission android:name="com.farsitel.bazaar.permission.PAY_THROUGH_BAZAAR" />
 
@@ -60,6 +59,9 @@
             android:exported="true" />
         <activity
             android:name=".activities.PaymentActivity"
+            android:exported="true" />
+        <activity
+            android:name=".activities.ShopActivity"
             android:exported="true" />
     </application>
 
