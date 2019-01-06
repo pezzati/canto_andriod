@@ -35,7 +35,7 @@
     <string name="profile">Profile</string>
     <string name="posts">Posts</string>
     <string name="story">Story</string>
-    <string name="ok">Ok</string>
+    <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
     <string name="update_required">Update Required</string>
     <string name="update_rationale">There is a new version of Canto available in market. Please upgrade now.</string>
@@ -57,4 +57,9 @@
     <string name="packages">Packages</string>
     <string name="payment_in_progress">Payment in Progress</string>
     <string name="payment_failed">Payment Failed</string>
+    <string name="purchase_failed_desc">Your purchase was not processed successfully.</string>
+    <string name="purchase_song">Purchase Song</string>
+    <string name="are_you_sure_to_but_x_tries">Are you sure to but %d tries of %s?</string>
+    <string name="yes_buy">Yes, Buy</string>
+    <string name="purchase_song_failed">Purchase song failed</string>
 </resources>

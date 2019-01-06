@@ -605,7 +605,7 @@ public class IabHelper {
         flagStartAsync("refresh inventory");
         (new Thread(new Runnable() {
             public void run() {
-                IabResult result = new IabResult(BILLING_RESPONSE_RESULT_OK, "Inventory refresh successful.");
+                IabResult result = new IabResult(BILLING_RESPONSE_RESULT_OK, "UserInventory refresh successful.");
                 Inventory inv = null;
                 try {
                     inv = queryInventory(querySkuDetails, moreSkus);

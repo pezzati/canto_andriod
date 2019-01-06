@@ -1,16 +1,21 @@
 package com.hmomeni.canto.fragments
 
 import android.arch.lifecycle.ViewModelProviders
+import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import com.crashlytics.android.Crashlytics
 import com.hmomeni.canto.R
+import com.hmomeni.canto.activities.ShopActivity
 import com.hmomeni.canto.adapters.rcl.MainRclAdapter
 import com.hmomeni.canto.entities.Banner
 import com.hmomeni.canto.entities.Genre
+import com.hmomeni.canto.entities.Post
 import com.hmomeni.canto.utils.*
 import com.hmomeni.canto.utils.navigation.ListNavEvent
 import com.hmomeni.canto.utils.navigation.PostNavEvent
@@ -84,8 +89,7 @@ class MainFragment : Fragment() {
                                 val post = genre.posts!![it.item]
                                 val dialog = ProgressDialog(context!!)
                                 viewModel
-                                        .api
-                                        .sing(post.id)
+                                        .sing(post)
                                         .iomain()
                                         .doOnSubscribe { dialog.show() }
                                         .doAfterTerminate { dialog.dismiss() }
@@ -95,7 +99,22 @@ class MainFragment : Fragment() {
                                             if (it is HttpException) {
                                                 when (it.code()) {
                                                     HTTP_ERROR_PAYMENT_REQUIRED -> {
-                                                        PaymentDialog(context!!, showNegativeButton = true).show()
+                                                        PaymentDialog(context!!, showNegativeButton = true, positiveListener = {
+                                                            startActivity(Intent(context, ShopActivity::class.java))
+                                                        }).show()
+                                                    }
+                                                    HTTP_ERROR_NOT_PURCHASED -> {
+                                                        PaymentDialog(
+                                                                context!!,
+                                                                title = getString(R.string.purchase_song),
+                                                                content = getString(R.string.are_you_sure_to_but_x_tries, 5, post.name),
+                                                                imageUrl = post.artist?.image,
+                                                                showNegativeButton = true,
+                                                                positiveButtonText = getString(R.string.yes_buy),
+                                                                positiveListener = {
+                                                                    purchaseSong(post)
+                                                                }
+                                                        ).show()
                                                     }
                                                 }
                                             }
@@ -114,6 +133,26 @@ class MainFragment : Fragment() {
         recyclerView.layoutManager = LinearLayoutManager(recyclerView.context)
         recyclerView.adapter = adapter
 
+    }
+
+    private fun purchaseSong(post: Post) {
+        val dialog = ProgressDialog(context!!)
+        viewModel.purchaseSong(post)
+                .iomain()
+                .doOnSubscribe { dialog.show() }
+                .doAfterTerminate { dialog.dismiss() }
+                .subscribe({
+                    viewModel.navEvents.onNext(PostNavEvent(post))
+                }, {
+                    if (it is HttpException && it.code() == HTTP_ERROR_PAYMENT_REQUIRED) {
+                        PaymentDialog(context!!, showNegativeButton = true, positiveListener = {
+                            startActivity(Intent(context, ShopActivity::class.java))
+                        }).show()
+                    } else {
+                        Toast.makeText(context, R.string.purchase_song_failed, Toast.LENGTH_SHORT).show()
+                        Crashlytics.logException(it)
+                    }
+                }).addTo(compositeDisposable)
     }
 
     override fun onDestroy() {

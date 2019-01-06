@@ -13,6 +13,8 @@ import com.hmomeni.canto.utils.billing.IabHelper
 import com.hmomeni.canto.utils.billing.Purchase
 import com.hmomeni.canto.utils.iomain
 import com.hmomeni.canto.vms.PaymentViewModel
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxkotlin.addTo
 import kotlinx.android.synthetic.main.activity_payment.*
 import timber.log.Timber
 
@@ -30,6 +32,8 @@ class PaymentActivity : BaseActivity() {
     private lateinit var iabHelper: IabHelper
 
     private lateinit var viewModel: PaymentViewModel
+
+    private val compositeDisposable = CompositeDisposable()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -94,7 +98,7 @@ class PaymentActivity : BaseActivity() {
                 }, {
                     Timber.e(it)
                     showError()
-                })
+                }).addTo(compositeDisposable)
     }
 
     private fun verifyPurchase(purchase: Purchase) {
@@ -112,19 +116,20 @@ class PaymentActivity : BaseActivity() {
                 }, {
                     Timber.e(it)
                     showError()
-                })
+                }).addTo(compositeDisposable)
     }
 
     private fun showError() {
-        imageView.setImageResource(R.drawable.payment_success)
-        pageTitle.setText(R.string.payment_successful)
-        resultDesc.text = getString(R.string.you_purchased_pack_x, viewModel.pack.name)
+        imageView.setImageResource(R.drawable.payment_failed)
+        pageTitle.setText(R.string.payment_failed)
+        resultDesc.setText(R.string.purchase_failed_desc)
         backBtn.visibility = View.VISIBLE
     }
 
     private fun showSuccess() {
-        imageView.setImageResource(R.drawable.payment_failed)
-        pageTitle.setText(R.string.payment_failed)
+        imageView.setImageResource(R.drawable.payment_success)
+        pageTitle.setText(R.string.payment_successful)
+        resultDesc.text = getString(R.string.you_purchased_pack_x, viewModel.pack.name)
         backBtn.visibility = View.VISIBLE
     }
 

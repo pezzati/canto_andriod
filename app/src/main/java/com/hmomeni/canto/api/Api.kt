@@ -36,7 +36,7 @@ interface Api {
     fun getSinglePost(@Path("postId") postId: Int): Single<FullPost>
 
     @POST("/song/posts/{postId}/sing/")
-    fun sing(@Path("postId") postId: Int): Completable
+    fun sing(@Path("postId") postId: Int): Single<JsonObject>
 
     @GET("finance/packages")
     fun getPaymentPacks(): Single<ApiResponse<List<PaymentPackage>>>
@@ -46,5 +46,8 @@ interface Api {
 
     @POST("finance/bazzar_paymnet")
     fun verifyPayment(@Body requestBody: RequestBody): Single<JsonObject>
+
+    @POST("song/posts/{postId}/buy/")
+    fun purchaseSong(@Path("postId") postId: Int): Single<JsonObject>
 
 }

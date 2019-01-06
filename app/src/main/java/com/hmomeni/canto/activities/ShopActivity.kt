@@ -3,7 +3,6 @@ package com.hmomeni.canto.activities
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.view.View
 import com.hmomeni.canto.R
@@ -16,7 +15,7 @@ import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.activity_shop.*
 import timber.log.Timber
 
-class ShopActivity : AppCompatActivity() {
+class ShopActivity : BaseActivity() {
 
     lateinit var viewModel: PaymentViewModel
     private var mAdapter: PaymentPacksRclAdapter? = null
