@@ -59,7 +59,7 @@
     <string name="payment_failed">Payment Failed</string>
     <string name="purchase_failed_desc">Your purchase was not processed successfully.</string>
     <string name="purchase_song">Purchase Song</string>
-    <string name="are_you_sure_to_but_x_tries">Are you sure to but %d tries of %s?</string>
+    <string name="are_you_sure_to_but_x_tries">Are you sure to buy %d tries of %s?</string>
     <string name="yes_buy">Yes, Buy</string>
     <string name="purchase_song_failed">Purchase song failed</string>
 </resources>

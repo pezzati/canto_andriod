@@ -108,12 +108,13 @@ class MainFragment : Fragment() {
                                                                 context!!,
                                                                 title = getString(R.string.purchase_song),
                                                                 content = getString(R.string.are_you_sure_to_but_x_tries, 5, post.name),
-                                                                imageUrl = post.artist?.image,
+                                                                imageUrl = post.coverPhoto?.link,
                                                                 showNegativeButton = true,
                                                                 positiveButtonText = getString(R.string.yes_buy),
                                                                 positiveListener = {
                                                                     purchaseSong(post)
-                                                                }
+                                                                },
+                                                                overlayText = "5X"
                                                         ).show()
                                                     }
                                                 }

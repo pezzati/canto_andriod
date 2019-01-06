@@ -58,4 +58,8 @@
     <string name="payment_in_progress">در حال انجام عملیات خرید</string>
     <string name="payment_failed">پرداخت انجام نشد</string>
     <string name="purchase_failed_desc">عملیات پرداخت شما با مشکل مواجه شد. در صورت تکرار با پشتیبانی تماس بگیرید.</string>
+    <string name="purchase_song">خرید آهنگ</string>
+    <string name="are_you_sure_to_but_x_tries">از خرید %d تلاش برای \"%s\" اطمینان دارید؟</string>
+    <string name="yes_buy">آره، می‌خرم</string>
+    <string name="purchase_song_failed">خرید آهنگ موفق نبود. لطفا مجددا سعی کنید و یا با پشتیبانی تماس بگیرید.</string>
 </resources>

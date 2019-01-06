@@ -72,4 +72,15 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/positiveButton" />
 
+    <TextView
+        android:id="@+id/overlay"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/roboto_bold"
+        android:text="5X"
+        android:textSize="50dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/dialogImage"
+        app:layout_constraintEnd_toEndOf="@+id/dialogImage" />
+
 </android.support.constraint.ConstraintLayout>

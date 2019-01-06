@@ -18,15 +18,16 @@ class PaymentDialog(
         var negativeButtonText: String? = null,
         var autoDismiss: Boolean = true,
         var positiveListener: ((PaymentDialog) -> Unit)? = null,
-        var negativeListener: ((PaymentDialog) -> Unit)? = null
+        var negativeListener: ((PaymentDialog) -> Unit)? = null,
+        var overlayText: String? = null
 ) : Dialog(context) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.dialog_payment)
 
-        window.setLayout(context.resources.getDimensionPixelSize(R.dimen.dialog_width), WindowManager.LayoutParams.WRAP_CONTENT)
-        window.setBackgroundDrawableResource(android.R.color.transparent)
+        window?.setLayout(context.resources.getDimensionPixelSize(R.dimen.dialog_width), WindowManager.LayoutParams.WRAP_CONTENT)
+        window?.setBackgroundDrawableResource(android.R.color.transparent)
 
 
         title?.let {
@@ -39,8 +40,18 @@ class PaymentDialog(
         imageUrl?.let {
             GlideApp.with(context)
                     .load(it)
-                    .rounded(dpToPx(3))
+                    .rounded(dpToPx(15))
                     .into(dialogImage)
+            dialogImage.apply {
+                layoutParams = layoutParams.apply {
+                    setPadding(dpToPx(16), dpToPx(16), dpToPx(16), dpToPx(16))
+                }
+            }
+        }
+
+        overlayText?.let {
+            overlay.visibility = View.VISIBLE
+            overlay.text = overlayText
         }
 
         if (showNegativeButton) {
