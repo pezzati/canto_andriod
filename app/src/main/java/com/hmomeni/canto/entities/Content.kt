@@ -16,7 +16,7 @@ data class Content(
         @SerializedName("artist")
         val artist: Artist,
         @SerializedName("midi")
-        val midi: List<MidiItem>
+        val midi: List<MidiItem>?
 
 ) : Parcelable {
     constructor(source: Parcel) : this(

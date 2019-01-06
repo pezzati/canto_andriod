@@ -38,7 +38,8 @@ class KaraokeActivity : BaseActivity() {
         setContentView(R.layout.activity_karaoke)
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 
-        post = intent.getParcelableExtra(INTENT_EXTRA_POST)
+        val extras = intent.extras!!
+        post = App.gson.fromJson(extras.getString(INTENT_EXTRA_POST), FullPost::class.java)
 
         disposable = downloadEvents
                 .onBackpressureDrop()

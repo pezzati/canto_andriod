@@ -105,7 +105,7 @@ class DubsmashActivity : CameraActivity() {
         post = App.gson.fromJson(extras.getString(INTENT_EXTRA_POST), FullPost::class.java)
 
 
-        midiItems = post.content.midi.filter { it.text != "\n" }
+        midiItems = post.content.midi!!.filter { it.text != "\n" }
 
         timeMap = preProcessLyric(midiItems)
 
