@@ -14,6 +14,7 @@ import com.hmomeni.canto.utils.ViewModelFactory
 import com.hmomeni.canto.utils.app
 import com.hmomeni.canto.utils.iomain
 import com.hmomeni.canto.utils.navigation.BackEvent
+import com.hmomeni.canto.utils.navigation.PostNavEvent
 import com.hmomeni.canto.vms.ListViewModel
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
@@ -49,6 +50,7 @@ class ListFragment : Fragment() {
             viewModel.type = it.getString("type")
             viewModel.urlPath = it.getString("url_path")
         }
+        listAdapter = ListPostsRclAdapter(viewModel.posts, R.layout.rcl_item_list_post)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
@@ -61,7 +63,12 @@ class ListFragment : Fragment() {
             viewModel.navEvents.onNext(BackEvent())
         }
 
-        listAdapter = ListPostsRclAdapter(viewModel.posts, R.layout.rcl_item_list_post)
+        listAdapter?.let {
+            it.clickPublisher.subscribe {
+                viewModel.navEvents.onNext(PostNavEvent(viewModel.posts[it]))
+            }.addTo(compositeDisposable)
+        }
+
         recyclerView.layoutManager = LinearLayoutManager(context)
         recyclerView.adapter = listAdapter
         viewModel

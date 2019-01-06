@@ -13,6 +13,7 @@ import com.hmomeni.canto.entities.Post
 import com.hmomeni.canto.utils.ViewModelFactory
 import com.hmomeni.canto.utils.app
 import com.hmomeni.canto.utils.iomain
+import com.hmomeni.canto.utils.navigation.PostNavEvent
 import com.hmomeni.canto.vms.SearchViewModel
 import com.jakewharton.rxbinding3.widget.afterTextChangeEvents
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -50,7 +51,8 @@ class SearchFragment : Fragment() {
                         it.dispose()
                         compositeDisposable.remove(it)
                     }
-                    searchDisposable = viewModel.api.searchInGenres(it.editable.toString())
+                    searchDisposable = viewModel.api
+                            .searchInGenres(it.editable.toString())
                             .map { it.data }
                             .iomain()
                             .doOnSubscribe {
@@ -74,6 +76,10 @@ class SearchFragment : Fragment() {
 
         recyclerView.layoutManager = LinearLayoutManager(context!!)
         recyclerView.adapter = adapter
+
+        adapter.clickPublisher.subscribe {
+            viewModel.navEvents.onNext(PostNavEvent(adapter.posts[it]))
+        }.addTo(compositeDisposable)
     }
 
     override fun onDestroyView() {

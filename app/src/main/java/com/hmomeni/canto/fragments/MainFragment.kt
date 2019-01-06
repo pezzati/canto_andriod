@@ -1,29 +1,25 @@
 package com.hmomeni.canto.fragments
 
 import android.arch.lifecycle.ViewModelProviders
-import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
-import com.crashlytics.android.Crashlytics
 import com.hmomeni.canto.R
-import com.hmomeni.canto.activities.ShopActivity
 import com.hmomeni.canto.adapters.rcl.MainRclAdapter
 import com.hmomeni.canto.entities.Banner
 import com.hmomeni.canto.entities.Genre
-import com.hmomeni.canto.entities.Post
-import com.hmomeni.canto.utils.*
+import com.hmomeni.canto.utils.ViewModelFactory
+import com.hmomeni.canto.utils.app
+import com.hmomeni.canto.utils.iomain
 import com.hmomeni.canto.utils.navigation.ListNavEvent
 import com.hmomeni.canto.utils.navigation.PostNavEvent
 import com.hmomeni.canto.vms.MainViewModel
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
 import kotlinx.android.synthetic.main.fragment_main.*
-import retrofit2.HttpException
 import timber.log.Timber
 
 class MainFragment : Fragment() {
@@ -87,40 +83,7 @@ class MainFragment : Fragment() {
                                 viewModel.navEvents.onNext(ListNavEvent("url_path", 0, genre.name, genre.filesLink))
                             } else {
                                 val post = genre.posts!![it.item]
-                                val dialog = ProgressDialog(context!!)
-                                viewModel
-                                        .sing(post)
-                                        .iomain()
-                                        .doOnSubscribe { dialog.show() }
-                                        .doAfterTerminate { dialog.dismiss() }
-                                        .subscribe({
-                                            viewModel.navEvents.onNext(PostNavEvent(post))
-                                        }, {
-                                            if (it is HttpException) {
-                                                when (it.code()) {
-                                                    HTTP_ERROR_PAYMENT_REQUIRED -> {
-                                                        PaymentDialog(context!!, showNegativeButton = true, positiveListener = {
-                                                            startActivity(Intent(context, ShopActivity::class.java))
-                                                        }).show()
-                                                    }
-                                                    HTTP_ERROR_NOT_PURCHASED -> {
-                                                        PaymentDialog(
-                                                                context!!,
-                                                                title = getString(R.string.purchase_song),
-                                                                content = getString(R.string.are_you_sure_to_but_x_tries, 5, post.name),
-                                                                imageUrl = post.coverPhoto?.link,
-                                                                showNegativeButton = true,
-                                                                positiveButtonText = getString(R.string.yes_buy),
-                                                                positiveListener = {
-                                                                    purchaseSong(post)
-                                                                },
-                                                                overlayText = "5X"
-                                                        ).show()
-                                                    }
-                                                }
-                                            }
-                                            Timber.e(it)
-                                        }).addTo(compositeDisposable)
+                                viewModel.navEvents.onNext(PostNavEvent(post))
                             }
 
                         }
@@ -134,26 +97,6 @@ class MainFragment : Fragment() {
         recyclerView.layoutManager = LinearLayoutManager(recyclerView.context)
         recyclerView.adapter = adapter
 
-    }
-
-    private fun purchaseSong(post: Post) {
-        val dialog = ProgressDialog(context!!)
-        viewModel.purchaseSong(post)
-                .iomain()
-                .doOnSubscribe { dialog.show() }
-                .doAfterTerminate { dialog.dismiss() }
-                .subscribe({
-                    viewModel.navEvents.onNext(PostNavEvent(post))
-                }, {
-                    if (it is HttpException && it.code() == HTTP_ERROR_PAYMENT_REQUIRED) {
-                        PaymentDialog(context!!, showNegativeButton = true, positiveListener = {
-                            startActivity(Intent(context, ShopActivity::class.java))
-                        }).show()
-                    } else {
-                        Toast.makeText(context, R.string.purchase_song_failed, Toast.LENGTH_SHORT).show()
-                        Crashlytics.logException(it)
-                    }
-                }).addTo(compositeDisposable)
     }
 
     override fun onDestroy() {

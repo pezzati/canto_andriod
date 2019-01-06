@@ -1,18 +1,27 @@
 package com.hmomeni.canto.activities
 
+import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
+import com.crashlytics.android.Crashlytics
 import com.hmomeni.canto.App
 import com.hmomeni.canto.R
+import com.hmomeni.canto.entities.Post
 import com.hmomeni.canto.fragments.ListFragment
-import com.hmomeni.canto.utils.UserSession
+import com.hmomeni.canto.utils.*
 import com.hmomeni.canto.utils.navigation.*
+import com.hmomeni.canto.vms.MainViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import io.reactivex.processors.PublishProcessor
+import io.reactivex.rxkotlin.addTo
 import kotlinx.android.synthetic.main.activity_main.*
+import retrofit2.HttpException
+import timber.log.Timber
 import javax.inject.Inject
 
 class MainActivity : BaseActivity() {
@@ -22,12 +31,17 @@ class MainActivity : BaseActivity() {
     @Inject
     lateinit var userSession: UserSession
 
+    private lateinit var viewModel: MainViewModel
+
     private lateinit var navController: NavController
+
+    private val compositeDisposable = CompositeDisposable()
 
     private var navDisposable: Disposable? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        viewModel = ViewModelProviders.of(this, ViewModelFactory(app()))[MainViewModel::class.java]
 
         (application as App).di.inject(this)
 
@@ -56,10 +70,7 @@ class MainActivity : BaseActivity() {
                             navController.navigate(R.id.action_mainFragment_to_searchFragment)
                         }
                         is PostNavEvent -> {
-                            if (navController.currentDestination!!.id != R.id.mainFragment) {
-                                navController.popBackStack(R.id.mainFragment, false)
-                            }
-                            navController.navigate(R.id.action_mainFragment_to_recorderFragment, Bundle().apply { putInt("post_id", it.post.id) })
+                            openPost(it.post)
                         }
                         is ProfileEvent -> {
                             if (navController.currentDestination!!.id != R.id.mainFragment) {
@@ -104,8 +115,69 @@ class MainActivity : BaseActivity() {
 
     }
 
+    private fun openPost(post: Post) {
+        val dialog = ProgressDialog(this)
+        viewModel
+                .sing(post)
+                .iomain()
+                .doOnSubscribe { dialog.show() }
+                .doAfterTerminate { dialog.dismiss() }
+                .subscribe({
+                    if (navController.currentDestination!!.id != R.id.mainFragment) {
+                        navController.popBackStack(R.id.mainFragment, false)
+                    }
+                    navController.navigate(R.id.action_mainFragment_to_recorderFragment, Bundle().apply { putInt("post_id", post.id) })
+                }, {
+                    if (it is HttpException) {
+                        when (it.code()) {
+                            HTTP_ERROR_PAYMENT_REQUIRED -> {
+                                PaymentDialog(this, showNegativeButton = true, positiveListener = {
+                                    startActivity(Intent(this, ShopActivity::class.java))
+                                }).show()
+                            }
+                            HTTP_ERROR_NOT_PURCHASED -> {
+                                PaymentDialog(
+                                        this,
+                                        title = getString(R.string.purchase_song),
+                                        content = getString(R.string.are_you_sure_to_but_x_tries, 5, post.name),
+                                        imageUrl = post.coverPhoto?.link,
+                                        showNegativeButton = true,
+                                        positiveButtonText = getString(R.string.yes_buy),
+                                        positiveListener = {
+                                            purchaseSong(post)
+                                        },
+                                        overlayText = "5X"
+                                ).show()
+                            }
+                        }
+                    }
+                    Timber.e(it)
+                }).addTo(compositeDisposable)
+    }
+
+    private fun purchaseSong(post: Post) {
+        val dialog = ProgressDialog(this)
+        viewModel.purchaseSong(post)
+                .iomain()
+                .doOnSubscribe { dialog.show() }
+                .doAfterTerminate { dialog.dismiss() }
+                .subscribe({
+                    viewModel.navEvents.onNext(PostNavEvent(post))
+                }, {
+                    if (it is HttpException && it.code() == HTTP_ERROR_PAYMENT_REQUIRED) {
+                        PaymentDialog(this, showNegativeButton = true, positiveListener = {
+                            startActivity(Intent(this, ShopActivity::class.java))
+                        }).show()
+                    } else {
+                        Toast.makeText(this, R.string.purchase_song_failed, Toast.LENGTH_SHORT).show()
+                        Crashlytics.logException(it)
+                    }
+                }).addTo(compositeDisposable)
+    }
+
     override fun onDestroy() {
         navDisposable?.dispose()
+        compositeDisposable.clear()
         super.onDestroy()
     }
 
