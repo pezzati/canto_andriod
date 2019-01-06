@@ -14,6 +14,8 @@ import com.hmomeni.canto.vms.PaymentViewModel
 import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.activity_shop.*
 import timber.log.Timber
+import java.text.NumberFormat
+import java.util.*
 
 class ShopActivity : BaseActivity() {
 
@@ -35,6 +37,8 @@ class ShopActivity : BaseActivity() {
             }
         }
         setContentView(R.layout.activity_shop)
+
+        currentBalance.text = NumberFormat.getInstance(Locale.ENGLISH).format(viewModel.userInventory.coins)
 
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = mAdapter
