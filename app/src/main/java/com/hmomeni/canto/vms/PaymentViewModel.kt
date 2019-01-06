@@ -42,7 +42,8 @@ class PaymentViewModel : ViewModel(), DIComponent.Injectable {
     fun verifyPayment(invoiceId: String, paymentToken: String): Completable {
         pack.paymentToken = paymentToken
         pack.invoiceId = invoiceId
-        val map = makeMap().add("serial_number", pack.invoiceId!!)
+        val map = makeMap()
+                .add("serial_number", pack.invoiceId!!)
                 .add("ref_id", paymentToken)
 
         return api.verifyPayment(map.body())
