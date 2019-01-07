@@ -19,6 +19,7 @@ import com.hmomeni.canto.entities.MuxJob
 import com.hmomeni.canto.entities.PROJECT_TYPE_DUBSMASH
 import com.hmomeni.canto.entities.PROJECT_TYPE_SINGING
 import com.hmomeni.canto.services.MuxerService
+import com.hmomeni.canto.utils.CantoDialog
 import com.hmomeni.canto.utils.getDuration
 import com.hmomeni.canto.utils.views.VerticalSlider
 import kotlinx.android.synthetic.main.activity_edit.*
@@ -116,6 +117,7 @@ class EditActivity : BaseFullActivity(), View.OnClickListener {
         mediaPlayer.setDataSource(videoFile.absolutePath)
 
         mediaPlayer.setOnPreparedListener {
+            mediaPlayer.seekTo(0)
             applyTransformation()
         }
 
@@ -279,12 +281,8 @@ class EditActivity : BaseFullActivity(), View.OnClickListener {
     }
 
     private fun applyEffects() {
-        when (Effect()) {
-            0 -> {
-            }
-            else -> {
-                SaveEffect(micFile.absolutePath, File(baseDir, "mic-effect.wav").absolutePath)
-            }
+        if (Effect() != 0) {
+            SaveEffect(micFile.absolutePath, File(baseDir, "mic-effect.wav").absolutePath)
         }
     }
 
@@ -303,6 +301,11 @@ class EditActivity : BaseFullActivity(), View.OnClickListener {
             }
 
             MuxerService.startJob(this, MuxJob(type, post.id, inputFiles, outFile.absolutePath))
+            runOnUiThread {
+                CantoDialog(this, getString(R.string.congrats), getString(R.string.your_project_is_now_being_processed), positiveListener = {
+                    finish()
+                }).show()
+            }
         }
 
     }

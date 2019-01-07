@@ -2,6 +2,7 @@ package com.hmomeni.canto.services
 
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.app.PendingIntent
 import android.app.Service
 import android.content.Context
 import android.content.Intent
@@ -12,6 +13,7 @@ import android.support.v4.app.NotificationCompat
 import android.support.v4.app.NotificationManagerCompat
 import android.widget.Toast
 import com.hmomeni.canto.R
+import com.hmomeni.canto.activities.MainActivity
 import com.hmomeni.canto.activities.RATIO_FULLSCREEN
 import com.hmomeni.canto.entities.MuxJob
 import com.hmomeni.canto.entities.PROJECT_TYPE_DUBSMASH
@@ -23,6 +25,7 @@ import com.hmomeni.canto.utils.iomain
 import com.hmomeni.canto.vms.EditViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
 import timber.log.Timber
+import java.io.File
 
 class MuxerService : Service() {
     override fun onBind(intent: Intent?): IBinder? {
@@ -120,6 +123,9 @@ class MuxerService : Service() {
                     object : FFcommandExecuteResponseHandler {
                         override fun onFinish() {
                             Timber.d("Mux finished")
+                            job.inputFiles.forEach {
+                                Timber.d("Deleting %s, %b", it, File(it).delete())
+                            }
                         }
 
                         override fun onSuccess(message: String?) {
@@ -177,6 +183,11 @@ class MuxerService : Service() {
     }
 
     private fun createNotification(finish: Boolean) {
+
+        val pendingIntent = PendingIntent.getActivity(this, hashCode(), Intent(this, MainActivity::class.java).apply {
+            putExtra("target", "profile")
+        }, PendingIntent.FLAG_UPDATE_CURRENT)
+
         val nBuilder = NotificationCompat.Builder(this, CHANNEL_ID)
                 .setContentTitle(getString(R.string.canto))
                 .setContentText(getString(R.string.muxing_project))
@@ -184,9 +195,11 @@ class MuxerService : Service() {
                 .setLargeIcon(BitmapFactory.decodeResource(resources, R.drawable.ic_canto_logo))
 
         if (finish) {
+            nBuilder.setContentIntent(pendingIntent)
             nBuilder.setContentText(getString(R.string.muxing_done))
         }
         if (finish) {
+            stopForeground(false)
             mNotificationManager.notify(hashCode(), nBuilder.build())
         } else {
             startForeground(hashCode(), nBuilder.build())
