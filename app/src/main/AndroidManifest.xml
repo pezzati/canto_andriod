@@ -28,7 +28,8 @@
                 android:resource="@xml/filepaths" />
         </provider>
 
-        <service android:name=".DownloadService" />
+        <service android:name=".services.DownloadService" />
+        <service android:name=".services.MuxerService" />
 
         <activity
             android:name=".activities.MainActivity"

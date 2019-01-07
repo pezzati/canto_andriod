@@ -1,4 +1,4 @@
-package com.hmomeni.canto
+package com.hmomeni.canto.services
 
 import android.app.Service
 import android.content.Context
@@ -40,7 +40,7 @@ class DownloadService : Service() {
     }
 
 
-    var downloadUrl: String? = ""
+    private var downloadUrl: String? = ""
     private var isCanceled = false
     @Inject
     lateinit var downloadEvents: PublishProcessor<DownloadEvent>
@@ -93,7 +93,7 @@ class DownloadService : Service() {
 
 
             val fileLength = c.contentLength
-            var downloded: Long = 0
+            var downloaded: Long = 0
 
             onDownloadStarted()
 
@@ -108,9 +108,9 @@ class DownloadService : Service() {
                     onDownloadCanceled()
                     return
                 }
-                val percent = downloded / fileLength.toFloat() * 100
+                val percent = downloaded / fileLength.toFloat() * 100
                 onProgressUpdate(percent.toInt())
-                downloded += read.toLong()
+                downloaded += read.toLong()
                 fileOutput.write(buffer, 0, read)
                 read = inputStream.read(buffer)
             }

@@ -1,20 +1,25 @@
 package com.hmomeni.canto.vms
 
 import android.arch.lifecycle.ViewModel
+import com.hmomeni.canto.App
+import com.hmomeni.canto.api.Api
 import com.hmomeni.canto.di.DIComponent
 import com.hmomeni.canto.entities.*
 import com.hmomeni.canto.persistence.PostDao
 import com.hmomeni.canto.persistence.ProjectDao
 import com.hmomeni.canto.persistence.TrackDao
 import io.reactivex.Completable
-import java.io.File
+import io.reactivex.Single
 import javax.inject.Inject
 
-class EditViewModel : ViewModel(), DIComponent.Injectable {
+class EditViewModel() : ViewModel(), DIComponent.Injectable {
     override fun inject(diComponent: DIComponent) {
         diComponent.inject(this)
     }
 
+    constructor(app: App) : this() {
+        app.di.inject(this)
+    }
 
     @Inject
     lateinit var projectDao: ProjectDao
@@ -22,11 +27,18 @@ class EditViewModel : ViewModel(), DIComponent.Injectable {
     lateinit var postDao: PostDao
     @Inject
     lateinit var trackDao: TrackDao
+    @Inject
+    lateinit var api: Api
 
-    fun saveDubsmash(finalFile: File, post: FullPost, ratio: Int): Completable {
+    fun getPost(postId: Long): Single<FullPost> = postDao.getPost(postId.toLong())
+            .onErrorResumeNext {
+                api.getSinglePost(postId.toInt())
+            }
+
+    fun saveDubsmash(finalFile: String, post: FullPost, ratio: Int): Completable {
         return Completable.create {
 
-            val pid = postDao.insertIgnore(post)
+            postDao.insertIgnore(post)
 
             val project = Project(
                     name = post.name,
@@ -40,7 +52,7 @@ class EditViewModel : ViewModel(), DIComponent.Injectable {
                     projectId = pId,
                     type = TRACK_TYPE_FINAL,
                     index = 0,
-                    filePath = finalFile.absolutePath,
+                    filePath = finalFile,
                     ratio = ratio
             )
 
@@ -50,7 +62,7 @@ class EditViewModel : ViewModel(), DIComponent.Injectable {
         }
     }
 
-    fun saveSinging(finalFile: File, post: FullPost, ratio: Int): Completable {
+    fun saveSinging(finalFile: String, post: FullPost, ratio: Int): Completable {
         return Completable.create {
 
             postDao.insertIgnore(post)
@@ -67,7 +79,7 @@ class EditViewModel : ViewModel(), DIComponent.Injectable {
                     projectId = pId,
                     type = TRACK_TYPE_FINAL,
                     index = 0,
-                    filePath = finalFile.absolutePath,
+                    filePath = finalFile,
                     ratio = ratio
             )
 

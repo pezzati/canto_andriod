@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "d09f412d937e33034b08e081b44c0582",
+    "identityHash": "e5d4cdc61597feea09b9acdde58bf0af",
     "entities": [
       {
         "tableName": "Project",
@@ -115,7 +115,7 @@
       },
       {
         "tableName": "FullPost",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `name` TEXT NOT NULL, `description` TEXT, `type` TEXT NOT NULL, `isPremium` INTEGER NOT NULL, `isFavorite` INTEGER NOT NULL, `like` INTEGER NOT NULL, `popularityRate` INTEGER NOT NULL, `link` TEXT NOT NULL, `createdDate` TEXT, `likedIt` INTEGER NOT NULL, `artist` TEXT NOT NULL, `content` TEXT NOT NULL, `genre` TEXT, `coverPhoto` TEXT, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `name` TEXT NOT NULL, `isPremium` INTEGER NOT NULL, `link` TEXT, `likedIt` INTEGER NOT NULL, `artist` TEXT, `content` TEXT, `coverPhoto` TEXT, `price` INTEGER NOT NULL, `count` INTEGER NOT NULL, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "id",
@@ -130,50 +130,14 @@
             "notNull": true
           },
           {
-            "fieldPath": "description",
-            "columnName": "description",
-            "affinity": "TEXT",
-            "notNull": false
-          },
-          {
-            "fieldPath": "type",
-            "columnName": "type",
-            "affinity": "TEXT",
-            "notNull": true
-          },
-          {
             "fieldPath": "isPremium",
             "columnName": "isPremium",
             "affinity": "INTEGER",
             "notNull": true
           },
           {
-            "fieldPath": "isFavorite",
-            "columnName": "isFavorite",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "like",
-            "columnName": "like",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "popularityRate",
-            "columnName": "popularityRate",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
             "fieldPath": "link",
             "columnName": "link",
-            "affinity": "TEXT",
-            "notNull": true
-          },
-          {
-            "fieldPath": "createdDate",
-            "columnName": "createdDate",
             "affinity": "TEXT",
             "notNull": false
           },
@@ -187,17 +151,11 @@
             "fieldPath": "artist",
             "columnName": "artist",
             "affinity": "TEXT",
-            "notNull": true
+            "notNull": false
           },
           {
             "fieldPath": "content",
             "columnName": "content",
-            "affinity": "TEXT",
-            "notNull": true
-          },
-          {
-            "fieldPath": "genre",
-            "columnName": "genre",
             "affinity": "TEXT",
             "notNull": false
           },
@@ -206,6 +164,18 @@
             "columnName": "coverPhoto",
             "affinity": "TEXT",
             "notNull": false
+          },
+          {
+            "fieldPath": "price",
+            "columnName": "price",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "count",
+            "columnName": "count",
+            "affinity": "INTEGER",
+            "notNull": true
           }
         ],
         "primaryKey": {
@@ -270,7 +240,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"d09f412d937e33034b08e081b44c0582\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"e5d4cdc61597feea09b9acdde58bf0af\")"
     ]
   }
 }

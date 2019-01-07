@@ -112,7 +112,7 @@ class VideoPlayActivity : BaseFullActivity(), View.OnClickListener {
         val track = triple.third
 
         filePath = track.filePath
-        artistName.text = post.artist.name
+        artistName.text = post.artist?.name
         trackName.text = post.name
 
         GlideApp.with(this)

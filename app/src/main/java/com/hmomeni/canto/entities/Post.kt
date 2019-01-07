@@ -5,56 +5,32 @@ import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
 
 data class Post(
-        @field:SerializedName("id")
+        @SerializedName("id")
         val id: Int,
-        @field:SerializedName("name")
-        val name: String? = null,
-        @field:SerializedName("is_favorite")
-        val isFavorite: Boolean = false,
-        @field:SerializedName("like")
-        val like: Int = 0,
-        @field:SerializedName("popularity_rate")
-        val popularityRate: Int = 0,
-        @field:SerializedName("link")
-        val link: String? = null,
-        @field:SerializedName("description")
-        val description: String? = null,
-        @field:SerializedName("type")
-        val type: String? = null,
-        @field:SerializedName("content")
-        val content: String? = null,
-        /*@field:SerializedName("tags")
-        val tags: List<String>? = null,*/
-        @field:SerializedName("is_premium")
+        @SerializedName("name")
+        val name: String,
+        @SerializedName("is_premium")
         val isPremium: Boolean = false,
-        @field:SerializedName("created_date")
-        val createdDate: String = "",
-        @field:SerializedName("liked_it")
-        val likedIt: Boolean = false,
-        @field:SerializedName("artist")
+        @SerializedName("artist")
         val artist: Artist? = null,
-        @field:SerializedName("genre")
+        @SerializedName("genre")
         val genre: Genre? = null,
-        @field:SerializedName("cover_photo")
-        val coverPhoto: CoverPhoto? = null
+        @SerializedName("cover_photo")
+        val coverPhoto: CoverPhoto? = null,
+        @SerializedName("price")
+        var price: Long,
+        @SerializedName("count")
+        var count: Int
 ) : Parcelable {
     constructor(source: Parcel) : this(
             source.readInt(),
-            source.readString(),
-            1 == source.readInt(),
-            source.readInt(),
-            source.readInt(),
-            source.readString(),
-            source.readString(),
-            source.readString(),
-            source.readString(),
-//            source.createStringArrayList(),
-            1 == source.readInt(),
-            source.readString(),
+            source.readString()!!,
             1 == source.readInt(),
             source.readParcelable<Artist>(Artist::class.java.classLoader),
             source.readParcelable<Genre>(Genre::class.java.classLoader),
-            source.readParcelable<CoverPhoto>(CoverPhoto::class.java.classLoader)
+            source.readParcelable<CoverPhoto>(CoverPhoto::class.java.classLoader),
+            source.readLong(),
+            source.readInt()
     )
 
     override fun describeContents() = 0
@@ -62,20 +38,12 @@ data class Post(
     override fun writeToParcel(dest: Parcel, flags: Int) = with(dest) {
         writeInt(id)
         writeString(name)
-        writeInt((if (isFavorite) 1 else 0))
-        writeInt(like)
-        writeInt(popularityRate)
-        writeString(link)
-        writeString(description)
-        writeString(type)
-        writeString(content)
-//        writeStringList(tags)
         writeInt((if (isPremium) 1 else 0))
-        writeString(createdDate)
-        writeInt((if (likedIt) 1 else 0))
         writeParcelable(artist, 0)
         writeParcelable(genre, 0)
         writeParcelable(coverPhoto, 0)
+        writeLong(price)
+        writeInt(count)
     }
 
     companion object {

@@ -6,8 +6,10 @@ import android.os.Bundle
 import android.view.View
 import android.view.WindowManager
 import android.widget.Toast
-import com.hmomeni.canto.*
+import com.hmomeni.canto.App
+import com.hmomeni.canto.R
 import com.hmomeni.canto.entities.FullPost
+import com.hmomeni.canto.services.*
 import com.hmomeni.canto.utils.DownloadEvent
 import com.hmomeni.canto.utils.app
 import com.hmomeni.canto.utils.views.RecordButton
@@ -48,7 +50,7 @@ class KaraokeActivity : BaseActivity() {
                     handleDownloadEvents(it)
                 }
 
-        with(post.content) {
+        with(post.content!!) {
             val fileUrl = if (!originalFileUrl.isEmpty()) {
                 originalFileUrl
             } else {

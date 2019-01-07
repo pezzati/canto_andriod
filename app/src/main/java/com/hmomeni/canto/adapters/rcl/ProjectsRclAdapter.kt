@@ -53,7 +53,7 @@ class ProjectsRclAdapter(private val projects: List<CompleteProject>) : Recycler
                     .rounded(dpToPx(15))
                     .into(itemView.preview)
 
-            itemView.artistName.text = project.post.artist.name
+            itemView.artistName.text = project.post.artist?.name
             itemView.trackName.text = project.post.name
         }
     }
@@ -78,7 +78,7 @@ class ProjectsRclAdapter(private val projects: List<CompleteProject>) : Recycler
             }
 
 
-            itemView.artistName.text = project.post.artist.name
+            itemView.artistName.text = project.post.artist?.name
             itemView.trackName.text = project.post.name
         }
     }

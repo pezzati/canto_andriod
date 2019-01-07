@@ -10,12 +10,14 @@ import android.view.TextureView
 import android.view.View
 import android.widget.Toast
 import com.azoft.carousellayoutmanager.CarouselLayoutManager
-import com.hmomeni.canto.*
+import com.hmomeni.canto.App
+import com.hmomeni.canto.R
 import com.hmomeni.canto.adapters.rcl.LyricRclAdapter
 import com.hmomeni.canto.entities.FullPost
 import com.hmomeni.canto.entities.MidiItem
 import com.hmomeni.canto.entities.PROJECT_TYPE_DUBSMASH
 import com.hmomeni.canto.entities.PROJECT_TYPE_SINGING
+import com.hmomeni.canto.services.*
 import com.hmomeni.canto.utils.DownloadEvent
 import com.hmomeni.canto.utils.app
 import com.hmomeni.canto.utils.getBitmapFromVectorDrawable
@@ -105,7 +107,7 @@ class DubsmashActivity : CameraActivity() {
         post = App.gson.fromJson(extras.getString(INTENT_EXTRA_POST), FullPost::class.java)
 
 
-        midiItems = post.content.midi!!.filter { it.text != "\n" }
+        midiItems = post.content!!.midi!!.filter { it.text != "\n" }
 
         timeMap = preProcessLyric(midiItems)
 
@@ -118,7 +120,7 @@ class DubsmashActivity : CameraActivity() {
 
         setContentView(R.layout.activity_dubsmash)
 
-        with(post.content) {
+        with(post.content!!) {
             fileUrl = if (!originalFileUrl.isEmpty()) {
                 originalFileUrl
             } else {

@@ -12,56 +12,40 @@ import com.hmomeni.canto.persistence.typeconvertors.PostTypeConvertor
 data class FullPost(
         @PrimaryKey(autoGenerate = false)
         @SerializedName("id")
-        val id: Long,
+        var id: Long,
         @SerializedName("name")
-        val name: String,
-        @SerializedName("description")
-        val description: String?,
-        @SerializedName("type")
-        val type: String,
+        var name: String,
         @SerializedName("is_premium")
-        val isPremium: Boolean = false,
-        @SerializedName("is_favorite")
-        val isFavorite: Boolean = false,
-        @SerializedName("like")
-        val like: Int = 0,
-        @SerializedName("popularity_rate")
-        val popularityRate: Int = 0,
+        var isPremium: Boolean = false,
         @SerializedName("link")
-        val link: String,
-        @SerializedName("created_date")
-        val createdDate: String? = null,
+        var link: String? = null,
         @SerializedName("liked_it")
-        val likedIt: Boolean = false,
+        var likedIt: Boolean = false,
         @TypeConverters(PostTypeConvertor::class)
         @SerializedName("artist")
-        val artist: Artist,
+        var artist: Artist? = null,
         @TypeConverters(PostTypeConvertor::class)
         @SerializedName("content")
-        val content: Content,
-        @TypeConverters(PostTypeConvertor::class)
-        @SerializedName("genre")
-        val genre: Genre? = null,
+        var content: Content? = null,
         @TypeConverters(PostTypeConvertor::class)
         @SerializedName("cover_photo")
-        val coverPhoto: CoverPhoto? = null
+        var coverPhoto: CoverPhoto? = null,
+        @SerializedName("price")
+        var price: Long,
+        @SerializedName("count")
+        var count: Int
 ) : Parcelable {
     constructor(source: Parcel) : this(
             source.readLong(),
-            source.readString(),
-            source.readString(),
-            source.readString(),
+            source.readString()!!,
             1 == source.readInt(),
-            1 == source.readInt(),
-            source.readInt(),
-            source.readInt(),
-            source.readString(),
             source.readString(),
             1 == source.readInt(),
             source.readParcelable<Artist>(Artist::class.java.classLoader),
             source.readParcelable<Content>(Content::class.java.classLoader),
-            source.readParcelable<Genre>(Genre::class.java.classLoader),
-            source.readParcelable<CoverPhoto>(CoverPhoto::class.java.classLoader)
+            source.readParcelable<CoverPhoto>(CoverPhoto::class.java.classLoader),
+            source.readLong(),
+            source.readInt()
     )
 
     override fun describeContents() = 0
@@ -69,19 +53,14 @@ data class FullPost(
     override fun writeToParcel(dest: Parcel, flags: Int) = with(dest) {
         writeLong(id)
         writeString(name)
-        writeString(description)
-        writeString(type)
         writeInt((if (isPremium) 1 else 0))
-        writeInt((if (isFavorite) 1 else 0))
-        writeInt(like)
-        writeInt(popularityRate)
         writeString(link)
-        writeString(createdDate)
         writeInt((if (likedIt) 1 else 0))
         writeParcelable(artist, 0)
         writeParcelable(content, 0)
-        writeParcelable(genre, 0)
         writeParcelable(coverPhoto, 0)
+        writeLong(price)
+        writeInt(count)
     }
 
     companion object {
