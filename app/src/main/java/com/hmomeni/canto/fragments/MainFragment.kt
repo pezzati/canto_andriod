@@ -1,6 +1,8 @@
 package com.hmomeni.canto.fragments
 
 import android.arch.lifecycle.ViewModelProviders
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
@@ -71,10 +73,15 @@ class MainFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         if (adapter == null) {
-            adapter = MainRclAdapter(banners, genres).also {
-                it.clickPublisher.subscribe {
+            adapter = MainRclAdapter(banners, genres).also { adapter ->
+                adapter.clickPublisher.subscribe {
                     when (it.type) {
                         MainRclAdapter.ClickEvent.Type.BANNER -> {
+                            val banner = adapter.banners[it.item]
+                            when {
+                                banner.contentType == "multi" -> viewModel.navEvents.onNext(ListNavEvent("url_path", 0, banner.title, banner.link))
+                                banner.contentType == "redirect" -> startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(banner.link)))
+                            }
                         }
                         MainRclAdapter.ClickEvent.Type.GENRE -> {
                             val pos = it.row - 1

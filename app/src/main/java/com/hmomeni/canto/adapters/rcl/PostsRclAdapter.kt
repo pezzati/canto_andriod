@@ -52,10 +52,7 @@ class PostsRclAdapter(private val posts: List<Post>) : RecyclerView.Adapter<Post
 
             itemView.artistName.text = post.artist!!.name
             itemView.trackName.text = post.name
-            var count = userInventory.items.get(post.id, -1)
-            if (count < 0) {
-                count = post.count
-            }
+            val count = userInventory.items.get(post.id, -1)
             if (count > 0) {
                 itemView.price.text = "X %d".format(Locale.ENGLISH, count)
                 itemView.price.setCompoundDrawables(null, null, null, null)

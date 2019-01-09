@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
-import com.crashlytics.android.Crashlytics
 import com.hmomeni.canto.App
 import com.hmomeni.canto.R
 import com.hmomeni.canto.entities.Post
@@ -22,6 +21,7 @@ import io.reactivex.rxkotlin.addTo
 import kotlinx.android.synthetic.main.activity_main.*
 import retrofit2.HttpException
 import timber.log.Timber
+import java.util.*
 import javax.inject.Inject
 
 class MainActivity : BaseActivity() {
@@ -146,7 +146,7 @@ class MainActivity : BaseActivity() {
                                         positiveListener = {
                                             purchaseSong(post)
                                         },
-                                        overlayText = "5X"
+                                        overlayText = "X%d".format(Locale.ENGLISH, post.count)
                                 ).show()
                             }
                         }

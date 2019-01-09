@@ -61,6 +61,7 @@
         android:layout_marginBottom="8dp"
         android:drawableLeft="@drawable/cantoriom"
         android:fontFamily="@font/roboto_bold"
+        android:drawablePadding="3dp"
         android:text="120"
         android:textSize="10dp"
         app:layout_constraintBottom_toBottomOf="@+id/postImageView"

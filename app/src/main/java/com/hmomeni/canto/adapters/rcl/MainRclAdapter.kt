@@ -18,7 +18,7 @@ import kotlinx.android.synthetic.main.rcl_item_genre.view.*
 const val TYPE_BANNER = 0
 const val TYPE_GENRE = 1
 
-class MainRclAdapter(private val banners: List<Banner>, private val genres: List<Genre>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class MainRclAdapter(val banners: List<Banner>, private val genres: List<Genre>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     val clickPublisher: PublishProcessor<ClickEvent> = PublishProcessor.create()
 
