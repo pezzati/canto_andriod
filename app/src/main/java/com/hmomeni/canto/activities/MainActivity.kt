@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
+import com.crashlytics.android.Crashlytics
 import com.hmomeni.canto.App
 import com.hmomeni.canto.R
 import com.hmomeni.canto.entities.Post

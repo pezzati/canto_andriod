@@ -27,9 +27,30 @@ class ListViewModel : ViewModel(), DIComponent.Injectable {
 
     private var page = 0
 
+    private var nextUrl: String? = null
+
     fun loadPosts(): Completable {
         return api
                 .getGenrePosts(urlPath)
+                .doOnSuccess {
+                    nextUrl = it.next
+                }
+                .map { it.data }
+                .doOnSuccess {
+                    posts.addAll(it)
+                }
+                .ignoreElement()
+    }
+
+    fun loadNextPage(): Completable? {
+        if (nextUrl.isNullOrEmpty()) {
+            return null
+        }
+        return api
+                .getGenrePosts(nextUrl!!)
+                .doOnSuccess {
+                    nextUrl = it.next
+                }
                 .map { it.data }
                 .doOnSuccess {
                     posts.addAll(it)
