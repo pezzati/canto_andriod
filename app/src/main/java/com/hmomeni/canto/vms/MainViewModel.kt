@@ -1,11 +1,15 @@
 package com.hmomeni.canto.vms
 
 import android.arch.lifecycle.ViewModel
+import com.hmomeni.canto.App
+import com.hmomeni.canto.BuildConfig
 import com.hmomeni.canto.api.Api
 import com.hmomeni.canto.di.DIComponent
 import com.hmomeni.canto.entities.Post
 import com.hmomeni.canto.entities.UserInventory
+import com.hmomeni.canto.utils.getDeviceId
 import com.hmomeni.canto.utils.navigation.NavEvent
+import com.hmomeni.canto.utils.toBody
 import io.reactivex.Completable
 import io.reactivex.processors.PublishProcessor
 import javax.inject.Inject
@@ -36,5 +40,15 @@ class MainViewModel : ViewModel(), DIComponent.Injectable {
                     userInventory.update(it)
                 }
                 .ignoreElement()
+    }
+
+    fun handshake(app: App): Completable {
+        val map = mutableMapOf<String, Any>()
+        map["build_version"] = BuildConfig.VERSION_CODE
+        map["device_type"] = "android"
+        map["udid"] = getDeviceId(app)
+        map["one_signal_id"] = ""
+        map["bundle"] = BuildConfig.APPLICATION_ID
+        return api.handshake(map.toBody()).ignoreElement()
     }
 }

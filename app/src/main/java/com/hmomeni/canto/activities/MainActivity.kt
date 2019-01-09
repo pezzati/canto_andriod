@@ -113,7 +113,25 @@ class MainActivity : BaseActivity() {
                 }
             }
         }
+        handshake()
+    }
 
+    private fun handshake() {
+        viewModel.handshake(app())
+                .iomain().subscribe({
+
+                }, {
+                    PaymentDialog(this,
+                            getString(R.string.no_network),
+                            getString(R.string.please_check_internet),
+                            imageResId = R.drawable.no_internet_conation,
+                            showPositiveButton = false,
+                            showNegativeButton = true,
+                            negativeButtonText = getString(R.string.ok),
+                            negativeListener = {
+                                handshake()
+                            }).show()
+                }).addTo(compositeDisposable)
     }
 
     private fun openPost(post: Post) {

@@ -66,4 +66,6 @@
     <string name="muxing_done">Mxuing done</string>
     <string name="congrats">Congratulations!</string>
     <string name="your_project_is_now_being_processed">Your project was successfully recorded and is now being processed and will be available shortly.</string>
+    <string name="no_network">Network Issue</string>
+    <string name="please_check_internet">We\'re having connectivity issues, please check your internet connection.</string>
 </resources>

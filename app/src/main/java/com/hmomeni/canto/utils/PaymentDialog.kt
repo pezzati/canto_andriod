@@ -5,6 +5,7 @@ import android.content.Context
 import android.os.Bundle
 import android.view.View
 import android.view.WindowManager
+import androidx.annotation.DrawableRes
 import com.hmomeni.canto.R
 import kotlinx.android.synthetic.main.dialog_payment.*
 
@@ -13,6 +14,9 @@ class PaymentDialog(
         var title: String? = null,
         var content: String? = null,
         var imageUrl: String? = null,
+        @DrawableRes
+        var imageResId: Int = -1,
+        var showPositiveButton: Boolean = true,
         var showNegativeButton: Boolean = false,
         var positiveButtonText: String? = null,
         var negativeButtonText: String? = null,
@@ -47,11 +51,19 @@ class PaymentDialog(
                     setPadding(dpToPx(16), dpToPx(16), dpToPx(16), dpToPx(16))
                 }
             }
+
+        }
+        if (imageResId > 0) {
+            dialogImage.setImageResource(imageResId)
         }
 
         overlayText?.let {
             overlay.visibility = View.VISIBLE
             overlay.text = overlayText
+        }
+
+        if (!showPositiveButton) {
+            positiveButton.visibility = View.GONE
         }
 
         if (showNegativeButton) {
