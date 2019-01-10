@@ -13,7 +13,9 @@ import com.hmomeni.canto.utils.dpToPx
 import com.hmomeni.canto.utils.rounded
 import io.reactivex.processors.PublishProcessor
 
-class BannerPagerAdapter(private val banners: List<Banner>, private val clickPublisher: PublishProcessor<MainRclAdapter.ClickEvent>) : PagerAdapter() {
+class BannerPagerAdapter(private val clickPublisher: PublishProcessor<MainRclAdapter.ClickEvent>) : PagerAdapter() {
+    lateinit var banners: List<Banner>
+
     override fun instantiateItem(container: ViewGroup, position: Int): Any {
         val padding = dpToPx(8)
         val frameLayout = FrameLayout(container.context).apply {

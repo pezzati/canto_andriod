@@ -52,10 +52,29 @@ class MainRclAdapter(val banners: List<Banner>, private val genres: List<Genre>)
         }
     }
 
-    class BannerHolder(itemView: View, private val clickPublisher: PublishProcessor<ClickEvent>) : RecyclerView.ViewHolder(itemView) {
+    class BannerHolder(itemView: View, clickPublisher: PublishProcessor<ClickEvent>) : RecyclerView.ViewHolder(itemView) {
+
+        private val mAdapter = BannerPagerAdapter(clickPublisher)
+        private var switchPageStarted = false
 
         fun bind(banners: List<Banner>) {
-            itemView.bannerViewPager.adapter = BannerPagerAdapter(banners, clickPublisher)
+            mAdapter.banners = banners
+            itemView.bannerViewPager.adapter = mAdapter
+            if (!switchPageStarted) {
+                switchPage()
+                switchPageStarted = true
+            }
+        }
+
+        private fun switchPage() {
+            itemView.postDelayed({
+                var currentItem = itemView.bannerViewPager.currentItem
+                if (currentItem >= mAdapter.banners.size - 1) {
+                    currentItem = -1
+                }
+                itemView.bannerViewPager.currentItem = ++currentItem
+                switchPage()
+            }, 5000)
         }
     }
 
