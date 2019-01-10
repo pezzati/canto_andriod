@@ -11,6 +11,7 @@ import com.hmomeni.canto.R
 import com.hmomeni.canto.entities.FullPost
 import com.hmomeni.canto.services.*
 import com.hmomeni.canto.utils.DownloadEvent
+import com.hmomeni.canto.utils.GlideApp
 import com.hmomeni.canto.utils.app
 import com.hmomeni.canto.utils.views.RecordButton
 import com.hmomeni.canto.utils.views.VerticalSlider
@@ -51,12 +52,7 @@ class KaraokeActivity : BaseActivity() {
                 }
 
         with(post.content!!) {
-            val fileUrl = if (!originalFileUrl.isEmpty()) {
-                originalFileUrl
-            } else {
-                karaokeFileUrl
-            }
-
+            val fileUrl = karaokeFileUrl
             filePath = DownloadService.startDownload(this@KaraokeActivity, fileUrl)
         }
 
@@ -102,6 +98,11 @@ class KaraokeActivity : BaseActivity() {
                 SetReverb(progress / 50f)
             }
         }
+        GlideApp.with(background)
+                .load(R.drawable.lubia)
+                .dontTransform()
+                .into(background)
+        background.startRotation()
     }
 
     override fun onResume() {
