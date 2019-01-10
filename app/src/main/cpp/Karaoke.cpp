@@ -268,3 +268,25 @@ Java_com_hmomeni_canto_activities_KaraokeActivity_IsPlaying(
         return 0;
     }
 }
+
+extern "C" JNIEXPORT void
+Java_com_hmomeni_canto_activities_KaraokeActivity_SeekMS(
+        JNIEnv  __unused *env,
+        jobject  __unused obj,
+        jdouble position) {
+    player->setPosition(position, false, false);
+}
+
+extern "C" JNIEXPORT jdouble
+Java_com_hmomeni_canto_activities_KaraokeActivity_GetDurationMS(
+        JNIEnv  __unused *env,
+        jobject  __unused obj) {
+    return player->durationMs;
+}
+
+extern "C" JNIEXPORT jdouble
+Java_com_hmomeni_canto_activities_KaraokeActivity_GetProgressMS(
+        JNIEnv  __unused *env,
+        jobject  __unused obj) {
+    return player->positionMs;
+}

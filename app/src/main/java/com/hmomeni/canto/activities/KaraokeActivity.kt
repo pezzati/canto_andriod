@@ -3,8 +3,10 @@ package com.hmomeni.canto.activities
 import android.content.Context
 import android.media.AudioManager
 import android.os.Bundle
+import android.os.Handler
 import android.view.View
 import android.view.WindowManager
+import android.widget.SeekBar
 import android.widget.Toast
 import com.hmomeni.canto.App
 import com.hmomeni.canto.R
@@ -61,12 +63,27 @@ class KaraokeActivity : BaseActivity() {
         playBtn.setOnClickListener {
             TogglePlayback()
             if (IsPlaying()) {
+                seekBar.max = GetDurationMS().toInt()
                 playBtn.setImageResource(R.drawable.ic_pause_circle)
+                timer()
             } else {
                 playBtn.setImageResource(R.drawable.ic_play_circle)
             }
         }
-        seekBar.max = 20
+
+        seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                if (fromUser) {
+                    SeekMS(progress.toDouble())
+                }
+            }
+
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {
+            }
+
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {
+            }
+        })
 
         pitchSlider.max = 20
         pitchSlider.progress = 10
@@ -137,6 +154,18 @@ class KaraokeActivity : BaseActivity() {
         OpenFile(filePath, 0, File(filePath).length().toInt())
     }
 
+    private var handler = Handler()
+    private fun timer() {
+        val progressMs = GetProgressMS()
+        seekBar.progress = progressMs.toInt()
+
+        handler.postDelayed({
+            if (IsPlaying()) {
+                timer()
+            }
+        }, 300)
+    }
+
     private fun handleDownloadEvents(event: DownloadEvent) {
         when (event.action) {
             ACTION_DOWNLOAD_START -> {
@@ -170,5 +199,7 @@ class KaraokeActivity : BaseActivity() {
     private external fun SetVolume(vol: Float)
     private external fun SetReverb(amount: Float)
     private external fun IsPlaying(): Boolean
-
+    private external fun SeekMS(percent: Double)
+    private external fun GetDurationMS(): Double
+    private external fun GetProgressMS(): Double
 }
