@@ -2,6 +2,7 @@ package com.hmomeni.canto.activities
 
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.widget.Toast
 import androidx.navigation.NavController
@@ -118,8 +119,35 @@ class MainActivity : BaseActivity() {
 
     private fun handshake() {
         viewModel.handshake(app())
-                .iomain().subscribe({
-
+                .iomain().subscribe({ p ->
+                    when (p.first) {
+                        2 -> {
+                            PaymentDialog(this,
+                                    getString(R.string.update_required),
+                                    getString(R.string.update_suggest_rationale),
+                                    imageResId = R.drawable.update,
+                                    showPositiveButton = true,
+                                    showNegativeButton = true,
+                                    positiveButtonText = getString(R.string.update),
+                                    negativeButtonText = getString(R.string.ask_later),
+                                    positiveListener = {
+                                        startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(p.second)))
+                                    }).show()
+                        }
+                        1 -> PaymentDialog(this,
+                                getString(R.string.update_required),
+                                getString(R.string.update_suggest_rationale),
+                                imageResId = R.drawable.update,
+                                showPositiveButton = true,
+                                showNegativeButton = false,
+                                autoDismiss = false,
+                                positiveButtonText = getString(R.string.update),
+                                positiveListener = {
+                                    if (!p.second.isNullOrEmpty()) {
+                                        startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(p.second)))
+                                    }
+                                }).apply { setCanceledOnTouchOutside(false) }.show()
+                    }
                 }, {
                     PaymentDialog(this,
                             getString(R.string.no_network),
@@ -158,7 +186,7 @@ class MainActivity : BaseActivity() {
                                 PaymentDialog(
                                         this,
                                         title = getString(R.string.purchase_song),
-                                        content = getString(R.string.are_you_sure_to_but_x_tries, 5, post.name),
+                                        content = getString(R.string.are_you_sure_to_but_x_tries, post.count, post.name),
                                         imageUrl = post.coverPhoto?.link,
                                         showNegativeButton = true,
                                         positiveButtonText = getString(R.string.yes_buy),

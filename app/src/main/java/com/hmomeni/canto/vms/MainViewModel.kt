@@ -11,6 +11,7 @@ import com.hmomeni.canto.utils.getDeviceId
 import com.hmomeni.canto.utils.navigation.NavEvent
 import com.hmomeni.canto.utils.toBody
 import io.reactivex.Completable
+import io.reactivex.Single
 import io.reactivex.processors.PublishProcessor
 import javax.inject.Inject
 
@@ -42,13 +43,20 @@ class MainViewModel : ViewModel(), DIComponent.Injectable {
                 .ignoreElement()
     }
 
-    fun handshake(app: App): Completable {
+    fun handshake(app: App): Single<Pair<Int, String?>> {
         val map = mutableMapOf<String, Any>()
         map["build_version"] = BuildConfig.VERSION_CODE
         map["device_type"] = "android"
         map["udid"] = getDeviceId(app)
         map["one_signal_id"] = ""
         map["bundle"] = BuildConfig.APPLICATION_ID
-        return api.handshake(map.toBody()).ignoreElement()
+        return api.handshake(map.toBody()).map {
+            return@map when {
+                it["force_update"].asBoolean -> Pair(1, it["url"].asString)
+                it["suggest_update"].asBoolean -> Pair(2, it["url"].asString)
+                it["token"].asString.startsWith("guest") -> Pair(3, null)
+                else -> Pair(0, null)
+            }
+        }
     }
 }

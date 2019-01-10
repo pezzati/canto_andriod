@@ -59,15 +59,31 @@ class LoginActivity : BaseActivity(), View.OnClickListener {
                         }
                         2 -> {
                             prepareLogin()
-                            CantoDialog(this, getString(R.string.update_required), getString(R.string.update_rationale), autoDismiss = false, positiveListener = {
-                                startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(p.second)))
-                            }, showNegativeButton = true, negativeListener = { d -> d.dismiss() }).show()
+                            PaymentDialog(this,
+                                    getString(R.string.update_required),
+                                    getString(R.string.update_suggest_rationale),
+                                    imageResId = R.drawable.update,
+                                    showPositiveButton = true,
+                                    showNegativeButton = true,
+                                    positiveButtonText = getString(R.string.update),
+                                    negativeButtonText = getString(R.string.ask_later),
+                                    positiveListener = {
+                                        startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(p.second)))
+                                    }).show()
                         }
-                        1 -> CantoDialog(this, getString(R.string.update_required), getString(R.string.update_rationale), autoDismiss = false, positiveListener = {
-                            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(p.second)))
-                        }).apply {
-                            setCanceledOnTouchOutside(false)
-                        }.show()
+                        1 -> PaymentDialog(this,
+                                getString(R.string.update_required),
+                                getString(R.string.update_suggest_rationale),
+                                imageResId = R.drawable.update,
+                                showPositiveButton = true,
+                                showNegativeButton = true,
+                                positiveButtonText = getString(R.string.update),
+                                negativeButtonText = getString(R.string.ask_later),
+                                positiveListener = {
+                                    if (!p.second.isNullOrEmpty()) {
+                                        startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(p.second)))
+                                    }
+                                }).apply { setCanceledOnTouchOutside(false) }.show()
                     }
                 }, {
                     Timber.e(it)

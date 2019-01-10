@@ -121,11 +121,17 @@ class DubsmashActivity : CameraActivity() {
         setContentView(R.layout.activity_dubsmash)
 
         with(post.content!!) {
-            fileUrl = if (!originalFileUrl.isEmpty()) {
+            fileUrl = if (type == PROJECT_TYPE_DUBSMASH) {
                 originalFileUrl
             } else {
                 karaokeFileUrl
             }
+        }
+
+        if (fileUrl.isEmpty()) {
+            Toast.makeText(this, R.string.audio_track_not_found, Toast.LENGTH_SHORT).show()
+            finish()
+            return
         }
 
         filePath = DownloadService.startDownload(this, fileUrl)
