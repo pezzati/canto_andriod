@@ -37,6 +37,7 @@ import com.hmomeni.canto.entities.PROJECT_TYPE_DUBSMASH
 import com.hmomeni.canto.entities.PROJECT_TYPE_KARAOKE
 import com.hmomeni.canto.entities.PROJECT_TYPE_SINGING
 import com.hmomeni.canto.utils.*
+import com.hmomeni.canto.utils.views.RotatingImageView
 import com.karumi.dexter.Dexter
 import com.karumi.dexter.MultiplePermissionsReport
 import com.karumi.dexter.PermissionToken
@@ -173,14 +174,17 @@ class RecorderFragment : Fragment() {
         textureView = TextureView(context!!)
         textureView2 = TextureView(context!!)
 
-        val karaokeView = View(context!!).apply {
-            setBackgroundColor(context!!.resources.getColor(R.color.md_green_400))
-            layoutParams = ViewGroup.LayoutParams(dpToPx(200), dpToPx(365))
+        val karaokeView = RotatingImageView(context!!).apply {
+            //            setBackgroundColor(context!!.resources.getColor(R.color.md_green_400))
+            layoutParams = ViewGroup.LayoutParams(dpToPx(205), dpToPx(365))
+            GlideApp.with(this)
+                    .load(R.drawable.lubia)
+                    .dontTransform()
+                    .into(this)
+            startRotation()
         }
         viewPager.setMultiScreen(0.6f)
         viewPager.setPageTransformer(false, UltraScaleTransformer())
-
-
 
         viewPager.adapter = ModePagerAdapter(context!!, arrayOf(textureView, textureView2, karaokeView))
 

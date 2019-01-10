@@ -10,7 +10,6 @@ import android.text.InputType
 import android.util.Patterns
 import android.view.View
 import android.widget.Toast
-import com.bumptech.glide.Glide
 import com.hmomeni.canto.R
 import com.hmomeni.canto.utils.*
 import com.hmomeni.canto.vms.LoginViewModel
@@ -33,10 +32,6 @@ class LoginActivity : BaseActivity(), View.OnClickListener {
         viewModel = ViewModelProviders.of(this, ViewModelFactory(app()))[LoginViewModel::class.java]
 
         setContentView(R.layout.activity_login)
-
-        Glide.with(this)
-                .load(R.drawable.splash_screen)
-                .into(splashBackground)
 
         phoneBtn.setOnClickListener(this)
         emailBtn.setOnClickListener(this)
@@ -151,7 +146,12 @@ class LoginActivity : BaseActivity(), View.OnClickListener {
         }
         step = 1
         phoneInputWrapper.animate().alpha(1f)
-        cantoWrapper.animate().scaleX(0.8f).scaleY(0.8f).translationYBy(-100f)
+        cantoWrapper.animate().alpha(0f).setListener(object : MyAnimatorListener() {
+            override fun onAnimationEnd(animation: Animator?) {
+                cantoWrapper.visibility = View.GONE
+            }
+
+        })
         buttonsWrapper.animate().alpha(0f).setListener(object : MyAnimatorListener() {
             override fun onAnimationEnd(animation: Animator?) {
                 buttonsWrapper.visibility = View.GONE
@@ -190,7 +190,8 @@ class LoginActivity : BaseActivity(), View.OnClickListener {
         step = 0
         buttonsWrapper.visibility = View.VISIBLE
         phoneInputWrapper.animate().alpha(0f)
-        cantoWrapper.animate().scaleX(1f).scaleY(1f).translationY(0f)
+        cantoWrapper.visibility = View.VISIBLE
+        cantoWrapper.animate().alpha(1f).setListener(null)
         buttonsWrapper.animate().alpha(1f).setListener(object : MyAnimatorListener() {
             override fun onAnimationEnd(animation: Animator?) {
                 phoneInputWrapper.visibility = View.GONE

@@ -6,8 +6,10 @@ import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
+import android.widget.ImageView
 import android.widget.RelativeLayout
 import com.hmomeni.canto.R
+import com.hmomeni.canto.utils.GlideApp
 import com.hmomeni.canto.utils.dpToPx
 import com.hmomeni.canto.utils.views.RoundedRelativeLayout
 
@@ -35,6 +37,16 @@ class ModePagerAdapter(private val context: Context, private val views: Array<Vi
                     addRule(RelativeLayout.CENTER_HORIZONTAL)
                 }
                 setBackgroundResource(R.drawable.ic_record_model)
+            })
+        } else {
+            roundedLayout.addView(ImageView(context).apply {
+                layoutParams = RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT).apply {
+                    addRule(RelativeLayout.CENTER_HORIZONTAL)
+                    addRule(RelativeLayout.CENTER_VERTICAL)
+                }
+                GlideApp.with(this)
+                        .load(R.drawable.karaoke)
+                        .into(this)
             })
         }
 

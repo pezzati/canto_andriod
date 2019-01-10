@@ -10,7 +10,7 @@
     <string name="phone_number">Phone number</string>
     <string name="email">Email</string>
     <string name="google">Google</string>
-    <string name="login_by_phone_number">Login by \n Phone Number</string>
+    <string name="login_by_phone_number">Login by Phone Number</string>
     <string name="accept_the_terms">I have read and accepted the terms and conditions</string>
     <string name="send">Send</string>
     <string name="code_was_sent_to_the_following_number">Code was send to:</string>
@@ -39,7 +39,7 @@
     <string name="cancel">Cancel</string>
     <string name="update_required">Update Required</string>
     <string name="update_rationale">There is a new version of Canto available in market. Please upgrade now.</string>
-    <string name="login_by_email">Login by \n Email</string>
+    <string name="login_by_email">Login by Email</string>
     <string name="invalid_phone_number">Invalid phone number (correct: 09123456789)</string>
     <string name="invalid_email_address">Invalid email address</string>
     <string name="camera_open_failed">Openning your device\'s camera failed, please try again.</string>

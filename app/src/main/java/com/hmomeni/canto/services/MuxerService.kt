@@ -192,7 +192,7 @@ class MuxerService : Service() {
                 .setContentTitle(getString(R.string.canto))
                 .setContentText(getString(R.string.muxing_project))
                 .setSmallIcon(R.drawable.cantoriom)
-                .setLargeIcon(BitmapFactory.decodeResource(resources, R.drawable.ic_canto_logo))
+                .setLargeIcon(BitmapFactory.decodeResource(resources, R.drawable.canto_logo))
 
         if (finish) {
             nBuilder.setContentIntent(pendingIntent)

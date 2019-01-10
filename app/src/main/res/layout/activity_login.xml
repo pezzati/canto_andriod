@@ -6,12 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".activities.LoginActivity">
 
-    <ImageView
-        android:id="@+id/splashBackground"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="centerCrop" />
-
     <LinearLayout
         android:id="@+id/cantoWrapper"
         android:layout_width="wrap_content"
@@ -33,19 +27,21 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:contentDescription="@string/app_name"
-            android:src="@drawable/ic_canto_logo" />
+            android:src="@drawable/canto_logo" />
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:contentDescription="@string/app_name"
-            android:src="@drawable/ic_canto_text" />
+            android:src="@drawable/canto_text" />
 
-        <TextView
+        <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/sing_by_canto" />
+            android:layout_marginTop="8dp"
+            android:contentDescription="@string/sing_by_canto"
+            android:src="@drawable/tagline" />
     </LinearLayout>
 
     <LinearLayout
@@ -121,7 +117,7 @@
     <LinearLayout
         android:id="@+id/phoneInputWrapper"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_marginStart="32dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="32dp"
@@ -137,27 +133,27 @@
 
         <TextView
             android:id="@+id/loginTitle"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="64dp"
+            android:gravity="center"
             android:text="@string/login_by_phone_number" />
 
-        <ProgressBar
-            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
 
         <EditText
             android:id="@+id/phoneInput"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:gravity="start"
+            android:layout_height="40dp"
+            android:layout_marginTop="64dp"
+            android:background="@drawable/login_input_bg"
+            android:gravity="center"
             android:hint="@string/phone_number"
             android:inputType="phone" />
 
         <CheckBox
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
             android:enabled="true"
             android:text="@string/accept_the_terms" />
 
@@ -166,7 +162,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="24dp"
             android:layout_marginEnd="32dp"
             android:background="@drawable/login_phone_btn_bg"
             android:text="@string/send"
@@ -180,13 +176,12 @@
     <LinearLayout
         android:id="@+id/codeInputWrapper"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_marginStart="32dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="32dp"
         android:layout_marginBottom="8dp"
         android:alpha="0"
-        android:gravity="center"
         android:orientation="vertical"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -196,32 +191,32 @@
         app:layout_constraintVertical_bias="0.75">
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="start"
+            android:layout_marginTop="64dp"
+            android:gravity="center"
             android:text="@string/login_by_phone_number" />
 
-        <ProgressBar
-            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:gravity="center"
             android:text="@string/code_was_sent_to_the_following_number" />
 
         <TextView
             android:id="@+id/phoneNumberView"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:gravity="center"
             android:text="+989123456789" />
 
         <EditText
             android:id="@+id/codeInput"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="40dp"
             android:layout_marginTop="16dp"
+            android:background="@drawable/login_input_bg"
             android:gravity="center"
             android:hint="- - - -"
             android:inputType="number"
