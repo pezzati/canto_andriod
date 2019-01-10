@@ -9,6 +9,8 @@ import android.graphics.RectF
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
+import com.hmomeni.canto.R
+import com.hmomeni.canto.utils.getBitmapFromVectorDrawable
 import timber.log.Timber
 
 class TrimView : View {
@@ -41,6 +43,9 @@ class TrimView : View {
         color = Color.parseColor("#FB861F")
         isAntiAlias = true
     }
+
+    private val leftBracket = getBitmapFromVectorDrawable(context, R.drawable.ic_bracket_left)
+    private val rightBracket = getBitmapFromVectorDrawable(context, R.drawable.ic_bracket_right)
     private val bgLine = RectF()
     private val mainLine = RectF()
     private val progressLine = RectF()
@@ -116,8 +121,8 @@ class TrimView : View {
         canvas.drawRect(progressLine, progressPaint)
         canvas.drawRoundRect(leftAnchor, radius, radius, anchorPaint)
         canvas.drawRoundRect(rightAnchor, radius, radius, anchorPaint)
-        canvas.drawText("[", leftAnchor.right - anchorWidth / 2, leftAnchor.bottom - anchorWidth / 2, bracketPaint)
-        canvas.drawText("]", rightAnchor.right - anchorWidth / 2, rightAnchor.bottom - anchorWidth / 2, bracketPaint)
+        canvas.drawBitmap(leftBracket, null, leftAnchor, null)
+        canvas.drawBitmap(rightBracket, null, rightAnchor, null)
     }
 
     private var captured: Captured = Captured.WHOLE
