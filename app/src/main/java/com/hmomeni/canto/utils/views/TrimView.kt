@@ -52,7 +52,7 @@ class TrimView : View {
     private val leftAnchor = RectF()
     private val rightAnchor = RectF()
     private val mainLineHeight = dpToPx(8)
-    private val anchorWidth = dpToPx(24).toFloat()
+    private var anchorWidth: Float = 0f
     private val radius = dpToPx(5).toFloat()
 
     var onTrimChangeListener: TrimChangeListener? = null
@@ -79,9 +79,11 @@ class TrimView : View {
     private val anchorCompensate = 20f
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec)
-        setMeasuredDimension(measuredWidth, anchorWidth.toInt())
         if (measuredWidth > 0 && measuredHeight > 0) {
+            setMeasuredDimension(measuredWidth, measuredHeight)
+            if (anchorWidth == 0f) {
+                anchorWidth = measuredHeight.toFloat()
+            }
             maxPx = (measuredWidth - (2 * anchorWidth)).toInt()
             bgLine.set(
                     anchorWidth,
@@ -112,6 +114,8 @@ class TrimView : View {
 
             calculateLeftandRight(false)
             calculateProgress(false)
+        } else {
+            super.onMeasure(widthMeasureSpec, heightMeasureSpec)
         }
     }
 

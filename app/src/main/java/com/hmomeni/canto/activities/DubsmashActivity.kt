@@ -201,9 +201,15 @@ class DubsmashActivity : CameraActivity() {
         toggleLyricsBtn.setOnClickListener {
             if (lyricRecyclerVIew.visibility == View.GONE) {
                 lyricRecyclerVIew.visibility = View.VISIBLE
+                toggleLyricsBtn.setImageResource(R.drawable.ic_hide_lyric)
             } else {
                 lyricRecyclerVIew.visibility = View.GONE
+                toggleLyricsBtn.setImageResource(R.drawable.ic_show_lyric)
             }
+        }
+
+        closeBtn.setOnClickListener {
+            finish()
         }
 
     }

@@ -4,13 +4,16 @@ import android.content.Context
 import android.media.AudioManager
 import android.os.Bundle
 import android.os.Handler
+import android.util.SparseIntArray
 import android.view.View
-import android.view.WindowManager
 import android.widget.SeekBar
 import android.widget.Toast
+import com.azoft.carousellayoutmanager.CarouselLayoutManager
 import com.hmomeni.canto.App
 import com.hmomeni.canto.R
+import com.hmomeni.canto.adapters.rcl.LyricRclAdapter
 import com.hmomeni.canto.entities.FullPost
+import com.hmomeni.canto.entities.MidiItem
 import com.hmomeni.canto.services.*
 import com.hmomeni.canto.utils.DownloadEvent
 import com.hmomeni.canto.utils.GlideApp
@@ -24,7 +27,7 @@ import kotlinx.android.synthetic.main.activity_karaoke.*
 import java.io.File
 import javax.inject.Inject
 
-class KaraokeActivity : BaseActivity() {
+class KaraokeActivity : BaseFullActivity() {
     init {
         System.loadLibrary("Karaoke")
     }
@@ -32,6 +35,9 @@ class KaraokeActivity : BaseActivity() {
     private lateinit var filePath: String
     private lateinit var post: FullPost
     private var disposable: Disposable? = null
+    private lateinit var timeMap: SparseIntArray
+
+    private lateinit var midiItems: List<MidiItem>
 
     @Inject
     lateinit var downloadEvents: PublishProcessor<DownloadEvent>
@@ -39,12 +45,14 @@ class KaraokeActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         app().di.inject(this)
-
         setContentView(R.layout.activity_karaoke)
-        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 
         val extras = intent.extras!!
         post = App.gson.fromJson(extras.getString(INTENT_EXTRA_POST), FullPost::class.java)
+
+        midiItems = post.content!!.midi!!.filter { it.text != "\n" }
+
+        timeMap = preProcessLyric(midiItems)
 
         disposable = downloadEvents
                 .onBackpressureDrop()
@@ -120,6 +128,27 @@ class KaraokeActivity : BaseActivity() {
                 .dontTransform()
                 .into(background)
         background.startRotation()
+
+        lyricRecyclerVIew.layoutManager = object : CarouselLayoutManager(CarouselLayoutManager.VERTICAL) {
+            override fun canScrollVertically(): Boolean {
+                return false
+            }
+        }
+        lyricRecyclerVIew.adapter = LyricRclAdapter(midiItems)
+
+
+        toggleLyricsBtn.setOnClickListener {
+            if (lyricRecyclerVIew.visibility == View.GONE) {
+                lyricRecyclerVIew.visibility = View.VISIBLE
+                toggleLyricsBtn.setImageResource(R.drawable.ic_hide_lyric)
+            } else {
+                lyricRecyclerVIew.visibility = View.GONE
+                toggleLyricsBtn.setImageResource(R.drawable.ic_show_lyric)
+            }
+        }
+        closeBtn.setOnClickListener {
+            finish()
+        }
     }
 
     override fun onResume() {
@@ -154,11 +183,26 @@ class KaraokeActivity : BaseActivity() {
         OpenFile(filePath, 0, File(filePath).length().toInt())
     }
 
+    private var lastPos = -2
     private var handler = Handler()
     private fun timer() {
         val progressMs = GetProgressMS()
         seekBar.progress = progressMs.toInt()
+        val sec = (progressMs / 1000).toInt()
 
+        val pos = timeMap.get(sec, -1)
+        if (pos >= 0 && lastPos != pos) {
+//            Timber.d("sec=%d, pos=%d, lastPos=%d", sec, pos, lastPos)
+            if (lastPos >= 0) {
+                midiItems[lastPos].active = false
+                lyricRecyclerVIew.adapter!!.notifyItemChanged(lastPos)
+            }
+            midiItems[pos].active = true
+            lyricRecyclerVIew.adapter!!.notifyItemChanged(pos)
+
+            lyricRecyclerVIew.scrollToPosition(pos)
+            lastPos = pos
+        }
         handler.postDelayed({
             if (IsPlaying()) {
                 timer()
@@ -186,6 +230,14 @@ class KaraokeActivity : BaseActivity() {
 
             }
         }
+    }
+
+    private fun preProcessLyric(midiItems: List<MidiItem>): SparseIntArray {
+        val timeMap = SparseIntArray(midiItems.size)
+        midiItems.forEachIndexed { i, v ->
+            timeMap.append(v.time.toInt(), i)
+        }
+        return timeMap
     }
 
     private external fun StartAudio(samplerate: Int, buffersize: Int)
