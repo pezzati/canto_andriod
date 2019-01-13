@@ -98,6 +98,7 @@ class ListFragment : Fragment() {
         toggleListMode.setOnClickListener {
             when (isList) {
                 false -> {
+                    toggleListMode.setImageResource(R.drawable.ic_list_view)
                     if (listAdapter == null) {
                         listAdapter = ListPostsRclAdapter(viewModel.posts, R.layout.rcl_item_list_post)
                     }
@@ -109,6 +110,7 @@ class ListFragment : Fragment() {
                     isList = true
                 }
                 true -> {
+                    toggleListMode.setImageResource(R.drawable.ic_list_card_view)
                     if (gridAdapter == null) {
                         gridAdapter = ListPostsRclAdapter(viewModel.posts, R.layout.rcl_item_grid_post)
                     }

@@ -20,7 +20,7 @@ class BannerPagerAdapter(private val clickPublisher: PublishProcessor<MainRclAda
         val padding = dpToPx(8)
         val frameLayout = FrameLayout(container.context).apply {
             layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
-            setPadding(padding, padding, padding, padding)
+            setPadding(padding, padding, padding, 0)
         }
         val imageView = ImageView(container.context).apply {
             layoutParams = FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)

@@ -34,7 +34,7 @@ class ListPostsRclAdapter(val posts: List<Post>, private val layoutResId: Int) :
             post.coverPhoto?.let {
                 GlideApp.with(itemView)
                         .load(it.link)
-                        .rounded(dpToPx(15))
+                        .rounded(dpToPx(10))
                         .into(itemView.postImageView)
             }
 
