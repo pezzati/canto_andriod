@@ -6,7 +6,7 @@
     <string name="description_info">اطلاعات</string>
     <string name="permission_request">این برنامه نیاز به دسترسی به دوربین و ضبط صدا دارد.</string>
     <string name="camera_error">این دستگاه از Camera 2 API پشتیبانی نمی‌کند.</string>
-    <string name="continue_with">ادامه</string>
+    <string name="continue_with">ادامه میدهم با</string>
     <string name="phone_number">شماره تلفن</string>
     <string name="email">ایمیل</string>
     <string name="google">گوگل</string>
