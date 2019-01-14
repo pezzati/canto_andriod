@@ -48,4 +48,31 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="@+id/artistName"
         app:layout_constraintTop_toBottomOf="@+id/artistName" />
+
+    <TextView
+        android:id="@+id/price"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginBottom="8dp"
+        android:drawableLeft="@drawable/cantoriom"
+        android:drawablePadding="3dp"
+        android:fontFamily="@font/roboto_bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:text="120"
+        android:textSize="10dp" />
+
+    <ImageView
+        android:id="@+id/giftView"
+        android:layout_width="14dp"
+        android:layout_height="14dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginLeft="16dp"
+        android:src="@drawable/gift"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 </android.support.constraint.ConstraintLayout>

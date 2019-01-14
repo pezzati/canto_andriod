@@ -5,6 +5,7 @@ import com.hmomeni.canto.activities.DubsmashActivity
 import com.hmomeni.canto.activities.KaraokeActivity
 import com.hmomeni.canto.activities.MainActivity
 import com.hmomeni.canto.activities.VideoPlayActivity
+import com.hmomeni.canto.adapters.rcl.ListPostsRclAdapter
 import com.hmomeni.canto.adapters.rcl.PostsRclAdapter
 import com.hmomeni.canto.fragments.RecorderFragment
 import com.hmomeni.canto.services.DownloadService
@@ -37,4 +38,5 @@ interface DIComponent {
     fun inject(paymentViewModel: PaymentViewModel)
     fun inject(postHolder: PostsRclAdapter.PostHolder)
     fun inject(muxerService: MuxerService)
+    fun inject(listPostHolder: ListPostsRclAdapter.ListPostHolder)
 }
