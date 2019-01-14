@@ -50,4 +50,7 @@ interface Api {
     @POST("song/posts/{postId}/buy/")
     fun purchaseSong(@Path("postId") postId: Int): Single<JsonObject>
 
+    @GET("user/avatar")
+    fun getAvatarList(@Query("page") page: Int = 1): Single<ApiResponse<List<Avatar>>>
+
 }

@@ -4,8 +4,9 @@
     <style name="AppTheme" parent="Theme.AppCompat.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/md_white_1000</item>
-        <item name="colorPrimaryDark">#242529</item>
+        <item name="colorPrimaryDark">@color/backgroundColor</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:background">@color/backgroundColor</item>
         <item name="android:fontFamily">@font/yekan_regular</item>
 
         <item name="android:textColor">@color/md_white_1000</item>

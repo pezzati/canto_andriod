@@ -39,4 +39,5 @@ interface DIComponent {
     fun inject(postHolder: PostsRclAdapter.PostHolder)
     fun inject(muxerService: MuxerService)
     fun inject(listPostHolder: ListPostsRclAdapter.ListPostHolder)
+    fun inject(editUserViewModel: EditUserViewModel)
 }
