@@ -1,14 +1,19 @@
 package com.hmomeni.canto.activities
 
+import android.animation.Animator
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.media.AudioManager
 import android.os.Bundle
 import android.os.Handler
 import android.util.SparseIntArray
 import android.view.TextureView
 import android.view.View
+import android.widget.TextView
 import android.widget.Toast
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.constraintlayout.widget.ConstraintSet
 import com.azoft.carousellayoutmanager.CarouselLayoutManager
 import com.hmomeni.canto.App
 import com.hmomeni.canto.R
@@ -18,10 +23,7 @@ import com.hmomeni.canto.entities.MidiItem
 import com.hmomeni.canto.entities.PROJECT_TYPE_DUBSMASH
 import com.hmomeni.canto.entities.PROJECT_TYPE_SINGING
 import com.hmomeni.canto.services.*
-import com.hmomeni.canto.utils.DownloadEvent
-import com.hmomeni.canto.utils.app
-import com.hmomeni.canto.utils.getBitmapFromVectorDrawable
-import com.hmomeni.canto.utils.getDuration
+import com.hmomeni.canto.utils.*
 import com.hmomeni.canto.utils.views.RecordButton
 import com.hmomeni.canto.utils.views.TrimView
 import com.hmomeni.canto.utils.views.VerticalSlider
@@ -144,7 +146,8 @@ class DubsmashActivity : CameraActivity() {
                 stopDubsmash()
                 recordBtn.mode = RecordButton.Mode.Ready
             } else {
-                startDubsmash()
+//                startDubsmash()
+                startRecordCountdown()
                 recordBtn.mode = RecordButton.Mode.Recording
             }
         }
@@ -242,6 +245,9 @@ class DubsmashActivity : CameraActivity() {
         } else {
             val diff = (System.currentTimeMillis() - recordStartTime) / 1000
             timerText.text = "%d:%02d".format(diff / 60, diff % 60)
+            if (diff >= 60L) {
+                stopDubsmash()
+            }
         }
 
         handler.postDelayed({
@@ -343,6 +349,42 @@ class DubsmashActivity : CameraActivity() {
         isPlaying = true
         StartAudio()
         timer()
+    }
+
+    private var countDown = 3
+    private fun startRecordCountdown() {
+        if (countDown < 0) {
+            startDubsmash()
+            return
+        }
+        val textView = TextView(this).apply {
+            layoutParams = ConstraintLayout.LayoutParams(ConstraintLayout.LayoutParams.WRAP_CONTENT, ConstraintLayout.LayoutParams.WRAP_CONTENT)
+            textSize = dpToPx(30).toFloat()
+            setTextColor(Color.WHITE)
+            text = if (countDown > 0) {
+                countDown.toString()
+            } else {
+                "Go!"
+            }
+            id = View.generateViewId()
+        }
+        wrapper.addView(textView)
+        val constraintSet = ConstraintSet()
+        constraintSet.clone(wrapper)
+
+        constraintSet.connect(textView.id, ConstraintSet.LEFT, wrapper.id, ConstraintSet.LEFT)
+        constraintSet.connect(textView.id, ConstraintSet.RIGHT, wrapper.id, ConstraintSet.RIGHT)
+        constraintSet.connect(textView.id, ConstraintSet.TOP, wrapper.id, ConstraintSet.TOP)
+        constraintSet.connect(textView.id, ConstraintSet.BOTTOM, wrapper.id, ConstraintSet.BOTTOM)
+
+        constraintSet.applyTo(wrapper)
+        textView.animate().setDuration(1000).scaleX(3f).scaleY(3f).alpha(0f).setListener(object : MyAnimatorListener() {
+            override fun onAnimationEnd(animation: Animator?) {
+                countDown--
+                wrapper.removeView(textView)
+                startRecordCountdown()
+            }
+        })
     }
 
     private var recordStartTime = 0L
