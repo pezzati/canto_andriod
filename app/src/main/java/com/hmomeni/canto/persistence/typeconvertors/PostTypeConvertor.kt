@@ -1,6 +1,6 @@
 package com.hmomeni.canto.persistence.typeconvertors
 
-import android.arch.persistence.room.TypeConverter
+import androidx.room.TypeConverter
 import com.hmomeni.canto.App
 import com.hmomeni.canto.entities.Artist
 import com.hmomeni.canto.entities.Content

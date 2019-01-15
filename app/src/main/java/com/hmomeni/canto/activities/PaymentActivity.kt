@@ -1,10 +1,10 @@
 package com.hmomeni.canto.activities
 
-import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
+import androidx.lifecycle.ViewModelProviders
 import com.hmomeni.canto.BuildConfig
 import com.hmomeni.canto.R
 import com.hmomeni.canto.utils.ViewModelFactory

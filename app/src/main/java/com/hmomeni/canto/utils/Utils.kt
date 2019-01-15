@@ -10,9 +10,9 @@ import android.graphics.Point
 import android.graphics.drawable.Drawable
 import android.media.MediaMetadataRetriever
 import android.provider.Settings
-import android.support.v4.content.ContextCompat
 import android.view.View
 import android.view.WindowManager
+import androidx.core.content.ContextCompat
 import com.bumptech.glide.RequestBuilder
 import com.hmomeni.canto.App
 import io.reactivex.*

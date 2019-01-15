@@ -1,14 +1,10 @@
 package com.hmomeni.canto.fragments
 
-import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v7.widget.GridLayoutManager
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.ViewModelProviders
 import com.crashlytics.android.Crashlytics
 import com.hmomeni.canto.R
 import com.hmomeni.canto.adapters.rcl.ListPostsRclAdapter
@@ -23,7 +19,7 @@ import io.reactivex.rxkotlin.addTo
 import kotlinx.android.synthetic.main.fragment_list.*
 import timber.log.Timber
 
-class ListFragment : Fragment() {
+class ListFragment : androidx.fragment.app.Fragment() {
 
     companion object {
         fun getBundle(type: String, objectId: Int, title: String, urlPath: String): Bundle {
@@ -59,8 +55,8 @@ class ListFragment : Fragment() {
             inflater.inflate(R.layout.fragment_list, container, false)
 
     private var isList = true
-    private var linearLayoutManager: LinearLayoutManager? = null
-    private var gridLayoutManager: GridLayoutManager? = null
+    private var linearLayoutManager: androidx.recyclerview.widget.LinearLayoutManager? = null
+    private var gridLayoutManager: androidx.recyclerview.widget.GridLayoutManager? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         pageTitle.text = title
@@ -74,7 +70,7 @@ class ListFragment : Fragment() {
             }.addTo(compositeDisposable)
         }
 
-        linearLayoutManager = LinearLayoutManager(context)
+        linearLayoutManager = androidx.recyclerview.widget.LinearLayoutManager(context)
 
         recyclerView.layoutManager = linearLayoutManager
         recyclerView.adapter = listAdapter
@@ -103,7 +99,7 @@ class ListFragment : Fragment() {
                         listAdapter = ListPostsRclAdapter(viewModel.posts, R.layout.rcl_item_list_post)
                     }
                     if (linearLayoutManager == null) {
-                        linearLayoutManager = LinearLayoutManager(context)
+                        linearLayoutManager = androidx.recyclerview.widget.LinearLayoutManager(context)
                     }
                     recyclerView.adapter = listAdapter
                     recyclerView.layoutManager = linearLayoutManager
@@ -116,7 +112,7 @@ class ListFragment : Fragment() {
                     }
 
                     if (gridLayoutManager == null) {
-                        gridLayoutManager = GridLayoutManager(context!!, 2)
+                        gridLayoutManager = androidx.recyclerview.widget.GridLayoutManager(context!!, 2)
                     }
 
                     recyclerView.adapter = gridAdapter
@@ -128,9 +124,9 @@ class ListFragment : Fragment() {
     }
 
     private fun applyEndlessScroll() {
-        recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+        recyclerView.addOnScrollListener(object : androidx.recyclerview.widget.RecyclerView.OnScrollListener() {
             private var endCalled = false
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+            override fun onScrolled(recyclerView: androidx.recyclerview.widget.RecyclerView, dx: Int, dy: Int) {
                 if (isList) {
                     val visibleItemCount = linearLayoutManager!!.childCount
                     val totalItemCount = linearLayoutManager!!.itemCount

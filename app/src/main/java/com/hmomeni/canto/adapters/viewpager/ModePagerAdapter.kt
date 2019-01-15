@@ -1,7 +1,6 @@
 package com.hmomeni.canto.adapters.viewpager
 
 import android.content.Context
-import android.support.v4.view.PagerAdapter
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
@@ -13,7 +12,7 @@ import com.hmomeni.canto.utils.GlideApp
 import com.hmomeni.canto.utils.dpToPx
 import com.hmomeni.canto.utils.views.RoundedRelativeLayout
 
-class ModePagerAdapter(private val context: Context, private val views: Array<View>) : PagerAdapter() {
+class ModePagerAdapter(private val context: Context, private val views: Array<View>) : androidx.viewpager.widget.PagerAdapter() {
     override fun getCount() = views.size
 
     override fun instantiateItem(container: ViewGroup, position: Int): Any {

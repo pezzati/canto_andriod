@@ -1,6 +1,6 @@
 package com.hmomeni.canto.vms
 
-import android.arch.lifecycle.ViewModel
+import androidx.lifecycle.ViewModel
 import com.hmomeni.canto.di.DIComponent
 
 class DubsmashViewModel : ViewModel(), DIComponent.Injectable {

@@ -2,7 +2,8 @@ package com.hmomeni.canto.utils.views;
 
 import android.graphics.Point;
 import android.graphics.RectF;
-import android.support.annotation.NonNull;
+
+import androidx.annotation.NonNull;
 
 /**
  * Changed https://github.com/fabrantes/videoroundedcorners

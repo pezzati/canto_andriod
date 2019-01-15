@@ -1,6 +1,5 @@
 package com.hmomeni.canto.adapters.viewpager
 
-import android.support.v4.view.PagerAdapter
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
@@ -13,7 +12,7 @@ import com.hmomeni.canto.utils.dpToPx
 import com.hmomeni.canto.utils.rounded
 import io.reactivex.processors.PublishProcessor
 
-class BannerPagerAdapter(private val clickPublisher: PublishProcessor<MainRclAdapter.ClickEvent>) : PagerAdapter() {
+class BannerPagerAdapter(private val clickPublisher: PublishProcessor<MainRclAdapter.ClickEvent>) : androidx.viewpager.widget.PagerAdapter() {
     lateinit var banners: List<Banner>
 
     override fun instantiateItem(container: ViewGroup, position: Int): Any {

@@ -1,6 +1,6 @@
 package com.hmomeni.canto.persistence
 
-import android.arch.persistence.room.*
+import androidx.room.*
 import com.hmomeni.canto.entities.FullPost
 import io.reactivex.Single
 

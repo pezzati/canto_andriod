@@ -1,6 +1,5 @@
 package com.hmomeni.canto.adapters.rcl
 
-import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,7 +10,7 @@ import com.hmomeni.canto.utils.rounded
 import io.reactivex.processors.PublishProcessor
 import kotlinx.android.synthetic.main.rcl_item_avatar.view.*
 
-class AvatarsRclAdapter(val items: List<Avatar>) : RecyclerView.Adapter<AvatarsRclAdapter.AvatarHolder>() {
+class AvatarsRclAdapter(val items: List<Avatar>) : androidx.recyclerview.widget.RecyclerView.Adapter<AvatarsRclAdapter.AvatarHolder>() {
     val clickPublisher: PublishProcessor<Int> = PublishProcessor.create()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AvatarHolder {
@@ -24,7 +23,7 @@ class AvatarsRclAdapter(val items: List<Avatar>) : RecyclerView.Adapter<AvatarsR
         holder.bind(items[position])
     }
 
-    class AvatarHolder(itemView: View, clickPublisher: PublishProcessor<Int>) : RecyclerView.ViewHolder(itemView) {
+    class AvatarHolder(itemView: View, clickPublisher: PublishProcessor<Int>) : androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView) {
         init {
             itemView.setOnClickListener {
                 clickPublisher.onNext(adapterPosition)

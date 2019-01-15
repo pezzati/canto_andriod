@@ -1,6 +1,6 @@
 package com.hmomeni.canto.di
 
-import android.arch.persistence.room.Room
+import androidx.room.Room
 import com.hmomeni.canto.App
 import com.hmomeni.canto.persistence.*
 import dagger.Module

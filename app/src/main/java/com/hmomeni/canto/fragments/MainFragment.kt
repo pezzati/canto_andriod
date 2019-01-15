@@ -1,14 +1,12 @@
 package com.hmomeni.canto.fragments
 
-import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.ViewModelProviders
 import com.hmomeni.canto.R
 import com.hmomeni.canto.adapters.rcl.MainRclAdapter
 import com.hmomeni.canto.entities.Banner
@@ -24,7 +22,7 @@ import io.reactivex.rxkotlin.addTo
 import kotlinx.android.synthetic.main.fragment_main.*
 import timber.log.Timber
 
-class MainFragment : Fragment() {
+class MainFragment : androidx.fragment.app.Fragment() {
     private lateinit var viewModel: MainViewModel
     private val compositeDisposable = CompositeDisposable()
 
@@ -101,7 +99,7 @@ class MainFragment : Fragment() {
             progressBar.visibility = View.GONE
         }
 
-        recyclerView.layoutManager = LinearLayoutManager(recyclerView.context)
+        recyclerView.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(recyclerView.context)
         recyclerView.adapter = adapter
 
     }

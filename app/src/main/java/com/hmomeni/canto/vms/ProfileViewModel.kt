@@ -1,6 +1,6 @@
 package com.hmomeni.canto.vms
 
-import android.arch.lifecycle.ViewModel
+import androidx.lifecycle.ViewModel
 import com.hmomeni.canto.di.DIComponent
 import com.hmomeni.canto.persistence.ProjectDao
 import com.hmomeni.canto.utils.UserSession

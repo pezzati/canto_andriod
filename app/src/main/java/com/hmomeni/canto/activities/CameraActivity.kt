@@ -10,13 +10,13 @@ import android.hardware.camera2.*
 import android.media.MediaRecorder
 import android.os.Handler
 import android.os.HandlerThread
-import android.support.v4.content.ContextCompat
 import android.util.Range
 import android.util.Size
 import android.util.SparseIntArray
 import android.view.Surface
 import android.view.TextureView
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import com.crashlytics.android.Crashlytics
 import com.hmomeni.canto.R
 import com.hmomeni.canto.utils.CompareSizesByArea

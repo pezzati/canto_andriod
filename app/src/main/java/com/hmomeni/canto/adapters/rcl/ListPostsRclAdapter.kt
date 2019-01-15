@@ -1,6 +1,5 @@
 package com.hmomeni.canto.adapters.rcl
 
-import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,7 +14,7 @@ import kotlinx.android.synthetic.main.rcl_item_post_rect.view.*
 import java.util.*
 import javax.inject.Inject
 
-class ListPostsRclAdapter(val posts: List<Post>, private val layoutResId: Int) : RecyclerView.Adapter<ListPostsRclAdapter.ListPostHolder>() {
+class ListPostsRclAdapter(val posts: List<Post>, private val layoutResId: Int) : androidx.recyclerview.widget.RecyclerView.Adapter<ListPostsRclAdapter.ListPostHolder>() {
     val clickPublisher: PublishProcessor<Int> = PublishProcessor.create()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
@@ -27,7 +26,7 @@ class ListPostsRclAdapter(val posts: List<Post>, private val layoutResId: Int) :
         holder.bind(posts[position])
     }
 
-    class ListPostHolder(itemView: View, clickPublisher: PublishProcessor<Int>) : RecyclerView.ViewHolder(itemView) {
+    class ListPostHolder(itemView: View, clickPublisher: PublishProcessor<Int>) : androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView) {
         init {
             itemView.context.app().di.inject(this)
             itemView.setOnClickListener {

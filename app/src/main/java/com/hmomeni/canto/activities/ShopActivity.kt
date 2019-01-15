@@ -1,10 +1,9 @@
 package com.hmomeni.canto.activities
 
-import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.os.Bundle
-import android.support.v7.widget.LinearLayoutManager
 import android.view.View
+import androidx.lifecycle.ViewModelProviders
 import com.hmomeni.canto.R
 import com.hmomeni.canto.adapters.rcl.PaymentPacksRclAdapter
 import com.hmomeni.canto.utils.ViewModelFactory
@@ -40,7 +39,7 @@ class ShopActivity : BaseActivity() {
 
         currentBalance.text = NumberFormat.getInstance(Locale.ENGLISH).format(viewModel.userInventory.coins)
 
-        recyclerView.layoutManager = LinearLayoutManager(this)
+        recyclerView.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(this)
         recyclerView.adapter = mAdapter
 
         disposable = viewModel.getPaymentPacks()

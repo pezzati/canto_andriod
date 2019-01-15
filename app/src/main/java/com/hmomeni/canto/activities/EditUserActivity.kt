@@ -1,10 +1,9 @@
 package com.hmomeni.canto.activities
 
 import android.animation.Animator
-import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
-import android.support.v7.widget.GridLayoutManager
 import android.view.View
+import androidx.lifecycle.ViewModelProviders
 import com.crashlytics.android.Crashlytics
 import com.hmomeni.canto.R
 import com.hmomeni.canto.adapters.rcl.AvatarsRclAdapter
@@ -24,7 +23,7 @@ class EditUserActivity : BaseActivity() {
         viewModel = ViewModelProviders.of(this, ViewModelFactory(app()))[EditUserViewModel::class.java]
         setContentView(R.layout.activity_edit_user)
 
-        recyclerView.layoutManager = GridLayoutManager(this, 3)
+        recyclerView.layoutManager = androidx.recyclerview.widget.GridLayoutManager(this, 3)
         recyclerView.adapter = AvatarsRclAdapter(viewModel.avatars).also {
             it.clickPublisher.subscribe {
                 GlideApp.with(userPhoto)

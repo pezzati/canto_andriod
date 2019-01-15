@@ -16,14 +16,11 @@ import android.media.MediaRecorder
 import android.os.Bundle
 import android.os.Handler
 import android.os.HandlerThread
-import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentActivity
-import android.support.v4.content.ContextCompat.checkSelfPermission
-import android.support.v4.view.ViewPager
 import android.util.Size
 import android.view.*
 import android.widget.Toast
 import android.widget.Toast.LENGTH_SHORT
+import androidx.core.content.ContextCompat.checkSelfPermission
 import com.crashlytics.android.Crashlytics
 import com.hmomeni.canto.App
 import com.hmomeni.canto.R
@@ -52,7 +49,7 @@ import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 
-class RecorderFragment : Fragment() {
+class RecorderFragment : androidx.fragment.app.Fragment() {
     private val FRAGMENT_DIALOG = "dialog"
 
     private var selectPostId: Int = 1085
@@ -206,7 +203,7 @@ class RecorderFragment : Fragment() {
         nextTabDesc.alpha = 0f
         nextTabDesc.translationY = -100f
         var lastPage = 0
-        viewPager.setOnPageChangeListener(object : ViewPager.OnPageChangeListener {
+        viewPager.setOnPageChangeListener(object : androidx.viewpager.widget.ViewPager.OnPageChangeListener {
             override fun onPageScrollStateChanged(state: Int) {
 
             }
@@ -326,7 +323,7 @@ class RecorderFragment : Fragment() {
 
     private fun hasPermissionsGranted(permissions: Array<String>) =
             permissions.none {
-                checkSelfPermission((activity as FragmentActivity), it) != PERMISSION_GRANTED
+                checkSelfPermission((activity as androidx.fragment.app.FragmentActivity), it) != PERMISSION_GRANTED
             }
 
     private fun requestVideoPermissions() {
@@ -488,7 +485,7 @@ class RecorderFragment : Fragment() {
      */
     private fun configureTransform(viewWidth: Int, viewHeight: Int) {
         activity ?: return
-        val rotation = (activity as FragmentActivity).windowManager.defaultDisplay.rotation
+        val rotation = (activity as androidx.fragment.app.FragmentActivity).windowManager.defaultDisplay.rotation
         val matrix = Matrix()
         val viewRect = RectF(0f, 0f, viewWidth.toFloat(), viewHeight.toFloat())
         val bufferRect = RectF(0f, 0f, previewSize.height.toFloat(), previewSize.width.toFloat())

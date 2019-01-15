@@ -1,6 +1,6 @@
 package com.hmomeni.canto.persistence
 
-import android.arch.persistence.room.*
+import androidx.room.*
 import com.hmomeni.canto.entities.TRACK_TYPE_FINAL
 import com.hmomeni.canto.entities.Track
 import io.reactivex.Single

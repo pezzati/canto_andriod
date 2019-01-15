@@ -1,7 +1,7 @@
 package com.hmomeni.canto.persistence
 
-import android.arch.persistence.db.SupportSQLiteQuery
-import android.arch.persistence.room.*
+import androidx.room.*
+import androidx.sqlite.db.SupportSQLiteQuery
 import com.hmomeni.canto.entities.CompleteProject
 import com.hmomeni.canto.entities.Project
 import com.hmomeni.canto.entities.TRACK_TYPE_FINAL

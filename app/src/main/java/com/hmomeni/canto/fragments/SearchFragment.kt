@@ -1,12 +1,10 @@
 package com.hmomeni.canto.fragments
 
-import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.ViewModelProviders
 import com.hmomeni.canto.R
 import com.hmomeni.canto.adapters.rcl.ListPostsRclAdapter
 import com.hmomeni.canto.entities.Post
@@ -24,7 +22,7 @@ import kotlinx.android.synthetic.main.fragment_search.*
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
 
-class SearchFragment : Fragment() {
+class SearchFragment : androidx.fragment.app.Fragment() {
     private lateinit var viewModel: SearchViewModel
     private val compositeDisposable = CompositeDisposable()
     private val posts: MutableList<Post> = mutableListOf()
@@ -74,7 +72,7 @@ class SearchFragment : Fragment() {
                 }.addTo(compositeDisposable)
 
 
-        recyclerView.layoutManager = LinearLayoutManager(context!!)
+        recyclerView.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(context!!)
         recyclerView.adapter = adapter
 
         adapter.clickPublisher.subscribe {

@@ -1,6 +1,6 @@
 package com.hmomeni.canto.entities
 
-import android.arch.persistence.room.Embedded
+import androidx.room.Embedded
 
 class CompleteProject(
         val projectId: Long,
