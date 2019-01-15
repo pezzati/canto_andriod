@@ -10,6 +10,10 @@ import android.text.InputType
 import android.util.Patterns
 import android.view.View
 import android.widget.Toast
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.common.api.ApiException
 import com.hmomeni.canto.R
 import com.hmomeni.canto.utils.*
 import com.hmomeni.canto.vms.LoginViewModel
@@ -19,6 +23,7 @@ import kotlinx.android.synthetic.main.activity_login.*
 import timber.log.Timber
 import java.util.regex.Pattern
 
+
 class LoginActivity : BaseActivity(), View.OnClickListener {
 
 
@@ -26,8 +31,18 @@ class LoginActivity : BaseActivity(), View.OnClickListener {
     private val compositeDisposable = CompositeDisposable()
 
     private var step = 0
+    private lateinit var mGoogleSignInClient: GoogleSignInClient
+
+    private val GOOGLE_SIGNIN_REQ_CODE = 4543
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()
+                .build()
+
+        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
 
         viewModel = ViewModelProviders.of(this, ViewModelFactory(app()))[LoginViewModel::class.java]
 
@@ -36,6 +51,7 @@ class LoginActivity : BaseActivity(), View.OnClickListener {
         phoneBtn.setOnClickListener(this)
         emailBtn.setOnClickListener(this)
         loginBtn.setOnClickListener(this)
+        googleBtn.setOnClickListener(this)
         verifyBtn.setOnClickListener(this)
         wrongPhoneBtn.setOnClickListener(this)
         noCodeBtn.setOnClickListener(this)
@@ -106,6 +122,21 @@ class LoginActivity : BaseActivity(), View.OnClickListener {
             R.id.verifyBtn -> submitCode()
             R.id.wrongPhoneBtn -> backToPhoneInput()
             R.id.noCodeBtn -> submitPhone()
+            R.id.googleBtn -> signInByGoogle()
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == GOOGLE_SIGNIN_REQ_CODE) {
+            val task = GoogleSignIn.getSignedInAccountFromIntent(data)
+            try {
+                val account = task.getResult(ApiException::class.java)
+
+                Timber.d(account.toString())
+            } catch (e: ApiException) {
+
+            }
         }
     }
 
@@ -275,6 +306,11 @@ class LoginActivity : BaseActivity(), View.OnClickListener {
                 requestFocus()
             }
         }
+    }
+
+    private fun signInByGoogle() {
+        val signInIntent = mGoogleSignInClient.signInIntent
+        startActivityForResult(signInIntent, GOOGLE_SIGNIN_REQ_CODE)
     }
 
 }
