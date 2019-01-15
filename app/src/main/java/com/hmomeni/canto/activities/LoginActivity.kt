@@ -152,7 +152,7 @@ class LoginActivity : BaseActivity(), View.OnClickListener {
                     }, {
                         progressBar.visibility = View.GONE
                         prepareLogin()
-                    })
+                    }).addTo(compositeDisposable)
         } else {
             val height = getScreenDimensions(this).height
             cantoWrapper.animate().translationYBy(-height / 6f)
