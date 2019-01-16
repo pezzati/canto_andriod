@@ -248,7 +248,7 @@ class RecorderFragment : androidx.fragment.app.Fragment() {
                             nextTabDesc.translationY = -100f
 
                             nextTabTitle.setText(R.string.sing)
-                            nextTabTitle.setText(R.string.sing_desc)
+                            nextTabDesc.setText(R.string.sing_desc)
                         }
                         1 -> {
                             currentTabTitle.alpha = 0f
