@@ -5,6 +5,7 @@ import com.hmomeni.canto.api.Api
 import com.hmomeni.canto.di.DIComponent
 import com.hmomeni.canto.entities.Avatar
 import com.hmomeni.canto.persistence.UserDao
+import com.hmomeni.canto.utils.UserSession
 import com.hmomeni.canto.utils.makeMap
 import io.reactivex.Completable
 import javax.inject.Inject
@@ -18,6 +19,8 @@ class EditUserViewModel : ViewModel(), DIComponent.Injectable {
     lateinit var api: Api
     @Inject
     lateinit var userDao: UserDao
+    @Inject
+    lateinit var userSession: UserSession
 
     val avatars = mutableListOf<Avatar>()
     private var avatarPage = 1

@@ -4,7 +4,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverters
 import com.google.gson.annotations.SerializedName
-import com.hmomeni.canto.utils.TypeConvertors
+import com.hmomeni.canto.utils.AvatarTypeConverters
 
 @Entity
 data class User(
@@ -21,7 +21,7 @@ data class User(
         var premiumDays: Int,
         @SerializedName("coins")
         var coins: Int,
-        @TypeConverters(TypeConvertors::class)
+        @TypeConverters(AvatarTypeConverters::class)
         @SerializedName("avatar")
         var avatar: Avatar?
 )

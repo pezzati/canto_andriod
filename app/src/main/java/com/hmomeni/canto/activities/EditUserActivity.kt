@@ -31,6 +31,15 @@ class EditUserActivity : BaseActivity() {
         viewModel = ViewModelProviders.of(this, ViewModelFactory(app()))[EditUserViewModel::class.java]
         setContentView(R.layout.activity_edit_user)
 
+        userName.setText(viewModel.userSession.user?.username)
+        viewModel.userSession.user?.avatar?.let {
+            selectedAvatar = it.id
+            GlideApp.with(userPhoto)
+                    .load(it.link)
+                    .rounded(dpToPx(10))
+                    .into(userPhoto)
+        }
+
         recyclerView.layoutManager = androidx.recyclerview.widget.GridLayoutManager(this, 3)
         recyclerView.adapter = AvatarsRclAdapter(viewModel.avatars).also {
             it.clickPublisher.subscribe {
@@ -38,7 +47,7 @@ class EditUserActivity : BaseActivity() {
                 selectedAvatar = avatar.id
                 GlideApp.with(userPhoto)
                         .load(avatar.link)
-                        .rounded(10)
+                        .rounded(dpToPx(10))
                         .into(userPhoto)
                 hideAvatars()
             }.addTo(compositeDisposable)

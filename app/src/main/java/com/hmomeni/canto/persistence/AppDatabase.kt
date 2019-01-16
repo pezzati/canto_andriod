@@ -8,12 +8,13 @@ import com.hmomeni.canto.entities.Project
 import com.hmomeni.canto.entities.Track
 import com.hmomeni.canto.entities.User
 import com.hmomeni.canto.persistence.typeconvertors.PostTypeConvertor
+import com.hmomeni.canto.utils.AvatarTypeConverters
 
 @Database(
         entities = [Project::class, Track::class, FullPost::class, User::class],
         version = 1
 )
-@TypeConverters(PostTypeConvertor::class)
+@TypeConverters(PostTypeConvertor::class, AvatarTypeConverters::class)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun projectDao(): ProjectDao
     abstract fun trackDao(): TrackDao

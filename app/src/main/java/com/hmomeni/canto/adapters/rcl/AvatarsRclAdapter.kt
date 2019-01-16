@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import com.hmomeni.canto.R
 import com.hmomeni.canto.entities.Avatar
 import com.hmomeni.canto.utils.GlideApp
+import com.hmomeni.canto.utils.dpToPx
 import com.hmomeni.canto.utils.rounded
 import io.reactivex.processors.PublishProcessor
 import kotlinx.android.synthetic.main.rcl_item_avatar.view.*
@@ -33,7 +34,7 @@ class AvatarsRclAdapter(val items: List<Avatar>) : androidx.recyclerview.widget.
         fun bind(avatar: Avatar) {
             GlideApp.with(itemView)
                     .load(avatar.link)
-                    .rounded(10)
+                    .rounded(dpToPx(10))
                     .into(itemView.avatar)
         }
     }
