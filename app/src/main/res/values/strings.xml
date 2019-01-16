@@ -1,4 +1,5 @@
 <resources>
+    <string name="google_signin_client_id" translatable="false">846781616423-3m21bsuka6js77s25dhh4opm9p2da0pb.apps.googleusercontent.com</string>
     <string name="app_name">Canto</string>
     <string name="record">Record</string>
     <string name="stop">Stop</string>
@@ -79,4 +80,5 @@
     <string name="updating_user_failed">Updating user fialed, please try again</string>
     <string name="user_info_updated_successfully">User info updated successfully</string>
     <string name="valid_username">Valid username</string>
+    <string name="login_by_google_failed">Login by Google failed</string>
 </resources>

@@ -10,10 +10,10 @@ import android.util.Patterns
 import android.view.View
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProviders
-import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.crashlytics.android.Crashlytics
+import com.google.android.gms.auth.api.Auth
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
-import com.google.android.gms.common.api.ApiException
+import com.google.android.gms.common.api.GoogleApiClient
 import com.hmomeni.canto.R
 import com.hmomeni.canto.utils.*
 import com.hmomeni.canto.vms.LoginViewModel
@@ -32,7 +32,7 @@ class LoginActivity : BaseActivity(), View.OnClickListener {
     private val compositeDisposable = CompositeDisposable()
 
     private var step = 0
-    private lateinit var mGoogleSignInClient: GoogleSignInClient
+    private var mGoogleApiClient: GoogleApiClient? = null
 
     private val GOOGLE_SIGNIN_REQ_CODE = 4543
 
@@ -40,10 +40,16 @@ class LoginActivity : BaseActivity(), View.OnClickListener {
         super.onCreate(savedInstanceState)
 
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.google_signin_client_id))
                 .requestEmail()
                 .build()
 
-        mGoogleSignInClient = GoogleSignIn.getClient(this, gso)
+        if (mGoogleApiClient == null) {
+            mGoogleApiClient = GoogleApiClient.Builder(this)
+                    .enableAutoManage(this) { googleBtn.visibility = View.GONE }
+                    .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
+                    .build()
+        }
 
         viewModel = ViewModelProviders.of(this, ViewModelFactory(app()))[LoginViewModel::class.java]
 
@@ -131,24 +137,29 @@ class LoginActivity : BaseActivity(), View.OnClickListener {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == GOOGLE_SIGNIN_REQ_CODE) {
-            val task = GoogleSignIn.getSignedInAccountFromIntent(data)
             try {
-                val account = task.getResult(ApiException::class.java)
-                viewModel.googleSignIn(account!!.id!!)
-                        .iomain()
-                        .subscribe({
-                            startActivity(Intent(this, MainActivity::class.java))
-                            finish()
-                        }, {
-                            if (it is HttpException && it.code() == 400) {
-                                Toast.makeText(this, it.response().errorString(), Toast.LENGTH_SHORT).show()
-                            } else {
-                                Toast.makeText(this, R.string.failed_requstin_verification, Toast.LENGTH_SHORT).show()
-                            }
-                            Timber.e(it)
-                        }).addTo(compositeDisposable)
-            } catch (e: ApiException) {
+                val result = Auth.GoogleSignInApi.getSignInResultFromIntent(data)
+                if (result.isSuccess) {
+                    val account = result.signInAccount
+                    viewModel.googleSignIn(account!!.idToken!!)
+                            .iomain()
+                            .subscribe({
+                                startActivity(Intent(this, MainActivity::class.java))
+                                finish()
+                            }, {
+                                if (it is HttpException && it.code() == 400) {
+                                    Toast.makeText(this, it.response().errorString(), Toast.LENGTH_SHORT).show()
+                                } else {
+                                    Toast.makeText(this, R.string.failed_requstin_verification, Toast.LENGTH_SHORT).show()
+                                }
+                                Timber.e(it)
+                            }).addTo(compositeDisposable)
+                }
 
+            } catch (e: Exception) {
+                Timber.e(e)
+                Crashlytics.logException(e)
+                Toast.makeText(this, R.string.login_by_google_failed, Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -327,7 +338,7 @@ class LoginActivity : BaseActivity(), View.OnClickListener {
     }
 
     private fun signInByGoogle() {
-        val signInIntent = mGoogleSignInClient.signInIntent
+        val signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient)
         startActivityForResult(signInIntent, GOOGLE_SIGNIN_REQ_CODE)
     }
 
