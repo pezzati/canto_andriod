@@ -2,7 +2,9 @@ package com.hmomeni.canto.entities
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import androidx.room.TypeConverters
 import com.google.gson.annotations.SerializedName
+import com.hmomeni.canto.utils.TypeConvertors
 
 @Entity
 data class User(
@@ -15,9 +17,11 @@ data class User(
         var firstName: String,
         @SerializedName("last_name")
         var lastName: String,
-        @SerializedName("token")
-        var token: String,
-        var current: Boolean = false
-) {
-        constructor() : this(0, "", "", "", "", false)
-}
+        @SerializedName("premium_days")
+        var premiumDays: Int,
+        @SerializedName("coins")
+        var coins: Int,
+        @TypeConverters(TypeConvertors::class)
+        @SerializedName("avatar")
+        var avatar: Avatar?
+)

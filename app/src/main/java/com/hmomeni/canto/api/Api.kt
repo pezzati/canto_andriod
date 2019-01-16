@@ -56,4 +56,10 @@ interface Api {
     @GET("user/avatar")
     fun getAvatarList(@Query("page") page: Int = 1): Single<ApiResponse<List<Avatar>>>
 
+    @GET("user/profile")
+    fun getUserInfo(): Single<User>
+
+    @POST("user/profile/")
+    fun updateUserInfo(@Body requestBody: RequestBody): Single<User>
+
 }

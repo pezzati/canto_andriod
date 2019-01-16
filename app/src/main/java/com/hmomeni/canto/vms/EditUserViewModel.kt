@@ -4,6 +4,9 @@ import androidx.lifecycle.ViewModel
 import com.hmomeni.canto.api.Api
 import com.hmomeni.canto.di.DIComponent
 import com.hmomeni.canto.entities.Avatar
+import com.hmomeni.canto.persistence.UserDao
+import com.hmomeni.canto.utils.makeMap
+import io.reactivex.Completable
 import javax.inject.Inject
 
 class EditUserViewModel : ViewModel(), DIComponent.Injectable {
@@ -13,15 +16,26 @@ class EditUserViewModel : ViewModel(), DIComponent.Injectable {
 
     @Inject
     lateinit var api: Api
+    @Inject
+    lateinit var userDao: UserDao
 
     val avatars = mutableListOf<Avatar>()
     private var avatarPage = 1
-    fun getAvatars() = api.getAvatarList(avatarPage++)
+    fun getAvatars(): Completable = api.getAvatarList(avatarPage++)
             .map {
                 it.data
             }.doOnSuccess {
                 avatars.addAll(it)
             }
             .ignoreElement()
+
+    fun updateUser(avatarId: Int, username: String): Completable {
+        val map = makeMap().add("username", username)
+                .add("avatar", avatarId)
+        return api.updateUserInfo(map.body())
+                .doOnSuccess {
+                    userDao.updateUser(it)
+                }.ignoreElement()
+    }
 
 }

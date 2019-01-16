@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "e5d4cdc61597feea09b9acdde58bf0af",
+    "identityHash": "48c06ab3fdfd129c6bbfb969cef1050a",
     "entities": [
       {
         "tableName": "Project",
@@ -189,7 +189,7 @@
       },
       {
         "tableName": "User",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `username` TEXT NOT NULL, `firstName` TEXT NOT NULL, `lastName` TEXT NOT NULL, `token` TEXT NOT NULL, `current` INTEGER NOT NULL, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `username` TEXT NOT NULL, `firstName` TEXT NOT NULL, `lastName` TEXT NOT NULL, `premiumDays` INTEGER NOT NULL, `coins` INTEGER NOT NULL, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "id",
@@ -216,14 +216,14 @@
             "notNull": true
           },
           {
-            "fieldPath": "token",
-            "columnName": "token",
-            "affinity": "TEXT",
+            "fieldPath": "premiumDays",
+            "columnName": "premiumDays",
+            "affinity": "INTEGER",
             "notNull": true
           },
           {
-            "fieldPath": "current",
-            "columnName": "current",
+            "fieldPath": "coins",
+            "columnName": "coins",
             "affinity": "INTEGER",
             "notNull": true
           }
@@ -238,9 +238,10 @@
         "foreignKeys": []
       }
     ],
+    "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"e5d4cdc61597feea09b9acdde58bf0af\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"48c06ab3fdfd129c6bbfb969cef1050a\")"
     ]
   }
 }

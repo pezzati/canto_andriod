@@ -1,7 +1,7 @@
 package com.hmomeni.canto.activities
 
 import android.animation.Animator
-import android.app.ProgressDialog
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -20,6 +20,7 @@ import com.hmomeni.canto.vms.LoginViewModel
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
 import kotlinx.android.synthetic.main.activity_login.*
+import retrofit2.HttpException
 import timber.log.Timber
 import java.util.regex.Pattern
 
@@ -42,7 +43,7 @@ class LoginActivity : BaseActivity(), View.OnClickListener {
                 .requestEmail()
                 .build()
 
-        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+        mGoogleSignInClient = GoogleSignIn.getClient(this, gso)
 
         viewModel = ViewModelProviders.of(this, ViewModelFactory(app()))[LoginViewModel::class.java]
 
@@ -139,7 +140,11 @@ class LoginActivity : BaseActivity(), View.OnClickListener {
                             startActivity(Intent(this, MainActivity::class.java))
                             finish()
                         }, {
-                            Toast.makeText(this, R.string.failed_requstin_verification, Toast.LENGTH_SHORT).show()
+                            if (it is HttpException && it.code() == 400) {
+                                Toast.makeText(this, it.response().errorString(), Toast.LENGTH_SHORT).show()
+                            } else {
+                                Toast.makeText(this, R.string.failed_requstin_verification, Toast.LENGTH_SHORT).show()
+                            }
                             Timber.e(it)
                         }).addTo(compositeDisposable)
             } catch (e: ApiException) {
@@ -246,9 +251,7 @@ class LoginActivity : BaseActivity(), View.OnClickListener {
             return
         }
 
-        val progressDialog = ProgressDialog(this).apply {
-            isIndeterminate = true
-        }
+        val progressDialog = ProgressDialog(this)
 
         viewModel.signUp(phoneInput.text.toString())
                 .iomain()
@@ -261,15 +264,17 @@ class LoginActivity : BaseActivity(), View.OnClickListener {
                     timerCanceled = false
                     startCountDownTimer(45)
                 }, {
-                    Toast.makeText(this, R.string.failed_requstin_verification, Toast.LENGTH_SHORT).show()
+                    if (it is HttpException && it.code() == 400) {
+                        Toast.makeText(this, it.response().errorString(), Toast.LENGTH_SHORT).show()
+                    } else {
+                        Toast.makeText(this, R.string.failed_requstin_verification, Toast.LENGTH_SHORT).show()
+                    }
                     Timber.e(it)
                 }).addTo(compositeDisposable)
     }
 
     private fun submitCode() {
-        val progressDialog = ProgressDialog(this).apply {
-            isIndeterminate = true
-        }
+        val progressDialog = ProgressDialog(this)
 
         viewModel.verify(codeInput.text.toString())
                 .iomain()
@@ -279,12 +284,17 @@ class LoginActivity : BaseActivity(), View.OnClickListener {
                     startActivity(Intent(this, MainActivity::class.java))
                     finish()
                 }, {
-                    Toast.makeText(this, R.string.failed_requstin_verification, Toast.LENGTH_SHORT).show()
+                    if (it is HttpException && it.code() == 400) {
+                        Toast.makeText(this, it.response().errorString(), Toast.LENGTH_SHORT).show()
+                    } else {
+                        Toast.makeText(this, R.string.failed_requstin_verification, Toast.LENGTH_SHORT).show()
+                    }
                     Timber.e(it)
                 }).addTo(compositeDisposable)
     }
 
     private var timerCanceled = false
+    @SuppressLint("SetTextI18n")
     private fun startCountDownTimer(start: Int = 45) {
         codeTimer.text = "%02d:%02d".format(start / 60, start % 60)
         if (start > 0 && !timerCanceled) {

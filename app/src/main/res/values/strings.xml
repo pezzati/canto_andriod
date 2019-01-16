@@ -62,8 +62,8 @@
     <string name="are_you_sure_to_but_x_tries">Are you sure to buy %d tries of %s?</string>
     <string name="yes_buy">Yes, Buy</string>
     <string name="purchase_song_failed">Purchase song failed</string>
-    <string name="muxing_project" translatable="false">Muxing project</string>
-    <string name="muxing_done" translatable="false">Mxuing done</string>
+    <string name="muxing_project">Muxing project</string>
+    <string name="muxing_done">Mxuing done</string>
     <string name="congrats">Congratulations!</string>
     <string name="your_project_is_now_being_processed">Your project was successfully recorded and is now being processed and will be available shortly.</string>
     <string name="no_network">Network Issue</string>
@@ -74,4 +74,9 @@
     <string name="update">Update</string>
     <string name="update_force_rationale">To continue using Canto you to update to latest version now.</string>
     <string name="force_update">Force Update</string>
+    <string name="choose_valid_username">Username can only contain alphnumeric characters with underscore and it can only start with a letter</string>
+    <string name="avatar_is_mandatory">Picking an Avatar is mandatory</string>
+    <string name="updating_user_failed">Updating user fialed, please try again</string>
+    <string name="user_info_updated_successfully">User info updated successfully</string>
+    <string name="valid_username">Valid username</string>
 </resources>

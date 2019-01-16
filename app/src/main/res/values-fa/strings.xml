@@ -74,4 +74,9 @@
     <string name="force_update">بروزرسانی ضروری</string>
     <string name="muxing_project">در حال ذخیره سازی…</string>
     <string name="muxing_done">با موفقیت ذخیره شد.</string>
+    <string name="choose_valid_username">نام کاربری فقط می‌تواند شامل حروف انگلیسی، اعداد یا _ باشد و فقط می‌تواند با یک حرف شروع شود</string>
+    <string name="avatar_is_mandatory">انتخاب آواتار الزامی می‌باشد</string>
+    <string name="updating_user_failed">بروزرسانی اطلاعات با مشکل مواجه شد. لطفا دوباره تلاش کنید</string>
+    <string name="user_info_updated_successfully">اطلاعات شما با موفقیت بروزرسانی شد</string>
+    <string name="valid_username">نام کاربری معتبر است</string>
 </resources>

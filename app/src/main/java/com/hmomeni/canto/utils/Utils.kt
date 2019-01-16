@@ -14,11 +14,13 @@ import android.view.View
 import android.view.WindowManager
 import androidx.core.content.ContextCompat
 import com.bumptech.glide.RequestBuilder
+import com.google.gson.JsonParser
 import com.hmomeni.canto.App
 import io.reactivex.*
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation
+import retrofit2.Response
 import java.io.File
 
 
@@ -150,4 +152,13 @@ fun installWatermark(context: Context): String {
         }
     }
     return outFile.absolutePath
+}
+
+fun Response<*>.errorString(): String? {
+    val jo = JsonParser().parse(this.errorBody()?.string())
+    return if (jo.isJsonNull) {
+        null
+    } else {
+        jo.asJsonArray[0].asJsonObject["error"].asString
+    }
 }
