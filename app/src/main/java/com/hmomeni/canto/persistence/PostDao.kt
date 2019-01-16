@@ -9,7 +9,7 @@ interface PostDao {
     @Insert
     fun insert(post: FullPost)
 
-    @Insert(onConflict = OnConflictStrategy.FAIL)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insertIgnore(post: FullPost): Long
 
     @Update

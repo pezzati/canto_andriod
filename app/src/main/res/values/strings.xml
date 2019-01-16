@@ -62,8 +62,8 @@
     <string name="are_you_sure_to_but_x_tries">Are you sure to buy %d tries of %s?</string>
     <string name="yes_buy">Yes, Buy</string>
     <string name="purchase_song_failed">Purchase song failed</string>
-    <string name="muxing_project">Muxing project</string>
-    <string name="muxing_done">Mxuing done</string>
+    <string name="muxing_project" translatable="false">Muxing project</string>
+    <string name="muxing_done" translatable="false">Mxuing done</string>
     <string name="congrats">Congratulations!</string>
     <string name="your_project_is_now_being_processed">Your project was successfully recorded and is now being processed and will be available shortly.</string>
     <string name="no_network">Network Issue</string>

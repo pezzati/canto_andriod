@@ -1,14 +1,17 @@
 package com.hmomeni.canto.services
 
+import android.annotation.SuppressLint
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.app.Service
 import android.content.Context
 import android.content.Intent
-import android.graphics.BitmapFactory
+import android.graphics.Bitmap
+import android.media.ThumbnailUtils
 import android.os.Build
 import android.os.IBinder
+import android.provider.MediaStore.Video.Thumbnails.MINI_KIND
 import android.widget.Toast
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
@@ -24,7 +27,9 @@ import com.hmomeni.canto.utils.ffmpeg.FFmpeg
 import com.hmomeni.canto.utils.installWatermark
 import com.hmomeni.canto.utils.iomain
 import com.hmomeni.canto.vms.EditViewModel
+import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import timber.log.Timber
 import java.io.File
 
@@ -70,12 +75,13 @@ class MuxerService : Service() {
             stopSelf()
             return
         }
-        createNotification(false)
+
         inProgress = true
         activeJob = jobList[0]
         jobList.removeAt(0)
 
         activeJob!!.let { job ->
+            createNotification(false, job.inputFiles[0])
             val ffmpeg = FFmpeg.getInstance(this)
             if (!ffmpeg.isSupported) {
                 Toast.makeText(this, "FFMPEG not supported!", Toast.LENGTH_SHORT).show()
@@ -156,6 +162,7 @@ class MuxerService : Service() {
         }
     }
 
+    @SuppressLint("CheckResult")
     private fun saveProject(job: MuxJob) {
         viewModel.getPost(job.postId)
                 .iomain()
@@ -168,7 +175,7 @@ class MuxerService : Service() {
                             .iomain()
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribe({
-                                createNotification(true)
+                                createNotification(true, job.outputFile)
                             }, {
                                 Timber.e(it)
                             })
@@ -189,28 +196,39 @@ class MuxerService : Service() {
         }
     }
 
-    private fun createNotification(finish: Boolean) {
+    @SuppressLint("CheckResult")
+    private fun createNotification(finish: Boolean, videoPath: String) {
+        Observable.create<Bitmap> {
+            val thumbnail = ThumbnailUtils.createVideoThumbnail(videoPath, MINI_KIND)
+            it.onNext(thumbnail)
+            it.onComplete()
+        }.subscribeOn(Schedulers.computation())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
+                    val pendingIntent = PendingIntent.getActivity(this, hashCode(), Intent(this, MainActivity::class.java).apply {
+                        putExtra("target", "profile")
+                    }, PendingIntent.FLAG_UPDATE_CURRENT)
 
-        val pendingIntent = PendingIntent.getActivity(this, hashCode(), Intent(this, MainActivity::class.java).apply {
-            putExtra("target", "profile")
-        }, PendingIntent.FLAG_UPDATE_CURRENT)
+                    val nBuilder = NotificationCompat.Builder(this, CHANNEL_ID)
+                            .setContentTitle(getString(R.string.canto))
+                            .setContentText(getString(R.string.muxing_project))
+                            .setSmallIcon(R.drawable.cantoriom)
+                            .setLargeIcon(it)
 
-        val nBuilder = NotificationCompat.Builder(this, CHANNEL_ID)
-                .setContentTitle(getString(R.string.canto))
-                .setContentText(getString(R.string.muxing_project))
-                .setSmallIcon(R.drawable.cantoriom)
-                .setLargeIcon(BitmapFactory.decodeResource(resources, R.drawable.canto_logo))
+                    if (!finish) nBuilder.setProgress(100, 100, true)
 
-        if (finish) {
-            nBuilder.setContentIntent(pendingIntent)
-            nBuilder.setContentText(getString(R.string.muxing_done))
-        }
-        if (finish) {
-            stopForeground(false)
-            mNotificationManager.notify(hashCode(), nBuilder.build())
-        } else {
-            startForeground(hashCode(), nBuilder.build())
-        }
-
+                    if (finish) {
+                        nBuilder.setContentIntent(pendingIntent)
+                        nBuilder.setContentText(getString(R.string.muxing_done))
+                    }
+                    if (finish) {
+                        stopForeground(false)
+                        mNotificationManager.notify(hashCode(), nBuilder.build())
+                    } else {
+                        startForeground(hashCode(), nBuilder.build())
+                    }
+                }, {
+                    Timber.e(it)
+                })
     }
 }

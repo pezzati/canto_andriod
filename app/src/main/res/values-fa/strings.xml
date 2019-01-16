@@ -17,11 +17,11 @@
     <string name="didnt_receive_code">رمزی دریافت نکردید؟</string>
     <string name="wrong_phone_number">شماره تلفن اشتباه است؟</string>
     <string name="dubsmash">دابسمش</string>
-    <string name="dubsmash_desc">دابسمش</string>
+    <string name="dubsmash_desc">موزیک دلخواه خود را پیدا کنید، در حال لب زدن با آن ، ویدیو  کلیپ های خلاقانه بسازید</string>
     <string name="sing">خوانندگی</string>
-    <string name="sing_desc">خوانندگی</string>
+    <string name="sing_desc">بجای خواننده مورد علاقه خود روی آهنگ دلخواهتان بخوانید  و موزیک ویدیو منحصر به خودتان را بسازید</string>
     <string name="karaoke">کارائوکی</string>
-    <string name="karaoke_desc">کارائوکی</string>
+    <string name="karaoke_desc">با اتصال موبایل خود به هر سیستم صوتی میتوانید صدای خود و آهنگ را همزمان بشنوید و روی آهنگ بخوانید</string>
     <string name="failed_requstin_verification">درخواست تأیید با مشکل روبرو شد</string>
     <string name="home">خانه</string>
     <string name="search">جستجو</string>
@@ -72,4 +72,6 @@
     <string name="update">بروزرسانی</string>
     <string name="update_force_rationale">این نسخه از نرم افزار دیگر قابل استفاده نیست، برای ادامه بروزرسانی کنید.</string>
     <string name="force_update">بروزرسانی ضروری</string>
+    <string name="muxing_project">در حال ذخیره سازی…</string>
+    <string name="muxing_done">با موفقیت ذخیره شد.</string>
 </resources>
