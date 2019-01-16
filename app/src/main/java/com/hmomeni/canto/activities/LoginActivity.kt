@@ -83,11 +83,12 @@ class LoginActivity : BaseActivity(), View.OnClickListener {
                                     }).show()
                         }
                         1 -> PaymentDialog(this,
-                                getString(R.string.update_required),
-                                getString(R.string.update_suggest_rationale),
-                                imageResId = R.drawable.update,
+                                getString(R.string.force_update),
+                                getString(R.string.update_force_rationale),
+                                imageResId = R.drawable.force_update,
+                                autoDismiss = false,
                                 showPositiveButton = true,
-                                showNegativeButton = true,
+                                showNegativeButton = false,
                                 positiveButtonText = getString(R.string.update),
                                 negativeButtonText = getString(R.string.ask_later),
                                 positiveListener = {

@@ -135,9 +135,9 @@ class MainActivity : BaseActivity() {
                                     }).show()
                         }
                         1 -> PaymentDialog(this,
-                                getString(R.string.update_required),
-                                getString(R.string.update_suggest_rationale),
-                                imageResId = R.drawable.update,
+                                getString(R.string.force_update),
+                                getString(R.string.update_force_rationale),
+                                imageResId = R.drawable.force_update,
                                 showPositiveButton = true,
                                 showNegativeButton = false,
                                 autoDismiss = false,

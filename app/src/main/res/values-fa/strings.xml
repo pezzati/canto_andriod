@@ -36,7 +36,7 @@
     <string name="posts">پست‌ها</string>
     <string name="story">استوری</string>
     <string name="ok">باشه</string>
-    <string name="update_required">نیازمند بروزرسانی</string>
+    <string name="update_required">بروزرسانی</string>
     <string name="update_rationale">نسخه جدید از کانتو در مارکت موجود است. لطفا به روزرسانی کنید.</string>
     <string name="login_by_email">ورود با ایمیل</string>
     <string name="invalid_phone_number">شماره نامعتبر است (درست: 09123456789)</string>
@@ -62,4 +62,14 @@
     <string name="are_you_sure_to_but_x_tries">از خرید %d تلاش برای \"%s\" اطمینان دارید؟</string>
     <string name="yes_buy">آره، می‌خرم</string>
     <string name="purchase_song_failed">خرید آهنگ موفق نبود. لطفا مجددا سعی کنید و یا با پشتیبانی تماس بگیرید.</string>
+    <string name="congrats">تبریک!</string>
+    <string name="your_project_is_now_being_processed">پروژه شما با موفق ضبط شد و هم اکنون در حال پردازش و نهایی سازی می‌باشد.</string>
+    <string name="no_network">" قطعی اینترنت"</string>
+    <string name="please_check_internet">کاربر گرامی اینترنت شما وصل نیست \\nلطفا از اتصال به اینترنت مطمئن شوید</string>
+    <string name="audio_track_not_found">فایل صوتی یافت نشد</string>
+    <string name="update_suggest_rationale">برای بهبود عملکرد نرم افزار بهتر است بروزرسانی کنید</string>
+    <string name="ask_later">بعدا بپرس</string>
+    <string name="update">بروزرسانی</string>
+    <string name="update_force_rationale">این نسخه از نرم افزار دیگر قابل استفاده نیست، برای ادامه بروزرسانی کنید.</string>
+    <string name="force_update">بروزرسانی ضروری</string>
 </resources>

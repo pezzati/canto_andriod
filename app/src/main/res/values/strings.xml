@@ -72,4 +72,6 @@
     <string name="update_suggest_rationale">To receive the latest improvements and features, we suggest you receive the latest version.</string>
     <string name="ask_later">Ask Later</string>
     <string name="update">Update</string>
+    <string name="update_force_rationale">To continue using Canto you to update to latest version now.</string>
+    <string name="force_update">Force Update</string>
 </resources>
