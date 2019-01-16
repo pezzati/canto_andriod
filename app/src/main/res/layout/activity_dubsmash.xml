@@ -70,7 +70,7 @@
         android:layout_width="36dp"
         android:layout_height="36dp"
         android:layout_marginEnd="24dp"
-        android:src="@drawable/ic_settings"
+        android:src="@drawable/ic_setting"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@+id/recordBtn"
         app:layout_constraintEnd_toStartOf="@+id/recordBtn"
@@ -81,7 +81,7 @@
         android:layout_width="36dp"
         android:layout_height="36dp"
         android:layout_marginStart="24dp"
-        android:src="@drawable/ic_restore"
+        android:src="@drawable/ic_rotate_camera"
         app:layout_constraintBottom_toBottomOf="@+id/recordBtn"
         app:layout_constraintStart_toEndOf="@+id/recordBtn"
         app:layout_constraintTop_toTopOf="@+id/recordBtn" />
