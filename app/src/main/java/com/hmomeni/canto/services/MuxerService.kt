@@ -21,6 +21,7 @@ import com.hmomeni.canto.entities.PROJECT_TYPE_SINGING
 import com.hmomeni.canto.utils.app
 import com.hmomeni.canto.utils.ffmpeg.FFcommandExecuteResponseHandler
 import com.hmomeni.canto.utils.ffmpeg.FFmpeg
+import com.hmomeni.canto.utils.installWatermark
 import com.hmomeni.canto.utils.iomain
 import com.hmomeni.canto.vms.EditViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -44,9 +45,11 @@ class MuxerService : Service() {
     private var activeJob: MuxJob? = null
     private lateinit var viewModel: EditViewModel
     private lateinit var mNotificationManager: NotificationManagerCompat
+    private lateinit var watermark: String
 
     override fun onCreate() {
         super.onCreate()
+        watermark = installWatermark(this)
         viewModel = EditViewModel(app())
         mNotificationManager = NotificationManagerCompat.from(this)
         createNotificationChannel()
@@ -84,6 +87,8 @@ class MuxerService : Service() {
                 PROJECT_TYPE_DUBSMASH -> {
                     commands += listOf(
                             "-i", job.inputFiles[0],
+                            "-i", watermark,
+                            "-filter_complex", "overlay=x=(main_w-overlay_w-40):y=(main_h-overlay_h-40)",
                             "-i", job.inputFiles[1]
                     )
                     commands.addAll(listOf(
@@ -92,7 +97,7 @@ class MuxerService : Service() {
                             "-crf", "30",
                             "-preset", "ultrafast",
                             "-map", "0:v:0",
-                            "-map", "1:a:0",
+                            "-map", "2:a:0",
                             "-shortest", "-y", job.outputFile
                     ))
                 }
@@ -100,18 +105,20 @@ class MuxerService : Service() {
 
                     commands += listOf(
                             "-i", job.inputFiles[0],
+                            "-i", watermark,
+                            "-filter_complex", "overlay=x=(main_w-overlay_w-40):y=(main_h-overlay_h-40)",
                             "-i", job.inputFiles[1],
                             "-i", job.inputFiles[2]
                     )
 
                     commands.addAll(listOf(
-                            "-filter_complex", "[1:0][2:0]  amix=inputs=2:duration=longest",
+                            "-filter_complex", "[2:0][3:0]  amix=inputs=2:duration=longest",
                             "-codec:a", "aac",
                             "-codec:v", "libx264",
                             "-crf", "30",
                             "-preset", "ultrafast",
                             "-map", "0:v",
-                            "-map", "1:a:0",
+                            "-map", "2:a:0",
                             "-shortest", "-y", job.outputFile
                     ))
                 }

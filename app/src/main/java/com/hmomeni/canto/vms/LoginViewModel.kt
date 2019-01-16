@@ -87,6 +87,20 @@ class LoginViewModel : ViewModel(), DIComponent.Injectable {
                 .ignoreElement()
     }
 
+    fun googleSignIn(idToken: String): Completable {
+        val map = makeMap().apply {
+            add("token", idToken)
+        }
+
+        return api.googleSignIn(map.body())
+                .doOnSuccess {
+                    val token = it["token"].asString
+                    userSession.token = token
+                    Prefs.putString("token", token)
+                }
+                .ignoreElement()
+    }
+
     fun isFFMpegAvailable(): Boolean {
         val ffmpeg = File(app.filesDir, "ffmpeg")
         return ffmpeg.exists()

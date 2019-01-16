@@ -132,8 +132,15 @@ class LoginActivity : BaseActivity(), View.OnClickListener {
             val task = GoogleSignIn.getSignedInAccountFromIntent(data)
             try {
                 val account = task.getResult(ApiException::class.java)
-
-                Timber.d(account.toString())
+                viewModel.googleSignIn(account!!.id!!)
+                        .iomain()
+                        .subscribe({
+                            startActivity(Intent(this, MainActivity::class.java))
+                            finish()
+                        }, {
+                            Toast.makeText(this, R.string.failed_requstin_verification, Toast.LENGTH_SHORT).show()
+                            Timber.e(it)
+                        }).addTo(compositeDisposable)
             } catch (e: ApiException) {
 
             }

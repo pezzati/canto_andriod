@@ -19,6 +19,7 @@ import io.reactivex.*
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation
+import java.io.File
 
 
 fun Application.app(): App {
@@ -135,3 +136,18 @@ fun getBitmapFromVectorDrawable(context: Context, drawableId: Int): Bitmap {
 
 @SuppressLint("HardwareIds")
 fun getDeviceId(context: Context): String = Settings.Secure.getString(context.contentResolver, Settings.Secure.ANDROID_ID)
+
+
+fun installWatermark(context: Context): String {
+    val outFile = File(context.filesDir, "watermark.png")
+    if (outFile.exists()) {
+        return outFile.absolutePath
+    }
+    val inputStream = context.assets.open("watermark.png")
+    inputStream.use { i ->
+        outFile.outputStream().use {
+            i.copyTo(it)
+        }
+    }
+    return outFile.absolutePath
+}

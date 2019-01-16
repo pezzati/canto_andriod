@@ -14,6 +14,9 @@ interface Api {
     @POST("user/signup")
     fun signUp(@Body requestBody: RequestBody): Completable
 
+    @POST("user/google_signup")
+    fun googleSignIn(@Body requestBody: RequestBody): Single<JsonObject>
+
     @POST("user/profile/verify")
     fun verify(@Body requestBody: RequestBody): Single<JsonObject>
 

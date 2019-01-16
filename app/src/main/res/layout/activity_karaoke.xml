@@ -62,7 +62,7 @@
         app:layout_constraintBottom_toBottomOf="@+id/pitchSlider"
         app:layout_constraintEnd_toEndOf="parent"
         app:vs_iconHigh="@drawable/ic_reverb_hi"
-        app:vs_iconLow="@drawable/ic_reverb_mid"
+        app:vs_iconLow="@drawable/ic_reverb_low"
         app:vs_iconMedium="@drawable/ic_reverb_mid" />
 
     <com.hmomeni.canto.utils.views.VerticalSlider
