@@ -4,9 +4,10 @@ import android.util.SparseIntArray
 import com.google.gson.JsonObject
 import com.google.gson.reflect.TypeToken
 import com.hmomeni.canto.App
+import com.hmomeni.canto.utils.UserSession
 import com.pixplicity.easyprefs.library.Prefs
 
-class UserInventory {
+class UserInventory(val userSession: UserSession) {
     var items: SparseIntArray = SparseIntArray()
     var coins: Long = 0
 
@@ -30,6 +31,8 @@ class UserInventory {
         }
         val c = jo["coins"].asLong
         coins = c
+        userSession.user?.coins = c.toInt()
+        userSession.updateUser()
         items = sparseIntArray
         save()
     }

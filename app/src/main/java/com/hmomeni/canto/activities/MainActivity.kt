@@ -160,6 +160,8 @@ class MainActivity : BaseActivity() {
                                 handshake()
                             }).show()
                 }).addTo(compositeDisposable)
+
+        viewModel.getUser().iomain().subscribe({}, {}).addTo(compositeDisposable)
     }
 
     private fun openPost(post: Post) {

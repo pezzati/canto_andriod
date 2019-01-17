@@ -79,4 +79,5 @@
     <string name="updating_user_failed">بروزرسانی اطلاعات با مشکل مواجه شد. لطفا دوباره تلاش کنید</string>
     <string name="user_info_updated_successfully">اطلاعات شما با موفقیت بروزرسانی شد</string>
     <string name="valid_username">نام کاربری معتبر است</string>
+    <string name="login_by_google_failed">ورود از طریق گوگل انجام نشد</string>
 </resources>

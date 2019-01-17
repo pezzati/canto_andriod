@@ -6,7 +6,10 @@ import com.hmomeni.canto.BuildConfig
 import com.hmomeni.canto.api.Api
 import com.hmomeni.canto.di.DIComponent
 import com.hmomeni.canto.entities.Post
+import com.hmomeni.canto.entities.User
 import com.hmomeni.canto.entities.UserInventory
+import com.hmomeni.canto.persistence.UserDao
+import com.hmomeni.canto.utils.UserSession
 import com.hmomeni.canto.utils.getDeviceId
 import com.hmomeni.canto.utils.navigation.NavEvent
 import com.hmomeni.canto.utils.toBody
@@ -26,6 +29,11 @@ class MainViewModel : ViewModel(), DIComponent.Injectable {
     lateinit var navEvents: PublishProcessor<NavEvent>
     @Inject
     lateinit var userInventory: UserInventory
+    @Inject
+    lateinit var userSession: UserSession
+
+    @Inject
+    lateinit var userDao: UserDao
 
     fun sing(post: Post): Completable {
         return api.sing(post.id)
@@ -41,6 +49,21 @@ class MainViewModel : ViewModel(), DIComponent.Injectable {
                     userInventory.update(it)
                 }
                 .ignoreElement()
+    }
+
+    fun getUser(): Single<User> = Single.create { e ->
+        userDao.getCurrentUser().subscribe({
+            userSession.user = it
+            e.onSuccess(it)
+        }, {
+            api.getUserInfo().subscribe({
+                userSession.user = it
+                userDao.insert(it)
+                e.onSuccess(it)
+            }, {
+                e.onError(it)
+            })
+        })
     }
 
     fun handshake(app: App): Single<Pair<Int, String?>> {

@@ -81,4 +81,5 @@
     <string name="user_info_updated_successfully">User info updated successfully</string>
     <string name="valid_username">Valid username</string>
     <string name="login_by_google_failed">Login by Google failed</string>
+    <string name="days">Days</string>
 </resources>

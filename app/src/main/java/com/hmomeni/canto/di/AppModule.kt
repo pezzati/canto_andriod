@@ -2,6 +2,7 @@ package com.hmomeni.canto.di
 
 import com.hmomeni.canto.App
 import com.hmomeni.canto.entities.UserInventory
+import com.hmomeni.canto.persistence.UserDao
 import com.hmomeni.canto.utils.DownloadEvent
 import com.hmomeni.canto.utils.UserSession
 import com.hmomeni.canto.utils.navigation.NavEvent
@@ -17,7 +18,7 @@ class AppModule(private val app: App) {
 
     @Provides
     @Singleton
-    fun providesUserSession(): UserSession = UserSession()
+    fun providesUserSession(userDao: UserDao): UserSession = UserSession(userDao)
 
     @Provides
     @Singleton
@@ -29,7 +30,7 @@ class AppModule(private val app: App) {
 
     @Provides
     @Singleton
-    fun providesInventory(): UserInventory {
-        return UserInventory()
+    fun providesInventory(userSession: UserSession): UserInventory {
+        return UserInventory(userSession)
     }
 }

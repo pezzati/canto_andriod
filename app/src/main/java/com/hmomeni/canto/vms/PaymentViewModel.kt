@@ -4,7 +4,8 @@ import androidx.lifecycle.ViewModel
 import com.hmomeni.canto.api.Api
 import com.hmomeni.canto.di.DIComponent
 import com.hmomeni.canto.entities.PaymentPackage
-import com.hmomeni.canto.entities.UserInventory
+import com.hmomeni.canto.persistence.UserDao
+import com.hmomeni.canto.utils.UserSession
 import com.hmomeni.canto.utils.makeMap
 import io.reactivex.Completable
 import io.reactivex.Single
@@ -19,7 +20,9 @@ class PaymentViewModel : ViewModel(), DIComponent.Injectable {
     @Inject
     lateinit var api: Api
     @Inject
-    lateinit var userInventory: UserInventory
+    lateinit var userDao: UserDao
+    @Inject
+    lateinit var userSession: UserSession
 
     val items: MutableList<PaymentPackage> = mutableListOf()
     lateinit var pack: PaymentPackage
@@ -53,6 +56,10 @@ class PaymentViewModel : ViewModel(), DIComponent.Injectable {
                 .doOnSuccess {
                     val coin = it["coins"].asInt
                     Timber.d("New Coin=%d", coin)
+                    userSession.user?.let {
+                        it.coins = coin
+                        userDao.updateUser(it)
+                    }
                 }
                 .ignoreElement()
     }

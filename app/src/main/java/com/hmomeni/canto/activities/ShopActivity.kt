@@ -37,8 +37,6 @@ class ShopActivity : BaseActivity() {
         }
         setContentView(R.layout.activity_shop)
 
-        currentBalance.text = NumberFormat.getInstance(Locale.ENGLISH).format(viewModel.userInventory.coins)
-
         recyclerView.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(this)
         recyclerView.adapter = mAdapter
 
@@ -51,6 +49,14 @@ class ShopActivity : BaseActivity() {
                 }, {
                     Timber.e(it)
                 })
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.userSession.user?.let {
+            currentBalance.text = NumberFormat.getInstance(Locale.ENGLISH).format(it.coins)
+            daysRemaining.text = it.premiumDays.toString()
+        }
     }
 
     override fun onStop() {

@@ -141,8 +141,11 @@ class LoginActivity : BaseActivity(), View.OnClickListener {
                 val result = Auth.GoogleSignInApi.getSignInResultFromIntent(data)
                 if (result.isSuccess) {
                     val account = result.signInAccount
+                    val progressDialog = ProgressDialog(this)
                     viewModel.googleSignIn(account!!.idToken!!)
                             .iomain()
+                            .doOnSubscribe { progressDialog.show() }
+                            .doAfterTerminate { progressDialog.dismiss() }
                             .subscribe({
                                 startActivity(Intent(this, MainActivity::class.java))
                                 finish()

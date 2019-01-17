@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/backgroundColor"
     tools:context="com.hmomeni.canto.activities.ShopActivity">
 
     <ImageView
@@ -13,8 +14,8 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
-        android:src="@drawable/ic_bg_credit"
-        app:layout_constraintDimensionRatio="16:9"
+        android:src="@drawable/bg_card"
+        app:layout_constraintDimensionRatio="16:4"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -25,6 +26,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="32dp"
         android:fontFamily="@font/roboto_bold"
+        android:gravity="center_horizontal"
         android:minWidth="54dp"
         android:text="0"
         android:textSize="30sp"
@@ -48,10 +50,60 @@
         android:layout_width="wrap_content"
         android:layout_height="15dp"
         android:fontFamily="@font/roboto"
-        android:text="Cantorium"
+        android:text="Canto"
         android:textSize="10sp"
         app:layout_constraintRight_toRightOf="@+id/currentBalance"
         app:layout_constraintTop_toBottomOf="@+id/currentBalance" />
+
+    <View
+        android:id="@+id/creditDivider"
+        android:layout_width="1dp"
+        android:layout_height="0dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
+        android:background="@color/md_white_1000"
+        app:layout_constraintBottom_toBottomOf="@id/bgCredit"
+        app:layout_constraintLeft_toRightOf="@+id/currentBalance"
+        app:layout_constraintTop_toTopOf="@id/bgCredit"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <TextView
+        android:id="@+id/daysRemaining"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:fontFamily="@font/roboto_bold"
+        android:gravity="center_horizontal"
+        android:minWidth="54dp"
+        android:text="0"
+        android:textSize="30sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/bgCredit"
+        app:layout_constraintLeft_toRightOf="@+id/creditDivider"
+        app:layout_constraintTop_toTopOf="@+id/bgCredit" />
+
+    <ImageView
+        android:id="@+id/daysIcon"
+        android:layout_width="12dp"
+        android:layout_height="12dp"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintBottom_toBottomOf="@+id/daysTexy"
+        app:layout_constraintEnd_toEndOf="@+id/daysRemaining"
+        app:layout_constraintRight_toLeftOf="@+id/daysTexy"
+        app:layout_constraintTop_toTopOf="@+id/daysTexy"
+        app:srcCompat="@drawable/cantoriom" />
+
+    <TextView
+        android:id="@+id/daysTexy"
+        android:layout_width="wrap_content"
+        android:layout_height="15dp"
+        android:fontFamily="@font/roboto"
+        android:text="@string/days"
+        android:textSize="10sp"
+        app:layout_constraintLeft_toRightOf="@+id/daysIcon"
+        app:layout_constraintRight_toRightOf="@+id/daysRemaining"
+        app:layout_constraintTop_toBottomOf="@+id/daysRemaining" />
 
     <TextView
         android:id="@+id/packages"
@@ -75,8 +127,10 @@
         android:layout_marginBottom="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/packages" />
+        app:layout_constraintTop_toBottomOf="@+id/packages"
+        app:layout_constraintVertical_bias="1.0" />
 
     <ProgressBar
         android:id="@+id/progressBar"
