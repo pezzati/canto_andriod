@@ -157,6 +157,9 @@ class LoginActivity : BaseActivity(), View.OnClickListener {
                                 }
                                 Timber.e(it)
                             }).addTo(compositeDisposable)
+                } else {
+                    Toast.makeText(this, R.string.failed_requstin_verification, Toast.LENGTH_SHORT).show()
+                    Timber.e("Code: %s, Message: %s", result.status.statusCode, result.status.statusMessage)
                 }
 
             } catch (e: Exception) {

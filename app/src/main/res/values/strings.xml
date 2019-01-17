@@ -1,5 +1,5 @@
 <resources>
-    <string name="google_signin_client_id" translatable="false">846781616423-3m21bsuka6js77s25dhh4opm9p2da0pb.apps.googleusercontent.com</string>
+    <string name="google_signin_client_id" translatable="false">243773746715-egtf23h3j7enij68h2udrtbp1ooqepv7.apps.googleusercontent.com</string>
     <string name="app_name">Canto</string>
     <string name="record">Record</string>
     <string name="stop">Stop</string>
