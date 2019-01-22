@@ -204,6 +204,7 @@ class LoginActivity : BaseActivity(), View.OnClickListener {
             loginBtn.setOnClickListener(this)
             phoneInflated = true
         }
+        phoneInput.setText("")
         if (email) {
             viewModel.signupMode = LoginViewModel.SignupMode.EMAIL
             loginTitle.setText(R.string.login_by_email)
@@ -243,6 +244,9 @@ class LoginActivity : BaseActivity(), View.OnClickListener {
             noCodeBtn.setOnClickListener(this)
             codeInflated = true
         }
+
+        phoneNumberView.text = phoneInput.text
+        noCodeBtn.isClickable = false
 
         step = 2
         codeInputWrapper.visibility = View.VISIBLE
@@ -294,8 +298,6 @@ class LoginActivity : BaseActivity(), View.OnClickListener {
                 .doOnSubscribe { progressDialog.show() }
                 .doAfterTerminate { progressDialog.dismiss() }
                 .subscribe({
-                    phoneNumberView.text = phoneInput.text
-                    noCodeBtn.isClickable = false
                     goToCodeInput()
                     timerCanceled = false
                     startCountDownTimer(45)
