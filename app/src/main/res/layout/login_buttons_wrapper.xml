@@ -53,18 +53,12 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/phoneBtn" />
 
-    <Button
+    <com.google.android.gms.common.SignInButton
         android:id="@+id/googleBtn"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="32dp"
         android:layout_marginEnd="32dp"
-        android:background="@drawable/login_google_btn_bg"
-        android:text="@string/google"
-        android:textAllCaps="false"
-        android:visibility="visible"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/emailBtn" />
+        android:visibility="visible" />
 </LinearLayout>

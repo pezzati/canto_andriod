@@ -12,6 +12,7 @@ import com.hmomeni.canto.App
 import com.hmomeni.canto.R
 import com.hmomeni.canto.entities.Post
 import com.hmomeni.canto.fragments.ListFragment
+import com.hmomeni.canto.services.FFMpegService
 import com.hmomeni.canto.utils.*
 import com.hmomeni.canto.utils.navigation.*
 import com.hmomeni.canto.vms.MainViewModel
@@ -46,6 +47,8 @@ class MainActivity : BaseActivity() {
         viewModel = ViewModelProviders.of(this, ViewModelFactory(app()))[MainViewModel::class.java]
 
         (application as App).di.inject(this)
+
+        startService(Intent(this, FFMpegService::class.java))
 
         if (!userSession.isUser()) {
             startActivity(Intent(this, LoginActivity::class.java))

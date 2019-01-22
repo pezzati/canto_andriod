@@ -30,6 +30,7 @@
 
         <service android:name=".services.DownloadService" />
         <service android:name=".services.MuxerService" />
+        <service android:name=".services.FFMpegService" />
 
         <activity
             android:name=".activities.MainActivity"

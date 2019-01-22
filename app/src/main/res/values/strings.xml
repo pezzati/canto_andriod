@@ -1,5 +1,5 @@
 <resources>
-    <string name="google_signin_client_id" translatable="false">243773746715-egtf23h3j7enij68h2udrtbp1ooqepv7.apps.googleusercontent.com</string>
+    <string name="google_signin_client_id" translatable="false">846781616423-v3f92os3p2m4m7ckf918f9orjahmdqaf.apps.googleusercontent.com</string>
     <string name="app_name">Canto</string>
     <string name="record">Record</string>
     <string name="stop">Stop</string>
@@ -82,4 +82,6 @@
     <string name="valid_username">Valid username</string>
     <string name="login_by_google_failed">Login by Google failed</string>
     <string name="days">Days</string>
+    <string name="preparing_assets">Preparing assets</string>
+    <string name="downloading">Downloading...</string>
 </resources>

@@ -45,9 +45,9 @@ class LoginActivity : BaseActivity(), View.OnClickListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        val clientId = getString(R.string.google_signin_client_id)
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(getString(R.string.google_signin_client_id))
+                .requestIdToken(clientId)
                 .requestEmail()
                 .build()
 
@@ -176,26 +176,12 @@ class LoginActivity : BaseActivity(), View.OnClickListener {
             googleBtn.setOnClickListener(this)
             buttonsInflated = true
         }
-        if (!viewModel.isFFMpegAvailable()) {
-            progressBar.visibility = View.VISIBLE
-            viewModel.downloadFFMpeg()
-                    .iomain()
-                    .subscribe({
-                        progressBar.progress = it
-                    }, {
-                        progressBar.visibility = View.GONE
-                    }, {
-                        progressBar.visibility = View.GONE
-                        prepareLogin()
-                    }).addTo(compositeDisposable)
-        } else {
-            val height = getScreenDimensions(this).height
-            cantoWrapper.animate().translationYBy(-height / 6f)
-            buttonsWrapper.postDelayed({
-                buttonsWrapper.visibility = View.VISIBLE
-                buttonsWrapper.animate().alpha(1f)
-            }, 300)
-        }
+        val height = getScreenDimensions(this).height
+        cantoWrapper.animate().translationYBy(-height / 6f)
+        buttonsWrapper.postDelayed({
+            buttonsWrapper.visibility = View.VISIBLE
+            buttonsWrapper.animate().alpha(1f)
+        }, 300)
     }
 
     private fun goToPhoneInput(email: Boolean = false) {
