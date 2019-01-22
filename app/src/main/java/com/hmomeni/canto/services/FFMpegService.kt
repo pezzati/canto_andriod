@@ -22,6 +22,7 @@ import java.io.FileOutputStream
 import java.io.IOException
 import java.net.HttpURLConnection
 import java.net.URL
+import java.util.*
 import java.util.concurrent.TimeUnit
 
 class FFMpegService : Service() {
@@ -60,10 +61,12 @@ class FFMpegService : Service() {
                     .doAfterTerminate {
                         inProgress = false
                         stopForeground(true)
+                        stopSelf()
                     }
                     .subscribe({
                         Timber.d("Downloading FFMPEG, progress=%d", it)
                         builder.setProgress(100, it, false)
+                        builder.setContentText("%d%%".format(Locale.ENGLISH, it))
                         nManager.notify(hashCode(), builder.build())
                     }, {
                         Crashlytics.logException(it)
