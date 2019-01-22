@@ -20,6 +20,9 @@ import com.hmomeni.canto.vms.LoginViewModel
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
 import kotlinx.android.synthetic.main.activity_login.*
+import kotlinx.android.synthetic.main.login_buttons_wrapper.*
+import kotlinx.android.synthetic.main.login_code_input_wrapper.*
+import kotlinx.android.synthetic.main.login_phone_input_wrapper.*
 import retrofit2.HttpException
 import timber.log.Timber
 import java.util.regex.Pattern
@@ -35,6 +38,10 @@ class LoginActivity : BaseActivity(), View.OnClickListener {
     private var mGoogleApiClient: GoogleApiClient? = null
 
     private val GOOGLE_SIGNIN_REQ_CODE = 4543
+
+    private var buttonsInflated = false
+    private var phoneInflated = false
+    private var codeInflated = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,15 +61,6 @@ class LoginActivity : BaseActivity(), View.OnClickListener {
         viewModel = ViewModelProviders.of(this, ViewModelFactory(app()))[LoginViewModel::class.java]
 
         setContentView(R.layout.activity_login)
-
-        phoneBtn.setOnClickListener(this)
-        emailBtn.setOnClickListener(this)
-        loginBtn.setOnClickListener(this)
-        googleBtn.setOnClickListener(this)
-        verifyBtn.setOnClickListener(this)
-        wrongPhoneBtn.setOnClickListener(this)
-        noCodeBtn.setOnClickListener(this)
-
 
         cantoWrapper.translationY += getScreenDimensions(this).height / 6
 
@@ -171,6 +169,13 @@ class LoginActivity : BaseActivity(), View.OnClickListener {
     }
 
     private fun prepareLogin() {
+        if (!buttonsInflated) {
+            buttonsStub.inflate()
+            phoneBtn.setOnClickListener(this)
+            emailBtn.setOnClickListener(this)
+            googleBtn.setOnClickListener(this)
+            buttonsInflated = true
+        }
         if (!viewModel.isFFMpegAvailable()) {
             progressBar.visibility = View.VISIBLE
             viewModel.downloadFFMpeg()
@@ -194,6 +199,11 @@ class LoginActivity : BaseActivity(), View.OnClickListener {
     }
 
     private fun goToPhoneInput(email: Boolean = false) {
+        if (!phoneInflated) {
+            phoneInputStub.inflate()
+            loginBtn.setOnClickListener(this)
+            phoneInflated = true
+        }
         if (email) {
             viewModel.signupMode = LoginViewModel.SignupMode.EMAIL
             loginTitle.setText(R.string.login_by_email)
@@ -224,6 +234,15 @@ class LoginActivity : BaseActivity(), View.OnClickListener {
 
     private fun goToCodeInput() {
         if (step == 2) return
+
+        if (!codeInflated) {
+            codeInputStub.inflate()
+
+            verifyBtn.setOnClickListener(this)
+            wrongPhoneBtn.setOnClickListener(this)
+            noCodeBtn.setOnClickListener(this)
+            codeInflated = true
+        }
 
         step = 2
         codeInputWrapper.visibility = View.VISIBLE
