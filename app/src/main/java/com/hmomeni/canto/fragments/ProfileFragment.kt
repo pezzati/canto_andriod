@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
+import com.crashlytics.android.Crashlytics
 import com.hmomeni.canto.R
 import com.hmomeni.canto.activities.EditUserActivity
 import com.hmomeni.canto.adapters.rcl.ProjectsRclAdapter
@@ -38,13 +39,19 @@ class ProfileFragment : androidx.fragment.app.Fragment() {
         viewModel.projectDao
                 .fetchCompleteProjects()
                 .iomain()
-                .subscribe { l ->
+                .subscribe({ l ->
+                    if (l.isEmpty()) {
+                        showNoPost()
+                    }
                     recyclerView.adapter = ProjectsRclAdapter(l).also {
                         it.clickPublisher.subscribe { pos ->
                             viewModel.navEvents.onNext(ProjectEvent(l[pos].projectId))
                         }
                     }
-                }.addTo(compositeDisposable)
+                }, {
+                    showNoPost()
+                    Crashlytics.logException(it)
+                }).addTo(compositeDisposable)
 
         recyclerView.setPadding(0, getScreenDimensions(context!!).height / 4, 0, 0)
 
@@ -74,8 +81,17 @@ class ProfileFragment : androidx.fragment.app.Fragment() {
                     Timber.e(it)
                 }).addTo(compositeDisposable)
     }
+
     override fun onDestroyView() {
         compositeDisposable.clear()
         super.onDestroyView()
+    }
+
+    private fun showNoPost() {
+        noPostImage.visibility = View.VISIBLE
+        noPostText.visibility = View.VISIBLE
+        GlideApp.with(noPostImage)
+                .load(R.drawable.not_post_yet)
+                .into(noPostImage)
     }
 }

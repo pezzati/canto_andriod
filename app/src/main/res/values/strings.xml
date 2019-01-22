@@ -85,4 +85,5 @@
     <string name="preparing_assets">Preparing assets</string>
     <string name="downloading">Downloading...</string>
     <string name="wait_for_assets">Please wait while we prepare some assets for you!</string>
+    <string name="nothing_posted_yet">Nothing posted yet</string>
 </resources>

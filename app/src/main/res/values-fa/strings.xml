@@ -81,4 +81,8 @@
     <string name="valid_username">نام کاربری معتبر است</string>
     <string name="login_by_google_failed">ورود از طریق گوگل انجام نشد</string>
     <string name="days">روز</string>
+    <string name="preparing_assets">در حال آماده سازی..</string>
+    <string name="downloading">در حال دریافت...</string>
+    <string name="wait_for_assets">لطفا صبر کنید تا کانتو آماده کار شود</string>
+    <string name="nothing_posted_yet">هنوز ویدیویی را ذخیره نکرده‌اید</string>
 </resources>
