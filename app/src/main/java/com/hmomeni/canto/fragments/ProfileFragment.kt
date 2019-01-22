@@ -74,6 +74,7 @@ class ProfileFragment : androidx.fragment.app.Fragment() {
                     it.avatar?.let {
                         GlideApp.with(userPhoto)
                                 .load(it.link)
+                                .placeholder(R.drawable.ic_user_place_holder)
                                 .rounded(dpToPx(10))
                                 .into(userPhoto)
                     }
