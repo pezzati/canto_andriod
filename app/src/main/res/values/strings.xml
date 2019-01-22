@@ -84,4 +84,5 @@
     <string name="days">Days</string>
     <string name="preparing_assets">Preparing assets</string>
     <string name="downloading">Downloading...</string>
+    <string name="wait_for_assets">Please wait while we prepare some assets for you!</string>
 </resources>

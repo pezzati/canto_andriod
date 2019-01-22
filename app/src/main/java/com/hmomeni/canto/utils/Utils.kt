@@ -162,3 +162,8 @@ fun Response<*>.errorString(): String? {
         jo.asJsonArray[0].asJsonObject["error"].asString
     }
 }
+
+fun isFFMpegAvailable(context: Context): Boolean {
+    val ffmpeg = File(context.filesDir, "ffmpeg")
+    return ffmpeg.exists()
+}

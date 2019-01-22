@@ -1,7 +1,6 @@
 package com.hmomeni.canto.fragments
 
 import android.annotation.SuppressLint
-import android.app.ProgressDialog
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager.PERMISSION_GRANTED
@@ -41,6 +40,8 @@ import com.karumi.dexter.PermissionToken
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener
 import com.tmall.ultraviewpager.transformer.UltraScaleTransformer
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxkotlin.addTo
 import kotlinx.android.synthetic.main.fragment_recorder.*
 import timber.log.Timber
 import java.util.*
@@ -56,6 +57,8 @@ class RecorderFragment : androidx.fragment.app.Fragment() {
 
     private val CAMERA_FRONT = "1"
     private val CAMERA_BACK = "0"
+
+    private val compositeDisposable = CompositeDisposable()
 
     @Inject
     lateinit var api: Api
@@ -569,7 +572,13 @@ class RecorderFragment : androidx.fragment.app.Fragment() {
     }
 
     private fun openActivity(mode: Int) {
-        val loadingDialog = ProgressDialog(context)
+
+        if (arrayOf(PROJECT_TYPE_SINGING, PROJECT_TYPE_DUBSMASH).contains(mode) && !isFFMpegAvailable(context!!)) {
+            Toast.makeText(context, R.string.wait_for_assets, Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        val loadingDialog = ProgressDialog(context!!)
         api.getSinglePost(postId = selectPostId)
                 .iomain()
                 .doOnSubscribe { loadingDialog.show() }
@@ -582,7 +591,7 @@ class RecorderFragment : androidx.fragment.app.Fragment() {
                     }
                 }, {
                     Timber.e(it)
-                })
+                }).addTo(compositeDisposable)
     }
 
 

@@ -42,6 +42,7 @@ class DownloadService : Service() {
 
     private var downloadUrl: String? = ""
     private var isCanceled = false
+    private var inProgress = false
     @Inject
     lateinit var downloadEvents: PublishProcessor<DownloadEvent>
 
@@ -51,8 +52,18 @@ class DownloadService : Service() {
 
         when (action) {
             ACTION_DOWNLOAD_START -> {
-                downloadUrl = intent.getStringExtra("file_url")
+                val newUrl = intent.getStringExtra("file_url")
+                if (inProgress && newUrl == downloadUrl) {
+                    return START_NOT_STICKY
+                }
+                if (inProgress) {
+                    isCanceled = true
+                }
+                downloadUrl = newUrl
                 thread {
+                    while (inProgress) {
+                        Thread.sleep(500)
+                    }
                     downloadFile()
                 }
             }
@@ -78,6 +89,7 @@ class DownloadService : Service() {
             return
         }
         try {
+            inProgress = true
             val url = URL(downloadUrl)
             val c = url.openConnection() as HttpURLConnection
             c.requestMethod = "GET"
@@ -106,6 +118,7 @@ class DownloadService : Service() {
                     c.disconnect()
                     isCanceled = false
                     onDownloadCanceled()
+                    inProgress = false
                     return
                 }
                 val percent = downloaded / fileLength.toFloat() * 100
@@ -126,6 +139,7 @@ class DownloadService : Service() {
             Timber.e(e)
             onDownloadFailed()
         }
+        inProgress = false
     }
 
     private fun onDownloadStarted() {

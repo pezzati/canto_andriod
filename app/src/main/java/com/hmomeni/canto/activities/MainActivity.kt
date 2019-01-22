@@ -56,6 +56,10 @@ class MainActivity : BaseActivity() {
             return
         }
 
+        if (intent.hasExtra("new_user") && intent.getBooleanExtra("new_user", false)) {
+            Intent(this, EditUserActivity::class.java)
+        }
+
         setContentView(R.layout.activity_main)
         navController = findNavController(R.id.mainNav)
         navDisposable = navEvents

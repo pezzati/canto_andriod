@@ -122,6 +122,10 @@ class DubsmashActivity : CameraActivity() {
 
         setContentView(R.layout.activity_dubsmash)
 
+        if (type == PROJECT_TYPE_DUBSMASH) {
+            pageTitle.setText(R.string.dubsmash)
+        }
+
         with(post.content!!) {
             fileUrl = if (type == PROJECT_TYPE_DUBSMASH) {
                 originalFileUrl

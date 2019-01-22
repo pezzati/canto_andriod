@@ -68,7 +68,7 @@ class LoginViewModel : ViewModel(), DIComponent.Injectable {
         return api.signUp(map.toBody())
     }
 
-    fun verify(code: String): Completable {
+    fun verify(code: String): Single<Boolean> {
         val map = makeMap().apply {
             if (signupMode == SignupMode.EMAIL) {
                 add("email", login)
@@ -84,7 +84,9 @@ class LoginViewModel : ViewModel(), DIComponent.Injectable {
                     userSession.token = token
                     Prefs.putString("token", token)
                 }
-                .ignoreElement()
+                .flatMap {
+                    Single.just(it["new_user"].asBoolean)
+                }
     }
 
     fun googleSignIn(idToken: String): Completable {

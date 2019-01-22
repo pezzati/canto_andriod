@@ -1,5 +1,6 @@
 package com.hmomeni.canto.services
 
+import android.annotation.SuppressLint
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.Service
@@ -13,6 +14,7 @@ import com.hmomeni.canto.R
 import com.hmomeni.canto.utils.FFMPEG_URL
 import com.hmomeni.canto.utils.ffmpeg.CpuArch
 import com.hmomeni.canto.utils.ffmpeg.CpuArchHelper
+import com.hmomeni.canto.utils.isFFMpegAvailable
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable
 import io.reactivex.schedulers.Schedulers
@@ -40,10 +42,11 @@ class FFMpegService : Service() {
         }
     }
 
+    @SuppressLint("CheckResult")
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
 
         if (!inProgress) {
-            if (isFFMpegAvailable()) {
+            if (isFFMpegAvailable(this)) {
                 Timber.d("FFMPEG is present, exiting...")
                 stopSelf()
                 return START_NOT_STICKY
@@ -99,10 +102,6 @@ class FFMpegService : Service() {
     }
 
     private var inProgress = false
-    private fun isFFMpegAvailable(): Boolean {
-        val ffmpeg = File(filesDir, "ffmpeg")
-        return ffmpeg.exists()
-    }
 
     private fun downloadFFMpeg(): Flowable<Int> {
         return Flowable.create({ e ->

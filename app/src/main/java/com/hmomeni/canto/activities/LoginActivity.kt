@@ -140,6 +140,7 @@ class LoginActivity : BaseActivity(), View.OnClickListener {
                 if (result.isSuccess) {
                     val account = result.signInAccount
                     val progressDialog = ProgressDialog(this)
+                    Timber.d("IDTOKEN: %s", account?.idToken)
                     viewModel.googleSignIn(account!!.idToken!!)
                             .iomain()
                             .doOnSubscribe { progressDialog.show() }
@@ -305,7 +306,13 @@ class LoginActivity : BaseActivity(), View.OnClickListener {
                 .doOnSubscribe { progressDialog.show() }
                 .doAfterTerminate { progressDialog.dismiss() }
                 .subscribe({
-                    startActivity(Intent(this, MainActivity::class.java))
+                    val intent = Intent(this, MainActivity::class.java)
+                            .apply {
+                                if (it) {
+                                    putExtra("new_user", it)
+                                }
+                            }
+                    startActivity(intent)
                     finish()
                 }, {
                     if (it is HttpException && it.code() == 400) {
