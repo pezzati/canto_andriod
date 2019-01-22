@@ -57,7 +57,7 @@ class MainActivity : BaseActivity() {
         }
 
         if (intent.hasExtra("new_user") && intent.getBooleanExtra("new_user", false)) {
-            Intent(this, EditUserActivity::class.java)
+            startActivity(Intent(this, EditUserActivity::class.java))
         }
 
         setContentView(R.layout.activity_main)

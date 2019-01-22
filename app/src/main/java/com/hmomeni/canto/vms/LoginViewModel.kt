@@ -6,20 +6,13 @@ import com.hmomeni.canto.BuildConfig
 import com.hmomeni.canto.api.Api
 import com.hmomeni.canto.di.DIComponent
 import com.hmomeni.canto.persistence.UserDao
-import com.hmomeni.canto.utils.*
-import com.hmomeni.canto.utils.ffmpeg.CpuArch
-import com.hmomeni.canto.utils.ffmpeg.CpuArchHelper
+import com.hmomeni.canto.utils.UserSession
+import com.hmomeni.canto.utils.getDeviceId
+import com.hmomeni.canto.utils.makeMap
+import com.hmomeni.canto.utils.toBody
 import com.pixplicity.easyprefs.library.Prefs
-import io.reactivex.BackpressureStrategy
 import io.reactivex.Completable
-import io.reactivex.Flowable
 import io.reactivex.Single
-import timber.log.Timber
-import java.io.File
-import java.io.FileOutputStream
-import java.io.IOException
-import java.net.HttpURLConnection
-import java.net.URL
 import javax.inject.Inject
 
 class LoginViewModel : ViewModel(), DIComponent.Injectable {
@@ -101,67 +94,6 @@ class LoginViewModel : ViewModel(), DIComponent.Injectable {
                     Prefs.putString("token", token)
                 }
                 .ignoreElement()
-    }
-
-    fun isFFMpegAvailable(): Boolean {
-        val ffmpeg = File(app.filesDir, "ffmpeg")
-        return ffmpeg.exists()
-    }
-
-    fun downloadFFMpeg(): Flowable<Int> {
-        return Flowable.create({ e ->
-            val finalFile = File(app.filesDir, "ffmpeg")
-            val cpuArch = if (CpuArchHelper.getCpuArch() == CpuArch.x86) "x86" else "arm"
-            val downloadUrl = FFMPEG_URL.replace("{arch}", cpuArch)
-            try {
-                val url = URL(downloadUrl)
-                val c = url.openConnection() as HttpURLConnection
-                c.requestMethod = "GET"
-                c.connect()
-
-                if (c.responseCode != 200) throw Exception("Error in connection")
-
-                val downloadFile = File(app.filesDir, "fftemp")
-
-                val fileOutput = FileOutputStream(downloadFile)
-                val inputStream = c.inputStream
-                val buffer = ByteArray(1024)
-
-
-                val fileLength = c.contentLength
-                var downloded: Long = 0
-
-                var read = 0
-                while (read != -1) {
-                    if (e.isCancelled) {
-                        fileOutput.close()
-                        inputStream.close()
-                        downloadFile.delete()
-                        c.disconnect()
-                        return@create
-                    }
-                    val percent = downloded / fileLength.toFloat() * 100
-                    e.onNext(percent.toInt())
-                    downloded += read.toLong()
-                    fileOutput.write(buffer, 0, read)
-                    read = inputStream.read(buffer)
-                }
-
-                downloadFile.renameTo(finalFile)
-
-                finalFile.setExecutable(true, false)
-                finalFile.setReadable(true, false)
-                finalFile.setWritable(true, false)
-
-                fileOutput.close()
-                inputStream.close()
-                c.disconnect()
-                e.onComplete()
-            } catch (ex: IOException) {
-                Timber.e(ex)
-                e.onError(ex)
-            }
-        }, BackpressureStrategy.BUFFER)
     }
 
     enum class SignupMode {
