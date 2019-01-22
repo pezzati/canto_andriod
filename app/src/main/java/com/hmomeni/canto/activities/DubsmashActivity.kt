@@ -14,7 +14,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
-import com.azoft.carousellayoutmanager.CarouselLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.hmomeni.canto.App
 import com.hmomeni.canto.R
 import com.hmomeni.canto.adapters.rcl.LyricRclAdapter
@@ -197,7 +197,7 @@ class DubsmashActivity : CameraActivity() {
             }
         }
 
-        lyricRecyclerVIew.layoutManager = object : CarouselLayoutManager(CarouselLayoutManager.VERTICAL) {
+        lyricRecyclerVIew.layoutManager = object : LinearLayoutManager(this) {
             override fun canScrollVertically(): Boolean {
                 return false
             }

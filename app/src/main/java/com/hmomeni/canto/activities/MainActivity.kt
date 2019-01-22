@@ -31,8 +31,6 @@ class MainActivity : BaseActivity() {
 
     @Inject
     lateinit var navEvents: PublishProcessor<NavEvent>
-    @Inject
-    lateinit var userSession: UserSession
 
     private lateinit var viewModel: MainViewModel
 
