@@ -1,11 +1,22 @@
 package com.hmomeni.canto.activities
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.hmomeni.canto.utils.FA_LANG
+import com.hmomeni.canto.utils.LogoutEvent
+import com.hmomeni.canto.utils.app
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
+import io.reactivex.processors.PublishProcessor
 import java.util.*
+import javax.inject.Inject
 
 open class BaseActivity : AppCompatActivity() {
+    @Inject
+    lateinit var logoutEvent: PublishProcessor<LogoutEvent>
+
+    private var logoutDisposable: Disposable? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         val dm = resources.displayMetrics
         val conf = resources.configuration
@@ -14,5 +25,18 @@ open class BaseActivity : AppCompatActivity() {
         conf.setLocale(locale)
         resources.updateConfiguration(conf, dm)
         super.onCreate(savedInstanceState)
+        app().di.inject(this)
+
+        logoutDisposable = logoutEvent
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe {
+                    startActivity(Intent(this, LoginActivity::class.java))
+                    finish()
+                }
+    }
+
+    override fun onDestroy() {
+        logoutDisposable?.dispose()
+        super.onDestroy()
     }
 }

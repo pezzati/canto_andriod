@@ -1,10 +1,7 @@
 package com.hmomeni.canto.di
 
 import com.hmomeni.canto.App
-import com.hmomeni.canto.activities.DubsmashActivity
-import com.hmomeni.canto.activities.KaraokeActivity
-import com.hmomeni.canto.activities.MainActivity
-import com.hmomeni.canto.activities.VideoPlayActivity
+import com.hmomeni.canto.activities.*
 import com.hmomeni.canto.adapters.rcl.ListPostsRclAdapter
 import com.hmomeni.canto.adapters.rcl.PostsRclAdapter
 import com.hmomeni.canto.fragments.RecorderFragment
@@ -40,4 +37,5 @@ interface DIComponent {
     fun inject(muxerService: MuxerService)
     fun inject(listPostHolder: ListPostsRclAdapter.ListPostHolder)
     fun inject(editUserViewModel: EditUserViewModel)
+    fun inject(baseActivity: BaseActivity)
 }

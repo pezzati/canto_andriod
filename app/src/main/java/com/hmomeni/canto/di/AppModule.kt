@@ -4,6 +4,7 @@ import com.hmomeni.canto.App
 import com.hmomeni.canto.entities.UserInventory
 import com.hmomeni.canto.persistence.UserDao
 import com.hmomeni.canto.utils.DownloadEvent
+import com.hmomeni.canto.utils.LogoutEvent
 import com.hmomeni.canto.utils.UserSession
 import com.hmomeni.canto.utils.navigation.NavEvent
 import dagger.Module
@@ -33,4 +34,8 @@ class AppModule(private val app: App) {
     fun providesInventory(userSession: UserSession): UserInventory {
         return UserInventory(userSession)
     }
+
+    @Provides
+    @Singleton
+    fun providesLogoutEvent(): PublishProcessor<LogoutEvent> = PublishProcessor.create()
 }

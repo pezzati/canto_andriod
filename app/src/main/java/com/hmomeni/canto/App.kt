@@ -22,6 +22,7 @@ class App : Application() {
     @Inject
     lateinit var userDao: UserDao
 
+
     lateinit var di: DIComponent
     override fun onCreate() {
         super.onCreate()
@@ -42,14 +43,6 @@ class App : Application() {
         if (Prefs.contains("token")) {
             userSession.token = Prefs.getString("token", null)
         }
-
-        /*userDao.getCurrentUser()
-                .subscribeOn(Schedulers.io())
-                .subscribe({
-                    userSession.user = it
-                }, {
-                    Timber.e(it)
-                })*/
 
     }
 }

@@ -2,12 +2,13 @@ package com.hmomeni.canto.di
 
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
-import com.hmomeni.canto.App
 import com.hmomeni.canto.api.Api
 import com.hmomeni.canto.utils.BASE_URL
+import com.hmomeni.canto.utils.LogoutEvent
 import com.hmomeni.canto.utils.UserSession
 import dagger.Module
 import dagger.Provides
+import io.reactivex.processors.PublishProcessor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -26,7 +27,7 @@ class ApiModule {
 
     @Provides
     @Singleton
-    fun providesRetrofit(app: App, gson: Gson, userSession: UserSession): Retrofit = Retrofit.Builder()
+    fun providesRetrofit(gson: Gson, userSession: UserSession, logoutEvents: PublishProcessor<LogoutEvent>): Retrofit = Retrofit.Builder()
             .baseUrl(BASE_URL)
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
             .addConverterFactory(ScalarsConverterFactory.create())
@@ -42,6 +43,13 @@ class ApiModule {
                                 }
                                 builder.addHeader("deviceType", "android")
                                 it.proceed(builder.build())
+                            }
+                            .addInterceptor {
+                                return@addInterceptor it.proceed(it.request()).also {
+                                    if (it.code() == 401) {
+                                        logoutEvents.onNext(LogoutEvent())
+                                    }
+                                }
                             }
                             .addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
                             .addNetworkInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.HEADERS))
