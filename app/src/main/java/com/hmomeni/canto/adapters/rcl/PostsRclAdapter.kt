@@ -45,6 +45,7 @@ class PostsRclAdapter(private val posts: List<Post>) : androidx.recyclerview.wid
             post.coverPhoto?.let {
                 GlideApp.with(itemView)
                         .load(it.link)
+                        .placeholder(R.drawable.post_placeholder)
                         .rounded(dpToPx(15))
                         .into(itemView.postImageView)
             }

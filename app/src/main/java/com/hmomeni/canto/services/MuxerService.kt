@@ -60,12 +60,16 @@ class MuxerService : Service() {
         createNotificationChannel()
     }
 
-    override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
 
-        val job = intent.getParcelableExtra<MuxJob>("job")
+        val job = intent?.getParcelableExtra<MuxJob>("job")
+        if (job == null) {
+            stopSelf()
+            return START_NOT_STICKY
+        }
         jobList.add(job)
         processJobs()
-        return START_STICKY
+        return START_NOT_STICKY
     }
 
     private fun processJobs() {
@@ -222,7 +226,7 @@ class MuxerService : Service() {
                         nBuilder.setContentText(getString(R.string.muxing_done))
                     }
                     if (finish) {
-                        stopForeground(false)
+                        stopForeground(true)
                         mNotificationManager.notify(hashCode(), nBuilder.build())
                     } else {
                         startForeground(hashCode(), nBuilder.build())

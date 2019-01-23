@@ -206,12 +206,10 @@ class RecorderFragment : androidx.fragment.app.Fragment() {
         nextTabDesc.alpha = 0f
         nextTabDesc.translationY = -100f
         var lastPage = 0
-        viewPager.setOnPageChangeListener(object : androidx.viewpager.widget.ViewPager.OnPageChangeListener {
-            override fun onPageScrollStateChanged(state: Int) {
+        viewPager.setOnPageChangeListener(object : DirectionAwareOnPageChangeListener() {
 
-            }
-
-            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
+            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int, isRight: Boolean) {
+                Timber.d("position: %d, positionOffset: %f, positionOffsetPixels: %d, direction: %s", position, positionOffset, positionOffsetPixels, if (isRight) "right" else "left")
                 if (positionOffset != 0f) {
                     when (position) {
                         0 -> {
@@ -260,7 +258,7 @@ class RecorderFragment : androidx.fragment.app.Fragment() {
                             currentTabDesc.alpha = 0f
                             currentTabDesc.translationY = -100f
 
-                            if (lastPage == 0) {
+                            if (lastPage == 0 && isRight) {
                                 currentTabTitle.setText(R.string.karaoke)
                                 currentTabDesc.setText(R.string.karaoke_desc)
                             } else {
@@ -271,10 +269,6 @@ class RecorderFragment : androidx.fragment.app.Fragment() {
                     }
                     lastPage = position
                 }
-            }
-
-            override fun onPageSelected(position: Int) {
-
             }
 
         })

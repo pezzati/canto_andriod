@@ -123,6 +123,11 @@ class ListFragment : androidx.fragment.app.Fragment() {
         }
     }
 
+    override fun onDestroyView() {
+        compositeDisposable.clear()
+        super.onDestroyView()
+    }
+
     private fun applyEndlessScroll() {
         recyclerView.addOnScrollListener(object : androidx.recyclerview.widget.RecyclerView.OnScrollListener() {
             private var endCalled = false
