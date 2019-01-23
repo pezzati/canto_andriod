@@ -3,6 +3,7 @@ package com.hmomeni.canto.adapters.rcl
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.hmomeni.canto.R
 import com.hmomeni.canto.entities.Post
 import com.hmomeni.canto.entities.UserInventory
 import com.hmomeni.canto.utils.GlideApp
@@ -38,12 +39,11 @@ class ListPostsRclAdapter(val posts: List<Post>, private val layoutResId: Int) :
         lateinit var userInventory: UserInventory
 
         fun bind(post: Post) {
-            post.coverPhoto?.let {
-                GlideApp.with(itemView)
-                        .load(it.link)
-                        .rounded(dpToPx(10))
-                        .into(itemView.postImageView)
-            }
+            GlideApp.with(itemView)
+                    .load(post.coverPhoto?.link)
+                    .placeholder(R.drawable.post_placeholder)
+                    .rounded(dpToPx(10))
+                    .into(itemView.postImageView)
 
             itemView.artistName.text = post.artist!!.name
             itemView.trackName.text = post.name

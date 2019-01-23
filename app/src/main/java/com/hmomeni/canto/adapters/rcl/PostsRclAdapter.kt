@@ -42,13 +42,11 @@ class PostsRclAdapter(private val posts: List<Post>) : androidx.recyclerview.wid
         }
 
         fun bind(post: Post) {
-            post.coverPhoto?.let {
-                GlideApp.with(itemView)
-                        .load(it.link)
-                        .placeholder(R.drawable.post_placeholder)
-                        .rounded(dpToPx(15))
-                        .into(itemView.postImageView)
-            }
+            GlideApp.with(itemView)
+                    .load(post.coverPhoto?.link)
+                    .placeholder(R.drawable.post_placeholder)
+                    .rounded(dpToPx(15))
+                    .into(itemView.postImageView)
 
             itemView.artistName.text = post.artist!!.name
             itemView.trackName.text = post.name

@@ -8,6 +8,7 @@ import com.hmomeni.canto.persistence.UserDao
 import com.hmomeni.canto.utils.UserSession
 import com.hmomeni.canto.utils.makeMap
 import io.reactivex.Completable
+import io.reactivex.Single
 import javax.inject.Inject
 
 class EditUserViewModel : ViewModel(), DIComponent.Injectable {
@@ -24,13 +25,12 @@ class EditUserViewModel : ViewModel(), DIComponent.Injectable {
 
     val avatars = mutableListOf<Avatar>()
     private var avatarPage = 1
-    fun getAvatars(): Completable = api.getAvatarList(avatarPage++)
+    fun getAvatars(): Single<List<Avatar>> = api.getAvatarList(avatarPage++)
             .map {
                 it.data
             }.doOnSuccess {
                 avatars.addAll(it)
             }
-            .ignoreElement()
 
     fun updateUser(avatarId: Int, username: String): Completable {
         val map = makeMap().add("username", username)

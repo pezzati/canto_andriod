@@ -96,10 +96,16 @@ class EditUserActivity : BaseActivity() {
                         Toast.makeText(this, R.string.updating_user_failed, Toast.LENGTH_SHORT).show()
                     }).addTo(compositeDisposable)
         }
+        loadAvatars()
+    }
 
+    private fun loadAvatars() {
         viewModel.getAvatars().iomain()
                 .subscribe({
                     recyclerView.adapter!!.notifyDataSetChanged()
+                    if (it.isNotEmpty()) {
+                        loadAvatars()
+                    }
                 }, {
                     Timber.e(it)
                     Crashlytics.logException(it)
