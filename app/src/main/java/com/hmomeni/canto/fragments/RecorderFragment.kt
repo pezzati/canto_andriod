@@ -205,12 +205,26 @@ class RecorderFragment : androidx.fragment.app.Fragment() {
 
         nextTabDesc.alpha = 0f
         nextTabDesc.translationY = -100f
-        var lastPage = 0
         viewPager.setOnPageChangeListener(object : DirectionAwareOnPageChangeListener() {
+            var titlesChanged = false
+            override fun onPageSelected(position: Int) {
+                super.onPageSelected(position)
+                titlesChanged = false
+            }
 
             override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int, isRight: Boolean) {
                 Timber.d("position: %d, positionOffset: %f, positionOffsetPixels: %d, direction: %s", position, positionOffset, positionOffsetPixels, if (isRight) "right" else "left")
                 if (positionOffset != 0f) {
+                    if (position == 1 && isRight && !titlesChanged) {
+                        currentTabTitle.setText(R.string.karaoke)
+                        currentTabDesc.setText(R.string.karaoke_desc)
+                        titlesChanged = true
+                    }
+                    if (position == 1 && !isRight && !titlesChanged) {
+                        currentTabTitle.setText(R.string.dubsmash)
+                        currentTabDesc.setText(R.string.dubsmash_desc)
+                        titlesChanged = true
+                    }
                     when (position) {
                         0 -> {
                             currentTabTitle.alpha = 1 - positionOffset
@@ -257,17 +271,8 @@ class RecorderFragment : androidx.fragment.app.Fragment() {
 
                             currentTabDesc.alpha = 0f
                             currentTabDesc.translationY = -100f
-
-                            if (lastPage == 0 && isRight) {
-                                currentTabTitle.setText(R.string.karaoke)
-                                currentTabDesc.setText(R.string.karaoke_desc)
-                            } else {
-                                currentTabTitle.setText(R.string.dubsmash)
-                                currentTabDesc.setText(R.string.dubsmash_desc)
-                            }
                         }
                     }
-                    lastPage = position
                 }
             }
 

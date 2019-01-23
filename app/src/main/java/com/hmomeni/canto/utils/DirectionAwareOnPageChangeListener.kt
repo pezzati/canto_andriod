@@ -23,7 +23,7 @@ abstract class DirectionAwareOnPageChangeListener : ViewPager.OnPageChangeListen
         }
         prevPos = positionOffsetPixels
         Timber.d("sum: %d", sum)
-        onPageScrolled(position, positionOffset, positionOffsetPixels, if (sum == 0) lastDir else sum < 0)
+        onPageScrolled(position, positionOffset, positionOffsetPixels, if (positionOffset == 0f) lastDir else sum < 0)
         lastDir = sum < 0
     }
 

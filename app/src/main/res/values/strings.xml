@@ -86,4 +86,11 @@
     <string name="downloading">Downloading...</string>
     <string name="wait_for_assets">Please wait while we prepare some assets for you!</string>
     <string name="nothing_posted_yet">Nothing posted yet</string>
+    <string name="telegram_channel">Telegram Channel</string>
+    <string name="instagram">Canto Instagram</string>
+    <string name="request_song">Request Song</string>
+    <string name="telegram_support">Telegram Support</string>
+    <string name="canto_website">Canto Website</string>
+    <string name="terms_and_conditions"><![CDATA[Terms & Considitions]]></string>
+    <string name="invite_friends">Invite Friends</string>
 </resources>

@@ -85,4 +85,11 @@
     <string name="downloading">در حال دریافت...</string>
     <string name="wait_for_assets">لطفا صبر کنید تا کانتو آماده کار شود</string>
     <string name="nothing_posted_yet">هنوز ویدیویی را ذخیره نکرده‌اید</string>
+    <string name="telegram_channel">کانال تلگرام کانتو</string>
+    <string name="instagram">اینستاگرام کانتو</string>
+    <string name="request_song">درخواست آهنگ</string>
+    <string name="telegram_support">پشتیبانی تلگرام</string>
+    <string name="canto_website">وب سایت کانتو</string>
+    <string name="terms_and_conditions">قوانین و مقررات</string>
+    <string name="invite_friends">دعوت از دوستان</string>
 </resources>

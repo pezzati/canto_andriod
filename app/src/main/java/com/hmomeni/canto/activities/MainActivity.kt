@@ -3,6 +3,7 @@ package com.hmomeni.canto.activities
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.view.View
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.NavController
@@ -104,6 +105,11 @@ class MainActivity : BaseActivity() {
             return@setOnNavigationItemSelectedListener true
         }
         navController.addOnDestinationChangedListener { _, destination, _ ->
+            if (destination.id == R.id.recorderFragment) {
+                bottomNav.visibility = View.GONE
+            } else {
+                bottomNav.visibility = View.VISIBLE
+            }
             when (destination.id) {
                 R.id.mainFragment -> {
                     userNavFired = true
