@@ -64,7 +64,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="32dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginBottom="16dp"
         android:text="@string/cancel"
         android:textColor="#5B5D65"
         app:layout_constraintBottom_toBottomOf="parent"
