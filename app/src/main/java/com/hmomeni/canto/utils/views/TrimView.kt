@@ -23,7 +23,8 @@ class TrimView : View {
         strokeCap = Paint.Cap.ROUND
     }
     private val whitePaint = Paint().apply {
-        color = Color.WHITE
+        color = Color.parseColor("#FFFFFF")
+//        color = Color.WHITE
         isAntiAlias = true
     }
     private val progressPaint = Paint().apply {
@@ -31,14 +32,7 @@ class TrimView : View {
         isAntiAlias = true
         strokeCap = Paint.Cap.ROUND
     }
-    private val bracketPaint = Paint().apply {
-        color = Color.WHITE
-        textSize = dpToPx(14).toFloat()
-        isAntiAlias = true
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-//            textAlignment = View.TEXT_ALIGNMENT_CENTER
-//        }
-    }
+
     private val anchorPaint = Paint().apply {
         color = Color.parseColor("#FB861F")
         isAntiAlias = true
@@ -48,6 +42,7 @@ class TrimView : View {
     private val rightBracket = getBitmapFromVectorDrawable(context, R.drawable.ic_bracket_right)
     private val bgLine = RectF()
     private val mainLine = RectF()
+    private val progressLineActual = RectF()
     private val progressLine = RectF()
     private val leftAnchor = RectF()
     private val rightAnchor = RectF()
@@ -76,40 +71,41 @@ class TrimView : View {
 
     private var maxPx = 0
 
-    private val anchorCompensate = 20f
+    private val anchorCompensate = 0f
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         if (measuredWidth > 0 && measuredHeight > 0) {
-            setMeasuredDimension(measuredWidth, measuredHeight)
+            super.onMeasure(widthMeasureSpec, heightMeasureSpec)
             if (anchorWidth == 0f) {
-                anchorWidth = measuredHeight.toFloat()
+                anchorWidth = MeasureSpec.getSize(heightMeasureSpec).toFloat()
             }
-            maxPx = (measuredWidth - (2 * anchorWidth)).toInt()
+            maxPx = (MeasureSpec.getSize(widthMeasureSpec) - (2 * anchorWidth)).toInt()
             bgLine.set(
                     anchorWidth,
-                    0f,
-                    anchorWidth + maxPx,
-                    measuredHeight.toFloat()
+                    (MeasureSpec.getSize(heightMeasureSpec) / 2 - mainLineHeight).toFloat(),
+                    MeasureSpec.getSize(widthMeasureSpec) - anchorWidth,
+                    (MeasureSpec.getSize(heightMeasureSpec) / 2 + mainLineHeight).toFloat()
             )
 
             mainLine.set(
                     -anchorCompensate,
-                    0f,
+                    (MeasureSpec.getSize(heightMeasureSpec) / 2 - mainLineHeight).toFloat(),
                     -anchorCompensate,
-                    measuredHeight.toFloat()
+                    (MeasureSpec.getSize(heightMeasureSpec) / 2 + mainLineHeight).toFloat()
             )
-            progressLine.set(
+            progressLineActual.set(
                     -anchorCompensate,
-                    0f,
+                    (MeasureSpec.getSize(heightMeasureSpec) / 2 - mainLineHeight).toFloat(),
                     -anchorCompensate,
-                    measuredHeight.toFloat()
+                    (MeasureSpec.getSize(heightMeasureSpec) / 2 + mainLineHeight).toFloat()
             )
-            leftAnchor.set(0f, 0f, 0f, measuredHeight.toFloat())
+            progressLine.set(progressLineActual)
+            leftAnchor.set(0f, 0f, 0f, MeasureSpec.getSize(heightMeasureSpec).toFloat())
             rightAnchor.set(
                     0f,
                     0f,
                     0f,
-                    measuredHeight.toFloat()
+                    MeasureSpec.getSize(heightMeasureSpec).toFloat()
             )
 
             calculateLeftandRight(false)
@@ -122,7 +118,7 @@ class TrimView : View {
     override fun onDraw(canvas: Canvas) {
         canvas.drawRoundRect(bgLine, radius, radius, bgPaint)
         canvas.drawRect(mainLine, whitePaint)
-        canvas.drawRect(progressLine, progressPaint)
+        canvas.drawRoundRect(progressLine, radius, radius, progressPaint)
         canvas.drawRoundRect(leftAnchor, radius, radius, anchorPaint)
         canvas.drawRoundRect(rightAnchor, radius, radius, anchorPaint)
         canvas.drawBitmap(leftBracket, null, leftAnchor, null)
@@ -231,8 +227,10 @@ class TrimView : View {
 
     private fun calculateProgress(invalidate: Boolean) {
         val progressPx = progress * maxPx / max
-        progressLine.left = mainLine.left
-        progressLine.right = progressLine.left + progressPx + anchorCompensate
+        progressLineActual.left = mainLine.left
+        progressLine.left = mainLine.left - 10
+        progressLineActual.right = progressLineActual.left + progressPx + anchorCompensate
+        progressLine.right = progressLineActual.right + 10
 
         if (invalidate)
             invalidate()
