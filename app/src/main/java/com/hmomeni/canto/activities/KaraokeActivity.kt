@@ -8,7 +8,7 @@ import android.util.SparseIntArray
 import android.view.View
 import android.widget.SeekBar
 import android.widget.Toast
-import com.azoft.carousellayoutmanager.CarouselLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.hmomeni.canto.App
 import com.hmomeni.canto.R
 import com.hmomeni.canto.adapters.rcl.LyricRclAdapter
@@ -129,7 +129,7 @@ class KaraokeActivity : BaseFullActivity() {
                 .into(background)
         background.startRotation()
 
-        lyricRecyclerVIew.layoutManager = object : CarouselLayoutManager(CarouselLayoutManager.VERTICAL) {
+        lyricRecyclerVIew.layoutManager = object : LinearLayoutManager(this) {
             override fun canScrollVertically(): Boolean {
                 return false
             }

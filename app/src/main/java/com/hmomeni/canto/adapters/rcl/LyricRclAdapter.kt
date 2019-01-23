@@ -1,6 +1,7 @@
 package com.hmomeni.canto.adapters.rcl
 
 import android.graphics.Color
+import android.graphics.Typeface
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -28,8 +29,11 @@ class LyricRclAdapter(private val midiItems: List<MidiItem>) : androidx.recycler
             itemView.textView.text = midiItem.text.trim('\n')
             if (midiItem.active) {
                 itemView.textView.setTextColor(activeColor)
+                itemView.textView.setTextColor(activeColor)
+                itemView.textView.setTypeface(itemView.textView.typeface, Typeface.BOLD)
             } else {
                 itemView.textView.setTextColor(inActiveColor)
+                itemView.textView.setTypeface(itemView.textView.typeface, Typeface.NORMAL)
             }
         }
     }

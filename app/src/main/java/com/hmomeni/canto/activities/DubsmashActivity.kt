@@ -196,22 +196,26 @@ class DubsmashActivity : CameraActivity() {
                 SetTempo((progress / 10f).toDouble())
             }
         }
-
-        lyricRecyclerVIew.layoutManager = object : LinearLayoutManager(this) {
-            override fun canScrollVertically(): Boolean {
-                return false
+        if (type == PROJECT_TYPE_DUBSMASH) {
+            lyricRecyclerVIew.visibility = View.GONE
+            toggleLyricsBtn.visibility = View.GONE
+        } else {
+            lyricRecyclerVIew.layoutManager = object : LinearLayoutManager(this) {
+                override fun canScrollVertically(): Boolean {
+                    return false
+                }
             }
-        }
-        lyricRecyclerVIew.adapter = LyricRclAdapter(midiItems)
+            lyricRecyclerVIew.adapter = LyricRclAdapter(midiItems)
 
 
-        toggleLyricsBtn.setOnClickListener {
-            if (lyricRecyclerVIew.visibility == View.GONE) {
-                lyricRecyclerVIew.visibility = View.VISIBLE
-                toggleLyricsBtn.setImageResource(R.drawable.ic_hide_lyric)
-            } else {
-                lyricRecyclerVIew.visibility = View.GONE
-                toggleLyricsBtn.setImageResource(R.drawable.ic_show_lyric)
+            toggleLyricsBtn.setOnClickListener {
+                if (lyricRecyclerVIew.visibility == View.GONE) {
+                    lyricRecyclerVIew.visibility = View.VISIBLE
+                    toggleLyricsBtn.setImageResource(R.drawable.ic_hide_lyric)
+                } else {
+                    lyricRecyclerVIew.visibility = View.GONE
+                    toggleLyricsBtn.setImageResource(R.drawable.ic_show_lyric)
+                }
             }
         }
 
@@ -230,7 +234,7 @@ class DubsmashActivity : CameraActivity() {
 
         val pos = timeMap.get(sec, -1)
 
-        if (pos >= 0 && lastPos != pos) {
+        if (pos >= 0 && lastPos != pos && type == PROJECT_TYPE_SINGING) {
 //            Timber.d("sec=%d, pos=%d, lastPos=%d", sec, pos, lastPos)
             if (lastPos >= 0) {
                 midiItems[lastPos].active = false
