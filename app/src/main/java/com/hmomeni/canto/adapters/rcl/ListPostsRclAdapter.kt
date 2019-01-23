@@ -52,6 +52,8 @@ class ListPostsRclAdapter(val posts: List<Post>, private val layoutResId: Int) :
             if (count > 0) {
                 itemView.price.text = "X %d".format(Locale.ENGLISH, count)
                 itemView.price.setCompoundDrawables(null, null, null, null)
+                itemView.price.visibility = View.VISIBLE
+                itemView.giftView.visibility = View.GONE
             } else {
                 if (post.price == 0L) {
                     itemView.price.visibility = View.GONE
