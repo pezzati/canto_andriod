@@ -11,7 +11,10 @@ import android.hardware.camera2.*
 import android.hardware.camera2.CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP
 import android.hardware.camera2.CameraCharacteristics.SENSOR_ORIENTATION
 import android.hardware.camera2.CameraDevice.TEMPLATE_PREVIEW
+import android.media.AudioDeviceInfo
+import android.media.AudioManager
 import android.media.MediaRecorder
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.HandlerThread
@@ -570,10 +573,36 @@ class RecorderFragment : androidx.fragment.app.Fragment() {
         }
     }
 
-    private fun openActivity(mode: Int) {
+    private fun openActivity(mode: Int, checkMic: Boolean = true) {
+
+        Timber.d("Mic: %b", checkMic())
 
         if (arrayOf(PROJECT_TYPE_SINGING, PROJECT_TYPE_DUBSMASH).contains(mode) && !isFFMpegAvailable(context!!)) {
             Toast.makeText(context, R.string.wait_for_assets, Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        if (checkMic && mode == PROJECT_TYPE_SINGING && !checkMic()) {
+            PaymentDialog(context!!,
+                    getString(R.string.handsfree),
+                    getString(R.string.for_high_q_use_handsfree),
+                    imageResId = R.drawable.ic_handsfree,
+                    showPositiveButton = false,
+                    showNegativeButton = true,
+                    negativeListener = {
+                        openActivity(mode, false)
+                    }).show()
+            return
+        }
+
+        if (checkMic && mode == PROJECT_TYPE_KARAOKE && !checkSpeaker()) {
+            PaymentDialog(context!!,
+                    getString(R.string.speaker),
+                    getString(R.string.for_karoke_use_speaker),
+                    imageResId = R.drawable.ic_speaker,
+                    showPositiveButton = false,
+                    showNegativeButton = true
+            ).show()
             return
         }
 
@@ -591,6 +620,41 @@ class RecorderFragment : androidx.fragment.app.Fragment() {
                 }, {
                     Timber.e(it)
                 }).addTo(compositeDisposable)
+    }
+
+    private var audioManager: AudioManager? = null
+
+    private fun checkMic(): Boolean {
+        if (audioManager == null) {
+            audioManager = context!!.getSystemService(Context.AUDIO_SERVICE) as AudioManager
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            val devices = audioManager!!.getDevices(AudioManager.GET_DEVICES_INPUTS)
+            for (d in devices) {
+                if (d.type == AudioDeviceInfo.TYPE_WIRED_HEADSET)
+                    return true
+            }
+        } else {
+            return audioManager!!.isWiredHeadsetOn
+        }
+        return false
+    }
+
+    private fun checkSpeaker(): Boolean {
+        if (audioManager == null) {
+            audioManager = context!!.getSystemService(Context.AUDIO_SERVICE) as AudioManager
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            val acceptableDevices = arrayOf(AudioDeviceInfo.TYPE_WIRED_HEADPHONES, AudioDeviceInfo.TYPE_WIRED_HEADSET, AudioDeviceInfo.TYPE_AUX_LINE)
+            val devices = audioManager!!.getDevices(AudioManager.GET_DEVICES_INPUTS)
+            for (d in devices) {
+                if (d.type in acceptableDevices)
+                    return true
+            }
+        } else {
+            return audioManager!!.isWiredHeadsetOn
+        }
+        return false
     }
 
 

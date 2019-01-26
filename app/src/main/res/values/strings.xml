@@ -91,6 +91,10 @@
     <string name="request_song">Request Song</string>
     <string name="telegram_support">Telegram Support</string>
     <string name="canto_website">Canto Website</string>
-    <string name="terms_and_conditions"><![CDATA[Terms & Considitions]]></string>
+    <string name="terms_and_conditions"><![CDATA[Terms & Conditions]]></string>
     <string name="invite_friends">Invite Friends</string>
+    <string name="handsfree">Handsfree</string>
+    <string name="for_high_q_use_handsfree">For high quality recording please use a handsfree device</string>
+    <string name="speaker">Speaker</string>
+    <string name="for_karoke_use_speaker">For karoke mode you attach a speaker</string>
 </resources>

@@ -92,4 +92,8 @@
     <string name="canto_website">وب سایت کانتو</string>
     <string name="terms_and_conditions">قوانین و مقررات</string>
     <string name="invite_friends">دعوت از دوستان</string>
+    <string name="handsfree">هندزفری</string>
+    <string name="for_high_q_use_handsfree">برای ضبط با کیفیت صدا از هندزفری استفاده کنید</string>
+    <string name="speaker">اسپیکر</string>
+    <string name="for_karoke_use_speaker">برای حالت کارائوکی باید اسپیکر متصل باشد</string>
 </resources>
