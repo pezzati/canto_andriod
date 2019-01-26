@@ -13,8 +13,8 @@
         android:layout_height="wrap_content"
         android:transitionName="textureView"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
@@ -24,8 +24,8 @@
         android:layout_marginTop="8dp"
         android:text="@string/sing"
         android:textSize="24sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <View
@@ -34,8 +34,8 @@
         android:layout_height="0dp"
         android:background="@drawable/gradient_index_rect"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <View
@@ -58,56 +58,56 @@
         android:id="@+id/recordBtn"
         android:layout_width="64dp"
         android:layout_height="64dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginLeft="8dp"
         android:layout_marginBottom="32dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
 
     <ImageView
         android:id="@+id/settingsBtn"
         android:layout_width="36dp"
         android:layout_height="36dp"
-        android:layout_marginEnd="24dp"
+        android:layout_marginLeft="24dp"
         android:src="@drawable/ic_setting"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@+id/recordBtn"
-        app:layout_constraintEnd_toStartOf="@+id/recordBtn"
+        app:layout_constraintLeft_toRightOf="@+id/recordBtn"
         app:layout_constraintTop_toTopOf="@+id/recordBtn" />
 
     <ImageView
         android:id="@+id/switchCam"
         android:layout_width="36dp"
         android:layout_height="36dp"
-        android:layout_marginStart="24dp"
+        android:layout_marginRight="24dp"
         android:src="@drawable/ic_rotate_camera"
         app:layout_constraintBottom_toBottomOf="@+id/recordBtn"
-        app:layout_constraintStart_toEndOf="@+id/recordBtn"
+        app:layout_constraintRight_toLeftOf="@+id/recordBtn"
         app:layout_constraintTop_toTopOf="@+id/recordBtn" />
 
     <ImageView
         android:id="@+id/switchRatio"
         android:layout_width="36dp"
         android:layout_height="36dp"
-        android:layout_marginStart="24dp"
+        android:layout_marginRight="24dp"
         android:src="@drawable/ic_portrait"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@+id/recordBtn"
-        app:layout_constraintStart_toEndOf="@+id/switchCam"
+        app:layout_constraintRight_toLeftOf="@+id/switchCam"
         app:layout_constraintTop_toTopOf="@+id/recordBtn" />
 
     <com.hmomeni.canto.utils.views.TrimView
         android:id="@+id/trimView"
         android:layout_width="0dp"
         android:layout_height="32dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginLeft="8dp"
         android:layout_marginBottom="32dp"
         android:visibility="visible"
         app:layout_constraintBottom_toTopOf="@+id/recordBtn"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
 
     <LinearLayout
         android:id="@+id/slidersWrapper"
@@ -118,8 +118,8 @@
         android:orientation="horizontal"
         android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@+id/trimView"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent">
 
         <com.hmomeni.canto.utils.views.VerticalSlider
             android:id="@+id/pitchSlider"
@@ -130,7 +130,7 @@
             android:id="@+id/tempoSlider"
             android:layout_width="80dp"
             android:layout_height="145dp"
-            android:layout_marginStart="32dp" />
+            android:layout_marginRight="32dp" />
 
     </LinearLayout>
 
@@ -138,13 +138,13 @@
         android:id="@+id/lyricRecyclerVIew"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginStart="8dp"
+        android:layout_marginRight="8dp"
         android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="8dp"
         android:layout_marginBottom="8dp"
         app:layout_constraintBottom_toTopOf="@+id/guideline"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toggleLyricsBtn" />
 
     <androidx.constraintlayout.widget.Guideline
@@ -168,14 +168,14 @@
         android:id="@+id/timerText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginLeft="8dp"
         android:layout_marginBottom="8dp"
         android:text="0:00"
         android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@+id/recordBtn"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
 
     <ImageView
         android:id="@+id/closeBtn"

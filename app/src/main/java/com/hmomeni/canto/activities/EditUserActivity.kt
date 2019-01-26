@@ -90,6 +90,7 @@ class EditUserActivity : BaseActivity() {
                     .doAfterTerminate { progressDialog.dismiss() }
                     .subscribe({
                         Toast.makeText(this, R.string.user_info_updated_successfully, Toast.LENGTH_SHORT).show()
+                        finish()
                     }, {
                         Timber.e(it)
                         Crashlytics.logException(it)

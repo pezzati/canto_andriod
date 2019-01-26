@@ -108,7 +108,7 @@ class KaraokeActivity : BaseFullActivity() {
                 SetTempo((progress / 10f).toDouble())
             }
         }
-        volumeSlider.max = 50
+        volumeSlider.max = 20
         volumeSlider.progress = 10
         volumeSlider.onProgressChangeListener = object : VerticalSlider.OnSliderProgressChangeListener {
             override fun onChanged(progress: Int, max: Int) {

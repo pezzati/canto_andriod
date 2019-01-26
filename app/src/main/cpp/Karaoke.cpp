@@ -42,11 +42,10 @@ static bool audioProcessing(
         int __unused samplerate     // sampling rate
 ) {
     SuperpoweredShortIntToFloat(audio, micBuffer, (unsigned int) numberOfFrames);
-    SuperpoweredVolume(micBuffer, micBuffer, 3, 3, (unsigned int) numberOfFrames);
+    SuperpoweredVolume(micBuffer, micBuffer, volume, volume, (unsigned int) numberOfFrames);
 
     if (reverb->enabled && player->playing) {
-        bool haveMusic = player->process(playerBuffer, false, (unsigned int) numberOfFrames,
-                                         volume);
+        bool haveMusic = player->process(playerBuffer, false, (unsigned int) numberOfFrames);
         bool haveReverb = reverb->process(micBuffer, reverbBuffer, (unsigned int) numberOfFrames);
         outputs[0] = outputBuffer;
         outputs[1] = NULL;
@@ -73,8 +72,7 @@ static bool audioProcessing(
             return true;
         }
     } else if (!reverb->enabled && player->playing) {
-        bool haveMusic = player->process(playerBuffer, false, (unsigned int) numberOfFrames,
-                                         volume);
+        bool haveMusic = player->process(playerBuffer, false, (unsigned int) numberOfFrames);
         outputs[0] = outputBuffer;
         outputs[1] = NULL;
         inputs[2] = inputs[3] = NULL;

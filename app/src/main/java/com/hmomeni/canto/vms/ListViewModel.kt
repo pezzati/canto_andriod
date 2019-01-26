@@ -3,9 +3,11 @@ package com.hmomeni.canto.vms
 import androidx.lifecycle.ViewModel
 import com.hmomeni.canto.api.Api
 import com.hmomeni.canto.di.DIComponent
+import com.hmomeni.canto.entities.ApiResponse
 import com.hmomeni.canto.entities.Post
 import com.hmomeni.canto.utils.navigation.NavEvent
 import io.reactivex.Completable
+import io.reactivex.Single
 import io.reactivex.processors.PublishProcessor
 import javax.inject.Inject
 
@@ -16,7 +18,6 @@ class ListViewModel : ViewModel(), DIComponent.Injectable {
 
     lateinit var type: String
     var urlPath: String = ""
-    var objectId: Int = 0
 
     @Inject
     lateinit var api: Api
@@ -24,8 +25,6 @@ class ListViewModel : ViewModel(), DIComponent.Injectable {
     lateinit var navEvents: PublishProcessor<NavEvent>
 
     val posts: MutableList<Post> = mutableListOf()
-
-    private var page = 0
 
     private var nextUrl: String? = null
 
@@ -48,6 +47,13 @@ class ListViewModel : ViewModel(), DIComponent.Injectable {
         }
         return api
                 .getGenrePosts(nextUrl!!)
+                .flatMap {
+                    if (it.next == nextUrl) {
+                        return@flatMap Single.never<ApiResponse<List<Post>>>()
+                    } else {
+                        return@flatMap Single.just(it)
+                    }
+                }
                 .doOnSuccess {
                     nextUrl = it.next
                 }

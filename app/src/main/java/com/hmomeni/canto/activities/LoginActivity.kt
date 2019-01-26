@@ -185,7 +185,9 @@ class LoginActivity : BaseActivity(), View.OnClickListener {
         }, 300)
     }
 
+    private var modeIsEmail = false
     private fun goToPhoneInput(email: Boolean = false) {
+        modeIsEmail = email
         if (!phoneInflated) {
             phoneInputStub.inflate()
             loginBtn.setOnClickListener(this)
