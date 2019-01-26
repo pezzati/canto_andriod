@@ -83,7 +83,7 @@
     <string name="login_by_google_failed">Login by Google failed</string>
     <string name="days">Days</string>
     <string name="preparing_assets">Preparing assets</string>
-    <string name="downloading">Downloading...</string>
+    <string name="downloading">Downloading…</string>
     <string name="wait_for_assets">Please wait while we prepare some assets for you!</string>
     <string name="nothing_posted_yet">Nothing posted yet</string>
     <string name="telegram_channel">Telegram Channel</string>
@@ -97,4 +97,6 @@
     <string name="for_high_q_use_handsfree">For high quality recording please use a handsfree device</string>
     <string name="speaker">Speaker</string>
     <string name="for_karoke_use_speaker">For karoke mode you attach a speaker</string>
+    <string name="request_song_desc">Can\'t find your favorite track? Send us its name and we\'ll provide it for you.</string>
+    <string name="name_of_song_singer">Name of song and singer</string>
 </resources>

@@ -141,7 +141,7 @@ class MainActivity : BaseActivity() {
                                     showNegativeButton = true,
                                     positiveButtonText = getString(R.string.update),
                                     negativeButtonText = getString(R.string.ask_later),
-                                    positiveListener = {
+                                    positiveListener = { _, _ ->
                                         startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(p.second)))
                                     }).show()
                         }
@@ -153,7 +153,7 @@ class MainActivity : BaseActivity() {
                                 showNegativeButton = false,
                                 autoDismiss = false,
                                 positiveButtonText = getString(R.string.update),
-                                positiveListener = {
+                                positiveListener = { _, _ ->
                                     if (!p.second.isNullOrEmpty()) {
                                         startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(p.second)))
                                     }
@@ -191,7 +191,7 @@ class MainActivity : BaseActivity() {
                     if (it is HttpException) {
                         when (it.code()) {
                             HTTP_ERROR_PAYMENT_REQUIRED -> {
-                                PaymentDialog(this, showNegativeButton = true, positiveListener = {
+                                PaymentDialog(this, showNegativeButton = true, positiveListener = { _, _ ->
                                     startActivity(Intent(this, ShopActivity::class.java))
                                 }).show()
                             }
@@ -203,7 +203,7 @@ class MainActivity : BaseActivity() {
                                         imageUrl = post.coverPhoto?.link,
                                         showNegativeButton = true,
                                         positiveButtonText = getString(R.string.yes_buy),
-                                        positiveListener = {
+                                        positiveListener = { _, _ ->
                                             purchaseSong(post)
                                         },
                                         overlayText = "X%d".format(Locale.ENGLISH, post.count)
@@ -225,7 +225,7 @@ class MainActivity : BaseActivity() {
                     viewModel.navEvents.onNext(PostNavEvent(post))
                 }, {
                     if (it is HttpException && it.code() == HTTP_ERROR_PAYMENT_REQUIRED) {
-                        PaymentDialog(this, showNegativeButton = true, positiveListener = {
+                        PaymentDialog(this, showNegativeButton = true, positiveListener = { _, _ ->
                             startActivity(Intent(this, ShopActivity::class.java))
                         }).show()
                     } else {

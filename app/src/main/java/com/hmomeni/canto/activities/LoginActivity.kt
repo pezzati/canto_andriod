@@ -83,7 +83,7 @@ class LoginActivity : BaseActivity(), View.OnClickListener {
                                     showNegativeButton = true,
                                     positiveButtonText = getString(R.string.update),
                                     negativeButtonText = getString(R.string.ask_later),
-                                    positiveListener = {
+                                    positiveListener = { _, _ ->
                                         startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(p.second)))
                                     }).show()
                         }
@@ -96,7 +96,7 @@ class LoginActivity : BaseActivity(), View.OnClickListener {
                                 showNegativeButton = false,
                                 positiveButtonText = getString(R.string.update),
                                 negativeButtonText = getString(R.string.ask_later),
-                                positiveListener = {
+                                positiveListener = { _, _ ->
                                     if (!p.second.isNullOrEmpty()) {
                                         startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(p.second)))
                                     }

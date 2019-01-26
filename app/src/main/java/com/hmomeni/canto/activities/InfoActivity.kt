@@ -7,6 +7,7 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.hmomeni.canto.BuildConfig
 import com.hmomeni.canto.R
+import com.hmomeni.canto.utils.PaymentDialog
 import kotlinx.android.synthetic.main.activity_info.*
 import java.util.*
 
@@ -17,6 +18,19 @@ class InfoActivity : AppCompatActivity(), View.OnClickListener {
             R.id.telegramSupportBtn -> openLink("http://t.me/cantoapp")
             R.id.instagramBtn -> openLink("http://instagram.com/canto_app")
             R.id.webSiteBtn -> openLink("http://canto-app.ir")
+            R.id.requestSongBtn -> PaymentDialog(
+                    this,
+                    getString(R.string.request_song),
+                    getString(R.string.request_song_desc),
+                    showTextInput = true,
+                    showPositiveButton = true,
+                    showNegativeButton = true,
+                    positiveButtonText = getString(R.string.send),
+                    textInputHint = getString(R.string.name_of_song_singer),
+                    positiveListener = { _, _ ->
+
+                    }
+            ).show()
         }
     }
 

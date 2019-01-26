@@ -21,9 +21,11 @@ class PaymentDialog(
         var positiveButtonText: String? = null,
         var negativeButtonText: String? = null,
         var autoDismiss: Boolean = true,
-        var positiveListener: ((PaymentDialog) -> Unit)? = null,
+        var positiveListener: ((PaymentDialog, String?) -> Unit)? = null,
         var negativeListener: ((PaymentDialog) -> Unit)? = null,
-        var overlayText: String? = null
+        var overlayText: String? = null,
+        var showTextInput: Boolean = false,
+        var textInputHint: String? = null
 ) : Dialog(context) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -77,7 +79,7 @@ class PaymentDialog(
             negativeButton.text = it
         }
         positiveButton.setOnClickListener {
-            positiveListener?.invoke(this)
+            positiveListener?.invoke(this, textInput.text.toString())
             if (autoDismiss) {
                 dismiss()
             }
@@ -88,6 +90,15 @@ class PaymentDialog(
             if (autoDismiss) {
                 dismiss()
             }
+        }
+
+        if (showTextInput) {
+            textInput.visibility = View.VISIBLE
+            textInputHint?.let {
+                textInput.hint = textInputHint
+            }
+        } else {
+            textInput.visibility = View.GONE
         }
     }
 }
