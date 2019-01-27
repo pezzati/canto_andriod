@@ -9,16 +9,16 @@ import com.hmomeni.canto.entities.Genre
 
 class PostTypeConvertor {
     @TypeConverter
-    fun toArtist(value: String): Artist = App.gson.fromJson(value, Artist::class.java)
+    fun toArtist(value: String?): Artist? = if (value == null) null else App.gson.fromJson(value, Artist::class.java)
 
     @TypeConverter
-    fun fromArtist(value: Artist): String = App.gson.toJson(value)
+    fun fromArtist(value: Artist?): String? = if (value == null) null else App.gson.toJson(value)
 
     @TypeConverter
-    fun toContent(value: String): Content = App.gson.fromJson(value, Content::class.java)
+    fun toContent(value: String?): Content? = if (value == null) null else App.gson.fromJson(value, Content::class.java)
 
     @TypeConverter
-    fun fromContent(value: Content): String = App.gson.toJson(value)
+    fun fromContent(value: Content?): String? = if (value == null) null else App.gson.toJson(value)
 
     @TypeConverter
     fun toGenre(value: String): Genre = App.gson.fromJson(value, Genre::class.java)
@@ -27,8 +27,8 @@ class PostTypeConvertor {
     fun fromGenre(value: Genre): String = App.gson.toJson(value)
 
     @TypeConverter
-    fun toCoverPhoto(value: String): CoverPhoto = App.gson.fromJson(value, CoverPhoto::class.java)
+    fun toCoverPhoto(value: String?): CoverPhoto? = if (value == null) null else App.gson.fromJson(value, CoverPhoto::class.java)
 
     @TypeConverter
-    fun fromCoverPhoto(value: CoverPhoto): String = App.gson.toJson(value)
+    fun fromCoverPhoto(value: CoverPhoto?): String? = if (value == null) null else App.gson.toJson(value)
 }

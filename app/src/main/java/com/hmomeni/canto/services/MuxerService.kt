@@ -15,23 +15,23 @@ import android.provider.MediaStore.Video.Thumbnails.MINI_KIND
 import android.widget.Toast
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import com.crashlytics.android.Crashlytics
 import com.hmomeni.canto.R
 import com.hmomeni.canto.activities.MainActivity
 import com.hmomeni.canto.activities.RATIO_FULLSCREEN
 import com.hmomeni.canto.entities.MuxJob
 import com.hmomeni.canto.entities.PROJECT_TYPE_DUBSMASH
 import com.hmomeni.canto.entities.PROJECT_TYPE_SINGING
-import com.hmomeni.canto.utils.app
+import com.hmomeni.canto.utils.*
 import com.hmomeni.canto.utils.ffmpeg.FFcommandExecuteResponseHandler
 import com.hmomeni.canto.utils.ffmpeg.FFmpeg
-import com.hmomeni.canto.utils.installWatermark
-import com.hmomeni.canto.utils.iomain
 import com.hmomeni.canto.vms.EditViewModel
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import timber.log.Timber
 import java.io.File
+import java.util.*
 
 class MuxerService : Service() {
     override fun onBind(intent: Intent?): IBinder? {
@@ -53,6 +53,12 @@ class MuxerService : Service() {
     private lateinit var watermark: String
 
     override fun onCreate() {
+        val dm = resources.displayMetrics
+        val conf = resources.configuration
+        val locale = Locale(FA_LANG.toLowerCase())
+        Locale.setDefault(locale)
+        conf.setLocale(locale)
+        resources.updateConfiguration(conf, dm)
         super.onCreate()
         watermark = installWatermark(this)
         viewModel = EditViewModel(app())
@@ -181,9 +187,13 @@ class MuxerService : Service() {
                             .subscribe({
                                 createNotification(true, job.outputFile)
                             }, {
+                                createNotification(true, job.outputFile, false)
                                 Timber.e(it)
+                                Crashlytics.logException(it)
                             })
                 }, {
+                    createNotification(true, job.outputFile, false)
+                    Crashlytics.logException(it)
                     Timber.e(it)
                 })
     }
@@ -201,9 +211,12 @@ class MuxerService : Service() {
     }
 
     @SuppressLint("CheckResult")
-    private fun createNotification(finish: Boolean, videoPath: String) {
+    private fun createNotification(finish: Boolean, videoPath: String, failed: Boolean = false) {
         Observable.create<Bitmap> {
-            val thumbnail = ThumbnailUtils.createVideoThumbnail(videoPath, MINI_KIND)
+            var thumbnail = ThumbnailUtils.createVideoThumbnail(videoPath, MINI_KIND)
+            if (thumbnail == null) {
+                thumbnail = getBitmapFromVectorDrawable(this, R.drawable.ic_error)
+            }
             it.onNext(thumbnail)
             it.onComplete()
         }.subscribeOn(Schedulers.computation())
@@ -223,7 +236,11 @@ class MuxerService : Service() {
 
                     if (finish) {
                         nBuilder.setContentIntent(pendingIntent)
-                        nBuilder.setContentText(getString(R.string.muxing_done))
+                        if (failed) {
+                            nBuilder.setContentText(getString(R.string.muxing_failed))
+                        } else {
+                            nBuilder.setContentText(getString(R.string.muxing_done))
+                        }
                     }
                     if (finish) {
                         stopForeground(true)
@@ -232,6 +249,7 @@ class MuxerService : Service() {
                         startForeground(hashCode(), nBuilder.build())
                     }
                 }, {
+                    Crashlytics.logException(it)
                     Timber.e(it)
                 })
     }
