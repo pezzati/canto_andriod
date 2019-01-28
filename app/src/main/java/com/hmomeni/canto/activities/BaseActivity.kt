@@ -22,12 +22,6 @@ open class BaseActivity : AppCompatActivity() {
 
     private var logoutDisposable: Disposable? = null
     override fun onCreate(savedInstanceState: Bundle?) {
-        val dm = resources.displayMetrics
-        val conf = resources.configuration
-        val locale = Locale(FA_LANG.toLowerCase())
-        Locale.setDefault(locale)
-        conf.setLocale(locale)
-        resources.updateConfiguration(conf, dm)
         super.onCreate(savedInstanceState)
         app().di.inject(this)
 
@@ -44,8 +38,27 @@ open class BaseActivity : AppCompatActivity() {
                 }
     }
 
+    override fun onResume() {
+        val dm = resources.displayMetrics
+        val conf = resources.configuration
+        val locale = Locale(FA_LANG.toLowerCase())
+        Locale.setDefault(locale)
+        conf.setLocale(locale)
+        resources.updateConfiguration(conf, dm)
+        super.onResume()
+    }
+
     override fun onDestroy() {
         logoutDisposable?.dispose()
         super.onDestroy()
+    }
+
+    private fun applyLang() {
+        val dm = resources.displayMetrics
+        val conf = resources.configuration
+        val locale = Locale(FA_LANG.toLowerCase())
+        Locale.setDefault(locale)
+        conf.setLocale(locale)
+        resources.updateConfiguration(conf, dm)
     }
 }

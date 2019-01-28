@@ -8,6 +8,7 @@ import android.media.MediaPlayer
 import android.os.Bundle
 import android.os.Environment
 import android.os.Handler
+import android.text.format.DateFormat
 import android.view.Surface
 import android.view.TextureView
 import android.view.View
@@ -25,6 +26,7 @@ import com.hmomeni.canto.utils.views.VerticalSlider
 import kotlinx.android.synthetic.main.activity_edit.*
 import timber.log.Timber
 import java.io.File
+import java.util.*
 import kotlin.concurrent.thread
 
 class EditActivity : BaseFullActivity(), View.OnClickListener {
@@ -56,9 +58,9 @@ class EditActivity : BaseFullActivity(), View.OnClickListener {
 
         outDir.mkdirs()
 
-        outFile = File(outDir, "Canto_%s_%d.mp4".format(
+        outFile = File(outDir, "Canto_%s_%s.mp4".format(Locale.ENGLISH,
                 if (type == PROJECT_TYPE_SINGING) "singing" else "dubsmash",
-                System.currentTimeMillis()
+                DateFormat.format("yyyy-MM-dd-hh-mm-ss", Date())
         ))
 
         type = intent.getIntExtra(INTENT_EXTRA_TYPE, type)

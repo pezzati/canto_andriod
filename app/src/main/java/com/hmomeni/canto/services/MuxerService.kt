@@ -30,8 +30,9 @@ import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import timber.log.Timber
-import java.io.File
 import java.util.*
+
+const val CRF_FACTOR = 24 // less is more quality
 
 class MuxerService : Service() {
     override fun onBind(intent: Intent?): IBinder? {
@@ -104,13 +105,13 @@ class MuxerService : Service() {
                     commands += listOf(
                             "-i", job.inputFiles[0],
                             "-i", watermark,
-                            "-filter_complex", "overlay=x=(main_w-overlay_w-40):y=(main_h-overlay_h-40)",
                             "-i", job.inputFiles[1]
                     )
                     commands.addAll(listOf(
+                            "-filter_complex", "crop=in_h*0.5625:in_h,overlay=x=(main_w-overlay_w-40):y=(main_h-overlay_h-40)",
                             "-codec:a", "aac",
                             "-codec:v", "libx264",
-                            "-crf", "30",
+                            "-crf", "$CRF_FACTOR",
                             "-preset", "ultrafast",
                             "-map", "0:v:0",
                             "-map", "2:a:0",
@@ -122,20 +123,20 @@ class MuxerService : Service() {
                     commands += listOf(
                             "-i", job.inputFiles[0],
                             "-i", watermark,
-                            "-filter_complex", "overlay=x=(main_w-overlay_w-40):y=(main_h-overlay_h-40)",
                             "-i", job.inputFiles[1],
                             "-i", job.inputFiles[2]
                     )
 
                     commands.addAll(listOf(
-                            "-filter_complex", "[2:0][3:0]  amix=inputs=2:duration=longest",
+                            "-filter_complex", "crop=in_h*0.5625:in_h,overlay=x=(main_w-overlay_w-40):y=(main_h-overlay_h-40);[2:0][3:0]amix=inputs=2:duration=longest",
                             "-codec:a", "aac",
                             "-codec:v", "libx264",
-                            "-crf", "30",
+                            "-crf", "$CRF_FACTOR",
                             "-preset", "ultrafast",
                             "-map", "0:v",
-                            "-map", "2:a:0",
-                            "-shortest", "-y", job.outputFile
+                            "-map", "2:a",
+                            "-shortest", "-y",
+                            job.outputFile
                     ))
                 }
             }
@@ -146,9 +147,9 @@ class MuxerService : Service() {
                     object : FFcommandExecuteResponseHandler {
                         override fun onFinish() {
                             Timber.d("Mux finished")
-                            job.inputFiles.forEach {
+                            /*job.inputFiles.forEach {
                                 Timber.d("Deleting %s, %b", it, File(it).delete())
-                            }
+                            }*/
                         }
 
                         override fun onSuccess(message: String?) {
@@ -158,6 +159,8 @@ class MuxerService : Service() {
 
                         override fun onFailure(message: String?) {
                             Timber.e("Mux failed: %s", message)
+                            Crashlytics.logException(Exception(message))
+                            createNotification(true, job.outputFile, true)
                         }
 
                         override fun onProgress(message: String?) {
