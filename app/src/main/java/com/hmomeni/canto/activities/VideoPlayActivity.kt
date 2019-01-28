@@ -116,7 +116,8 @@ class VideoPlayActivity : BaseFullActivity(), View.OnClickListener {
         trackName.text = post.name
 
         GlideApp.with(this)
-                .load(post.coverPhoto!!.link)
+                .load(post.coverPhoto?.link)
+                .placeholder(R.drawable.post_placeholder)
                 .rounded(dpToPx(5))
                 .into(artistPhoto)
 
