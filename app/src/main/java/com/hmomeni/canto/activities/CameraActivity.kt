@@ -441,6 +441,7 @@ abstract class CameraActivity : BaseFullActivity() {
                 addTarget(previewSurface)
                 addTarget(recorderSurface)
             }
+            previewRequestBuilder.set(CaptureRequest.CONTROL_AE_TARGET_FPS_RANGE, getRange())
 
             // Start a capture session
             // Once the session starts, we can update the UI and start recording
