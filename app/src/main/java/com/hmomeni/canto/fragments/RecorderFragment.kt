@@ -214,7 +214,7 @@ class RecorderFragment : androidx.fragment.app.Fragment() {
         karaokeDesc.alpha = 0f
 //        karaokeDesc.translationY = -100f
 
-        viewPager.setOnPageChangeListener(object : ViewPager.OnPageChangeListener() {
+        viewPager.setOnPageChangeListener(object : ViewPager.OnPageChangeListener {
             override fun onPageScrollStateChanged(state: Int) {
 
             }

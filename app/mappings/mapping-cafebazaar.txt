@@ -39050,8 +39050,6 @@ com.hmomeni.canto.R$id -> com.hmomeni.canto.b$a:
     int cropBottom -> cropBottom
     int cropTop -> cropTop
     int currentBalance -> currentBalance
-    int currentTabDesc -> currentTabDesc
-    int currentTabTitle -> currentTabTitle
     int custom -> custom
     int customPanel -> customPanel
     int cut -> cut
@@ -39078,6 +39076,8 @@ com.hmomeni.canto.R$id -> com.hmomeni.canto.b$a:
     int divider -> divider
     int dname -> dname
     int drop -> drop
+    int dubsmashDesc -> dubsmashDesc
+    int dubsmashTitle -> dubsmashTitle
     int echoBtn -> echoBtn
     int edit_query -> edit_query
     int emailBtn -> emailBtn
@@ -39142,6 +39142,8 @@ com.hmomeni.canto.R$id -> com.hmomeni.canto.b$a:
     int inviteBtn -> inviteBtn
     int italic -> italic
     int item_touch_helper_previous_elevation -> item_touch_helper_previous_elevation
+    int karaokeDesc -> karaokeDesc
+    int karaokeTitle -> karaokeTitle
     int labeled -> labeled
     int largeLabel -> largeLabel
     int left -> left
@@ -39179,8 +39181,6 @@ com.hmomeni.canto.R$id -> com.hmomeni.canto.b$a:
     int navigation_header_container -> navigation_header_container
     int negativeButton -> negativeButton
     int never -> never
-    int nextTabDesc -> nextTabDesc
-    int nextTabTitle -> nextTabTitle
     int noCodeBtn -> noCodeBtn
     int noPostImage -> noPostImage
     int noPostText -> noPostText
@@ -39272,6 +39272,8 @@ com.hmomeni.canto.R$id -> com.hmomeni.canto.b$a:
     int showCustom -> showCustom
     int showHome -> showHome
     int showTitle -> showTitle
+    int singingDesc -> singingDesc
+    int singingTitle -> singingTitle
     int single_mode -> single_mode
     int slide -> slide
     int slidersWrapper -> slidersWrapper
@@ -40444,6 +40446,7 @@ com.hmomeni.canto.activities.BaseActivity -> com.hmomeni.canto.activities.a:
     java.util.HashMap _$_findViewCache -> n
     com.hmomeni.canto.utils.UserSession getUserSession() -> m
     void onCreate(android.os.Bundle) -> onCreate
+    void onResume() -> onResume
     void onDestroy() -> onDestroy
     void <init>() -> <init>
     android.view.View _$_findCachedViewById(int) -> c
@@ -41796,16 +41799,18 @@ com.hmomeni.canto.di.DIComponent$Injectable -> com.hmomeni.canto.c.l$a:
     void inject(com.hmomeni.canto.di.DIComponent) -> a
 com.hmomeni.canto.di.DaggerDIComponent -> com.hmomeni.canto.c.m:
     com.hmomeni.canto.di.AppModule appModule -> a
-    com.hmomeni.canto.di.RoomModule roomModule -> b
-    javax.inject.Provider providesLogoutEventProvider -> c
-    com.hmomeni.canto.di.RoomModule_ProvidesUserDaoFactory providesUserDaoProvider -> d
-    javax.inject.Provider providesUserSessionProvider -> e
-    javax.inject.Provider providesNavEventsProvider -> f
-    javax.inject.Provider providesGsonProvider -> g
-    javax.inject.Provider providesRetrofitProvider -> h
-    javax.inject.Provider providesApiProvider -> i
-    javax.inject.Provider providesInventoryProvider -> j
-    javax.inject.Provider providesProgressEventsProvider -> k
+    javax.inject.Provider providesLogoutEventProvider -> b
+    javax.inject.Provider providesUserDaoProvider -> c
+    javax.inject.Provider providesUserSessionProvider -> d
+    javax.inject.Provider providesNavEventsProvider -> e
+    javax.inject.Provider providesGsonProvider -> f
+    javax.inject.Provider providesRetrofitProvider -> g
+    javax.inject.Provider providesApiProvider -> h
+    javax.inject.Provider providesInventoryProvider -> i
+    javax.inject.Provider providesProgressEventsProvider -> j
+    javax.inject.Provider providesProjectDaoProvider -> k
+    javax.inject.Provider providesPostDaoProvider -> l
+    javax.inject.Provider providesTrackDaoProvider -> m
     void <init>(com.hmomeni.canto.di.DaggerDIComponent$Builder) -> <init>
     com.hmomeni.canto.di.DaggerDIComponent$Builder builder() -> a
     void initialize(com.hmomeni.canto.di.DaggerDIComponent$Builder) -> a
@@ -41869,21 +41874,27 @@ com.hmomeni.canto.di.RoomModule -> com.hmomeni.canto.c.n:
     void <init>(com.hmomeni.canto.App) -> <init>
 com.hmomeni.canto.di.RoomModule_ProvidesPostDaoFactory -> com.hmomeni.canto.c.o:
     com.hmomeni.canto.di.RoomModule module -> a
+    void <init>(com.hmomeni.canto.di.RoomModule) -> <init>
     com.hmomeni.canto.persistence.PostDao get() -> a
     com.hmomeni.canto.persistence.PostDao provideInstance(com.hmomeni.canto.di.RoomModule) -> a
-    com.hmomeni.canto.persistence.PostDao proxyProvidesPostDao(com.hmomeni.canto.di.RoomModule) -> b
+    com.hmomeni.canto.di.RoomModule_ProvidesPostDaoFactory create(com.hmomeni.canto.di.RoomModule) -> b
+    com.hmomeni.canto.persistence.PostDao proxyProvidesPostDao(com.hmomeni.canto.di.RoomModule) -> c
     java.lang.Object get() -> b
 com.hmomeni.canto.di.RoomModule_ProvidesProjectDaoFactory -> com.hmomeni.canto.c.p:
     com.hmomeni.canto.di.RoomModule module -> a
+    void <init>(com.hmomeni.canto.di.RoomModule) -> <init>
     com.hmomeni.canto.persistence.ProjectDao get() -> a
     com.hmomeni.canto.persistence.ProjectDao provideInstance(com.hmomeni.canto.di.RoomModule) -> a
-    com.hmomeni.canto.persistence.ProjectDao proxyProvidesProjectDao(com.hmomeni.canto.di.RoomModule) -> b
+    com.hmomeni.canto.di.RoomModule_ProvidesProjectDaoFactory create(com.hmomeni.canto.di.RoomModule) -> b
+    com.hmomeni.canto.persistence.ProjectDao proxyProvidesProjectDao(com.hmomeni.canto.di.RoomModule) -> c
     java.lang.Object get() -> b
 com.hmomeni.canto.di.RoomModule_ProvidesTrackDaoFactory -> com.hmomeni.canto.c.q:
     com.hmomeni.canto.di.RoomModule module -> a
+    void <init>(com.hmomeni.canto.di.RoomModule) -> <init>
     com.hmomeni.canto.persistence.TrackDao get() -> a
     com.hmomeni.canto.persistence.TrackDao provideInstance(com.hmomeni.canto.di.RoomModule) -> a
-    com.hmomeni.canto.persistence.TrackDao proxyProvidesTrackDao(com.hmomeni.canto.di.RoomModule) -> b
+    com.hmomeni.canto.di.RoomModule_ProvidesTrackDaoFactory create(com.hmomeni.canto.di.RoomModule) -> b
+    com.hmomeni.canto.persistence.TrackDao proxyProvidesTrackDao(com.hmomeni.canto.di.RoomModule) -> c
     java.lang.Object get() -> b
 com.hmomeni.canto.di.RoomModule_ProvidesUserDaoFactory -> com.hmomeni.canto.c.r:
     com.hmomeni.canto.di.RoomModule module -> a
@@ -42538,10 +42549,10 @@ com.hmomeni.canto.fragments.RecorderFragment$onViewCreated$3 -> com.hmomeni.cant
     void onClick(android.view.View) -> onClick
     void <init>(com.hmomeni.canto.fragments.RecorderFragment) -> <init>
 com.hmomeni.canto.fragments.RecorderFragment$onViewCreated$4 -> com.hmomeni.canto.fragments.RecorderFragment$d:
-    boolean titlesChanged -> b
     com.hmomeni.canto.fragments.RecorderFragment this$0 -> a
+    void onPageScrollStateChanged(int) -> b
     void onPageSelected(int) -> a
-    void onPageScrolled(int,float,int,boolean) -> a
+    void onPageScrolled(int,float,int) -> a
     void <init>(com.hmomeni.canto.fragments.RecorderFragment) -> <init>
 com.hmomeni.canto.fragments.RecorderFragment$openActivity$1 -> com.hmomeni.canto.fragments.RecorderFragment$e:
     com.hmomeni.canto.fragments.RecorderFragment this$0 -> a
@@ -42953,8 +42964,8 @@ com.hmomeni.canto.services.MuxerService -> com.hmomeni.canto.services.MuxerServi
     void <init>() -> <init>
     void <clinit>() -> <clinit>
     void access$saveProject(com.hmomeni.canto.services.MuxerService,com.hmomeni.canto.entities.MuxJob) -> a
-    com.hmomeni.canto.vms.EditViewModel access$getViewModel$p(com.hmomeni.canto.services.MuxerService) -> a
     void access$createNotification(com.hmomeni.canto.services.MuxerService,boolean,java.lang.String,boolean) -> a
+    com.hmomeni.canto.vms.EditViewModel access$getViewModel$p(com.hmomeni.canto.services.MuxerService) -> a
     java.lang.String access$getCHANNEL_ID$p(com.hmomeni.canto.services.MuxerService) -> b
     androidx.core.app.NotificationManagerCompat access$getMNotificationManager$p(com.hmomeni.canto.services.MuxerService) -> c
 com.hmomeni.canto.services.MuxerService$Companion -> com.hmomeni.canto.services.MuxerService$a:
@@ -43053,22 +43064,13 @@ com.hmomeni.canto.utils.Dimension -> com.hmomeni.canto.utils.e:
     java.lang.String toString() -> toString
     boolean equals(java.lang.Object) -> equals
     void <init>(int,int) -> <init>
-com.hmomeni.canto.utils.DirectionAwareOnPageChangeListener -> com.hmomeni.canto.utils.f:
-    int sum -> a
-    int prevPos -> b
-    boolean lastDir -> c
-    void onPageScrollStateChanged(int) -> b
-    void onPageScrolled(int,float,int) -> a
-    void onPageSelected(int) -> a
-    void onPageScrolled(int,float,int,boolean) -> a
-    void <init>() -> <init>
-com.hmomeni.canto.utils.DownloadEvent -> com.hmomeni.canto.utils.g:
+com.hmomeni.canto.utils.DownloadEvent -> com.hmomeni.canto.utils.f:
     int action -> a
     int progress -> b
     int getAction() -> a
     int getProgress() -> b
     void <init>(int,int) -> <init>
-com.hmomeni.canto.utils.ErrorDialog -> com.hmomeni.canto.utils.h:
+com.hmomeni.canto.utils.ErrorDialog -> com.hmomeni.canto.utils.g:
     java.lang.String ARG_MESSAGE -> ae
     com.hmomeni.canto.utils.ErrorDialog$Companion Companion -> ad
     java.util.HashMap _$_findViewCache -> af
@@ -43079,19 +43081,19 @@ com.hmomeni.canto.utils.ErrorDialog -> com.hmomeni.canto.utils.h:
     java.lang.String access$getARG_MESSAGE$p(com.hmomeni.canto.utils.ErrorDialog) -> a
     void _$_clearFindViewByIdCache() -> al
     void onDestroyView() -> g
-com.hmomeni.canto.utils.ErrorDialog$Companion -> com.hmomeni.canto.utils.h$a:
+com.hmomeni.canto.utils.ErrorDialog$Companion -> com.hmomeni.canto.utils.g$a:
     com.hmomeni.canto.utils.ErrorDialog newInstance(java.lang.String) -> a
     void <init>() -> <init>
     void <init>(kotlin.jvm.internal.DefaultConstructorMarker) -> <init>
-com.hmomeni.canto.utils.ErrorDialog$onCreateDialog$1 -> com.hmomeni.canto.utils.h$b:
+com.hmomeni.canto.utils.ErrorDialog$onCreateDialog$1 -> com.hmomeni.canto.utils.g$b:
     com.hmomeni.canto.utils.ErrorDialog this$0 -> a
     void onClick(android.content.DialogInterface,int) -> onClick
     void <init>(com.hmomeni.canto.utils.ErrorDialog) -> <init>
-com.hmomeni.canto.utils.GlideApp -> com.hmomeni.canto.utils.i:
+com.hmomeni.canto.utils.GlideApp -> com.hmomeni.canto.utils.h:
     com.hmomeni.canto.utils.GlideRequests with(android.content.Context) -> a
     com.hmomeni.canto.utils.GlideRequests with(androidx.fragment.app.FragmentActivity) -> a
     com.hmomeni.canto.utils.GlideRequests with(android.view.View) -> a
-com.hmomeni.canto.utils.GlideOptions -> com.hmomeni.canto.utils.j:
+com.hmomeni.canto.utils.GlideOptions -> com.hmomeni.canto.utils.i:
     void <init>() -> <init>
     com.hmomeni.canto.utils.GlideOptions sizeMultiplier(float) -> b
     com.hmomeni.canto.utils.GlideOptions useAnimationPool(boolean) -> c
@@ -43134,7 +43136,7 @@ com.hmomeni.canto.utils.GlideOptions -> com.hmomeni.canto.utils.j:
     com.bumptech.glide.request.RequestOptions useAnimationPool(boolean) -> a
     com.bumptech.glide.request.RequestOptions sizeMultiplier(float) -> a
     java.lang.Object clone() -> clone
-com.hmomeni.canto.utils.GlideRequest -> com.hmomeni.canto.utils.k:
+com.hmomeni.canto.utils.GlideRequest -> com.hmomeni.canto.utils.j:
     void <init>(com.bumptech.glide.Glide,com.bumptech.glide.RequestManager,java.lang.Class,android.content.Context) -> <init>
     com.hmomeni.canto.utils.GlideRequest placeholder(int) -> a
     com.hmomeni.canto.utils.GlideRequest dontTransform() -> c
@@ -43151,7 +43153,7 @@ com.hmomeni.canto.utils.GlideRequest -> com.hmomeni.canto.utils.k:
     com.bumptech.glide.RequestBuilder load(java.lang.Object) -> a
     com.bumptech.glide.RequestBuilder apply(com.bumptech.glide.request.RequestOptions) -> a
     java.lang.Object clone() -> clone
-com.hmomeni.canto.utils.GlideRequests -> com.hmomeni.canto.utils.l:
+com.hmomeni.canto.utils.GlideRequests -> com.hmomeni.canto.utils.k:
     void <init>(com.bumptech.glide.Glide,com.bumptech.glide.manager.Lifecycle,com.bumptech.glide.manager.RequestManagerTreeNode,android.content.Context) -> <init>
     com.hmomeni.canto.utils.GlideRequest as(java.lang.Class) -> c
     com.hmomeni.canto.utils.GlideRequest asBitmap() -> i
@@ -43166,16 +43168,16 @@ com.hmomeni.canto.utils.GlideRequests -> com.hmomeni.canto.utils.l:
     com.bumptech.glide.RequestBuilder load(java.lang.String) -> a
     com.bumptech.glide.RequestBuilder asDrawable() -> g
     com.bumptech.glide.RequestBuilder asBitmap() -> f
-com.hmomeni.canto.utils.LogoutEvent -> com.hmomeni.canto.utils.m:
+com.hmomeni.canto.utils.LogoutEvent -> com.hmomeni.canto.utils.l:
     void <init>() -> <init>
-com.hmomeni.canto.utils.MyAnimatorListener -> com.hmomeni.canto.utils.n:
+com.hmomeni.canto.utils.MyAnimatorListener -> com.hmomeni.canto.utils.m:
     void onAnimationRepeat(android.animation.Animator) -> onAnimationRepeat
     void onAnimationCancel(android.animation.Animator) -> onAnimationCancel
     void onAnimationStart(android.animation.Animator) -> onAnimationStart
     void <init>() -> <init>
 com.hmomeni.canto.utils.MyGlideModule -> com.hmomeni.canto.utils.MyGlideModule:
     void <init>() -> <init>
-com.hmomeni.canto.utils.PaymentDialog -> com.hmomeni.canto.utils.o:
+com.hmomeni.canto.utils.PaymentDialog -> com.hmomeni.canto.utils.n:
     java.lang.String title -> a
     java.lang.String content -> b
     java.lang.String imageUrl -> c
@@ -43196,28 +43198,28 @@ com.hmomeni.canto.utils.PaymentDialog -> com.hmomeni.canto.utils.o:
     kotlin.jvm.functions.Function1 getNegativeListener() -> c
     void <init>(android.content.Context,java.lang.String,java.lang.String,java.lang.String,int,boolean,boolean,java.lang.String,java.lang.String,boolean,kotlin.jvm.functions.Function2,kotlin.jvm.functions.Function1,java.lang.String,boolean,java.lang.String) -> <init>
     void <init>(android.content.Context,java.lang.String,java.lang.String,java.lang.String,int,boolean,boolean,java.lang.String,java.lang.String,boolean,kotlin.jvm.functions.Function2,kotlin.jvm.functions.Function1,java.lang.String,boolean,java.lang.String,int,kotlin.jvm.internal.DefaultConstructorMarker) -> <init>
-com.hmomeni.canto.utils.PaymentDialog$onCreate$7 -> com.hmomeni.canto.utils.o$a:
+com.hmomeni.canto.utils.PaymentDialog$onCreate$7 -> com.hmomeni.canto.utils.n$a:
     com.hmomeni.canto.utils.PaymentDialog this$0 -> a
     void onClick(android.view.View) -> onClick
     void <init>(com.hmomeni.canto.utils.PaymentDialog) -> <init>
-com.hmomeni.canto.utils.PaymentDialog$onCreate$8 -> com.hmomeni.canto.utils.o$b:
+com.hmomeni.canto.utils.PaymentDialog$onCreate$8 -> com.hmomeni.canto.utils.n$b:
     com.hmomeni.canto.utils.PaymentDialog this$0 -> a
     void onClick(android.view.View) -> onClick
     void <init>(com.hmomeni.canto.utils.PaymentDialog) -> <init>
-com.hmomeni.canto.utils.ProgressDialog -> com.hmomeni.canto.utils.p:
+com.hmomeni.canto.utils.ProgressDialog -> com.hmomeni.canto.utils.o:
     java.lang.String title -> a
     void onCreate(android.os.Bundle) -> onCreate
     void <init>(android.content.Context,java.lang.String) -> <init>
     void <init>(android.content.Context,java.lang.String,int,kotlin.jvm.internal.DefaultConstructorMarker) -> <init>
-com.hmomeni.canto.utils.RequestMap -> com.hmomeni.canto.utils.q:
+com.hmomeni.canto.utils.RequestMap -> com.hmomeni.canto.utils.p:
     java.util.Map map -> a
     com.hmomeni.canto.utils.RequestMap add(java.lang.String,java.lang.Object) -> a
     okhttp3.RequestBody body() -> a
     void <init>() -> <init>
-com.hmomeni.canto.utils.RequestMapKt -> com.hmomeni.canto.utils.r:
+com.hmomeni.canto.utils.RequestMapKt -> com.hmomeni.canto.utils.q:
     okhttp3.RequestBody toBody(java.util.Map) -> a
     com.hmomeni.canto.utils.RequestMap makeMap() -> a
-com.hmomeni.canto.utils.UserSession -> com.hmomeni.canto.utils.s:
+com.hmomeni.canto.utils.UserSession -> com.hmomeni.canto.utils.r:
     com.hmomeni.canto.persistence.UserDao userDao -> a
     com.hmomeni.canto.entities.User user -> b
     java.lang.String token -> c
@@ -43229,7 +43231,7 @@ com.hmomeni.canto.utils.UserSession -> com.hmomeni.canto.utils.s:
     void setToken(java.lang.String) -> a
     void <init>(com.hmomeni.canto.persistence.UserDao,com.hmomeni.canto.entities.User,java.lang.String) -> <init>
     void <init>(com.hmomeni.canto.persistence.UserDao,com.hmomeni.canto.entities.User,java.lang.String,int,kotlin.jvm.internal.DefaultConstructorMarker) -> <init>
-com.hmomeni.canto.utils.UtilsKt -> com.hmomeni.canto.utils.t:
+com.hmomeni.canto.utils.UtilsKt -> com.hmomeni.canto.utils.s:
     com.hmomeni.canto.utils.Dimension screenDimension -> a
     com.hmomeni.canto.App app(android.content.Context) -> a
     io.reactivex.Single iomain(io.reactivex.Single) -> a
@@ -43244,19 +43246,19 @@ com.hmomeni.canto.utils.UtilsKt -> com.hmomeni.canto.utils.t:
     java.lang.String installWatermark(android.content.Context) -> d
     java.lang.String errorString(retrofit2.Response) -> a
     boolean isFFMpegAvailable(android.content.Context) -> e
-com.hmomeni.canto.utils.UtilsKt$iomain$1 -> com.hmomeni.canto.utils.t$a:
+com.hmomeni.canto.utils.UtilsKt$iomain$1 -> com.hmomeni.canto.utils.s$a:
     com.hmomeni.canto.utils.UtilsKt$iomain$1 INSTANCE -> a
     io.reactivex.SingleSource apply(io.reactivex.Single) -> a
     io.reactivex.Single apply(io.reactivex.Single) -> b
     void <init>() -> <init>
     void <clinit>() -> <clinit>
-com.hmomeni.canto.utils.UtilsKt$iomain$2 -> com.hmomeni.canto.utils.t$b:
+com.hmomeni.canto.utils.UtilsKt$iomain$2 -> com.hmomeni.canto.utils.s$b:
     com.hmomeni.canto.utils.UtilsKt$iomain$2 INSTANCE -> a
     io.reactivex.CompletableSource apply(io.reactivex.Completable) -> a
     io.reactivex.Completable apply(io.reactivex.Completable) -> b
     void <init>() -> <init>
     void <clinit>() -> <clinit>
-com.hmomeni.canto.utils.ViewModelFactory -> com.hmomeni.canto.utils.u:
+com.hmomeni.canto.utils.ViewModelFactory -> com.hmomeni.canto.utils.t:
     com.hmomeni.canto.App app -> a
     androidx.lifecycle.ViewModel create(java.lang.Class) -> a
     void <init>(com.hmomeni.canto.App) -> <init>
