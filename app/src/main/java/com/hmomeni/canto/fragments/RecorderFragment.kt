@@ -23,6 +23,7 @@ import android.view.*
 import android.widget.Toast
 import android.widget.Toast.LENGTH_SHORT
 import androidx.core.content.ContextCompat.checkSelfPermission
+import androidx.viewpager.widget.ViewPager
 import com.crashlytics.android.Crashlytics
 import com.hmomeni.canto.App
 import com.hmomeni.canto.R
@@ -203,78 +204,45 @@ class RecorderFragment : androidx.fragment.app.Fragment() {
             openActivity(PROJECT_TYPE_KARAOKE)
         }
 
-        nextTabTitle.alpha = 0f
-        nextTabTitle.translationY = -100f
+        singingTitle.alpha = 0f
+//        singingTitle.translationY = -100f
+        singingDesc.alpha = 0f
+//        singingDesc.translationY = -100f
 
-        nextTabDesc.alpha = 0f
-        nextTabDesc.translationY = -100f
-        viewPager.setOnPageChangeListener(object : DirectionAwareOnPageChangeListener() {
-            var titlesChanged = false
-            override fun onPageSelected(position: Int) {
-                super.onPageSelected(position)
-                titlesChanged = false
+        karaokeTitle.alpha = 0f
+//        karaokeTitle.translationY = -100f
+        karaokeDesc.alpha = 0f
+//        karaokeDesc.translationY = -100f
+
+        viewPager.setOnPageChangeListener(object : ViewPager.OnPageChangeListener() {
+            override fun onPageScrollStateChanged(state: Int) {
+
             }
 
-            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int, isRight: Boolean) {
-                Timber.d("position: %d, positionOffset: %f, positionOffsetPixels: %d, direction: %s", position, positionOffset, positionOffsetPixels, if (isRight) "right" else "left")
-                if (positionOffset != 0f) {
-                    if (position == 1 && isRight && !titlesChanged) {
-                        currentTabTitle.setText(R.string.karaoke)
-                        currentTabDesc.setText(R.string.karaoke_desc)
-                        titlesChanged = true
+            override fun onPageSelected(position: Int) {
+            }
+
+            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
+                when (position) {
+                    0 -> {
+                        dubsmashTitle.alpha = 1f - positionOffset
+                        dubsmashDesc.alpha = 1f - positionOffset
+
+                        singingTitle.alpha = positionOffset
+                        singingDesc.alpha = positionOffset
+
+                        karaokeTitle.alpha = 0f
+                        karaokeDesc.alpha = 0f
                     }
-                    if (position == 1 && !isRight && !titlesChanged) {
-                        currentTabTitle.setText(R.string.dubsmash)
-                        currentTabDesc.setText(R.string.dubsmash_desc)
-                        titlesChanged = true
-                    }
-                    when (position) {
-                        0 -> {
-                            currentTabTitle.alpha = 1 - positionOffset
-                            currentTabTitle.translationY = 100 * positionOffset
+                    1 -> {
+                        dubsmashTitle.alpha = 0f
+                        dubsmashDesc.alpha = 0f
 
-                            currentTabDesc.alpha = 1 - positionOffset
-                            currentTabDesc.translationY = 100 * positionOffset
+                        singingTitle.alpha = 1f - positionOffset
+                        singingDesc.alpha = 1f - positionOffset
 
-                            nextTabTitle.alpha = positionOffset
-                            nextTabTitle.translationY = -(100 - 100 * positionOffset)
-
-                            nextTabDesc.alpha = positionOffset
-                            nextTabDesc.translationY = -(100 - 100 * positionOffset)
-                        }
-                        1 -> {
-                            nextTabTitle.alpha = 1 - positionOffset
-                            nextTabTitle.translationY = 100 * positionOffset
-
-                            nextTabDesc.alpha = 1 - positionOffset
-                            nextTabDesc.translationY = 100 * positionOffset
-
-                            currentTabTitle.alpha = positionOffset
-                            currentTabTitle.translationY = -(100 - 100 * positionOffset)
-
-                            currentTabDesc.alpha = positionOffset
-                            currentTabDesc.translationY = -(100 - 100 * positionOffset)
-                        }
-                    }
-                } else {
-                    when (position) {
-                        0 -> {
-                            nextTabTitle.alpha = 0f
-                            nextTabTitle.translationY = -100f
-
-                            nextTabDesc.alpha = 0f
-                            nextTabDesc.translationY = -100f
-
-                            nextTabTitle.setText(R.string.sing)
-                            nextTabDesc.setText(R.string.sing_desc)
-                        }
-                        1 -> {
-                            currentTabTitle.alpha = 0f
-                            currentTabTitle.translationY = -100f
-
-                            currentTabDesc.alpha = 0f
-                            currentTabDesc.translationY = -100f
-                        }
+                        karaokeTitle.alpha = positionOffset
+                        karaokeDesc.alpha = positionOffset
                     }
                 }
             }

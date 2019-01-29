@@ -11,23 +11,26 @@ import javax.inject.Singleton
 class RoomModule(app: App) {
 
     private val appDatabase = Room.databaseBuilder(app.applicationContext, AppDatabase::class.java, "canto")
-
             .allowMainThreadQueries()
             .build()
 
-    @Provides
     @Singleton
+    @Provides
     fun providesAppDatabase(): AppDatabase = appDatabase
 
+    @Singleton
     @Provides
     fun providesProjectDao(): ProjectDao = appDatabase.projectDao()
 
+    @Singleton
     @Provides
     fun providesTrackDao(): TrackDao = appDatabase.trackDao()
 
+    @Singleton
     @Provides
     fun providesPostDao(): PostDao = appDatabase.postDao()
 
+    @Singleton
     @Provides
     fun providesUserDao(): UserDao = appDatabase.userDao()
 }

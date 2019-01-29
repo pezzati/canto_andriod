@@ -13,6 +13,7 @@
 #include <SuperpoweredRecorder.h>
 #include <SuperpoweredMixer.h>
 #include <SuperpoweredReverb.h>
+#include <SuperpoweredFilter.h>
 
 #define log_print __android_log_print
 
@@ -22,6 +23,7 @@ static SuperpoweredAndroidAudioIO *audioIO;
 static SuperpoweredAdvancedAudioPlayer *player;
 static SuperpoweredStereoMixer *mixer;
 static SuperpoweredReverb *reverb;
+//static SuperpoweredFilter *filter;
 
 static float *micBuffer;
 static float *reverbBuffer;
@@ -62,6 +64,7 @@ static bool audioProcessing(
         }
         mixer->process(inputs, outputs, inputLevels, outputLevels, NULL, NULL,
                        (unsigned int) numberOfFrames);
+//        filter->process(outputBuffer, outputBuffer, (unsigned int) numberOfFrames);
         SuperpoweredFloatToShortInt(outputBuffer, audio, (unsigned int) numberOfFrames);
         if (haveMusic || haveReverb) {
             return true;
@@ -84,9 +87,11 @@ static bool audioProcessing(
         inputs[1] = micBuffer;
         mixer->process(inputs, outputs, inputLevels, outputLevels, NULL, NULL,
                        (unsigned int) numberOfFrames);
+//        filter->process(outputBuffer, outputBuffer, (unsigned int) numberOfFrames);
         SuperpoweredFloatToShortInt(outputBuffer, audio, (unsigned int) numberOfFrames);
         return true;
     } else {
+//        filter->process(micBuffer, outputBuffer, (unsigned int) numberOfFrames);
         SuperpoweredFloatToShortInt(micBuffer, audio, (unsigned int) numberOfFrames);
         return true;
     }
@@ -137,6 +142,9 @@ Java_com_hmomeni_canto_activities_KaraokeActivity_StartAudio(
             (unsigned int) samplerate,       // sampling rate
             0                               // cachedPointCount
     );
+
+/*    filter = new SuperpoweredFilter(SuperpoweredFilterType::SuperpoweredFilter_HighShelf,
+                                    (unsigned int) samplerate);*/
 
     reverb = new SuperpoweredReverb((unsigned int) samplerate);
 
