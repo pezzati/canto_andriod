@@ -64,6 +64,10 @@ class LoginActivity : BaseActivity(), View.OnClickListener {
 
         cantoWrapper.translationY += getScreenDimensions(this).height / 6
 
+        handshake()
+    }
+
+    private fun handshake() {
         viewModel.handshake()
                 .iomain()
                 .subscribe({ p ->
@@ -103,6 +107,16 @@ class LoginActivity : BaseActivity(), View.OnClickListener {
                                 }).apply { setCanceledOnTouchOutside(false) }.show()
                     }
                 }, {
+                    PaymentDialog(this,
+                            getString(R.string.no_network),
+                            getString(R.string.please_check_internet),
+                            imageResId = R.drawable.no_internet_conation,
+                            showPositiveButton = false,
+                            showNegativeButton = true,
+                            negativeButtonText = getString(R.string.ok),
+                            negativeListener = {
+                                handshake()
+                            }).show()
                     Timber.e(it)
                 }).addTo(compositeDisposable)
     }
