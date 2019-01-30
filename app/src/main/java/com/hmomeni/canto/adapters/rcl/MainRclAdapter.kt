@@ -75,9 +75,10 @@ class MainRclAdapter(val banners: List<Banner>, private val genres: List<Genre>)
 
         fun bind(banners: List<Banner>) {
             mAdapter.banners = banners
+            mAdapter.notifyDataSetChanged()
             itemView.bannerViewPager.adapter = mAdapter
             itemView.pageIndicatorView.count = banners.size
-            if (!switchPageStarted) {
+            if (!switchPageStarted && mAdapter.count > 0) {
                 switchPage()
                 switchPageStarted = true
             }

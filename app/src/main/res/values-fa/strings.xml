@@ -99,4 +99,5 @@
     <string name="request_song_desc">آهنگ درخواستی خودتان را بنویسید و ما سعی می‌کنیم هر چه سریعتر آن را بر روی کانتو قرار دهیم</string>
     <string name="name_of_song_singer">نام آهنگ و خواننده</string>
     <string name="muxing_failed">ذخیره ویدیو با موفقیت انجام نشد</string>
+    <string name="x_days">%d روز</string>
 </resources>

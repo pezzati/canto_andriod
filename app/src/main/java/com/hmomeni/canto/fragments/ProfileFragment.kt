@@ -25,6 +25,7 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
 import kotlinx.android.synthetic.main.fragment_profile.*
 import timber.log.Timber
+import java.util.*
 
 class ProfileFragment : Fragment(), View.OnClickListener {
 
@@ -89,7 +90,7 @@ class ProfileFragment : Fragment(), View.OnClickListener {
                 recyclerView.setPadding(0, guideline4.y.toInt(), 0, 0)
                 scrollOffset = guideline4.y.toInt()
 
-                xAnimator = ObjectAnimator.ofFloat(userPhoto, View.X, userPhoto.x, btnInfo.x - dpToPx(48 + 16))
+                xAnimator = ObjectAnimator.ofFloat(userPhoto, View.X, userPhoto.x, 0f)
                 yAnimator = ObjectAnimator.ofFloat(userPhoto, View.Y, userPhoto.y, btnInfo.y - dpToPx(24 + 8))
 
                 xAnimator!!.duration = 10000
@@ -103,6 +104,9 @@ class ProfileFragment : Fragment(), View.OnClickListener {
                         userName.alpha = 1f - it.animatedFraction
                         userName.scaleX = 1f - it.animatedFraction
                         userName.scaleY = 1f - it.animatedFraction
+                        currentBalance.alpha = 1f - it.animatedFraction
+                        currentBalance.scaleX = 1f - it.animatedFraction
+                        currentBalance.scaleY = 1f - it.animatedFraction
                     }
                 }
                 btnInfo.viewTreeObserver.removeOnGlobalLayoutListener(globalLayoutListener)
@@ -145,12 +149,16 @@ class ProfileFragment : Fragment(), View.OnClickListener {
                 .iomain()
                 .doAfterTerminate { progressBar.visibility = View.GONE }
                 .subscribe({
-                    userName.visibility = View.VISIBLE
-                    userPhoto.visibility = View.VISIBLE
-                    btnSettings.visibility = View.VISIBLE
-                    btnShop.visibility = View.VISIBLE
-                    btnInfo.visibility = View.VISIBLE
+
+                    userGroup.visibility = View.VISIBLE
+                    progressBar.visibility = View.GONE
+
                     userName.text = it.username
+                    if (it.premiumDays > 0) {
+                        currentBalance.text = getString(R.string.x_days, it.premiumDays)
+                    } else {
+                        currentBalance.text = java.text.NumberFormat.getInstance(Locale.ENGLISH).format(it.coins)
+                    }
                     it.avatar?.let {
                         GlideApp.with(userPhoto)
                                 .load(it.link)
