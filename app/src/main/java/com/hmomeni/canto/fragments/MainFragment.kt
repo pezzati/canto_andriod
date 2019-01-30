@@ -6,7 +6,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
+import com.crashlytics.android.Crashlytics
 import com.hmomeni.canto.R
 import com.hmomeni.canto.adapters.rcl.MainRclAdapter
 import com.hmomeni.canto.entities.Banner
@@ -22,7 +24,7 @@ import io.reactivex.rxkotlin.addTo
 import kotlinx.android.synthetic.main.fragment_main.*
 import timber.log.Timber
 
-class MainFragment : androidx.fragment.app.Fragment() {
+class MainFragment : Fragment() {
     private lateinit var viewModel: MainViewModel
     private val compositeDisposable = CompositeDisposable()
 
@@ -34,35 +36,8 @@ class MainFragment : androidx.fragment.app.Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel = ViewModelProviders.of(this, ViewModelFactory(context!!.app()))[MainViewModel::class.java]
-        viewModel.api.getBanners()
-                .map { it.data }
-                .iomain()
-                .subscribe({
-                    banners.addAll(it)
-                    adapter?.notifyDataSetChanged()
-                }, {
-                    Timber.e(it, "Failed loading banners")
-                }).addTo(compositeDisposable)
+        loadData()
 
-        viewModel.api.getHomeFeed()
-                .iomain()
-                .doAfterTerminate {
-                    progressBar?.visibility = View.GONE
-                }
-                .subscribe({
-                    it.forEach { f ->
-                        val genre = Genre(
-                                filesLink = f.moreUrl,
-                                link = f.moreUrl,
-                                name = f.name,
-                                posts = f.posts
-                        )
-                        genres.add(genre)
-                    }
-                    adapter?.notifyDataSetChanged()
-                }, {
-                    Timber.e(it, "Failed loading genres")
-                }).addTo(compositeDisposable)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -101,11 +76,53 @@ class MainFragment : androidx.fragment.app.Fragment() {
 
         recyclerView.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(recyclerView.context)
         recyclerView.adapter = adapter
-
+        swipeRefresh.setOnRefreshListener {
+            loadData()
+        }
     }
 
     override fun onDestroy() {
         compositeDisposable.clear()
         super.onDestroy()
+    }
+
+    private fun loadData() {
+        viewModel.api.getBanners()
+                .map { it.data }
+                .iomain()
+                .subscribe({
+                    banners.clear()
+                    banners.addAll(it)
+                    adapter?.notifyDataSetChanged()
+                }, {
+                    Crashlytics.logException(it)
+                    Timber.e(it, "Failed loading banners")
+                }).addTo(compositeDisposable)
+
+        viewModel.api.getHomeFeed()
+                .iomain()
+                .doOnSubscribe {
+                    swipeRefresh?.isRefreshing = true
+                }
+                .doAfterTerminate {
+                    swipeRefresh?.isRefreshing = false
+                    progressBar?.visibility = View.GONE
+                }
+                .subscribe({
+                    genres.clear()
+                    it.forEach { f ->
+                        val genre = Genre(
+                                filesLink = f.moreUrl,
+                                link = f.moreUrl,
+                                name = f.name,
+                                posts = f.posts
+                        )
+                        genres.add(genre)
+                    }
+                    adapter?.notifyDataSetChanged()
+                }, {
+                    Crashlytics.logException(it)
+                    Timber.e(it, "Failed loading genres")
+                }).addTo(compositeDisposable)
     }
 }
