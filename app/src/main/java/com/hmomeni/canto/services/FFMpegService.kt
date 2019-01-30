@@ -98,7 +98,7 @@ class FFMpegService : Service() {
         builder.setContentText(getString(R.string.downloading))
         builder.setSmallIcon(R.drawable.cantoriom)
 
-        builder.setVibrate(longArrayOf(0, 0))
+        builder.setVibrate(null)
         builder.setSound(null)
 
         return builder

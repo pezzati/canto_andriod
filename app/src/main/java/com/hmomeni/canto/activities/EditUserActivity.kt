@@ -98,6 +98,8 @@ class EditUserActivity : BaseActivity() {
                     }).addTo(compositeDisposable)
         }
         loadAvatars()
+
+        backBtn.setOnClickListener { finish() }
     }
 
     private fun loadAvatars() {

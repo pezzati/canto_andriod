@@ -10,4 +10,5 @@
     <color name="buttonDefault">#007AFF</color>
     <color name="dialogDivider">#22FFFFFF</color>
     <color name="backgroundColor">#242529</color>
+    <color name="backgroundColorTransparent">#55242529</color>
 </resources>

@@ -49,7 +49,7 @@
     <string name="confirm">تأیید</string>
     <string name="canto">کانتو</string>
     <string name="go_to_shop">برو به فروشگاه</string>
-    <string name="you_dont_have_enough_credit">اعتبار شما برای خواندن این آهنگ کافی نیست. برای ادامه یکی از تعرفه‌ها رو خرید نمایید.</string>
+    <string name="you_dont_have_enough_credit">اعتبار شما برای خواندن این آهنگ کافی نیست. برای ادامه یکی از تعرفه‌ها را خرید نمایید.</string>
     <string name="please_wait">لطفا صبر کنید…</string>
     <string name="payment_successful">پرداخت موفق</string>
     <string name="you_purchased_pack_x">شما با موفقیت بسته %s را خریداری کردید.</string>

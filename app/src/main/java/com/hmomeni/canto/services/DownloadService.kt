@@ -11,7 +11,6 @@ import io.reactivex.processors.PublishProcessor
 import timber.log.Timber
 import java.io.File
 import java.io.FileOutputStream
-import java.io.IOException
 import java.net.HttpURLConnection
 import java.net.URL
 import javax.inject.Inject
@@ -93,9 +92,11 @@ class DownloadService : Service() {
             val url = URL(downloadUrl)
             val c = url.openConnection() as HttpURLConnection
             c.requestMethod = "GET"
+            c.connectTimeout = 5000
+            c.readTimeout = 5000
             c.connect()
 
-            if (c.responseCode != 200) throw Exception("Error in connection")
+            if (c.responseCode != 200) throw Exception("Error in connection: ${c.responseCode}, ${c.responseMessage}")
 
             val downloadFile = File(cacheDir, "tempFile")
 
@@ -135,7 +136,7 @@ class DownloadService : Service() {
             fileOutput.close()
             inputStream.close()
             c.disconnect()
-        } catch (e: IOException) {
+        } catch (e: Exception) {
             Timber.e(e)
             onDownloadFailed()
         }

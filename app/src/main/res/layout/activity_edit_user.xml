@@ -7,13 +7,22 @@
     android:background="@color/backgroundColor"
     tools:context=".activities.EditUserActivity">
 
+    <ImageView
+        android:id="@+id/backBtn"
+        style="@style/AppTheme.BackBtn"
+        android:layout_width="@dimen/back_btn_size"
+        android:layout_height="@dimen/back_btn_size"
+        android:src="@drawable/ic_back"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <TextView
         android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginRight="8dp"
-        android:layout_marginTop="16dp"
         android:layout_marginLeft="8dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginRight="8dp"
         android:text="@string/select_avatar"
         android:textSize="18dp"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -24,9 +33,9 @@
         android:id="@+id/userPhoto"
         android:layout_width="84dp"
         android:layout_height="84dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginTop="32dp"
         android:layout_marginLeft="8dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginRight="8dp"
         android:src="@drawable/ic_user_place_holder"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -46,9 +55,9 @@
         android:id="@+id/userName"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginRight="32dp"
-        android:layout_marginTop="16dp"
         android:layout_marginLeft="32dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginRight="32dp"
         android:background="@drawable/input_bg"
         android:hint="@string/your_name"
         android:inputType="textCapWords"
@@ -63,7 +72,8 @@
         android:layout_height="18dp"
         android:layout_marginTop="16dp"
         android:src="@drawable/ic_error"
-        app:layout_constraintRight_toRightOf="parent"
+        android:visibility="gone"
+        app:layout_constraintRight_toRightOf="@+id/userName"
         app:layout_constraintTop_toBottomOf="@+id/userName" />
 
     <TextView
@@ -71,10 +81,12 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
         android:text="@string/username_already_taken"
         android:textSize="10sp"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@+id/resultImage"
-        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintLeft_toLeftOf="@+id/userName"
         app:layout_constraintRight_toLeftOf="@+id/resultImage"
         app:layout_constraintTop_toTopOf="@+id/resultImage" />
 
@@ -82,8 +94,8 @@
         android:id="@+id/confirmBtn"
         android:layout_width="138dp"
         android:layout_height="40dp"
-        android:layout_marginRight="8dp"
         android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
         android:layout_marginBottom="16dp"
         android:background="@drawable/confirm_btn_bg"
         android:text="@string/confirm"

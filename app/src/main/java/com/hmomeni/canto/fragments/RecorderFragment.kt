@@ -555,9 +555,10 @@ class RecorderFragment : androidx.fragment.app.Fragment() {
                     getString(R.string.handsfree),
                     getString(R.string.for_high_q_use_handsfree),
                     imageResId = R.drawable.ic_handsfree,
-                    showPositiveButton = false,
+                    showPositiveButton = true,
                     showNegativeButton = true,
-                    negativeListener = {
+                    positiveButtonText = getString(R.string.ok),
+                    positiveListener = { _, _ ->
                         openActivity(mode, false)
                     }).show()
             return

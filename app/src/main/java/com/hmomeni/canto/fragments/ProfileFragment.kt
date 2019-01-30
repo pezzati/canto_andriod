@@ -1,13 +1,17 @@
 package com.hmomeni.canto.fragments
 
+import android.animation.ObjectAnimator
+import android.animation.ValueAnimator
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewTreeObserver
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.crashlytics.android.Crashlytics
 import com.hmomeni.canto.R
 import com.hmomeni.canto.activities.EditUserActivity
@@ -36,12 +40,22 @@ class ProfileFragment : Fragment(), View.OnClickListener {
         return inflater.inflate(R.layout.fragment_profile, container, false)
     }
 
+    private lateinit var globalLayoutListener: ViewTreeObserver.OnGlobalLayoutListener
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         recyclerView.layoutManager = GridLayoutManager(context!!, 2)
 
         viewModel.projectDao
                 .fetchCompleteProjects()
                 .iomain()
+                .map {
+                    val list = it.toMutableList()
+                    list.addAll(it)
+                    list.addAll(it)
+                    list.addAll(it)
+                    list.addAll(it)
+                    return@map list
+                }
                 .subscribe({ l ->
                     if (l.isEmpty()) {
                         showNoPost()
@@ -61,6 +75,67 @@ class ProfileFragment : Fragment(), View.OnClickListener {
         btnSettings.setOnClickListener(this)
         btnShop.setOnClickListener(this)
         btnInfo.setOnClickListener(this)
+        userPhoto.setOnClickListener(this)
+        userName.setOnClickListener(this)
+
+        var xAnimator: ObjectAnimator? = null
+        var yAnimator: ObjectAnimator? = null
+        var scaleAnimator: ValueAnimator? = null
+
+
+        var scrollOffset = 0
+        globalLayoutListener = ViewTreeObserver.OnGlobalLayoutListener {
+            if (btnInfo.x != 0f && btnInfo.y != 0f) {
+                recyclerView.setPadding(0, guideline4.y.toInt(), 0, 0)
+                scrollOffset = guideline4.y.toInt()
+
+                xAnimator = ObjectAnimator.ofFloat(userPhoto, View.X, userPhoto.x, btnInfo.x - dpToPx(48 + 16))
+                yAnimator = ObjectAnimator.ofFloat(userPhoto, View.Y, userPhoto.y, btnInfo.y - dpToPx(24 + 8))
+
+                xAnimator!!.duration = 10000
+                yAnimator!!.duration = 10000
+
+                scaleAnimator = ValueAnimator.ofFloat(1f, dpToPx(24).toFloat() / userPhoto.height.toFloat()).apply {
+                    duration = 10000
+                    addUpdateListener {
+                        userPhoto.scaleX = it.animatedValue as Float
+                        userPhoto.scaleY = it.animatedValue as Float
+                        userName.alpha = 1f - it.animatedFraction
+                        userName.scaleX = 1f - it.animatedFraction
+                        userName.scaleY = 1f - it.animatedFraction
+                    }
+                }
+                btnInfo.viewTreeObserver.removeOnGlobalLayoutListener(globalLayoutListener)
+            }
+
+        }
+        btnInfo.viewTreeObserver.addOnGlobalLayoutListener(globalLayoutListener)
+
+
+
+        recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                val offset = recyclerView.computeVerticalScrollOffset()
+                Timber.d("offset %d", offset)
+                when {
+                    offset == 0 -> {
+                        xAnimator?.currentPlayTime = 0
+                        yAnimator?.currentPlayTime = 0
+                        scaleAnimator?.currentPlayTime = 0
+                    }
+                    offset < scrollOffset -> {
+                        xAnimator?.currentPlayTime = (offset.toFloat() / scrollOffset.toFloat() * 10000).toLong()
+                        yAnimator?.currentPlayTime = (offset.toFloat() / scrollOffset.toFloat() * 10000).toLong()
+                        scaleAnimator?.currentPlayTime = (offset.toFloat() / scrollOffset.toFloat() * 10000).toLong()
+                    }
+                    offset >= scrollOffset -> {
+                        xAnimator?.currentPlayTime = 10000
+                        yAnimator?.currentPlayTime = 10000
+                        scaleAnimator?.currentPlayTime = 10000
+                    }
+                }
+            }
+        })
     }
 
     override fun onResume() {
@@ -95,7 +170,7 @@ class ProfileFragment : Fragment(), View.OnClickListener {
 
     override fun onClick(v: View) {
         when (v.id) {
-            R.id.btnSettings -> startActivity(Intent(context!!, EditUserActivity::class.java))
+            R.id.userName, R.id.userPhoto, R.id.btnSettings -> startActivity(Intent(context!!, EditUserActivity::class.java))
             R.id.btnShop -> startActivity(Intent(context!!, ShopActivity::class.java))
             R.id.btnInfo -> startActivity(Intent(context!!, InfoActivity::class.java))
         }
