@@ -27,6 +27,7 @@
         android:layout_marginRight="8dp"
         android:layout_marginBottom="32dp"
         android:src="@drawable/ic_play_circle"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent" />
@@ -114,14 +115,42 @@
         app:vs_iconLow="@drawable/ic_music_volume_low"
         app:vs_iconMedium="@drawable/ic_music_volume_mid" />
 
+    <View
+        android:id="@+id/lyricsBackground"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/lyrics_bg"
+        app:layout_constraintBottom_toTopOf="@+id/guideline"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toggleLyricsBtn" />
+
+    <TextView
+        android:id="@+id/guideTextView1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:text="@string/preparing_song"
+        android:textColor="@color/md_white_1000"
+        android:textSize="18dp"
+        app:layout_constraintBottom_toBottomOf="@+id/lyricsBackground"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/lyricsBackground" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/lyricRecyclerVIew"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="12dp"
+        android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@+id/guideline"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"

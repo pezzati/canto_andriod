@@ -100,4 +100,8 @@
     <string name="name_of_song_singer">نام آهنگ و خواننده</string>
     <string name="muxing_failed">ذخیره ویدیو با موفقیت انجام نشد</string>
     <string name="x_days">%d روز</string>
+    <string name="preparing_song">در حال آماده سازی آهنگ</string>
+    <string name="downloading_song">در حال دریافت آهنگ</string>
+    <string name="select_60_sec_of_song">لطفا ۶۰ ثانیه مورد نظر از آهنگ را انتخاب کنید</string>
+    <string name="tap_record_to_start">برای شروع ضبط روی دکمه ضبط بزنید</string>
 </resources>

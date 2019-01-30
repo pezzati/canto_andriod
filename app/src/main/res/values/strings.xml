@@ -101,4 +101,8 @@
     <string name="name_of_song_singer">Name of song and singer</string>
     <string name="muxing_failed">Muxing failed</string>
     <string name="x_days">%d days</string>
+    <string name="preparing_song">Preparing song...</string>
+    <string name="downloading_song">Downloading song...</string>
+    <string name="select_60_sec_of_song">Select 60 seconds of the song</string>
+    <string name="tap_record_to_start">Tap record button to start recording</string>
 </resources>

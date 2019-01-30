@@ -172,7 +172,10 @@ class MainActivity : BaseActivity() {
                             }).show()
                 }).addTo(compositeDisposable)
 
-        viewModel.getUser().iomain().subscribe({}, {}).addTo(compositeDisposable)
+        viewModel.getUser().iomain().subscribe({}, {
+            Crashlytics.logException(it)
+            Timber.e(it)
+        }).addTo(compositeDisposable)
     }
 
     private fun openPost(post: Post) {

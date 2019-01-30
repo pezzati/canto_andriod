@@ -15,9 +15,7 @@ import com.hmomeni.canto.adapters.rcl.LyricRclAdapter
 import com.hmomeni.canto.entities.FullPost
 import com.hmomeni.canto.entities.MidiItem
 import com.hmomeni.canto.services.*
-import com.hmomeni.canto.utils.DownloadEvent
-import com.hmomeni.canto.utils.GlideApp
-import com.hmomeni.canto.utils.app
+import com.hmomeni.canto.utils.*
 import com.hmomeni.canto.utils.views.RecordButton
 import com.hmomeni.canto.utils.views.VerticalSlider
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -74,6 +72,8 @@ class KaraokeActivity : BaseFullActivity() {
                 seekBar.max = GetDurationMS().toInt()
                 playBtn.setImageResource(R.drawable.ic_pause_circle)
                 timer()
+                guideTextView1.gone()
+                lyricRecyclerVIew.visible()
             } else {
                 playBtn.setImageResource(R.drawable.ic_play_circle)
             }
@@ -139,10 +139,12 @@ class KaraokeActivity : BaseFullActivity() {
 
         toggleLyricsBtn.setOnClickListener {
             if (lyricRecyclerVIew.visibility == View.GONE) {
-                lyricRecyclerVIew.visibility = View.VISIBLE
+                lyricRecyclerVIew.visible()
+                lyricsBackground.visible()
                 toggleLyricsBtn.setImageResource(R.drawable.ic_hide_lyric)
             } else {
-                lyricRecyclerVIew.visibility = View.GONE
+                lyricRecyclerVIew.gone()
+                lyricsBackground.gone()
                 toggleLyricsBtn.setImageResource(R.drawable.ic_show_lyric)
             }
         }
@@ -214,14 +216,19 @@ class KaraokeActivity : BaseFullActivity() {
         when (event.action) {
             ACTION_DOWNLOAD_START -> {
                 recordBtn.mode = RecordButton.Mode.Loading
+                guideTextView1.setText(R.string.downloading_song)
+
             }
             ACTION_DOWNLOAD_PROGRESS -> {
-                recordBtn.mode = RecordButton.Mode.Loading
+                if (recordBtn.mode != RecordButton.Mode.Loading) {
+                    recordBtn.mode = RecordButton.Mode.Loading
+                }
                 recordBtn.progress = event.progress
             }
             ACTION_DOWNLOAD_FINISH -> {
-                recordBtn.visibility = View.GONE
-                playBtn.visibility = View.VISIBLE
+                recordBtn.gone()
+                playBtn.visible()
+                guideTextView1.setText(R.string.tap_record_to_start)
             }
             ACTION_DOWNLOAD_FAILED -> {
                 Toast.makeText(this, R.string.download_failed_try_again, Toast.LENGTH_SHORT).show()

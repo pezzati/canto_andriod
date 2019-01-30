@@ -199,8 +199,12 @@ Java_com_hmomeni_canto_activities_DubsmashActivity_StopAudio(
     if (isSinging) {
         micRecorder->stop();
     }
-    recorder->stop();
-    player->pause();
+    if (recorder != nullptr) {
+        recorder->stop();
+    }
+    if (player != nullptr) {
+        player->pause();
+    }
 }
 
 extern "C" JNIEXPORT jdouble
@@ -268,8 +272,10 @@ Java_com_hmomeni_canto_activities_DubsmashActivity_Cleanup(
     if (micRecorder != nullptr)
         delete micRecorder;
 
-    free(playerBuffer);
-    free(micBuffer);
+    if (playerBuffer != nullptr)
+        free(playerBuffer);
+    if (micBuffer != nullptr)
+        free(micBuffer);
 }
 
 extern "C" JNIEXPORT void

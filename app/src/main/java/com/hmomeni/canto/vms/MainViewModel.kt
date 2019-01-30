@@ -1,6 +1,7 @@
 package com.hmomeni.canto.vms
 
 import androidx.lifecycle.ViewModel
+import com.crashlytics.android.Crashlytics
 import com.hmomeni.canto.App
 import com.hmomeni.canto.BuildConfig
 import com.hmomeni.canto.api.Api
@@ -16,6 +17,7 @@ import com.hmomeni.canto.utils.toBody
 import io.reactivex.Completable
 import io.reactivex.Single
 import io.reactivex.processors.PublishProcessor
+import timber.log.Timber
 import javax.inject.Inject
 
 class MainViewModel : ViewModel(), DIComponent.Injectable {
@@ -56,6 +58,8 @@ class MainViewModel : ViewModel(), DIComponent.Injectable {
             userSession.user = it
             e.onSuccess(it)
         }, {
+            Crashlytics.logException(it)
+            Timber.e(it)
             api.getUserInfo().subscribe({
                 userSession.user = it
                 userDao.insert(it)

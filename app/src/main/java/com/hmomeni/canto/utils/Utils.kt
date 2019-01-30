@@ -167,3 +167,11 @@ fun isFFMpegAvailable(context: Context): Boolean {
     val ffmpeg = File(context.filesDir, "ffmpeg")
     return ffmpeg.exists()
 }
+
+fun View.gone() {
+    this.visibility = View.GONE
+}
+
+fun View.visible() {
+    this.visibility = View.VISIBLE
+}

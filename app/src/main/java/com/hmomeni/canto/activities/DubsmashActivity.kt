@@ -210,10 +210,12 @@ class DubsmashActivity : CameraActivity() {
 
             toggleLyricsBtn.setOnClickListener {
                 if (lyricRecyclerVIew.visibility == View.GONE) {
-                    lyricRecyclerVIew.visibility = View.VISIBLE
+                    lyricsBackground.visible()
+                    lyricRecyclerVIew.visible()
                     toggleLyricsBtn.setImageResource(R.drawable.ic_hide_lyric)
                 } else {
-                    lyricRecyclerVIew.visibility = View.GONE
+                    lyricsBackground.gone()
+                    lyricRecyclerVIew.gone()
                     toggleLyricsBtn.setImageResource(R.drawable.ic_show_lyric)
                 }
             }
@@ -279,16 +281,24 @@ class DubsmashActivity : CameraActivity() {
         when (event.action) {
             ACTION_DOWNLOAD_START -> {
                 recordBtn.mode = RecordButton.Mode.Loading
+                guideTextView1.setText(R.string.downloading_song)
             }
             ACTION_DOWNLOAD_PROGRESS -> {
-                recordBtn.mode = RecordButton.Mode.Loading
+                if (recordBtn.mode != RecordButton.Mode.Loading) {
+                    recordBtn.mode = RecordButton.Mode.Loading
+                }
                 recordBtn.progress = event.progress
             }
             ACTION_DOWNLOAD_FINISH -> {
                 prepare()
+                guideTextView1.setText(R.string.select_60_sec_of_song)
+                guideTextView2.setText(R.string.tap_record_to_start)
             }
             ACTION_DOWNLOAD_FAILED -> {
                 Toast.makeText(this, R.string.download_failed_try_again, Toast.LENGTH_SHORT).show()
+                guideTextView1.setText(R.string.download_failed_try_again)
+                guideTextView2.gone()
+
             }
             ACTION_DOWNLOAD_CANCEL -> {
 
@@ -304,8 +314,9 @@ class DubsmashActivity : CameraActivity() {
         trimView.maxTrim = trimView.trim
         trimView.minTrim = trimView.maxTrim
 
-        trimView.visibility = View.VISIBLE
-        settingsBtn.visibility = View.VISIBLE
+        slidersWrapper.visible()
+        trimView.visible()
+        settingsBtn.visible()
 
         settingsBtn.setOnClickListener {
             toggleSettings()
@@ -313,6 +324,8 @@ class DubsmashActivity : CameraActivity() {
 
         trimView.onTrimChangeListener = object : TrimView.TrimChangeListener() {
             override fun onRangeChanged(trimStart: Int, trim: Int) {
+                guideTextView1.setText(R.string.tap_record_to_start)
+                guideTextView2.gone()
                 val pos = trimStart * duration / trimView.max
                 SeekMS(pos.toDouble())
             }
@@ -397,6 +410,13 @@ class DubsmashActivity : CameraActivity() {
 
     private var recordStartTime = 0L
     private fun startDubsmash() {
+        guideTextView1.gone()
+        guideTextView2.gone()
+        if (type == PROJECT_TYPE_DUBSMASH) {
+            lyricsBackground.gone()
+        } else {
+            lyricRecyclerVIew.visible()
+        }
         val pos = trimView.trimStart * GetDurationMS() / trimView.max
         SeekMS(pos)
         recordStartTime = System.currentTimeMillis()
