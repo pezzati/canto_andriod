@@ -8388,6 +8388,11 @@ androidx.constraintlayout.widget.Constraints$LayoutParams -> androidx.constraint
     float translationZ -> az
     void <init>(int,int) -> <init>
     void <init>(android.content.Context,android.util.AttributeSet) -> <init>
+androidx.constraintlayout.widget.Group -> androidx.constraintlayout.widget.Group:
+    void <init>(android.content.Context,android.util.AttributeSet) -> <init>
+    void init(android.util.AttributeSet) -> a
+    void updatePreLayout(androidx.constraintlayout.widget.ConstraintLayout) -> a
+    void updatePostLayout(androidx.constraintlayout.widget.ConstraintLayout) -> b
 androidx.constraintlayout.widget.Guideline -> androidx.constraintlayout.widget.Guideline:
     void <init>(android.content.Context) -> <init>
     void <init>(android.content.Context,android.util.AttributeSet) -> <init>
@@ -9192,6 +9197,8 @@ androidx.core.app.NotificationCompat$Builder -> androidx.core.app.i$c:
     androidx.core.app.NotificationCompat$Builder setTicker(java.lang.CharSequence) -> c
     androidx.core.app.NotificationCompat$Builder setLargeIcon(android.graphics.Bitmap) -> a
     android.graphics.Bitmap reduceLargeIconSize(android.graphics.Bitmap) -> b
+    androidx.core.app.NotificationCompat$Builder setSound(android.net.Uri) -> a
+    androidx.core.app.NotificationCompat$Builder setVibrate(long[]) -> a
     androidx.core.app.NotificationCompat$Builder setAutoCancel(boolean) -> a
     androidx.core.app.NotificationCompat$Builder setLocalOnly(boolean) -> b
     void setFlag(int,boolean) -> a
@@ -10228,6 +10235,7 @@ androidx.core.view.NestedScrollingParentHelper -> androidx.core.g.p:
     void onNestedScrollAccepted(android.view.View,android.view.View,int) -> a
     void onNestedScrollAccepted(android.view.View,android.view.View,int,int) -> a
     int getNestedScrollAxes() -> a
+    void onStopNestedScroll(android.view.View) -> a
     void onStopNestedScroll(android.view.View,int) -> a
 androidx.core.view.OnApplyWindowInsetsListener -> androidx.core.g.q:
     androidx.core.view.WindowInsetsCompat onApplyWindowInsets(android.view.View,androidx.core.view.WindowInsetsCompat) -> a
@@ -10749,6 +10757,7 @@ androidx.core.widget.ListViewAutoScrollHelper -> androidx.core.widget.f:
     boolean canTargetScrollVertically(int) -> f
 androidx.core.widget.ListViewCompat -> androidx.core.widget.g:
     void scrollListBy(android.widget.ListView,int) -> a
+    boolean canScrollList(android.widget.ListView,int) -> b
 androidx.core.widget.NestedScrollView -> androidx.core.widget.NestedScrollView:
     long mLastScroll -> a
     android.graphics.Rect mTempRect -> b
@@ -11391,6 +11400,7 @@ androidx.fragment.app.Fragment -> androidx.fragment.app.d:
     androidx.fragment.app.FragmentActivity requireActivity() -> p
     android.content.res.Resources getResources() -> q
     java.lang.String getString(int) -> a
+    java.lang.String getString(int,java.lang.Object[]) -> a
     androidx.fragment.app.FragmentManager getFragmentManager() -> r
     androidx.fragment.app.FragmentManager requireFragmentManager() -> s
     androidx.fragment.app.FragmentManager getChildFragmentManager() -> t
@@ -16065,6 +16075,270 @@ androidx.sqlite.db.framework.FrameworkSQLiteStatement -> androidx.i.a.a.e:
     void <init>(android.database.sqlite.SQLiteStatement) -> <init>
     int executeUpdateDelete() -> a
     long executeInsert() -> b
+androidx.swiperefreshlayout.widget.CircleImageView -> androidx.swiperefreshlayout.widget.a:
+    android.view.animation.Animation$AnimationListener mListener -> b
+    int mShadowRadius -> a
+    void <init>(android.content.Context,int) -> <init>
+    boolean elevationSupported() -> a
+    void onMeasure(int,int) -> onMeasure
+    void setAnimationListener(android.view.animation.Animation$AnimationListener) -> a
+    void onAnimationStart() -> onAnimationStart
+    void onAnimationEnd() -> onAnimationEnd
+    void setBackgroundColor(int) -> setBackgroundColor
+androidx.swiperefreshlayout.widget.CircleImageView$OvalShadow -> androidx.swiperefreshlayout.widget.a$a:
+    android.graphics.RadialGradient mRadialGradient -> b
+    android.graphics.Paint mShadowPaint -> c
+    androidx.swiperefreshlayout.widget.CircleImageView this$0 -> a
+    void <init>(androidx.swiperefreshlayout.widget.CircleImageView,int) -> <init>
+    void onResize(float,float) -> onResize
+    void draw(android.graphics.Canvas,android.graphics.Paint) -> draw
+    void updateRadialGradient(int) -> a
+androidx.swiperefreshlayout.widget.CircularProgressDrawable -> androidx.swiperefreshlayout.widget.b:
+    android.view.animation.Interpolator LINEAR_INTERPOLATOR -> c
+    android.view.animation.Interpolator MATERIAL_INTERPOLATOR -> d
+    int[] COLORS -> e
+    androidx.swiperefreshlayout.widget.CircularProgressDrawable$Ring mRing -> f
+    float mRotation -> g
+    android.content.res.Resources mResources -> h
+    android.animation.Animator mAnimator -> i
+    float mRotationCount -> a
+    boolean mFinishing -> b
+    void <init>(android.content.Context) -> <init>
+    void setSizeParameters(float,float,float,float) -> a
+    void setStyle(int) -> a
+    void setStrokeWidth(float) -> a
+    void setArrowEnabled(boolean) -> a
+    void setArrowScale(float) -> b
+    void setStartEndTrim(float,float) -> a
+    void setProgressRotation(float) -> c
+    void setColorSchemeColors(int[]) -> a
+    void draw(android.graphics.Canvas) -> draw
+    void setAlpha(int) -> setAlpha
+    int getAlpha() -> getAlpha
+    void setColorFilter(android.graphics.ColorFilter) -> setColorFilter
+    void setRotation(float) -> d
+    int getOpacity() -> getOpacity
+    boolean isRunning() -> isRunning
+    void start() -> start
+    void stop() -> stop
+    int evaluateColorChange(float,int,int) -> a
+    void updateRingColor(float,androidx.swiperefreshlayout.widget.CircularProgressDrawable$Ring) -> a
+    void applyFinishTranslation(float,androidx.swiperefreshlayout.widget.CircularProgressDrawable$Ring) -> b
+    void applyTransformation(float,androidx.swiperefreshlayout.widget.CircularProgressDrawable$Ring,boolean) -> a
+    void setupAnimators() -> a
+    void <clinit>() -> <clinit>
+androidx.swiperefreshlayout.widget.CircularProgressDrawable$1 -> androidx.swiperefreshlayout.widget.b$1:
+    androidx.swiperefreshlayout.widget.CircularProgressDrawable$Ring val$ring -> a
+    androidx.swiperefreshlayout.widget.CircularProgressDrawable this$0 -> b
+    void <init>(androidx.swiperefreshlayout.widget.CircularProgressDrawable,androidx.swiperefreshlayout.widget.CircularProgressDrawable$Ring) -> <init>
+    void onAnimationUpdate(android.animation.ValueAnimator) -> onAnimationUpdate
+androidx.swiperefreshlayout.widget.CircularProgressDrawable$2 -> androidx.swiperefreshlayout.widget.b$2:
+    androidx.swiperefreshlayout.widget.CircularProgressDrawable$Ring val$ring -> a
+    androidx.swiperefreshlayout.widget.CircularProgressDrawable this$0 -> b
+    void <init>(androidx.swiperefreshlayout.widget.CircularProgressDrawable,androidx.swiperefreshlayout.widget.CircularProgressDrawable$Ring) -> <init>
+    void onAnimationStart(android.animation.Animator) -> onAnimationStart
+    void onAnimationEnd(android.animation.Animator) -> onAnimationEnd
+    void onAnimationCancel(android.animation.Animator) -> onAnimationCancel
+    void onAnimationRepeat(android.animation.Animator) -> onAnimationRepeat
+androidx.swiperefreshlayout.widget.CircularProgressDrawable$Ring -> androidx.swiperefreshlayout.widget.b$a:
+    android.graphics.RectF mTempBounds -> a
+    android.graphics.Paint mPaint -> b
+    android.graphics.Paint mArrowPaint -> c
+    android.graphics.Paint mCirclePaint -> d
+    float mStartTrim -> e
+    float mEndTrim -> f
+    float mRotation -> g
+    float mStrokeWidth -> h
+    int[] mColors -> i
+    int mColorIndex -> j
+    float mStartingStartTrim -> k
+    float mStartingEndTrim -> l
+    float mStartingRotation -> m
+    boolean mShowArrow -> n
+    android.graphics.Path mArrow -> o
+    float mArrowScale -> p
+    float mRingCenterRadius -> q
+    int mArrowWidth -> r
+    int mArrowHeight -> s
+    int mAlpha -> t
+    int mCurrentColor -> u
+    void <init>() -> <init>
+    void setArrowDimensions(float,float) -> a
+    void draw(android.graphics.Canvas,android.graphics.Rect) -> a
+    void drawTriangle(android.graphics.Canvas,float,float,android.graphics.RectF) -> a
+    void setColors(int[]) -> a
+    void setColor(int) -> a
+    void setColorIndex(int) -> b
+    int getNextColor() -> a
+    int getNextColorIndex() -> b
+    void goToNextColor() -> c
+    void setColorFilter(android.graphics.ColorFilter) -> a
+    void setAlpha(int) -> c
+    int getAlpha() -> d
+    void setStrokeWidth(float) -> a
+    void setStartTrim(float) -> b
+    float getStartTrim() -> e
+    float getStartingStartTrim() -> f
+    float getStartingEndTrim() -> g
+    int getStartingColor() -> h
+    void setEndTrim(float) -> c
+    float getEndTrim() -> i
+    void setRotation(float) -> d
+    void setCenterRadius(float) -> e
+    void setShowArrow(boolean) -> a
+    void setArrowScale(float) -> f
+    float getStartingRotation() -> j
+    void storeOriginals() -> k
+    void resetOriginals() -> l
+androidx.swiperefreshlayout.widget.SwipeRefreshLayout -> androidx.swiperefreshlayout.widget.SwipeRefreshLayout:
+    java.lang.String LOG_TAG -> n
+    android.view.View mTarget -> o
+    androidx.swiperefreshlayout.widget.SwipeRefreshLayout$OnRefreshListener mListener -> a
+    boolean mRefreshing -> b
+    int mTouchSlop -> p
+    float mTotalDragDistance -> q
+    float mTotalUnconsumed -> r
+    androidx.core.view.NestedScrollingParentHelper mNestedScrollingParentHelper -> s
+    androidx.core.view.NestedScrollingChildHelper mNestedScrollingChildHelper -> t
+    int[] mParentScrollConsumed -> u
+    int[] mParentOffsetInWindow -> v
+    boolean mNestedScrollInProgress -> w
+    int mMediumAnimationDuration -> x
+    int mCurrentTargetOffsetTop -> c
+    float mInitialMotionY -> y
+    float mInitialDownY -> z
+    boolean mIsBeingDragged -> A
+    int mActivePointerId -> B
+    boolean mScale -> d
+    boolean mReturningToStart -> C
+    android.view.animation.DecelerateInterpolator mDecelerateInterpolator -> D
+    int[] LAYOUT_ATTRS -> E
+    androidx.swiperefreshlayout.widget.CircleImageView mCircleView -> e
+    int mCircleViewIndex -> F
+    int mFrom -> f
+    float mStartingScale -> g
+    int mOriginalOffsetTop -> h
+    int mSpinnerOffsetEnd -> i
+    int mCustomSlingshotDistance -> j
+    androidx.swiperefreshlayout.widget.CircularProgressDrawable mProgress -> k
+    android.view.animation.Animation mScaleAnimation -> G
+    android.view.animation.Animation mScaleDownAnimation -> H
+    android.view.animation.Animation mAlphaStartAnimation -> I
+    android.view.animation.Animation mAlphaMaxAnimation -> J
+    android.view.animation.Animation mScaleDownToStartAnimation -> K
+    boolean mNotify -> l
+    int mCircleDiameter -> L
+    boolean mUsingCustomStart -> m
+    androidx.swiperefreshlayout.widget.SwipeRefreshLayout$OnChildScrollUpCallback mChildScrollUpCallback -> M
+    android.view.animation.Animation$AnimationListener mRefreshListener -> N
+    android.view.animation.Animation mAnimateToCorrectPosition -> O
+    android.view.animation.Animation mAnimateToStartPosition -> P
+    void reset() -> a
+    void setEnabled(boolean) -> setEnabled
+    void onDetachedFromWindow() -> onDetachedFromWindow
+    void setColorViewAlpha(int) -> setColorViewAlpha
+    int getProgressViewStartOffset() -> getProgressViewStartOffset
+    int getProgressViewEndOffset() -> getProgressViewEndOffset
+    void setSlingshotDistance(int) -> setSlingshotDistance
+    void setSize(int) -> setSize
+    void <init>(android.content.Context,android.util.AttributeSet) -> <init>
+    int getChildDrawingOrder(int,int) -> getChildDrawingOrder
+    void createProgressView() -> c
+    void setOnRefreshListener(androidx.swiperefreshlayout.widget.SwipeRefreshLayout$OnRefreshListener) -> setOnRefreshListener
+    void setRefreshing(boolean) -> setRefreshing
+    void startScaleUpAnimation(android.view.animation.Animation$AnimationListener) -> b
+    void setAnimationProgress(float) -> setAnimationProgress
+    void setRefreshing(boolean,boolean) -> a
+    void startScaleDownAnimation(android.view.animation.Animation$AnimationListener) -> a
+    void startProgressAlphaStartAnimation() -> d
+    void startProgressAlphaMaxAnimation() -> e
+    android.view.animation.Animation startAlphaAnimation(int,int) -> a
+    void setProgressBackgroundColor(int) -> setProgressBackgroundColor
+    void setProgressBackgroundColorSchemeResource(int) -> setProgressBackgroundColorSchemeResource
+    void setProgressBackgroundColorSchemeColor(int) -> setProgressBackgroundColorSchemeColor
+    void setColorScheme(int[]) -> setColorScheme
+    void setColorSchemeResources(int[]) -> setColorSchemeResources
+    void setColorSchemeColors(int[]) -> setColorSchemeColors
+    void ensureTarget() -> f
+    void setDistanceToTriggerSync(int) -> setDistanceToTriggerSync
+    void onLayout(boolean,int,int,int,int) -> onLayout
+    void onMeasure(int,int) -> onMeasure
+    int getProgressCircleDiameter() -> getProgressCircleDiameter
+    boolean canChildScrollUp() -> b
+    void setOnChildScrollUpCallback(androidx.swiperefreshlayout.widget.SwipeRefreshLayout$OnChildScrollUpCallback) -> setOnChildScrollUpCallback
+    boolean onInterceptTouchEvent(android.view.MotionEvent) -> onInterceptTouchEvent
+    void requestDisallowInterceptTouchEvent(boolean) -> requestDisallowInterceptTouchEvent
+    boolean onStartNestedScroll(android.view.View,android.view.View,int) -> onStartNestedScroll
+    void onNestedScrollAccepted(android.view.View,android.view.View,int) -> onNestedScrollAccepted
+    void onNestedPreScroll(android.view.View,int,int,int[]) -> onNestedPreScroll
+    int getNestedScrollAxes() -> getNestedScrollAxes
+    void onStopNestedScroll(android.view.View) -> onStopNestedScroll
+    void onNestedScroll(android.view.View,int,int,int,int) -> onNestedScroll
+    void setNestedScrollingEnabled(boolean) -> setNestedScrollingEnabled
+    boolean isNestedScrollingEnabled() -> isNestedScrollingEnabled
+    boolean startNestedScroll(int) -> startNestedScroll
+    void stopNestedScroll() -> stopNestedScroll
+    boolean hasNestedScrollingParent() -> hasNestedScrollingParent
+    boolean dispatchNestedScroll(int,int,int,int,int[]) -> dispatchNestedScroll
+    boolean dispatchNestedPreScroll(int,int,int[],int[]) -> dispatchNestedPreScroll
+    boolean onNestedPreFling(android.view.View,float,float) -> onNestedPreFling
+    boolean onNestedFling(android.view.View,float,float,boolean) -> onNestedFling
+    boolean dispatchNestedFling(float,float,boolean) -> dispatchNestedFling
+    boolean dispatchNestedPreFling(float,float) -> dispatchNestedPreFling
+    boolean isAnimationRunning(android.view.animation.Animation) -> a
+    void moveSpinner(float) -> b
+    void finishSpinner(float) -> c
+    boolean onTouchEvent(android.view.MotionEvent) -> onTouchEvent
+    void startDragging(float) -> d
+    void animateOffsetToCorrectPosition(int,android.view.animation.Animation$AnimationListener) -> a
+    void animateOffsetToStartPosition(int,android.view.animation.Animation$AnimationListener) -> b
+    void moveToStart(float) -> a
+    void startScaleDownReturnToStartAnimation(int,android.view.animation.Animation$AnimationListener) -> c
+    void setTargetOffsetTopAndBottom(int) -> setTargetOffsetTopAndBottom
+    void onSecondaryPointerUp(android.view.MotionEvent) -> a
+    void <clinit>() -> <clinit>
+androidx.swiperefreshlayout.widget.SwipeRefreshLayout$1 -> androidx.swiperefreshlayout.widget.SwipeRefreshLayout$1:
+    androidx.swiperefreshlayout.widget.SwipeRefreshLayout this$0 -> a
+    void <init>(androidx.swiperefreshlayout.widget.SwipeRefreshLayout) -> <init>
+    void onAnimationStart(android.view.animation.Animation) -> onAnimationStart
+    void onAnimationRepeat(android.view.animation.Animation) -> onAnimationRepeat
+    void onAnimationEnd(android.view.animation.Animation) -> onAnimationEnd
+androidx.swiperefreshlayout.widget.SwipeRefreshLayout$2 -> androidx.swiperefreshlayout.widget.SwipeRefreshLayout$2:
+    androidx.swiperefreshlayout.widget.SwipeRefreshLayout this$0 -> a
+    void <init>(androidx.swiperefreshlayout.widget.SwipeRefreshLayout) -> <init>
+    void applyTransformation(float,android.view.animation.Transformation) -> applyTransformation
+androidx.swiperefreshlayout.widget.SwipeRefreshLayout$3 -> androidx.swiperefreshlayout.widget.SwipeRefreshLayout$3:
+    androidx.swiperefreshlayout.widget.SwipeRefreshLayout this$0 -> a
+    void <init>(androidx.swiperefreshlayout.widget.SwipeRefreshLayout) -> <init>
+    void applyTransformation(float,android.view.animation.Transformation) -> applyTransformation
+androidx.swiperefreshlayout.widget.SwipeRefreshLayout$4 -> androidx.swiperefreshlayout.widget.SwipeRefreshLayout$4:
+    int val$startingAlpha -> a
+    int val$endingAlpha -> b
+    androidx.swiperefreshlayout.widget.SwipeRefreshLayout this$0 -> c
+    void <init>(androidx.swiperefreshlayout.widget.SwipeRefreshLayout,int,int) -> <init>
+    void applyTransformation(float,android.view.animation.Transformation) -> applyTransformation
+androidx.swiperefreshlayout.widget.SwipeRefreshLayout$5 -> androidx.swiperefreshlayout.widget.SwipeRefreshLayout$5:
+    androidx.swiperefreshlayout.widget.SwipeRefreshLayout this$0 -> a
+    void <init>(androidx.swiperefreshlayout.widget.SwipeRefreshLayout) -> <init>
+    void onAnimationStart(android.view.animation.Animation) -> onAnimationStart
+    void onAnimationEnd(android.view.animation.Animation) -> onAnimationEnd
+    void onAnimationRepeat(android.view.animation.Animation) -> onAnimationRepeat
+androidx.swiperefreshlayout.widget.SwipeRefreshLayout$6 -> androidx.swiperefreshlayout.widget.SwipeRefreshLayout$6:
+    androidx.swiperefreshlayout.widget.SwipeRefreshLayout this$0 -> a
+    void <init>(androidx.swiperefreshlayout.widget.SwipeRefreshLayout) -> <init>
+    void applyTransformation(float,android.view.animation.Transformation) -> applyTransformation
+androidx.swiperefreshlayout.widget.SwipeRefreshLayout$7 -> androidx.swiperefreshlayout.widget.SwipeRefreshLayout$7:
+    androidx.swiperefreshlayout.widget.SwipeRefreshLayout this$0 -> a
+    void <init>(androidx.swiperefreshlayout.widget.SwipeRefreshLayout) -> <init>
+    void applyTransformation(float,android.view.animation.Transformation) -> applyTransformation
+androidx.swiperefreshlayout.widget.SwipeRefreshLayout$8 -> androidx.swiperefreshlayout.widget.SwipeRefreshLayout$8:
+    androidx.swiperefreshlayout.widget.SwipeRefreshLayout this$0 -> a
+    void <init>(androidx.swiperefreshlayout.widget.SwipeRefreshLayout) -> <init>
+    void applyTransformation(float,android.view.animation.Transformation) -> applyTransformation
+androidx.swiperefreshlayout.widget.SwipeRefreshLayout$OnChildScrollUpCallback -> androidx.swiperefreshlayout.widget.SwipeRefreshLayout$a:
+    boolean canChildScrollUp(androidx.swiperefreshlayout.widget.SwipeRefreshLayout,android.view.View) -> a
+androidx.swiperefreshlayout.widget.SwipeRefreshLayout$OnRefreshListener -> androidx.swiperefreshlayout.widget.SwipeRefreshLayout$b:
+    void onRefresh() -> a
 androidx.transition.AnimatorUtils -> androidx.j.a:
     void addPauseListener(android.animation.Animator,android.animation.AnimatorListenerAdapter) -> a
     void pause(android.animation.Animator) -> a
@@ -39119,6 +39393,8 @@ com.hmomeni.canto.R$id -> com.hmomeni.canto.b$a:
     int gradientView -> gradientView
     int group_divider -> group_divider
     int groups -> groups
+    int guideTextView1 -> guideTextView1
+    int guideTextView2 -> guideTextView2
     int guideline -> guideline
     int guideline2 -> guideline2
     int guideline3 -> guideline3
@@ -39159,6 +39435,7 @@ com.hmomeni.canto.R$id -> com.hmomeni.canto.b$a:
     int loginTitle -> loginTitle
     int logo -> logo
     int lyricRecyclerVIew -> lyricRecyclerVIew
+    int lyricsBackground -> lyricsBackground
     int mainFragment -> mainFragment
     int mainNav -> mainNav
     int main_nav -> main_nav
@@ -39297,6 +39574,7 @@ com.hmomeni.canto.R$id -> com.hmomeni.canto.b$a:
     int submit_area -> submit_area
     int surfaceView -> surfaceView
     int swap -> swap
+    int swipeRefresh -> swipeRefresh
     int switchCam -> switchCam
     int switchRatio -> switchRatio
     int tabMode -> tabMode
@@ -39336,6 +39614,7 @@ com.hmomeni.canto.R$id -> com.hmomeni.canto.b$a:
     int title_template -> title_template
     int toggleListMode -> toggleListMode
     int toggleLyricsBtn -> toggleLyricsBtn
+    int toolbar -> toolbar
     int top -> top
     int topPanel -> topPanel
     int touch_outside -> touch_outside
@@ -39352,6 +39631,7 @@ com.hmomeni.canto.R$id -> com.hmomeni.canto.b$a:
     int unlabeled -> unlabeled
     int up -> up
     int useLogo -> useLogo
+    int userGroup -> userGroup
     int userName -> userName
     int userPhoto -> userPhoto
     int verifyBtn -> verifyBtn
@@ -40864,6 +41144,10 @@ com.hmomeni.canto.activities.EditUserActivity$onCreate$5$4 -> com.hmomeni.canto.
     void accept(java.lang.Object) -> a
     void accept(java.lang.Throwable) -> a
     void <init>(com.hmomeni.canto.activities.EditUserActivity$onCreate$5) -> <init>
+com.hmomeni.canto.activities.EditUserActivity$onCreate$6 -> com.hmomeni.canto.activities.EditUserActivity$h:
+    com.hmomeni.canto.activities.EditUserActivity this$0 -> a
+    void onClick(android.view.View) -> onClick
+    void <init>(com.hmomeni.canto.activities.EditUserActivity) -> <init>
 com.hmomeni.canto.activities.InfoActivity -> com.hmomeni.canto.activities.InfoActivity:
     java.util.HashMap _$_findViewCache -> k
     void onClick(android.view.View) -> onClick
@@ -40983,25 +41267,27 @@ com.hmomeni.canto.activities.LoginActivity -> com.hmomeni.canto.activities.Login
     boolean timerCanceled -> v
     java.util.HashMap _$_findViewCache -> w
     void onCreate(android.os.Bundle) -> onCreate
+    void handshake() -> n
     void onStop() -> onStop
     void onBackPressed() -> onBackPressed
     void onClick(android.view.View) -> onClick
     void onActivityResult(int,int,android.content.Intent) -> onActivityResult
-    void prepareLogin() -> n
+    void prepareLogin() -> o
     void goToPhoneInput(boolean) -> a
     void goToPhoneInput$default(com.hmomeni.canto.activities.LoginActivity,boolean,int,java.lang.Object) -> a
-    void goToCodeInput() -> o
-    void backToPhoneInput() -> p
-    void backToOriginFromPhone() -> q
-    void submitPhone() -> r
-    void submitCode() -> s
+    void goToCodeInput() -> p
+    void backToPhoneInput() -> q
+    void backToOriginFromPhone() -> r
+    void submitPhone() -> s
+    void submitCode() -> t
     void startCountDownTimer(int) -> d
     boolean verifyInput(java.lang.String,com.hmomeni.canto.vms.LoginViewModel$SignupMode) -> a
     void showErrorMessage(com.hmomeni.canto.vms.LoginViewModel$SignupMode) -> a
-    void signInByGoogle() -> t
+    void signInByGoogle() -> u
     void <init>() -> <init>
     void access$prepareLogin(com.hmomeni.canto.activities.LoginActivity) -> a
-    void access$goToCodeInput(com.hmomeni.canto.activities.LoginActivity) -> b
+    void access$handshake(com.hmomeni.canto.activities.LoginActivity) -> b
+    void access$goToCodeInput(com.hmomeni.canto.activities.LoginActivity) -> c
     void access$setTimerCanceled$p(com.hmomeni.canto.activities.LoginActivity,boolean) -> a
     void access$startCountDownTimer(com.hmomeni.canto.activities.LoginActivity,int) -> a
     android.view.View _$_findCachedViewById(int) -> c
@@ -41029,51 +41315,55 @@ com.hmomeni.canto.activities.LoginActivity$goToPhoneInput$2 -> com.hmomeni.canto
     com.hmomeni.canto.activities.LoginActivity this$0 -> a
     void onAnimationEnd(android.animation.Animator) -> onAnimationEnd
     void <init>(com.hmomeni.canto.activities.LoginActivity) -> <init>
-com.hmomeni.canto.activities.LoginActivity$onActivityResult$1 -> com.hmomeni.canto.activities.LoginActivity$f:
-    com.hmomeni.canto.utils.ProgressDialog $progressDialog -> a
-    void accept(java.lang.Object) -> a
-    void accept(io.reactivex.disposables.Disposable) -> a
-    void <init>(com.hmomeni.canto.utils.ProgressDialog) -> <init>
-com.hmomeni.canto.activities.LoginActivity$onActivityResult$2 -> com.hmomeni.canto.activities.LoginActivity$g:
-    com.hmomeni.canto.utils.ProgressDialog $progressDialog -> a
-    void run() -> a
-    void <init>(com.hmomeni.canto.utils.ProgressDialog) -> <init>
-com.hmomeni.canto.activities.LoginActivity$onActivityResult$3 -> com.hmomeni.canto.activities.LoginActivity$h:
-    com.hmomeni.canto.activities.LoginActivity this$0 -> a
-    void run() -> a
-    void <init>(com.hmomeni.canto.activities.LoginActivity) -> <init>
-com.hmomeni.canto.activities.LoginActivity$onActivityResult$4 -> com.hmomeni.canto.activities.LoginActivity$i:
-    com.hmomeni.canto.activities.LoginActivity this$0 -> a
-    void accept(java.lang.Object) -> a
-    void accept(java.lang.Throwable) -> a
-    void <init>(com.hmomeni.canto.activities.LoginActivity) -> <init>
-com.hmomeni.canto.activities.LoginActivity$onCreate$1 -> com.hmomeni.canto.activities.LoginActivity$j:
-    com.hmomeni.canto.activities.LoginActivity this$0 -> a
-    void onConnectionFailed(com.google.android.gms.common.ConnectionResult) -> a
-    void <init>(com.hmomeni.canto.activities.LoginActivity) -> <init>
-com.hmomeni.canto.activities.LoginActivity$onCreate$2 -> com.hmomeni.canto.activities.LoginActivity$k:
+com.hmomeni.canto.activities.LoginActivity$handshake$1 -> com.hmomeni.canto.activities.LoginActivity$f:
     com.hmomeni.canto.activities.LoginActivity this$0 -> a
     void accept(java.lang.Object) -> a
     void accept(kotlin.Pair) -> a
     void <init>(com.hmomeni.canto.activities.LoginActivity) -> <init>
-com.hmomeni.canto.activities.LoginActivity$onCreate$2$1 -> com.hmomeni.canto.activities.LoginActivity$k$1:
-    com.hmomeni.canto.activities.LoginActivity$onCreate$2 this$0 -> a
+com.hmomeni.canto.activities.LoginActivity$handshake$1$1 -> com.hmomeni.canto.activities.LoginActivity$f$1:
+    com.hmomeni.canto.activities.LoginActivity$handshake$1 this$0 -> a
     kotlin.Pair $p -> b
     java.lang.Object invoke(java.lang.Object,java.lang.Object) -> a
     void invoke(com.hmomeni.canto.utils.PaymentDialog,java.lang.String) -> a
-    void <init>(com.hmomeni.canto.activities.LoginActivity$onCreate$2,kotlin.Pair) -> <init>
-com.hmomeni.canto.activities.LoginActivity$onCreate$2$2 -> com.hmomeni.canto.activities.LoginActivity$k$2:
-    com.hmomeni.canto.activities.LoginActivity$onCreate$2 this$0 -> a
+    void <init>(com.hmomeni.canto.activities.LoginActivity$handshake$1,kotlin.Pair) -> <init>
+com.hmomeni.canto.activities.LoginActivity$handshake$1$2 -> com.hmomeni.canto.activities.LoginActivity$f$2:
+    com.hmomeni.canto.activities.LoginActivity$handshake$1 this$0 -> a
     kotlin.Pair $p -> b
     java.lang.Object invoke(java.lang.Object,java.lang.Object) -> a
     void invoke(com.hmomeni.canto.utils.PaymentDialog,java.lang.String) -> a
-    void <init>(com.hmomeni.canto.activities.LoginActivity$onCreate$2,kotlin.Pair) -> <init>
-com.hmomeni.canto.activities.LoginActivity$onCreate$3 -> com.hmomeni.canto.activities.LoginActivity$l:
-    com.hmomeni.canto.activities.LoginActivity$onCreate$3 INSTANCE -> a
+    void <init>(com.hmomeni.canto.activities.LoginActivity$handshake$1,kotlin.Pair) -> <init>
+com.hmomeni.canto.activities.LoginActivity$handshake$2 -> com.hmomeni.canto.activities.LoginActivity$g:
+    com.hmomeni.canto.activities.LoginActivity this$0 -> a
     void accept(java.lang.Object) -> a
     void accept(java.lang.Throwable) -> a
-    void <init>() -> <init>
-    void <clinit>() -> <clinit>
+    void <init>(com.hmomeni.canto.activities.LoginActivity) -> <init>
+com.hmomeni.canto.activities.LoginActivity$handshake$2$1 -> com.hmomeni.canto.activities.LoginActivity$g$1:
+    com.hmomeni.canto.activities.LoginActivity$handshake$2 this$0 -> a
+    java.lang.Object invoke(java.lang.Object) -> a
+    void invoke(com.hmomeni.canto.utils.PaymentDialog) -> a
+    void <init>(com.hmomeni.canto.activities.LoginActivity$handshake$2) -> <init>
+com.hmomeni.canto.activities.LoginActivity$onActivityResult$1 -> com.hmomeni.canto.activities.LoginActivity$h:
+    com.hmomeni.canto.utils.ProgressDialog $progressDialog -> a
+    void accept(java.lang.Object) -> a
+    void accept(io.reactivex.disposables.Disposable) -> a
+    void <init>(com.hmomeni.canto.utils.ProgressDialog) -> <init>
+com.hmomeni.canto.activities.LoginActivity$onActivityResult$2 -> com.hmomeni.canto.activities.LoginActivity$i:
+    com.hmomeni.canto.utils.ProgressDialog $progressDialog -> a
+    void run() -> a
+    void <init>(com.hmomeni.canto.utils.ProgressDialog) -> <init>
+com.hmomeni.canto.activities.LoginActivity$onActivityResult$3 -> com.hmomeni.canto.activities.LoginActivity$j:
+    com.hmomeni.canto.activities.LoginActivity this$0 -> a
+    void run() -> a
+    void <init>(com.hmomeni.canto.activities.LoginActivity) -> <init>
+com.hmomeni.canto.activities.LoginActivity$onActivityResult$4 -> com.hmomeni.canto.activities.LoginActivity$k:
+    com.hmomeni.canto.activities.LoginActivity this$0 -> a
+    void accept(java.lang.Object) -> a
+    void accept(java.lang.Throwable) -> a
+    void <init>(com.hmomeni.canto.activities.LoginActivity) -> <init>
+com.hmomeni.canto.activities.LoginActivity$onCreate$1 -> com.hmomeni.canto.activities.LoginActivity$l:
+    com.hmomeni.canto.activities.LoginActivity this$0 -> a
+    void onConnectionFailed(com.google.android.gms.common.ConnectionResult) -> a
+    void <init>(com.hmomeni.canto.activities.LoginActivity) -> <init>
 com.hmomeni.canto.activities.LoginActivity$prepareLogin$1 -> com.hmomeni.canto.activities.LoginActivity$m:
     com.hmomeni.canto.activities.LoginActivity this$0 -> a
     void run() -> run
@@ -42381,59 +42671,71 @@ com.hmomeni.canto.fragments.MainFragment -> com.hmomeni.canto.fragments.MainFrag
     android.view.View onCreateView(android.view.LayoutInflater,android.view.ViewGroup,android.os.Bundle) -> a
     void onViewCreated(android.view.View,android.os.Bundle) -> a
     void onDestroy() -> E
+    void loadData() -> al
     void <init>() -> <init>
-    java.util.List access$getBanners$p(com.hmomeni.canto.fragments.MainFragment) -> a
-    com.hmomeni.canto.adapters.rcl.MainRclAdapter access$getAdapter$p(com.hmomeni.canto.fragments.MainFragment) -> b
-    java.util.List access$getGenres$p(com.hmomeni.canto.fragments.MainFragment) -> c
-    com.hmomeni.canto.vms.MainViewModel access$getViewModel$p(com.hmomeni.canto.fragments.MainFragment) -> d
+    com.hmomeni.canto.vms.MainViewModel access$getViewModel$p(com.hmomeni.canto.fragments.MainFragment) -> a
+    java.util.List access$getGenres$p(com.hmomeni.canto.fragments.MainFragment) -> b
+    void access$loadData(com.hmomeni.canto.fragments.MainFragment) -> c
+    java.util.List access$getBanners$p(com.hmomeni.canto.fragments.MainFragment) -> d
+    com.hmomeni.canto.adapters.rcl.MainRclAdapter access$getAdapter$p(com.hmomeni.canto.fragments.MainFragment) -> e
     android.view.View _$_findCachedViewById(int) -> d
     void _$_clearFindViewByIdCache() -> a
     void onDestroyView() -> g
 com.hmomeni.canto.fragments.MainFragment$WhenMappings -> com.hmomeni.canto.fragments.a:
     int[] $EnumSwitchMapping$0 -> a
     void <clinit>() -> <clinit>
-com.hmomeni.canto.fragments.MainFragment$onCreate$1 -> com.hmomeni.canto.fragments.MainFragment$a:
-    com.hmomeni.canto.fragments.MainFragment$onCreate$1 INSTANCE -> a
+com.hmomeni.canto.fragments.MainFragment$loadData$1 -> com.hmomeni.canto.fragments.MainFragment$a:
+    com.hmomeni.canto.fragments.MainFragment$loadData$1 INSTANCE -> a
     java.lang.Object apply(java.lang.Object) -> a
     java.util.List apply(com.hmomeni.canto.entities.ApiResponse) -> a
     void <init>() -> <init>
     void <clinit>() -> <clinit>
-com.hmomeni.canto.fragments.MainFragment$onCreate$2 -> com.hmomeni.canto.fragments.MainFragment$b:
+com.hmomeni.canto.fragments.MainFragment$loadData$2 -> com.hmomeni.canto.fragments.MainFragment$b:
     com.hmomeni.canto.fragments.MainFragment this$0 -> a
     void accept(java.lang.Object) -> a
     void accept(java.util.List) -> a
     void <init>(com.hmomeni.canto.fragments.MainFragment) -> <init>
-com.hmomeni.canto.fragments.MainFragment$onCreate$3 -> com.hmomeni.canto.fragments.MainFragment$c:
-    com.hmomeni.canto.fragments.MainFragment$onCreate$3 INSTANCE -> a
+com.hmomeni.canto.fragments.MainFragment$loadData$3 -> com.hmomeni.canto.fragments.MainFragment$c:
+    com.hmomeni.canto.fragments.MainFragment$loadData$3 INSTANCE -> a
     void accept(java.lang.Object) -> a
     void accept(java.lang.Throwable) -> a
     void <init>() -> <init>
     void <clinit>() -> <clinit>
-com.hmomeni.canto.fragments.MainFragment$onCreate$4 -> com.hmomeni.canto.fragments.MainFragment$d:
+com.hmomeni.canto.fragments.MainFragment$loadData$4 -> com.hmomeni.canto.fragments.MainFragment$d:
+    com.hmomeni.canto.fragments.MainFragment this$0 -> a
+    void accept(java.lang.Object) -> a
+    void accept(io.reactivex.disposables.Disposable) -> a
+    void <init>(com.hmomeni.canto.fragments.MainFragment) -> <init>
+com.hmomeni.canto.fragments.MainFragment$loadData$5 -> com.hmomeni.canto.fragments.MainFragment$e:
     com.hmomeni.canto.fragments.MainFragment this$0 -> a
     void run() -> a
     void <init>(com.hmomeni.canto.fragments.MainFragment) -> <init>
-com.hmomeni.canto.fragments.MainFragment$onCreate$5 -> com.hmomeni.canto.fragments.MainFragment$e:
+com.hmomeni.canto.fragments.MainFragment$loadData$6 -> com.hmomeni.canto.fragments.MainFragment$f:
     com.hmomeni.canto.fragments.MainFragment this$0 -> a
     void accept(java.lang.Object) -> a
     void accept(java.util.List) -> a
     void <init>(com.hmomeni.canto.fragments.MainFragment) -> <init>
-com.hmomeni.canto.fragments.MainFragment$onCreate$6 -> com.hmomeni.canto.fragments.MainFragment$f:
-    com.hmomeni.canto.fragments.MainFragment$onCreate$6 INSTANCE -> a
+com.hmomeni.canto.fragments.MainFragment$loadData$7 -> com.hmomeni.canto.fragments.MainFragment$g:
+    com.hmomeni.canto.fragments.MainFragment$loadData$7 INSTANCE -> a
     void accept(java.lang.Object) -> a
     void accept(java.lang.Throwable) -> a
     void <init>() -> <init>
     void <clinit>() -> <clinit>
-com.hmomeni.canto.fragments.MainFragment$onViewCreated$$inlined$also$lambda$1 -> com.hmomeni.canto.fragments.MainFragment$g:
+com.hmomeni.canto.fragments.MainFragment$onViewCreated$$inlined$also$lambda$1 -> com.hmomeni.canto.fragments.MainFragment$h:
     com.hmomeni.canto.adapters.rcl.MainRclAdapter $adapter -> a
     com.hmomeni.canto.fragments.MainFragment this$0 -> b
     void <init>(com.hmomeni.canto.adapters.rcl.MainRclAdapter,com.hmomeni.canto.fragments.MainFragment) -> <init>
     void accept(java.lang.Object) -> a
     void accept(com.hmomeni.canto.adapters.rcl.MainRclAdapter$ClickEvent) -> a
+com.hmomeni.canto.fragments.MainFragment$onViewCreated$2 -> com.hmomeni.canto.fragments.MainFragment$i:
+    com.hmomeni.canto.fragments.MainFragment this$0 -> a
+    void onRefresh() -> a
+    void <init>(com.hmomeni.canto.fragments.MainFragment) -> <init>
 com.hmomeni.canto.fragments.ProfileFragment -> com.hmomeni.canto.fragments.ProfileFragment:
     com.hmomeni.canto.vms.ProfileViewModel viewModel -> a
     io.reactivex.disposables.CompositeDisposable compositeDisposable -> b
-    java.util.HashMap _$_findViewCache -> c
+    android.view.ViewTreeObserver$OnGlobalLayoutListener globalLayoutListener -> c
+    java.util.HashMap _$_findViewCache -> d
     void onCreate(android.os.Bundle) -> a
     android.view.View onCreateView(android.view.LayoutInflater,android.view.ViewGroup,android.os.Bundle) -> a
     void onViewCreated(android.view.View,android.os.Bundle) -> a
@@ -42444,6 +42746,7 @@ com.hmomeni.canto.fragments.ProfileFragment -> com.hmomeni.canto.fragments.Profi
     void <init>() -> <init>
     void access$showNoPost(com.hmomeni.canto.fragments.ProfileFragment) -> a
     com.hmomeni.canto.vms.ProfileViewModel access$getViewModel$p(com.hmomeni.canto.fragments.ProfileFragment) -> b
+    android.view.ViewTreeObserver$OnGlobalLayoutListener access$getGlobalLayoutListener$p(com.hmomeni.canto.fragments.ProfileFragment) -> c
     android.view.View _$_findCachedViewById(int) -> d
     void _$_clearFindViewByIdCache() -> a
 com.hmomeni.canto.fragments.ProfileFragment$onResume$1 -> com.hmomeni.canto.fragments.ProfileFragment$a:
@@ -42462,21 +42765,46 @@ com.hmomeni.canto.fragments.ProfileFragment$onResume$3 -> com.hmomeni.canto.frag
     void <init>() -> <init>
     void <clinit>() -> <clinit>
 com.hmomeni.canto.fragments.ProfileFragment$onViewCreated$1 -> com.hmomeni.canto.fragments.ProfileFragment$d:
+    com.hmomeni.canto.fragments.ProfileFragment$onViewCreated$1 INSTANCE -> a
+    java.lang.Object apply(java.lang.Object) -> a
+    java.util.List apply(java.util.List) -> a
+    void <init>() -> <init>
+    void <clinit>() -> <clinit>
+com.hmomeni.canto.fragments.ProfileFragment$onViewCreated$2 -> com.hmomeni.canto.fragments.ProfileFragment$e:
     com.hmomeni.canto.fragments.ProfileFragment this$0 -> a
     void accept(java.lang.Object) -> a
     void accept(java.util.List) -> a
     void <init>(com.hmomeni.canto.fragments.ProfileFragment) -> <init>
-com.hmomeni.canto.fragments.ProfileFragment$onViewCreated$1$$special$$inlined$also$lambda$1 -> com.hmomeni.canto.fragments.ProfileFragment$d$a:
-    com.hmomeni.canto.fragments.ProfileFragment$onViewCreated$1 this$0 -> a
+com.hmomeni.canto.fragments.ProfileFragment$onViewCreated$2$$special$$inlined$also$lambda$1 -> com.hmomeni.canto.fragments.ProfileFragment$e$a:
+    com.hmomeni.canto.fragments.ProfileFragment$onViewCreated$2 this$0 -> a
     java.util.List $l$inlined -> b
-    void <init>(com.hmomeni.canto.fragments.ProfileFragment$onViewCreated$1,java.util.List) -> <init>
+    void <init>(com.hmomeni.canto.fragments.ProfileFragment$onViewCreated$2,java.util.List) -> <init>
     void accept(java.lang.Object) -> a
     void accept(java.lang.Integer) -> a
-com.hmomeni.canto.fragments.ProfileFragment$onViewCreated$2 -> com.hmomeni.canto.fragments.ProfileFragment$e:
+com.hmomeni.canto.fragments.ProfileFragment$onViewCreated$3 -> com.hmomeni.canto.fragments.ProfileFragment$f:
     com.hmomeni.canto.fragments.ProfileFragment this$0 -> a
     void accept(java.lang.Object) -> a
     void accept(java.lang.Throwable) -> a
     void <init>(com.hmomeni.canto.fragments.ProfileFragment) -> <init>
+com.hmomeni.canto.fragments.ProfileFragment$onViewCreated$4 -> com.hmomeni.canto.fragments.ProfileFragment$g:
+    com.hmomeni.canto.fragments.ProfileFragment this$0 -> a
+    kotlin.jvm.internal.Ref$IntRef $scrollOffset -> b
+    kotlin.jvm.internal.Ref$ObjectRef $xAnimator -> c
+    kotlin.jvm.internal.Ref$ObjectRef $yAnimator -> d
+    kotlin.jvm.internal.Ref$ObjectRef $scaleAnimator -> e
+    void onGlobalLayout() -> onGlobalLayout
+    void <init>(com.hmomeni.canto.fragments.ProfileFragment,kotlin.jvm.internal.Ref$IntRef,kotlin.jvm.internal.Ref$ObjectRef,kotlin.jvm.internal.Ref$ObjectRef,kotlin.jvm.internal.Ref$ObjectRef) -> <init>
+com.hmomeni.canto.fragments.ProfileFragment$onViewCreated$4$$special$$inlined$apply$lambda$1 -> com.hmomeni.canto.fragments.ProfileFragment$g$a:
+    com.hmomeni.canto.fragments.ProfileFragment$onViewCreated$4 this$0 -> a
+    void <init>(com.hmomeni.canto.fragments.ProfileFragment$onViewCreated$4) -> <init>
+    void onAnimationUpdate(android.animation.ValueAnimator) -> onAnimationUpdate
+com.hmomeni.canto.fragments.ProfileFragment$onViewCreated$5 -> com.hmomeni.canto.fragments.ProfileFragment$h:
+    kotlin.jvm.internal.Ref$ObjectRef $xAnimator -> a
+    kotlin.jvm.internal.Ref$ObjectRef $yAnimator -> b
+    kotlin.jvm.internal.Ref$ObjectRef $scaleAnimator -> c
+    kotlin.jvm.internal.Ref$IntRef $scrollOffset -> d
+    void onScrolled(androidx.recyclerview.widget.RecyclerView,int,int) -> a
+    void <init>(kotlin.jvm.internal.Ref$ObjectRef,kotlin.jvm.internal.Ref$ObjectRef,kotlin.jvm.internal.Ref$ObjectRef,kotlin.jvm.internal.Ref$IntRef) -> <init>
 com.hmomeni.canto.fragments.RecorderFragment -> com.hmomeni.canto.fragments.RecorderFragment:
     java.lang.String FRAGMENT_DIALOG -> b
     int selectPostId -> c
@@ -42557,8 +42885,8 @@ com.hmomeni.canto.fragments.RecorderFragment$onViewCreated$4 -> com.hmomeni.cant
 com.hmomeni.canto.fragments.RecorderFragment$openActivity$1 -> com.hmomeni.canto.fragments.RecorderFragment$e:
     com.hmomeni.canto.fragments.RecorderFragment this$0 -> a
     int $mode -> b
-    java.lang.Object invoke(java.lang.Object) -> a
-    void invoke(com.hmomeni.canto.utils.PaymentDialog) -> a
+    java.lang.Object invoke(java.lang.Object,java.lang.Object) -> a
+    void invoke(com.hmomeni.canto.utils.PaymentDialog,java.lang.String) -> a
     void <init>(com.hmomeni.canto.fragments.RecorderFragment,int) -> <init>
 com.hmomeni.canto.fragments.RecorderFragment$openActivity$2 -> com.hmomeni.canto.fragments.RecorderFragment$f:
     com.hmomeni.canto.utils.ProgressDialog $loadingDialog -> a
@@ -43234,6 +43562,8 @@ com.hmomeni.canto.utils.UserSession -> com.hmomeni.canto.utils.r:
 com.hmomeni.canto.utils.UtilsKt -> com.hmomeni.canto.utils.s:
     com.hmomeni.canto.utils.Dimension screenDimension -> a
     com.hmomeni.canto.App app(android.content.Context) -> a
+    io.reactivex.FlowableTransformer schedulers() -> a
+    io.reactivex.Flowable iomain(io.reactivex.Flowable) -> a
     io.reactivex.Single iomain(io.reactivex.Single) -> a
     io.reactivex.Completable iomain(io.reactivex.Completable) -> a
     com.hmomeni.canto.utils.Dimension getScreenDimensions(android.content.Context) -> b
@@ -43246,6 +43576,8 @@ com.hmomeni.canto.utils.UtilsKt -> com.hmomeni.canto.utils.s:
     java.lang.String installWatermark(android.content.Context) -> d
     java.lang.String errorString(retrofit2.Response) -> a
     boolean isFFMpegAvailable(android.content.Context) -> e
+    void gone(android.view.View) -> a
+    void visible(android.view.View) -> b
 com.hmomeni.canto.utils.UtilsKt$iomain$1 -> com.hmomeni.canto.utils.s$a:
     com.hmomeni.canto.utils.UtilsKt$iomain$1 INSTANCE -> a
     io.reactivex.SingleSource apply(io.reactivex.Single) -> a
@@ -43256,6 +43588,12 @@ com.hmomeni.canto.utils.UtilsKt$iomain$2 -> com.hmomeni.canto.utils.s$b:
     com.hmomeni.canto.utils.UtilsKt$iomain$2 INSTANCE -> a
     io.reactivex.CompletableSource apply(io.reactivex.Completable) -> a
     io.reactivex.Completable apply(io.reactivex.Completable) -> b
+    void <init>() -> <init>
+    void <clinit>() -> <clinit>
+com.hmomeni.canto.utils.UtilsKt$schedulers$1 -> com.hmomeni.canto.utils.s$c:
+    com.hmomeni.canto.utils.UtilsKt$schedulers$1 INSTANCE -> a
+    org.reactivestreams.Publisher apply(io.reactivex.Flowable) -> a
+    io.reactivex.Flowable apply(io.reactivex.Flowable) -> b
     void <init>() -> <init>
     void <clinit>() -> <clinit>
 com.hmomeni.canto.utils.ViewModelFactory -> com.hmomeni.canto.utils.t:
@@ -43989,34 +44327,35 @@ com.hmomeni.canto.vms.ProfileViewModel -> com.hmomeni.canto.e.m:
     com.hmomeni.canto.persistence.ProjectDao getProjectDao() -> e
     io.reactivex.processors.PublishProcessor getNavEvents() -> f
     com.hmomeni.canto.api.Api getApi() -> g
-    io.reactivex.Single getUser() -> h
+    io.reactivex.Flowable getUser() -> h
     void <init>() -> <init>
 com.hmomeni.canto.vms.ProfileViewModel$getUser$1 -> com.hmomeni.canto.e.m$a:
     com.hmomeni.canto.vms.ProfileViewModel this$0 -> a
-    void subscribe(io.reactivex.SingleEmitter) -> a
+    void subscribe(io.reactivex.FlowableEmitter) -> a
     void <init>(com.hmomeni.canto.vms.ProfileViewModel) -> <init>
 com.hmomeni.canto.vms.ProfileViewModel$getUser$1$1 -> com.hmomeni.canto.e.m$a$1:
     com.hmomeni.canto.vms.ProfileViewModel$getUser$1 this$0 -> a
-    io.reactivex.SingleEmitter $e -> b
+    io.reactivex.FlowableEmitter $e -> b
     void accept(java.lang.Object) -> a
     void accept(com.hmomeni.canto.entities.User) -> a
-    void <init>(com.hmomeni.canto.vms.ProfileViewModel$getUser$1,io.reactivex.SingleEmitter) -> <init>
+    void <init>(com.hmomeni.canto.vms.ProfileViewModel$getUser$1,io.reactivex.FlowableEmitter) -> <init>
 com.hmomeni.canto.vms.ProfileViewModel$getUser$1$2 -> com.hmomeni.canto.e.m$a$2:
-    com.hmomeni.canto.vms.ProfileViewModel$getUser$1 this$0 -> a
-    io.reactivex.SingleEmitter $e -> b
+    com.hmomeni.canto.vms.ProfileViewModel$getUser$1$2 INSTANCE -> a
     void accept(java.lang.Object) -> a
     void accept(java.lang.Throwable) -> a
-    void <init>(com.hmomeni.canto.vms.ProfileViewModel$getUser$1,io.reactivex.SingleEmitter) -> <init>
-com.hmomeni.canto.vms.ProfileViewModel$getUser$1$2$1 -> com.hmomeni.canto.e.m$a$2$1:
-    com.hmomeni.canto.vms.ProfileViewModel$getUser$1$2 this$0 -> a
+    void <init>() -> <init>
+    void <clinit>() -> <clinit>
+com.hmomeni.canto.vms.ProfileViewModel$getUser$1$3 -> com.hmomeni.canto.e.m$a$3:
+    com.hmomeni.canto.vms.ProfileViewModel$getUser$1 this$0 -> a
+    io.reactivex.FlowableEmitter $e -> b
     void accept(java.lang.Object) -> a
     void accept(com.hmomeni.canto.entities.User) -> a
-    void <init>(com.hmomeni.canto.vms.ProfileViewModel$getUser$1$2) -> <init>
-com.hmomeni.canto.vms.ProfileViewModel$getUser$1$2$2 -> com.hmomeni.canto.e.m$a$2$2:
-    com.hmomeni.canto.vms.ProfileViewModel$getUser$1$2 this$0 -> a
+    void <init>(com.hmomeni.canto.vms.ProfileViewModel$getUser$1,io.reactivex.FlowableEmitter) -> <init>
+com.hmomeni.canto.vms.ProfileViewModel$getUser$1$4 -> com.hmomeni.canto.e.m$a$4:
+    io.reactivex.FlowableEmitter $e -> a
     void accept(java.lang.Object) -> a
     void accept(java.lang.Throwable) -> a
-    void <init>(com.hmomeni.canto.vms.ProfileViewModel$getUser$1$2) -> <init>
+    void <init>(io.reactivex.FlowableEmitter) -> <init>
 com.hmomeni.canto.vms.ProfileViewModel_MembersInjector -> com.hmomeni.canto.e.n:
     void injectUserSession(com.hmomeni.canto.vms.ProfileViewModel,com.hmomeni.canto.utils.UserSession) -> a
     void injectUserDao(com.hmomeni.canto.vms.ProfileViewModel,com.hmomeni.canto.persistence.UserDao) -> a
@@ -48767,6 +49106,8 @@ io.reactivex.Flowable -> b.b.i:
     void <init>() -> <init>
     int bufferSize() -> a
     io.reactivex.Flowable create(io.reactivex.FlowableOnSubscribe,io.reactivex.BackpressureStrategy) -> a
+    io.reactivex.Flowable fromPublisher(org.reactivestreams.Publisher) -> a
+    io.reactivex.Flowable compose(io.reactivex.FlowableTransformer) -> a
     io.reactivex.Flowable doAfterTerminate(io.reactivex.functions.Action) -> a
     io.reactivex.Flowable doOnEach(io.reactivex.functions.Consumer,io.reactivex.functions.Consumer,io.reactivex.functions.Action,io.reactivex.functions.Action) -> a
     io.reactivex.Flowable doOnLifecycle(io.reactivex.functions.Consumer,io.reactivex.functions.LongConsumer,io.reactivex.functions.Action) -> a
@@ -48794,9 +49135,11 @@ io.reactivex.FlowableOnSubscribe -> b.b.k:
     void subscribe(io.reactivex.FlowableEmitter) -> a
 io.reactivex.FlowableSubscriber -> b.b.l:
     void onSubscribe(org.reactivestreams.Subscription) -> a
-io.reactivex.Maybe -> b.b.m:
+io.reactivex.FlowableTransformer -> b.b.m:
+    org.reactivestreams.Publisher apply(io.reactivex.Flowable) -> a
+io.reactivex.Maybe -> b.b.n:
     void <init>() -> <init>
-io.reactivex.Observable -> b.b.n:
+io.reactivex.Observable -> b.b.o:
     void <init>() -> <init>
     int bufferSize() -> c
     io.reactivex.Observable create(io.reactivex.ObservableOnSubscribe) -> a
@@ -48815,20 +49158,20 @@ io.reactivex.Observable -> b.b.n:
     void subscribeActual(io.reactivex.Observer) -> a
     io.reactivex.Observable subscribeOn(io.reactivex.Scheduler) -> b
     io.reactivex.Flowable toFlowable(io.reactivex.BackpressureStrategy) -> a
-io.reactivex.Observable$1 -> b.b.n$1:
+io.reactivex.Observable$1 -> b.b.o$1:
     int[] $SwitchMap$io$reactivex$BackpressureStrategy -> a
     void <clinit>() -> <clinit>
-io.reactivex.ObservableEmitter -> b.b.o:
-io.reactivex.ObservableOnSubscribe -> b.b.p:
+io.reactivex.ObservableEmitter -> b.b.p:
+io.reactivex.ObservableOnSubscribe -> b.b.q:
     void subscribe(io.reactivex.ObservableEmitter) -> a
-io.reactivex.ObservableSource -> b.b.q:
+io.reactivex.ObservableSource -> b.b.r:
     void subscribe(io.reactivex.Observer) -> c
-io.reactivex.Observer -> b.b.r:
+io.reactivex.Observer -> b.b.s:
     void onSubscribe(io.reactivex.disposables.Disposable) -> a
     void onNext(java.lang.Object) -> a_
     void onError(java.lang.Throwable) -> a
     void onComplete() -> m_
-io.reactivex.Scheduler -> b.b.s:
+io.reactivex.Scheduler -> b.b.t:
     long CLOCK_DRIFT_TOLERANCE_NANOSECONDS -> a
     void <init>() -> <init>
     io.reactivex.Scheduler$Worker createWorker() -> a
@@ -48836,7 +49179,7 @@ io.reactivex.Scheduler -> b.b.s:
     io.reactivex.disposables.Disposable scheduleDirect(java.lang.Runnable) -> a
     io.reactivex.disposables.Disposable scheduleDirect(java.lang.Runnable,long,java.util.concurrent.TimeUnit) -> a
     void <clinit>() -> <clinit>
-io.reactivex.Scheduler$DisposeTask -> b.b.s$a:
+io.reactivex.Scheduler$DisposeTask -> b.b.t$a:
     java.lang.Runnable decoratedRun -> a
     io.reactivex.Scheduler$Worker w -> b
     java.lang.Thread runner -> c
@@ -48844,12 +49187,12 @@ io.reactivex.Scheduler$DisposeTask -> b.b.s$a:
     void run() -> run
     void dispose() -> a
     boolean isDisposed() -> b
-io.reactivex.Scheduler$Worker -> b.b.s$b:
+io.reactivex.Scheduler$Worker -> b.b.t$b:
     void <init>() -> <init>
     io.reactivex.disposables.Disposable schedule(java.lang.Runnable) -> a
     io.reactivex.disposables.Disposable schedule(java.lang.Runnable,long,java.util.concurrent.TimeUnit) -> a
     long now(java.util.concurrent.TimeUnit) -> a
-io.reactivex.Single -> b.b.t:
+io.reactivex.Single -> b.b.u:
     void <init>() -> <init>
     io.reactivex.Single create(io.reactivex.SingleOnSubscribe) -> a
     io.reactivex.Single fromCallable(java.util.concurrent.Callable) -> a
@@ -48870,18 +49213,18 @@ io.reactivex.Single -> b.b.t:
     void subscribeActual(io.reactivex.SingleObserver) -> b
     io.reactivex.Single subscribeOn(io.reactivex.Scheduler) -> b
     io.reactivex.Completable ignoreElement() -> b
-io.reactivex.SingleEmitter -> b.b.u:
+io.reactivex.SingleEmitter -> b.b.v:
     void onSuccess(java.lang.Object) -> a
     void onError(java.lang.Throwable) -> a
-io.reactivex.SingleObserver -> b.b.v:
+io.reactivex.SingleObserver -> b.b.w:
     void onSubscribe(io.reactivex.disposables.Disposable) -> a
     void onSuccess(java.lang.Object) -> a
     void onError(java.lang.Throwable) -> a
-io.reactivex.SingleOnSubscribe -> b.b.w:
+io.reactivex.SingleOnSubscribe -> b.b.x:
     void subscribe(io.reactivex.SingleEmitter) -> a
-io.reactivex.SingleSource -> b.b.x:
+io.reactivex.SingleSource -> b.b.y:
     void subscribe(io.reactivex.SingleObserver) -> a
-io.reactivex.SingleTransformer -> b.b.y:
+io.reactivex.SingleTransformer -> b.b.z:
     io.reactivex.SingleSource apply(io.reactivex.Single) -> a
 io.reactivex.android.MainThreadDisposable -> b.b.a.a:
     java.util.concurrent.atomic.AtomicBoolean unsubscribed -> a
@@ -49417,8 +49760,12 @@ io.reactivex.internal.operators.flowable.FlowableFromObservable$SubscriberObserv
     void onSubscribe(io.reactivex.disposables.Disposable) -> a
     void cancel() -> d
     void request(long) -> a
-io.reactivex.internal.operators.flowable.FlowableInternalHelper -> b.b.e.e.b.f:
-io.reactivex.internal.operators.flowable.FlowableInternalHelper$RequestMax -> b.b.e.e.b.f$a:
+io.reactivex.internal.operators.flowable.FlowableFromPublisher -> b.b.e.e.b.f:
+    org.reactivestreams.Publisher publisher -> b
+    void <init>(org.reactivestreams.Publisher) -> <init>
+    void subscribeActual(org.reactivestreams.Subscriber) -> b
+io.reactivex.internal.operators.flowable.FlowableInternalHelper -> b.b.e.e.b.g:
+io.reactivex.internal.operators.flowable.FlowableInternalHelper$RequestMax -> b.b.e.e.b.g$a:
     io.reactivex.internal.operators.flowable.FlowableInternalHelper$RequestMax INSTANCE -> a
     io.reactivex.internal.operators.flowable.FlowableInternalHelper$RequestMax[] $VALUES -> b
     io.reactivex.internal.operators.flowable.FlowableInternalHelper$RequestMax[] values() -> values
@@ -49427,13 +49774,13 @@ io.reactivex.internal.operators.flowable.FlowableInternalHelper$RequestMax -> b.
     void accept(org.reactivestreams.Subscription) -> a
     void accept(java.lang.Object) -> a
     void <clinit>() -> <clinit>
-io.reactivex.internal.operators.flowable.FlowableObserveOn -> b.b.e.e.b.g:
+io.reactivex.internal.operators.flowable.FlowableObserveOn -> b.b.e.e.b.h:
     io.reactivex.Scheduler scheduler -> c
     boolean delayError -> d
     int prefetch -> e
     void <init>(io.reactivex.Flowable,io.reactivex.Scheduler,boolean,int) -> <init>
     void subscribeActual(org.reactivestreams.Subscriber) -> b
-io.reactivex.internal.operators.flowable.FlowableObserveOn$BaseObserveOnSubscriber -> b.b.e.e.b.g$a:
+io.reactivex.internal.operators.flowable.FlowableObserveOn$BaseObserveOnSubscriber -> b.b.e.e.b.h$a:
     io.reactivex.Scheduler$Worker worker -> a
     boolean delayError -> b
     int prefetch -> c
@@ -49462,7 +49809,7 @@ io.reactivex.internal.operators.flowable.FlowableObserveOn$BaseObserveOnSubscrib
     int requestFusion(int) -> a
     void clear() -> e
     boolean isEmpty() -> l_
-io.reactivex.internal.operators.flowable.FlowableObserveOn$ObserveOnConditionalSubscriber -> b.b.e.e.b.g$b:
+io.reactivex.internal.operators.flowable.FlowableObserveOn$ObserveOnConditionalSubscriber -> b.b.e.e.b.h$b:
     io.reactivex.internal.fuseable.ConditionalSubscriber downstream -> n
     long consumed -> o
     void <init>(io.reactivex.internal.fuseable.ConditionalSubscriber,io.reactivex.Scheduler$Worker,boolean,int) -> <init>
@@ -49471,7 +49818,7 @@ io.reactivex.internal.operators.flowable.FlowableObserveOn$ObserveOnConditionalS
     void runAsync() -> h
     void runBackfused() -> f
     java.lang.Object poll() -> c
-io.reactivex.internal.operators.flowable.FlowableObserveOn$ObserveOnSubscriber -> b.b.e.e.b.g$c:
+io.reactivex.internal.operators.flowable.FlowableObserveOn$ObserveOnSubscriber -> b.b.e.e.b.h$c:
     org.reactivestreams.Subscriber downstream -> n
     void <init>(org.reactivestreams.Subscriber,io.reactivex.Scheduler$Worker,boolean,int) -> <init>
     void onSubscribe(org.reactivestreams.Subscription) -> a
@@ -49479,14 +49826,14 @@ io.reactivex.internal.operators.flowable.FlowableObserveOn$ObserveOnSubscriber -
     void runAsync() -> h
     void runBackfused() -> f
     java.lang.Object poll() -> c
-io.reactivex.internal.operators.flowable.FlowableOnBackpressureBuffer -> b.b.e.e.b.h:
+io.reactivex.internal.operators.flowable.FlowableOnBackpressureBuffer -> b.b.e.e.b.i:
     int bufferSize -> c
     boolean unbounded -> d
     boolean delayError -> e
     io.reactivex.functions.Action onOverflow -> f
     void <init>(io.reactivex.Flowable,int,boolean,boolean,io.reactivex.functions.Action) -> <init>
     void subscribeActual(org.reactivestreams.Subscriber) -> b
-io.reactivex.internal.operators.flowable.FlowableOnBackpressureBuffer$BackpressureBufferSubscriber -> b.b.e.e.b.h$a:
+io.reactivex.internal.operators.flowable.FlowableOnBackpressureBuffer$BackpressureBufferSubscriber -> b.b.e.e.b.i$a:
     org.reactivestreams.Subscriber downstream -> a
     io.reactivex.internal.fuseable.SimplePlainQueue queue -> b
     boolean delayError -> c
@@ -49510,12 +49857,12 @@ io.reactivex.internal.operators.flowable.FlowableOnBackpressureBuffer$Backpressu
     java.lang.Object poll() -> c
     void clear() -> e
     boolean isEmpty() -> l_
-io.reactivex.internal.operators.flowable.FlowableOnBackpressureDrop -> b.b.e.e.b.i:
+io.reactivex.internal.operators.flowable.FlowableOnBackpressureDrop -> b.b.e.e.b.j:
     io.reactivex.functions.Consumer onDrop -> c
     void <init>(io.reactivex.Flowable) -> <init>
     void accept(java.lang.Object) -> a
     void subscribeActual(org.reactivestreams.Subscriber) -> b
-io.reactivex.internal.operators.flowable.FlowableOnBackpressureDrop$BackpressureDropSubscriber -> b.b.e.e.b.i$a:
+io.reactivex.internal.operators.flowable.FlowableOnBackpressureDrop$BackpressureDropSubscriber -> b.b.e.e.b.j$a:
     org.reactivestreams.Subscriber downstream -> a
     io.reactivex.functions.Consumer onDrop -> b
     org.reactivestreams.Subscription upstream -> c
@@ -49527,10 +49874,10 @@ io.reactivex.internal.operators.flowable.FlowableOnBackpressureDrop$Backpressure
     void onComplete() -> q_
     void request(long) -> a
     void cancel() -> d
-io.reactivex.internal.operators.flowable.FlowableOnBackpressureError -> b.b.e.e.b.j:
+io.reactivex.internal.operators.flowable.FlowableOnBackpressureError -> b.b.e.e.b.k:
     void <init>(io.reactivex.Flowable) -> <init>
     void subscribeActual(org.reactivestreams.Subscriber) -> b
-io.reactivex.internal.operators.flowable.FlowableOnBackpressureError$BackpressureErrorSubscriber -> b.b.e.e.b.j$a:
+io.reactivex.internal.operators.flowable.FlowableOnBackpressureError$BackpressureErrorSubscriber -> b.b.e.e.b.k$a:
     org.reactivestreams.Subscriber downstream -> a
     org.reactivestreams.Subscription upstream -> b
     boolean done -> c
@@ -49541,10 +49888,10 @@ io.reactivex.internal.operators.flowable.FlowableOnBackpressureError$Backpressur
     void onComplete() -> q_
     void request(long) -> a
     void cancel() -> d
-io.reactivex.internal.operators.flowable.FlowableOnBackpressureLatest -> b.b.e.e.b.k:
+io.reactivex.internal.operators.flowable.FlowableOnBackpressureLatest -> b.b.e.e.b.l:
     void <init>(io.reactivex.Flowable) -> <init>
     void subscribeActual(org.reactivestreams.Subscriber) -> b
-io.reactivex.internal.operators.flowable.FlowableOnBackpressureLatest$BackpressureLatestSubscriber -> b.b.e.e.b.k$a:
+io.reactivex.internal.operators.flowable.FlowableOnBackpressureLatest$BackpressureLatestSubscriber -> b.b.e.e.b.l$a:
     org.reactivestreams.Subscriber downstream -> a
     org.reactivestreams.Subscription upstream -> b
     boolean done -> c
@@ -49561,12 +49908,12 @@ io.reactivex.internal.operators.flowable.FlowableOnBackpressureLatest$Backpressu
     void cancel() -> d
     void drain() -> b
     boolean checkTerminated(boolean,boolean,org.reactivestreams.Subscriber,java.util.concurrent.atomic.AtomicReference) -> a
-io.reactivex.internal.operators.flowable.FlowableSubscribeOn -> b.b.e.e.b.l:
+io.reactivex.internal.operators.flowable.FlowableSubscribeOn -> b.b.e.e.b.m:
     io.reactivex.Scheduler scheduler -> c
     boolean nonScheduledRequests -> d
     void <init>(io.reactivex.Flowable,io.reactivex.Scheduler,boolean) -> <init>
     void subscribeActual(org.reactivestreams.Subscriber) -> b
-io.reactivex.internal.operators.flowable.FlowableSubscribeOn$SubscribeOnSubscriber -> b.b.e.e.b.l$a:
+io.reactivex.internal.operators.flowable.FlowableSubscribeOn$SubscribeOnSubscriber -> b.b.e.e.b.m$a:
     org.reactivestreams.Subscriber downstream -> a
     io.reactivex.Scheduler$Worker worker -> b
     java.util.concurrent.atomic.AtomicReference upstream -> c
@@ -49582,19 +49929,19 @@ io.reactivex.internal.operators.flowable.FlowableSubscribeOn$SubscribeOnSubscrib
     void request(long) -> a
     void requestUpstream(long,org.reactivestreams.Subscription) -> a
     void cancel() -> d
-io.reactivex.internal.operators.flowable.FlowableSubscribeOn$SubscribeOnSubscriber$Request -> b.b.e.e.b.l$a$a:
+io.reactivex.internal.operators.flowable.FlowableSubscribeOn$SubscribeOnSubscriber$Request -> b.b.e.e.b.m$a$a:
     org.reactivestreams.Subscription upstream -> a
     long n -> b
     void <init>(org.reactivestreams.Subscription,long) -> <init>
     void run() -> run
-io.reactivex.internal.operators.flowable.FlowableThrottleLatest -> b.b.e.e.b.m:
+io.reactivex.internal.operators.flowable.FlowableThrottleLatest -> b.b.e.e.b.n:
     long timeout -> c
     java.util.concurrent.TimeUnit unit -> d
     io.reactivex.Scheduler scheduler -> e
     boolean emitLast -> f
     void <init>(io.reactivex.Flowable,long,java.util.concurrent.TimeUnit,io.reactivex.Scheduler,boolean) -> <init>
     void subscribeActual(org.reactivestreams.Subscriber) -> b
-io.reactivex.internal.operators.flowable.FlowableThrottleLatest$ThrottleLatestSubscriber -> b.b.e.e.b.m$a:
+io.reactivex.internal.operators.flowable.FlowableThrottleLatest$ThrottleLatestSubscriber -> b.b.e.e.b.n$a:
     org.reactivestreams.Subscriber downstream -> a
     long timeout -> b
     java.util.concurrent.TimeUnit unit -> c
@@ -50621,6 +50968,7 @@ kotlin.collections.CollectionsKt___CollectionsJvmKt -> d.a.q:
 kotlin.collections.CollectionsKt___CollectionsKt -> d.a.r:
     java.lang.Object single(java.lang.Iterable) -> a
     java.lang.Object single(java.util.List) -> a
+    java.util.List toMutableList(java.util.Collection) -> a
 kotlin.collections.EmptyIterator -> d.a.s:
     kotlin.collections.EmptyIterator INSTANCE -> a
     boolean hasNext() -> hasNext
@@ -50744,6 +51092,14 @@ kotlin.jvm.internal.Lambda -> d.e.b.g:
 kotlin.jvm.internal.Ref -> d.e.b.h:
 kotlin.jvm.internal.Ref$BooleanRef -> d.e.b.h$a:
     boolean element -> a
+    void <init>() -> <init>
+    java.lang.String toString() -> toString
+kotlin.jvm.internal.Ref$IntRef -> d.e.b.h$b:
+    int element -> a
+    void <init>() -> <init>
+    java.lang.String toString() -> toString
+kotlin.jvm.internal.Ref$ObjectRef -> d.e.b.h$c:
+    java.lang.Object element -> a
     void <init>() -> <init>
     java.lang.String toString() -> toString
 kotlin.jvm.internal.Reflection -> d.e.b.i:
