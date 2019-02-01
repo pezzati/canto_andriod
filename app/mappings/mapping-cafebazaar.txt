@@ -39548,6 +39548,7 @@ com.hmomeni.canto.R$id -> com.hmomeni.canto.b$a:
     int shortcut -> shortcut
     int showCustom -> showCustom
     int showHome -> showHome
+    int showTermsBtn -> showTermsBtn
     int showTitle -> showTitle
     int singingDesc -> singingDesc
     int singingTitle -> singingTitle
@@ -39591,6 +39592,7 @@ com.hmomeni.canto.R$id -> com.hmomeni.canto.b$a:
     int telegramSupportBtn -> telegramSupportBtn
     int tempoSlider -> tempoSlider
     int termsBtn -> termsBtn
+    int termsCheckBox -> termsCheckBox
     int text -> text
     int text2 -> text2
     int textInput -> textInput
