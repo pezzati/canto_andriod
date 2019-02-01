@@ -105,4 +105,7 @@
     <string name="downloading_song">Downloading song...</string>
     <string name="select_60_sec_of_song">Select 60 seconds of the song</string>
     <string name="tap_record_to_start">Tap record button to start recording</string>
+    <string name="terms">لطفاً متن زیر را به دقت بخوانید و آگاه باشید که با ثبت نام و استفاده از این اپلیکشین، با این موارد موافقت کرده‌اید:\n\n-کاربران حق استفاده از نام و هویت دیگران را ندارند.\n\n-هر گونه توهین و تمسخر مقدسات و اشخاص حقیقی و حقوقی ممنوع است.\n\n-استفاده از کلمات و عبارات رکیک ممنوع است.\n\n-توهین به مقدسات اقلیت‌های دینی و مذهبی و تحریک اذهان عمومی ممنوع است.\n\nشما با ثبت نام و استفاده از این اپلیکیشن با موارد فوق موافقت کرده‌اید و در صورت مشاهده هر گونه تخلف، اکانت کاربری توقیف خواهد شد.</string>
+    <string name="show_terms">Show terms</string>
+    <string name="please_accept_terms">Please read and accept terms before continuing</string>
 </resources>

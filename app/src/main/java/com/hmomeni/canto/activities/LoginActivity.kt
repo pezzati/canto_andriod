@@ -143,6 +143,7 @@ class LoginActivity : BaseActivity(), View.OnClickListener {
             R.id.wrongPhoneBtn -> backToPhoneInput()
             R.id.noCodeBtn -> submitPhone()
             R.id.googleBtn -> signInByGoogle()
+            R.id.showTermsBtn -> CantoDialog(this, getString(R.string.terms_and_conditions), getString(R.string.terms), showNegativeButton = false).show()
         }
     }
 
@@ -205,6 +206,7 @@ class LoginActivity : BaseActivity(), View.OnClickListener {
         if (!phoneInflated) {
             phoneInputStub.inflate()
             loginBtn.setOnClickListener(this)
+            showTermsBtn.setOnClickListener(this)
             phoneInflated = true
         }
         phoneInput.setText("")
@@ -288,7 +290,10 @@ class LoginActivity : BaseActivity(), View.OnClickListener {
     }
 
     private fun submitPhone() {
-
+        if (!termsCheckBox.isChecked) {
+            Toast.makeText(this, R.string.please_accept_terms, Toast.LENGTH_SHORT).show()
+            return
+        }
         if (!verifyInput(phoneInput.text.toString(), viewModel.signupMode)) {
             showErrorMessage(viewModel.signupMode)
             return
