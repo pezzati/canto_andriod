@@ -3,13 +3,14 @@ package com.hmomeni.canto.adapters.rcl
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.RecyclerView
 import com.hmomeni.canto.R
 import com.hmomeni.canto.entities.PaymentPackage
 import com.hmomeni.canto.utils.GlideApp
 import io.reactivex.processors.PublishProcessor
 import kotlinx.android.synthetic.main.rcl_item_payment_pack.view.*
 
-class PaymentPacksRclAdapter(private val items: List<PaymentPackage>) : androidx.recyclerview.widget.RecyclerView.Adapter<PaymentPacksRclAdapter.PaymentPackHolder>() {
+class PaymentPacksRclAdapter(private val items: List<PaymentPackage>) : RecyclerView.Adapter<PaymentPacksRclAdapter.PaymentPackHolder>() {
 
     val clickPublisher: PublishProcessor<Int> = PublishProcessor.create()
 
@@ -22,7 +23,7 @@ class PaymentPacksRclAdapter(private val items: List<PaymentPackage>) : androidx
         holder.bind(items[position])
     }
 
-    class PaymentPackHolder(itemView: View, clickPublisher: PublishProcessor<Int>) : androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView) {
+    class PaymentPackHolder(itemView: View, clickPublisher: PublishProcessor<Int>) : RecyclerView.ViewHolder(itemView) {
         init {
             itemView.setOnClickListener {
                 clickPublisher.onNext(adapterPosition)

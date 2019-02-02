@@ -18,11 +18,12 @@ package com.hmomeni.canto.utils
 
 import android.app.AlertDialog
 import android.os.Bundle
+import androidx.fragment.app.DialogFragment
 
 /**
  * Shows an error message dialog.
  */
-class ErrorDialog : androidx.fragment.app.DialogFragment() {
+class ErrorDialog : DialogFragment() {
     private val ARG_MESSAGE = "message"
 
     override fun onCreateDialog(savedInstanceState: Bundle?): AlertDialog =

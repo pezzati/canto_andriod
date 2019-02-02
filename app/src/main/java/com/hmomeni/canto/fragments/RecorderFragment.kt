@@ -23,6 +23,8 @@ import android.view.*
 import android.widget.Toast
 import android.widget.Toast.LENGTH_SHORT
 import androidx.core.content.ContextCompat.checkSelfPermission
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
 import androidx.viewpager.widget.ViewPager
 import com.crashlytics.android.Crashlytics
 import com.hmomeni.canto.App
@@ -54,7 +56,7 @@ import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 
-class RecorderFragment : androidx.fragment.app.Fragment() {
+class RecorderFragment : Fragment() {
     private val FRAGMENT_DIALOG = "dialog"
 
     private var selectPostId: Int = 1085
@@ -296,7 +298,7 @@ class RecorderFragment : androidx.fragment.app.Fragment() {
 
     private fun hasPermissionsGranted(permissions: Array<String>) =
             permissions.none {
-                checkSelfPermission((activity as androidx.fragment.app.FragmentActivity), it) != PERMISSION_GRANTED
+                checkSelfPermission((activity as FragmentActivity), it) != PERMISSION_GRANTED
             }
 
     private fun requestVideoPermissions() {
@@ -458,7 +460,7 @@ class RecorderFragment : androidx.fragment.app.Fragment() {
      */
     private fun configureTransform(viewWidth: Int, viewHeight: Int) {
         activity ?: return
-        val rotation = (activity as androidx.fragment.app.FragmentActivity).windowManager.defaultDisplay.rotation
+        val rotation = (activity as FragmentActivity).windowManager.defaultDisplay.rotation
         val matrix = Matrix()
         val viewRect = RectF(0f, 0f, viewWidth.toFloat(), viewHeight.toFloat())
         val bufferRect = RectF(0f, 0f, previewSize.height.toFloat(), previewSize.width.toFloat())

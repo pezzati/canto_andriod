@@ -31,9 +31,7 @@ class AppModule(private val app: App) {
 
     @Provides
     @Singleton
-    fun providesInventory(userSession: UserSession): UserInventory {
-        return UserInventory(userSession)
-    }
+    fun providesInventory(userSession: UserSession): UserInventory = UserInventory(userSession)
 
     @Provides
     @Singleton

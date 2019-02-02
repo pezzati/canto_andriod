@@ -14,18 +14,17 @@
  * limitations under the License.
  */
 
-package com.example.android.camera2video
+package com.hmomeni.canto.utils
 
 import android.app.AlertDialog
 import android.os.Bundle
+import androidx.fragment.app.DialogFragment
 import com.hmomeni.canto.R
-import com.hmomeni.canto.utils.REQUEST_VIDEO_PERMISSIONS
-import com.hmomeni.canto.utils.VIDEO_PERMISSIONS
 
 /**
  * Shows OK/Cancel confirmation dialog about camera permission.
  */
-class ConfirmationDialog : androidx.fragment.app.DialogFragment() {
+class ConfirmationDialog : DialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?) =
             AlertDialog.Builder(activity)

@@ -7,12 +7,13 @@ import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.RelativeLayout
+import androidx.viewpager.widget.PagerAdapter
 import com.hmomeni.canto.R
 import com.hmomeni.canto.utils.GlideApp
 import com.hmomeni.canto.utils.dpToPx
 import com.hmomeni.canto.utils.views.RoundedRelativeLayout
 
-class ModePagerAdapter(private val context: Context, private val views: Array<View>) : androidx.viewpager.widget.PagerAdapter() {
+class ModePagerAdapter(private val context: Context, private val views: Array<View>) : PagerAdapter() {
     override fun getCount() = views.size
 
     override fun instantiateItem(container: ViewGroup, position: Int): Any {

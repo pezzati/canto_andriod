@@ -3,6 +3,7 @@ package com.hmomeni.canto.adapters.rcl
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.RecyclerView
 import com.hmomeni.canto.R
 import com.hmomeni.canto.entities.Post
 import com.hmomeni.canto.entities.UserInventory
@@ -15,7 +16,7 @@ import kotlinx.android.synthetic.main.rcl_item_post_rect.view.*
 import java.util.*
 import javax.inject.Inject
 
-class PostsRclAdapter(private val posts: List<Post>) : androidx.recyclerview.widget.RecyclerView.Adapter<PostsRclAdapter.PostHolder>() {
+class PostsRclAdapter(private val posts: List<Post>) : RecyclerView.Adapter<PostsRclAdapter.PostHolder>() {
 
     val clickPublisher: PublishProcessor<Int> = PublishProcessor.create()
 
@@ -29,7 +30,7 @@ class PostsRclAdapter(private val posts: List<Post>) : androidx.recyclerview.wid
         holder.bind(posts[position])
     }
 
-    class PostHolder(itemView: View, clickPublisher: PublishProcessor<Int>) : androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView) {
+    class PostHolder(itemView: View, clickPublisher: PublishProcessor<Int>) : RecyclerView.ViewHolder(itemView) {
 
         @Inject
         lateinit var userInventory: UserInventory

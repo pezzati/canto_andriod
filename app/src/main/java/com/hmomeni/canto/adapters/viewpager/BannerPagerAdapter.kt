@@ -4,6 +4,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.ImageView
+import androidx.viewpager.widget.PagerAdapter
 import com.bumptech.glide.Glide
 import com.hmomeni.canto.adapters.rcl.MainRclAdapter
 import com.hmomeni.canto.entities.Banner
@@ -12,7 +13,7 @@ import com.hmomeni.canto.utils.dpToPx
 import com.hmomeni.canto.utils.rounded
 import io.reactivex.processors.PublishProcessor
 
-class BannerPagerAdapter(private val clickPublisher: PublishProcessor<MainRclAdapter.ClickEvent>) : androidx.viewpager.widget.PagerAdapter() {
+class BannerPagerAdapter(private val clickPublisher: PublishProcessor<MainRclAdapter.ClickEvent>) : PagerAdapter() {
     lateinit var banners: List<Banner>
 
     override fun instantiateItem(container: ViewGroup, position: Int): Any {

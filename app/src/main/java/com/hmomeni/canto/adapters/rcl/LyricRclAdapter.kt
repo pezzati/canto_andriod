@@ -5,12 +5,13 @@ import android.graphics.Typeface
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.RecyclerView
 import com.hmomeni.canto.R
 import com.hmomeni.canto.entities.MidiItem
 import kotlinx.android.synthetic.main.rcl_item_midi.view.*
 import timber.log.Timber
 
-class LyricRclAdapter(private val midiItems: List<MidiItem>) : androidx.recyclerview.widget.RecyclerView.Adapter<LyricRclAdapter.MidiHolder>() {
+class LyricRclAdapter(private val midiItems: List<MidiItem>) : RecyclerView.Adapter<LyricRclAdapter.MidiHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MidiHolder {
         return MidiHolder(LayoutInflater.from(parent.context).inflate(R.layout.rcl_item_midi, parent, false))
     }
@@ -21,7 +22,7 @@ class LyricRclAdapter(private val midiItems: List<MidiItem>) : androidx.recycler
         holder.bind(midiItems[position])
     }
 
-    class MidiHolder(itemView: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView) {
+    class MidiHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val activeColor = Color.parseColor("#FFFFFFFF")
         private val inActiveColor = Color.parseColor("#88FFFFFF")
         fun bind(midiItem: MidiItem) {

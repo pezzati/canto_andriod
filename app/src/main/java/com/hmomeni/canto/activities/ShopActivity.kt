@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.hmomeni.canto.R
 import com.hmomeni.canto.adapters.rcl.PaymentPacksRclAdapter
 import com.hmomeni.canto.utils.ViewModelFactory
@@ -37,7 +38,7 @@ class ShopActivity : BaseActivity() {
         }
         setContentView(R.layout.activity_shop)
 
-        recyclerView.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(this)
+        recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = mAdapter
 
         disposable = viewModel.getPaymentPacks()

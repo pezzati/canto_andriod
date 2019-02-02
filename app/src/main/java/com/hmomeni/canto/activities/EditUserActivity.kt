@@ -7,6 +7,7 @@ import android.text.TextWatcher
 import android.view.View
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.GridLayoutManager
 import com.crashlytics.android.Crashlytics
 import com.hmomeni.canto.R
 import com.hmomeni.canto.adapters.rcl.AvatarsRclAdapter
@@ -40,7 +41,7 @@ class EditUserActivity : BaseActivity() {
                     .into(userPhoto)
         }
 
-        recyclerView.layoutManager = androidx.recyclerview.widget.GridLayoutManager(this, 3)
+        recyclerView.layoutManager = GridLayoutManager(this, 3)
         recyclerView.adapter = AvatarsRclAdapter(viewModel.avatars).also {
             it.clickPublisher.subscribe {
                 val avatar = viewModel.avatars[it]
