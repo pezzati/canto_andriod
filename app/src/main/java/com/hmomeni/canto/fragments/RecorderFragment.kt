@@ -2,7 +2,6 @@ package com.hmomeni.canto.fragments
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.content.Intent
 import android.content.pm.PackageManager.PERMISSION_GRANTED
 import android.graphics.Matrix
 import android.graphics.RectF
@@ -25,14 +24,11 @@ import android.widget.Toast.LENGTH_SHORT
 import androidx.core.content.ContextCompat.checkSelfPermission
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
+import androidx.navigation.fragment.findNavController
 import androidx.viewpager.widget.ViewPager
 import com.crashlytics.android.Crashlytics
 import com.hmomeni.canto.App
 import com.hmomeni.canto.R
-import com.hmomeni.canto.activities.DubsmashActivity
-import com.hmomeni.canto.activities.INTENT_EXTRA_POST
-import com.hmomeni.canto.activities.INTENT_EXTRA_TYPE
-import com.hmomeni.canto.activities.KaraokeActivity
 import com.hmomeni.canto.adapters.viewpager.ModePagerAdapter
 import com.hmomeni.canto.api.Api
 import com.hmomeni.canto.entities.PROJECT_TYPE_DUBSMASH
@@ -584,12 +580,12 @@ class RecorderFragment : Fragment() {
                 .doAfterTerminate { loadingDialog.dismiss() }
                 .subscribe({
                     when (mode) {
-                        PROJECT_TYPE_SINGING -> startActivity(Intent(context, DubsmashActivity::class.java).putExtra(INTENT_EXTRA_POST, App.gson.toJson(it)).putExtra(INTENT_EXTRA_TYPE, PROJECT_TYPE_SINGING))
-                        PROJECT_TYPE_DUBSMASH -> startActivity(Intent(context, DubsmashActivity::class.java).putExtra(INTENT_EXTRA_POST, App.gson.toJson(it)).putExtra(INTENT_EXTRA_TYPE, PROJECT_TYPE_DUBSMASH))
-                        PROJECT_TYPE_KARAOKE -> startActivity(Intent(context, KaraokeActivity::class.java).putExtra(INTENT_EXTRA_POST, App.gson.toJson(it)))
+                        PROJECT_TYPE_SINGING, PROJECT_TYPE_DUBSMASH -> findNavController().navigate(RecorderFragmentDirections.actionRecorderFragmentToDubsmashActivity(mode, App.gson.toJson(it)))
+                        PROJECT_TYPE_KARAOKE -> findNavController().navigate(RecorderFragmentDirections.actionRecorderFragmentToKaraokeActivity(App.gson.toJson(it)))
                     }
                 }, {
                     Timber.e(it)
+                    Crashlytics.logException(it)
                 }).addTo(compositeDisposable)
     }
 

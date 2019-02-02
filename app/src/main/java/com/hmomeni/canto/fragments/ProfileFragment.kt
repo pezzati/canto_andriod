@@ -2,7 +2,6 @@ package com.hmomeni.canto.fragments
 
 import android.animation.ObjectAnimator
 import android.animation.ValueAnimator
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,13 +9,11 @@ import android.view.ViewGroup
 import android.view.ViewTreeObserver
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.crashlytics.android.Crashlytics
 import com.hmomeni.canto.R
-import com.hmomeni.canto.activities.EditUserActivity
-import com.hmomeni.canto.activities.InfoActivity
-import com.hmomeni.canto.activities.ShopActivity
 import com.hmomeni.canto.adapters.rcl.ProjectsRclAdapter
 import com.hmomeni.canto.utils.*
 import com.hmomeni.canto.utils.navigation.ProjectEvent
@@ -78,7 +75,7 @@ class ProfileFragment : Fragment(), View.OnClickListener {
 
         var scrollOffset = 0
         globalLayoutListener = ViewTreeObserver.OnGlobalLayoutListener {
-            if (btnInfo.x != 0f && btnInfo.y != 0f) {
+            if (btnInfo != null && btnInfo.x != 0f && btnInfo.y != 0f) {
                 recyclerView.setPadding(0, guideline4.y.toInt(), 0, 0)
                 scrollOffset = guideline4.y.toInt()
 
@@ -170,9 +167,9 @@ class ProfileFragment : Fragment(), View.OnClickListener {
 
     override fun onClick(v: View) {
         when (v.id) {
-            R.id.userName, R.id.userPhoto, R.id.btnSettings -> startActivity(Intent(context!!, EditUserActivity::class.java))
-            R.id.btnShop -> startActivity(Intent(context!!, ShopActivity::class.java))
-            R.id.btnInfo -> startActivity(Intent(context!!, InfoActivity::class.java))
+            R.id.userName, R.id.userPhoto, R.id.btnSettings -> findNavController().navigate(ProfileFragmentDirections.actionProfileFragmentToEditUserFragment())
+            R.id.btnShop -> findNavController().navigate(ProfileFragmentDirections.actionProfileFragmentToShopActivity())
+            R.id.btnInfo -> findNavController().navigate(ProfileFragmentDirections.actionProfileFragmentToInfoFragment())
         }
     }
 

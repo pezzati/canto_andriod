@@ -28,6 +28,8 @@ import timber.log.Timber
 import java.util.*
 import javax.inject.Inject
 
+val BOTTOM_NAV_FRAGMENTS = arrayOf(R.id.mainFragment, R.id.profileFragment, R.id.searchFragment, R.id.listFragment)
+
 class MainActivity : BaseActivity() {
 
     @Inject
@@ -56,7 +58,7 @@ class MainActivity : BaseActivity() {
         }
 
         if (intent.hasExtra("new_user") && intent.getBooleanExtra("new_user", false)) {
-            startActivity(Intent(this, EditUserActivity::class.java))
+            startActivity(Intent(this, EditUserFragment::class.java))
         }
 
         setContentView(R.layout.activity_main)
@@ -105,7 +107,7 @@ class MainActivity : BaseActivity() {
             return@setOnNavigationItemSelectedListener true
         }
         navController.addOnDestinationChangedListener { _, destination, _ ->
-            if (destination.id == R.id.recorderFragment) {
+            if (destination.id !in BOTTOM_NAV_FRAGMENTS) {
                 bottomNav.visibility = View.GONE
             } else {
                 bottomNav.visibility = View.VISIBLE

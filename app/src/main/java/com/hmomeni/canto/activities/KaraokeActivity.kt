@@ -45,8 +45,8 @@ class KaraokeActivity : BaseFullActivity() {
         app().di.inject(this)
         setContentView(R.layout.activity_karaoke)
 
-        val extras = intent.extras!!
-        post = App.gson.fromJson(extras.getString(INTENT_EXTRA_POST), FullPost::class.java)
+        val details = KaraokeActivityArgs.fromBundle(intent.extras!!)
+        post = App.gson.fromJson(details.post, FullPost::class.java)
 
         midiItems = post.content!!.midi!!.filter { it.text != "\n" }
 

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_nav"
     app:startDestination="@id/mainFragment">
 
@@ -40,7 +41,22 @@
     <fragment
         android:id="@+id/recorderFragment"
         android:name="com.hmomeni.canto.fragments.RecorderFragment"
-        android:label="RecorderFragment" />
+        android:label="RecorderFragment">
+        <action
+            android:id="@+id/action_recorderFragment_to_dubsmashActivity"
+            app:destination="@id/dubsmashActivity"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+        <action
+            android:id="@+id/action_recorderFragment_to_karaokeActivity"
+            app:destination="@id/karaokeActivity"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+    </fragment>
     <fragment
         android:id="@+id/listFragment"
         android:name="com.hmomeni.canto.fragments.ListFragment"
@@ -60,6 +76,27 @@
             app:exitAnim="@anim/nav_default_enter_anim"
             app:popEnterAnim="@anim/nav_default_pop_enter_anim"
             app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+        <action
+            android:id="@+id/action_profileFragment_to_shopActivity"
+            app:destination="@id/shopActivity"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+        <action
+            android:id="@+id/action_profileFragment_to_infoFragment"
+            app:destination="@id/infoFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+        <action
+            android:id="@+id/action_profileFragment_to_editUserFragment"
+            app:destination="@id/editUserFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
     </fragment>
     <activity
         android:id="@+id/videoPlayActivity"
@@ -69,4 +106,40 @@
             android:name="project"
             app:argType="integer" />
     </activity>
+    <activity
+        android:id="@+id/dubsmashActivity"
+        android:name="com.hmomeni.canto.activities.DubsmashActivity"
+        android:label="activity_dubsmash"
+        tools:layout="@layout/activity_dubsmash">
+        <argument
+            android:name="type"
+            app:argType="integer" />
+        <argument
+            android:name="post"
+            app:argType="string" />
+    </activity>
+    <activity
+        android:id="@+id/karaokeActivity"
+        android:name="com.hmomeni.canto.activities.KaraokeActivity"
+        android:label="activity_karaoke"
+        tools:layout="@layout/activity_karaoke">
+        <argument
+            android:name="post"
+            app:argType="string" />
+    </activity>
+    <activity
+        android:id="@+id/shopActivity"
+        android:name="com.hmomeni.canto.activities.ShopActivity"
+        android:label="activity_shop"
+        tools:layout="@layout/activity_shop" />
+    <fragment
+        android:id="@+id/infoFragment"
+        android:name="com.hmomeni.canto.activities.InfoFragment"
+        android:label="fragment_info"
+        tools:layout="@layout/fragment_info" />
+    <fragment
+        android:id="@+id/editUserFragment"
+        android:name="com.hmomeni.canto.activities.EditUserFragment"
+        android:label="fragment_edit_user"
+        tools:layout="@layout/fragment_edit_user" />
 </navigation>

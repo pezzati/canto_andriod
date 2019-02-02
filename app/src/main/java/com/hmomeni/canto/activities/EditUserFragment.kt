@@ -4,9 +4,14 @@ import android.animation.Animator
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.KeyEvent
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.crashlytics.android.Crashlytics
 import com.hmomeni.canto.R
@@ -15,11 +20,12 @@ import com.hmomeni.canto.utils.*
 import com.hmomeni.canto.vms.EditUserViewModel
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
-import kotlinx.android.synthetic.main.activity_edit_user.*
+import kotlinx.android.synthetic.main.fragment_edit_user.*
 import timber.log.Timber
 import java.util.regex.Pattern
 
-class EditUserActivity : BaseActivity() {
+
+class EditUserFragment : Fragment() {
     lateinit var viewModel: EditUserViewModel
     private val compositeDisposable = CompositeDisposable()
 
@@ -29,8 +35,24 @@ class EditUserActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel = ViewModelProviders.of(this, ViewModelFactory(app()))[EditUserViewModel::class.java]
-        setContentView(R.layout.activity_edit_user)
+        viewModel = ViewModelProviders.of(this, ViewModelFactory(context!!.app()))[EditUserViewModel::class.java]
+    }
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        return inflater.inflate(com.hmomeni.canto.R.layout.fragment_edit_user, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+
+        userName.setOnKeyListener(object : View.OnKeyListener {
+            override fun onKey(v: View, keyCode: Int, event: KeyEvent): Boolean {
+                if (keyCode == KeyEvent.KEYCODE_BACK && recyclerView.visibility == View.VISIBLE) {
+                    hideAvatars()
+                    return true
+                }
+                return false
+            }
+        })
 
         userName.setText(viewModel.userSession.user?.username)
         viewModel.userSession.user?.avatar?.let {
@@ -41,7 +63,7 @@ class EditUserActivity : BaseActivity() {
                     .into(userPhoto)
         }
 
-        recyclerView.layoutManager = GridLayoutManager(this, 3)
+        recyclerView.layoutManager = GridLayoutManager(context!!, 3)
         recyclerView.adapter = AvatarsRclAdapter(viewModel.avatars).also {
             it.clickPublisher.subscribe {
                 val avatar = viewModel.avatars[it]
@@ -76,31 +98,31 @@ class EditUserActivity : BaseActivity() {
         })
         confirmBtn.setOnClickListener {
             if (!isUserNameValid) {
-                Toast.makeText(this, R.string.choose_valid_username, Toast.LENGTH_SHORT).show()
+                Toast.makeText(context!!, R.string.choose_valid_username, Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
             if (selectedAvatar < 0) {
-                Toast.makeText(this, R.string.avatar_is_mandatory, Toast.LENGTH_SHORT).show()
+                Toast.makeText(context!!, R.string.avatar_is_mandatory, Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
-            val progressDialog = ProgressDialog(this)
+            val progressDialog = ProgressDialog(context!!)
             viewModel.updateUser(selectedAvatar, userName.text.toString())
                     .iomain()
                     .doOnSubscribe { progressDialog.show() }
                     .doAfterTerminate { progressDialog.dismiss() }
                     .subscribe({
-                        Toast.makeText(this, R.string.user_info_updated_successfully, Toast.LENGTH_SHORT).show()
-                        finish()
+                        Toast.makeText(context!!, R.string.user_info_updated_successfully, Toast.LENGTH_SHORT).show()
+                        findNavController().popBackStack()
                     }, {
                         Timber.e(it)
                         Crashlytics.logException(it)
-                        Toast.makeText(this, R.string.updating_user_failed, Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context!!, R.string.updating_user_failed, Toast.LENGTH_SHORT).show()
                     }).addTo(compositeDisposable)
         }
         loadAvatars()
 
-        backBtn.setOnClickListener { finish() }
+        backBtn.setOnClickListener { findNavController().popBackStack() }
     }
 
     private fun loadAvatars() {
@@ -119,14 +141,6 @@ class EditUserActivity : BaseActivity() {
     override fun onDestroy() {
         compositeDisposable.clear()
         super.onDestroy()
-    }
-
-    override fun onBackPressed() {
-        if (recyclerView.visibility == View.VISIBLE) {
-            hideAvatars()
-        } else {
-            super.onBackPressed()
-        }
     }
 
     private fun showAvatars() {

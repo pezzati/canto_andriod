@@ -103,10 +103,9 @@ class DubsmashActivity : CameraActivity() {
 
         app().di.inject(this)
 
-        val extras = intent.extras!!
-
-        type = extras.getInt(INTENT_EXTRA_TYPE, type)
-        post = App.gson.fromJson(extras.getString(INTENT_EXTRA_POST), FullPost::class.java)
+        val details = DubsmashActivityArgs.fromBundle(intent.extras!!)
+        type = details.type
+        post = App.gson.fromJson(details.post, FullPost::class.java)
 
 
         midiItems = post.content!!.midi!!.filter { it.text != "\n" }

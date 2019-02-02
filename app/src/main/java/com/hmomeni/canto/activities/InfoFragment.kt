@@ -3,23 +3,27 @@ package com.hmomeni.canto.activities
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
-import androidx.appcompat.app.AppCompatActivity
+import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.hmomeni.canto.BuildConfig
 import com.hmomeni.canto.R
 import com.hmomeni.canto.utils.PaymentDialog
-import kotlinx.android.synthetic.main.activity_info.*
+import kotlinx.android.synthetic.main.fragment_info.*
 import java.util.*
 
-class InfoActivity : AppCompatActivity(), View.OnClickListener {
+class InfoFragment : Fragment(), View.OnClickListener {
     override fun onClick(v: View) {
         when (v.id) {
+            R.id.backBtn -> findNavController().popBackStack()
             R.id.telegramChBtn -> openLink("http://t.me/cantoapp")
             R.id.telegramSupportBtn -> openLink("http://t.me/cantoapp")
             R.id.instagramBtn -> openLink("http://instagram.com/canto_app")
             R.id.webSiteBtn -> openLink("http://canto-app.ir")
             R.id.requestSongBtn -> PaymentDialog(
-                    this,
+                    context!!,
                     getString(R.string.request_song),
                     getString(R.string.request_song_desc),
                     showTextInput = true,
@@ -34,9 +38,12 @@ class InfoActivity : AppCompatActivity(), View.OnClickListener {
         }
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_info)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        return inflater.inflate(R.layout.fragment_info, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         telegramChBtn.setOnClickListener(this)
         telegramSupportBtn.setOnClickListener(this)
@@ -45,6 +52,7 @@ class InfoActivity : AppCompatActivity(), View.OnClickListener {
         termsBtn.setOnClickListener(this)
         requestSongBtn.setOnClickListener(this)
         inviteBtn.setOnClickListener(this)
+        backBtn.setOnClickListener(this)
 
         version.text = "Ver: %s".format(Locale.ENGLISH, BuildConfig.VERSION_NAME)
     }
