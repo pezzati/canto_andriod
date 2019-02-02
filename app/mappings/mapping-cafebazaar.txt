@@ -42767,28 +42767,22 @@ com.hmomeni.canto.fragments.ProfileFragment$onResume$3 -> com.hmomeni.canto.frag
     void <init>() -> <init>
     void <clinit>() -> <clinit>
 com.hmomeni.canto.fragments.ProfileFragment$onViewCreated$1 -> com.hmomeni.canto.fragments.ProfileFragment$d:
-    com.hmomeni.canto.fragments.ProfileFragment$onViewCreated$1 INSTANCE -> a
-    java.lang.Object apply(java.lang.Object) -> a
-    java.util.List apply(java.util.List) -> a
-    void <init>() -> <init>
-    void <clinit>() -> <clinit>
-com.hmomeni.canto.fragments.ProfileFragment$onViewCreated$2 -> com.hmomeni.canto.fragments.ProfileFragment$e:
     com.hmomeni.canto.fragments.ProfileFragment this$0 -> a
     void accept(java.lang.Object) -> a
     void accept(java.util.List) -> a
     void <init>(com.hmomeni.canto.fragments.ProfileFragment) -> <init>
-com.hmomeni.canto.fragments.ProfileFragment$onViewCreated$2$$special$$inlined$also$lambda$1 -> com.hmomeni.canto.fragments.ProfileFragment$e$a:
-    com.hmomeni.canto.fragments.ProfileFragment$onViewCreated$2 this$0 -> a
+com.hmomeni.canto.fragments.ProfileFragment$onViewCreated$1$$special$$inlined$also$lambda$1 -> com.hmomeni.canto.fragments.ProfileFragment$d$a:
+    com.hmomeni.canto.fragments.ProfileFragment$onViewCreated$1 this$0 -> a
     java.util.List $l$inlined -> b
-    void <init>(com.hmomeni.canto.fragments.ProfileFragment$onViewCreated$2,java.util.List) -> <init>
+    void <init>(com.hmomeni.canto.fragments.ProfileFragment$onViewCreated$1,java.util.List) -> <init>
     void accept(java.lang.Object) -> a
     void accept(java.lang.Integer) -> a
-com.hmomeni.canto.fragments.ProfileFragment$onViewCreated$3 -> com.hmomeni.canto.fragments.ProfileFragment$f:
+com.hmomeni.canto.fragments.ProfileFragment$onViewCreated$2 -> com.hmomeni.canto.fragments.ProfileFragment$e:
     com.hmomeni.canto.fragments.ProfileFragment this$0 -> a
     void accept(java.lang.Object) -> a
     void accept(java.lang.Throwable) -> a
     void <init>(com.hmomeni.canto.fragments.ProfileFragment) -> <init>
-com.hmomeni.canto.fragments.ProfileFragment$onViewCreated$4 -> com.hmomeni.canto.fragments.ProfileFragment$g:
+com.hmomeni.canto.fragments.ProfileFragment$onViewCreated$3 -> com.hmomeni.canto.fragments.ProfileFragment$f:
     com.hmomeni.canto.fragments.ProfileFragment this$0 -> a
     kotlin.jvm.internal.Ref$IntRef $scrollOffset -> b
     kotlin.jvm.internal.Ref$ObjectRef $xAnimator -> c
@@ -42796,11 +42790,11 @@ com.hmomeni.canto.fragments.ProfileFragment$onViewCreated$4 -> com.hmomeni.canto
     kotlin.jvm.internal.Ref$ObjectRef $scaleAnimator -> e
     void onGlobalLayout() -> onGlobalLayout
     void <init>(com.hmomeni.canto.fragments.ProfileFragment,kotlin.jvm.internal.Ref$IntRef,kotlin.jvm.internal.Ref$ObjectRef,kotlin.jvm.internal.Ref$ObjectRef,kotlin.jvm.internal.Ref$ObjectRef) -> <init>
-com.hmomeni.canto.fragments.ProfileFragment$onViewCreated$4$$special$$inlined$apply$lambda$1 -> com.hmomeni.canto.fragments.ProfileFragment$g$a:
-    com.hmomeni.canto.fragments.ProfileFragment$onViewCreated$4 this$0 -> a
-    void <init>(com.hmomeni.canto.fragments.ProfileFragment$onViewCreated$4) -> <init>
+com.hmomeni.canto.fragments.ProfileFragment$onViewCreated$3$$special$$inlined$apply$lambda$1 -> com.hmomeni.canto.fragments.ProfileFragment$f$a:
+    com.hmomeni.canto.fragments.ProfileFragment$onViewCreated$3 this$0 -> a
+    void <init>(com.hmomeni.canto.fragments.ProfileFragment$onViewCreated$3) -> <init>
     void onAnimationUpdate(android.animation.ValueAnimator) -> onAnimationUpdate
-com.hmomeni.canto.fragments.ProfileFragment$onViewCreated$5 -> com.hmomeni.canto.fragments.ProfileFragment$h:
+com.hmomeni.canto.fragments.ProfileFragment$onViewCreated$4 -> com.hmomeni.canto.fragments.ProfileFragment$g:
     kotlin.jvm.internal.Ref$ObjectRef $xAnimator -> a
     kotlin.jvm.internal.Ref$ObjectRef $yAnimator -> b
     kotlin.jvm.internal.Ref$ObjectRef $scaleAnimator -> c
@@ -50970,7 +50964,6 @@ kotlin.collections.CollectionsKt___CollectionsJvmKt -> d.a.q:
 kotlin.collections.CollectionsKt___CollectionsKt -> d.a.r:
     java.lang.Object single(java.lang.Iterable) -> a
     java.lang.Object single(java.util.List) -> a
-    java.util.List toMutableList(java.util.Collection) -> a
 kotlin.collections.EmptyIterator -> d.a.s:
     kotlin.collections.EmptyIterator INSTANCE -> a
     boolean hasNext() -> hasNext
