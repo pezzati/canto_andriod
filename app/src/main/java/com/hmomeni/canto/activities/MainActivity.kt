@@ -13,6 +13,7 @@ import com.hmomeni.canto.App
 import com.hmomeni.canto.R
 import com.hmomeni.canto.entities.Post
 import com.hmomeni.canto.fragments.ListFragment
+import com.hmomeni.canto.fragments.MainFragmentDirections
 import com.hmomeni.canto.services.FFMpegService
 import com.hmomeni.canto.utils.*
 import com.hmomeni.canto.utils.navigation.*
@@ -57,12 +58,9 @@ class MainActivity : BaseActivity() {
             return
         }
 
-        if (intent.hasExtra("new_user") && intent.getBooleanExtra("new_user", false)) {
-            startActivity(Intent(this, EditUserFragment::class.java))
-        }
-
         setContentView(R.layout.activity_main)
         navController = findNavController(R.id.mainNav)
+
         navDisposable = navEvents
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
@@ -128,6 +126,10 @@ class MainActivity : BaseActivity() {
             }
         }
         handshake()
+
+        if (intent.hasExtra("new_user") && intent.getBooleanExtra("new_user", false)) {
+            navController.navigate(MainFragmentDirections.actionMainFragmentToEditUserFragment())
+        }
     }
 
     private fun handshake() {

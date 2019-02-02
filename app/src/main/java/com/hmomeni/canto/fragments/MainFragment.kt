@@ -34,6 +34,8 @@ class MainFragment : Fragment() {
     private val genres: MutableList<Genre> = mutableListOf()
     private val banners: MutableList<Banner> = mutableListOf()
 
+    private var dataLoaded = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel = ViewModelProviders.of(this, ViewModelFactory(context!!.app()))[MainViewModel::class.java]
@@ -71,6 +73,9 @@ class MainFragment : Fragment() {
                     }
                 }.addTo(compositeDisposable)
             }
+            if (dataLoaded) {
+                progressBar.visibility = View.GONE
+            }
         } else {
             progressBar.visibility = View.GONE
         }
@@ -91,6 +96,7 @@ class MainFragment : Fragment() {
         viewModel.api.getBanners()
                 .map { it.data }
                 .iomain()
+                .doAfterTerminate { progressBar?.visibility = View.GONE }
                 .subscribe({
                     banners.clear()
                     banners.addAll(it)
@@ -108,6 +114,7 @@ class MainFragment : Fragment() {
                 .doAfterTerminate {
                     swipeRefresh?.isRefreshing = false
                     progressBar?.visibility = View.GONE
+                    dataLoaded = true
                 }
                 .subscribe({
                     genres.clear()
