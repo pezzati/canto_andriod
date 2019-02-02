@@ -49,14 +49,6 @@ class ProfileFragment : Fragment(), View.OnClickListener {
         viewModel.projectDao
                 .fetchCompleteProjects()
                 .iomain()
-                .map {
-                    val list = it.toMutableList()
-                    list.addAll(it)
-                    list.addAll(it)
-                    list.addAll(it)
-                    list.addAll(it)
-                    return@map list
-                }
                 .subscribe({ l ->
                     if (l.isEmpty()) {
                         showNoPost()
