@@ -27,6 +27,8 @@ import java.net.URL
 import java.util.*
 import java.util.concurrent.TimeUnit
 
+const val CHANNEL_ID = "ffmpeg"
+
 class FFMpegService : Service() {
     override fun onBind(intent: Intent?): IBinder? {
         return null
@@ -40,6 +42,15 @@ class FFMpegService : Service() {
         } else {
             getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val channel = NotificationChannel(CHANNEL_ID, "ffmpeg", NotificationManager.IMPORTANCE_NONE)
+            channel.enableVibration(false)
+            channel.enableLights(false)
+            channel.setSound(null, null)
+            nManager.createNotificationChannel(channel)
+        }
+
     }
 
     @SuppressLint("CheckResult")
@@ -81,15 +92,8 @@ class FFMpegService : Service() {
 
     private fun showNotification(): NotificationCompat.Builder {
 
-        val nManager: NotificationManager = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            getSystemService(NotificationManager::class.java)
-        } else {
-            getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        }
         val builder = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channel = NotificationChannel("ffmpeg", "ffmpeg", NotificationManager.IMPORTANCE_DEFAULT)
-            nManager.createNotificationChannel(channel)
-            NotificationCompat.Builder(this, channel.id)
+            NotificationCompat.Builder(this, CHANNEL_ID)
         } else {
             NotificationCompat.Builder(this)
         }

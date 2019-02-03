@@ -25,7 +25,7 @@ android {
         minSdkVersion 21
         targetSdkVersion 28
         versionCode 7
-        versionName "0.9.10"
+        versionName "0.9.11 RC1"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         externalNativeBuild {
             cmake {
@@ -116,15 +116,16 @@ dependencies {
     implementation 'com.google.android.material:material:1.1.0-alpha02'
     implementation 'androidx.media:media:1.1.0-alpha01'
     implementation 'androidx.lifecycle:lifecycle-extensions:2.1.0-alpha01'
-    implementation 'androidx.room:room-runtime:2.1.0-alpha03'
-    kapt 'androidx.room:room-compiler:2.1.0-alpha03'
-    implementation 'androidx.room:room-rxjava2:2.1.0-alpha03'
+    implementation 'androidx.room:room-runtime:2.1.0-alpha04'
+    kapt 'androidx.room:room-compiler:2.1.0-alpha04'
+    implementation 'androidx.room:room-rxjava2:2.1.0-alpha04'
     implementation 'androidx.lifecycle:lifecycle-reactivestreams:2.1.0-alpha01'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
 
     implementation 'com.google.android.gms:play-services-auth:16.0.1'
     implementation 'com.google.firebase:firebase-core:16.0.6'
     implementation 'com.crashlytics.sdk.android:crashlytics:2.9.8'
+    implementation 'com.google.firebase:firebase-perf:16.2.3'
 
     implementation 'com.squareup.okhttp3:okhttp:3.12.0'
     implementation 'com.squareup.okhttp3:logging-interceptor:3.11.0'
@@ -151,8 +152,8 @@ dependencies {
 
     implementation 'com.jakewharton.timber:timber:4.7.1'
 
-    implementation 'android.arch.navigation:navigation-fragment-ktx:1.0.0-alpha09'
-    implementation 'android.arch.navigation:navigation-ui-ktx:1.0.0-alpha09'
+    implementation 'android.arch.navigation:navigation-fragment-ktx:1.0.0-alpha11'
+    implementation 'android.arch.navigation:navigation-ui-ktx:1.0.0-alpha11'
 
     implementation 'com.karumi:dexter:5.0.0'
 
@@ -167,5 +168,6 @@ dependencies {
 }
 
 apply plugin: 'com.google.gms.google-services'
-apply plugin: 'com.getkeepsafe.dexcount'
+apply plugin: 'com.google.firebase.firebase-perf'
+//apply plugin: 'com.getkeepsafe.dexcount'
 
