@@ -7,12 +7,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.crashlytics.android.Crashlytics
+import com.google.firebase.analytics.FirebaseAnalytics
 import com.hmomeni.canto.R
 import com.hmomeni.canto.adapters.rcl.ProjectsRclAdapter
 import com.hmomeni.canto.utils.*
@@ -23,7 +23,7 @@ import kotlinx.android.synthetic.main.fragment_profile.*
 import timber.log.Timber
 import java.util.*
 
-class ProfileFragment : Fragment(), View.OnClickListener {
+class ProfileFragment : BaseFragment(), View.OnClickListener {
 
     private lateinit var viewModel: ProfileViewModel
     private val compositeDisposable = CompositeDisposable()
@@ -137,6 +137,8 @@ class ProfileFragment : Fragment(), View.OnClickListener {
                 .iomain()
                 .doAfterTerminate { progressBar.visibility = View.GONE }
                 .subscribe({
+                    FirebaseAnalytics.getInstance(context!!).setUserId(it.id.toString())
+                    Crashlytics.setUserIdentifier(it.id.toString())
 
                     userGroup.visibility = View.VISIBLE
                     progressBar.visibility = View.GONE

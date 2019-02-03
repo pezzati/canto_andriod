@@ -4,12 +4,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.crashlytics.android.Crashlytics
+import com.google.firebase.analytics.FirebaseAnalytics
 import com.hmomeni.canto.R
 import com.hmomeni.canto.adapters.rcl.ListPostsRclAdapter
 import com.hmomeni.canto.utils.ViewModelFactory
@@ -23,7 +23,7 @@ import io.reactivex.rxkotlin.addTo
 import kotlinx.android.synthetic.main.fragment_list.*
 import timber.log.Timber
 
-class ListFragment : Fragment() {
+class ListFragment : BaseFragment() {
 
     companion object {
         fun getBundle(type: String, objectId: Int, title: String, urlPath: String): Bundle {
@@ -51,6 +51,12 @@ class ListFragment : Fragment() {
             title = it.getString("title")
             viewModel.type = it.getString("type")
             viewModel.urlPath = it.getString("url_path")
+            FirebaseAnalytics.getInstance(context!!)
+                    .logEvent("List", Bundle().apply {
+                        putString("url", viewModel.urlPath)
+                        putString("type", viewModel.type)
+                        putString("title", title)
+                    })
         }
         listAdapter = ListPostsRclAdapter(viewModel.posts, R.layout.rcl_item_list_post)
     }

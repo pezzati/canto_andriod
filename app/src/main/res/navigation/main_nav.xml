@@ -141,12 +141,12 @@
         tools:layout="@layout/activity_shop" />
     <fragment
         android:id="@+id/infoFragment"
-        android:name="com.hmomeni.canto.activities.InfoFragment"
+        android:name="com.hmomeni.canto.fragments.InfoFragment"
         android:label="fragment_info"
         tools:layout="@layout/fragment_info" />
     <fragment
         android:id="@+id/editUserFragment"
-        android:name="com.hmomeni.canto.activities.EditUserFragment"
+        android:name="com.hmomeni.canto.fragments.EditUserFragment"
         android:label="fragment_edit_user"
         tools:layout="@layout/fragment_edit_user" />
 </navigation>

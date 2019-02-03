@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import com.crashlytics.android.Crashlytics
+import com.google.firebase.analytics.FirebaseAnalytics
 import com.hmomeni.canto.App
 import com.hmomeni.canto.R
 import com.hmomeni.canto.entities.Post
@@ -173,7 +174,10 @@ class MainActivity : BaseActivity() {
                             }).show()
                 }).addTo(compositeDisposable)
 
-        viewModel.getUser().iomain().subscribe({}, {
+        viewModel.getUser().iomain().subscribe({
+            FirebaseAnalytics.getInstance(this).setUserId(it.id.toString())
+            Crashlytics.setUserIdentifier(it.id.toString())
+        }, {
             Crashlytics.logException(it)
             Timber.e(it)
         }).addTo(compositeDisposable)

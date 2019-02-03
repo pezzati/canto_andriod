@@ -1,4 +1,4 @@
-package com.hmomeni.canto.activities
+package com.hmomeni.canto.fragments
 
 import android.animation.Animator
 import android.os.Bundle
@@ -9,7 +9,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
@@ -25,7 +24,7 @@ import timber.log.Timber
 import java.util.regex.Pattern
 
 
-class EditUserFragment : Fragment() {
+class EditUserFragment : BaseFragment() {
     lateinit var viewModel: EditUserViewModel
     private val compositeDisposable = CompositeDisposable()
 

@@ -3,6 +3,7 @@ package com.hmomeni.canto.activities
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import com.google.firebase.analytics.FirebaseAnalytics
 import com.hmomeni.canto.utils.FA_LANG
 import com.hmomeni.canto.utils.LogoutEvent
 import com.hmomeni.canto.utils.UserSession
@@ -24,6 +25,8 @@ open class BaseActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         app().di.inject(this)
+        FirebaseAnalytics.getInstance(this)
+                .setCurrentScreen(this, this.javaClass.simpleName, null)
 
         logoutDisposable = logoutEvent
                 .observeOn(AndroidSchedulers.mainThread())
@@ -39,12 +42,7 @@ open class BaseActivity : AppCompatActivity() {
     }
 
     override fun onResume() {
-        val dm = resources.displayMetrics
-        val conf = resources.configuration
-        val locale = Locale(FA_LANG.toLowerCase())
-        Locale.setDefault(locale)
-        conf.setLocale(locale)
-        resources.updateConfiguration(conf, dm)
+        applyLang()
         super.onResume()
     }
 

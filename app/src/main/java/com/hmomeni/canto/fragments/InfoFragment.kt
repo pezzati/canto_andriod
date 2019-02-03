@@ -1,4 +1,4 @@
-package com.hmomeni.canto.activities
+package com.hmomeni.canto.fragments
 
 import android.content.Intent
 import android.net.Uri
@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.hmomeni.canto.BuildConfig
 import com.hmomeni.canto.R
@@ -15,7 +14,7 @@ import com.hmomeni.canto.utils.PaymentDialog
 import kotlinx.android.synthetic.main.fragment_info.*
 import java.util.*
 
-class InfoFragment : Fragment(), View.OnClickListener {
+class InfoFragment : BaseFragment(), View.OnClickListener {
     override fun onClick(v: View) {
         when (v.id) {
             R.id.backBtn -> findNavController().popBackStack()

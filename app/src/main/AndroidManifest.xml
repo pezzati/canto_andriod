@@ -19,7 +19,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activities.InfoFragment"></activity>
+        <activity android:name=".fragments.InfoFragment"></activity>
 
         <provider
             android:name="androidx.core.content.FileProvider"
@@ -60,7 +60,7 @@
             android:name=".activities.VideoPlayActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activities.EditUserFragment"
+            android:name=".fragments.EditUserFragment"
             android:exported="true" />
         <activity
             android:name=".activities.PaymentActivity"

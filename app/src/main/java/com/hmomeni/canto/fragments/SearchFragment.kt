@@ -4,9 +4,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.firebase.analytics.FirebaseAnalytics
 import com.hmomeni.canto.R
 import com.hmomeni.canto.adapters.rcl.ListPostsRclAdapter
 import com.hmomeni.canto.entities.Post
@@ -24,7 +24,7 @@ import kotlinx.android.synthetic.main.fragment_search.*
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
 
-class SearchFragment : Fragment() {
+class SearchFragment : BaseFragment() {
     private lateinit var viewModel: SearchViewModel
     private val compositeDisposable = CompositeDisposable()
     private val posts: MutableList<Post> = mutableListOf()
@@ -43,14 +43,21 @@ class SearchFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         searchInput.afterTextChangeEvents()
-                .filter { !it.editable.isNullOrEmpty() }
-                .debounce(500, TimeUnit.MILLISECONDS)
+                .debounce(1000, TimeUnit.MILLISECONDS)
+                .filter { !it.editable.isNullOrBlank() }
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
                     searchDisposable?.let {
                         it.dispose()
                         compositeDisposable.remove(it)
                     }
+                    if (it.editable.isNullOrBlank()) {
+                        return@subscribe
+                    }
+                    FirebaseAnalytics.getInstance(context!!)
+                            .logEvent(FirebaseAnalytics.Event.SEARCH, Bundle().apply {
+                                putString(FirebaseAnalytics.Param.SEARCH_TERM, it.editable.toString())
+                            })
                     searchDisposable = viewModel.api
                             .searchInGenres(it.editable.toString())
                             .map { it.data }

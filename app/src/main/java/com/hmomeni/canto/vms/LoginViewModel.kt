@@ -29,7 +29,7 @@ class LoginViewModel : ViewModel(), DIComponent.Injectable {
     @Inject
     lateinit var userSession: UserSession
 
-    lateinit var login: String
+    private lateinit var login: String
 
     lateinit var signupMode: SignupMode
 

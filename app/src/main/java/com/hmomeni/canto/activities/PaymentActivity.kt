@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProviders
+import com.google.firebase.analytics.FirebaseAnalytics
 import com.hmomeni.canto.BuildConfig
 import com.hmomeni.canto.R
 import com.hmomeni.canto.utils.ViewModelFactory
@@ -107,6 +108,10 @@ class PaymentActivity : BaseActivity() {
                 .subscribe({
                     iabHelper.consumeAsync(purchase) { _, result ->
                         if (result.isSuccess) {
+                            FirebaseAnalytics.getInstance(this)
+                                    .logEvent(FirebaseAnalytics.Event.ECOMMERCE_PURCHASE, Bundle().apply {
+                                        putString(FirebaseAnalytics.Param.ITEM_ID, purchase.sku)
+                                    })
                             showSuccess()
                         } else {
                             Timber.e("Consuming purchase failed: %s", result.message)

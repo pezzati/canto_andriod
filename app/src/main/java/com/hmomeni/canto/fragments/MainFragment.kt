@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.crashlytics.android.Crashlytics
@@ -25,7 +24,7 @@ import io.reactivex.rxkotlin.addTo
 import kotlinx.android.synthetic.main.fragment_main.*
 import timber.log.Timber
 
-class MainFragment : Fragment() {
+class MainFragment : BaseFragment() {
     private lateinit var viewModel: MainViewModel
     private val compositeDisposable = CompositeDisposable()
 

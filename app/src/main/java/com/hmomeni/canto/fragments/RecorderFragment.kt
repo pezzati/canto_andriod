@@ -22,7 +22,6 @@ import android.view.*
 import android.widget.Toast
 import android.widget.Toast.LENGTH_SHORT
 import androidx.core.content.ContextCompat.checkSelfPermission
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.navigation.fragment.findNavController
 import androidx.viewpager.widget.ViewPager
@@ -52,7 +51,7 @@ import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 
-class RecorderFragment : Fragment() {
+class RecorderFragment : BaseFragment() {
     private val FRAGMENT_DIALOG = "dialog"
 
     private var selectPostId: Int = 1085
