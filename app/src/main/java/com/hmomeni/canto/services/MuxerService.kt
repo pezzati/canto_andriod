@@ -14,7 +14,6 @@ import android.os.IBinder
 import android.provider.MediaStore.Video.Thumbnails.MINI_KIND
 import android.widget.Toast
 import androidx.core.app.NotificationCompat
-import androidx.core.app.NotificationManagerCompat
 import com.crashlytics.android.Crashlytics
 import com.hmomeni.canto.R
 import com.hmomeni.canto.activities.MainActivity
@@ -26,13 +25,18 @@ import com.hmomeni.canto.utils.*
 import com.hmomeni.canto.utils.ffmpeg.FFcommandExecuteResponseHandler
 import com.hmomeni.canto.utils.ffmpeg.FFmpeg
 import com.hmomeni.canto.vms.EditViewModel
-import io.reactivex.Observable
+import io.reactivex.BackpressureStrategy
+import io.reactivex.Flowable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import timber.log.Timber
+import java.io.File
 import java.util.*
+import java.util.regex.Pattern
 
 const val CRF_FACTOR = 24 // less is more quality
+val DURATION_PATTERN: Pattern = Pattern.compile("(.*)Duration: 00:([0-9]{2}):([0-9]{2})\\.([0-9]{2}),(.*)")
+val PROGRESS_PATTERN: Pattern = Pattern.compile("(.*)time=00:([0-9]{2}):([0-9]{2})\\.([0-9]{2})(.*)")
 
 class MuxerService : Service() {
     override fun onBind(intent: Intent?): IBinder? {
@@ -50,7 +54,7 @@ class MuxerService : Service() {
     private var inProgress = false
     private var activeJob: MuxJob? = null
     private lateinit var viewModel: EditViewModel
-    private lateinit var mNotificationManager: NotificationManagerCompat
+    private lateinit var nManager: NotificationManager
     private lateinit var watermark: String
 
     override fun onCreate() {
@@ -63,7 +67,13 @@ class MuxerService : Service() {
         super.onCreate()
         watermark = installWatermark(this)
         viewModel = EditViewModel(app())
-        mNotificationManager = NotificationManagerCompat.from(this)
+
+
+        nManager = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            getSystemService(NotificationManager::class.java)
+        } else {
+            getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        }
         createNotificationChannel()
     }
 
@@ -92,91 +102,120 @@ class MuxerService : Service() {
         jobList.removeAt(0)
 
         activeJob!!.let { job ->
-            createNotification(false, job.inputFiles[0])
-            val ffmpeg = FFmpeg.getInstance(this)
-            if (!ffmpeg.isSupported) {
-                Toast.makeText(this, "FFMPEG not supported!", Toast.LENGTH_SHORT).show()
-                stopSelf()
-            }
-
-            val commands: MutableList<String> = mutableListOf()
-            when (job.type) {
-                PROJECT_TYPE_DUBSMASH -> {
-                    commands += listOf(
-                            "-i", job.inputFiles[0],
-                            "-i", watermark,
-                            "-i", job.inputFiles[1]
-                    )
-                    commands.addAll(listOf(
-                            "-filter_complex", "[0:v]crop=in_h*0.5625:in_h [bg];[1:v]scale=-2:50 [ovrl];[bg][ovrl]overlay=x=(main_w-overlay_w-40):y=(main_h-overlay_h-40)",
-                            "-codec:a", "aac",
-                            "-codec:v", "libx264",
-                            "-crf", "$CRF_FACTOR",
-                            "-preset", "ultrafast",
-                            "-map", "0:v:0",
-                            "-map", "2:a:0",
-                            "-shortest", "-y", job.outputFile
-                    ))
-                }
-                PROJECT_TYPE_SINGING -> {
-
-                    commands += listOf(
-                            "-i", job.inputFiles[0],
-                            "-i", watermark,
-                            "-i", job.inputFiles[1],
-                            "-i", job.inputFiles[2]
-                    )
-
-                    commands.addAll(listOf(
-                            "-filter_complex", "[0:v]crop=in_h*0.5625:in_h [bg];[1:v]scale=-2:50 [ovrl];[bg][ovrl]overlay=x=(main_w-overlay_w-40):y=(main_h-overlay_h-40);[2:0][3:0]amix=inputs=2:duration=longest",
-                            "-codec:a", "aac",
-                            "-codec:v", "libx264",
-                            "-crf", "$CRF_FACTOR",
-                            "-preset", "ultrafast",
-                            "-map", "0:v",
-                            "-map", "2:a",
-                            "-shortest", "-y",
-                            job.outputFile
-                    ))
-                }
-            }
-
-
-            ffmpeg.execute(
-                    commands.toTypedArray(),
-                    object : FFcommandExecuteResponseHandler {
-                        override fun onFinish() {
-                            Timber.d("Mux finished")
-                            /*job.inputFiles.forEach {
-                                Timber.d("Deleting %s, %b", it, File(it).delete())
-                            }*/
+            createNotification(job.inputFiles[0])
+                    .subscribeOn(Schedulers.computation())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe({ nBuilder ->
+                        val ffmpeg = FFmpeg.getInstance(this)
+                        if (!ffmpeg.isSupported) {
+                            Toast.makeText(this, "FFMPEG not supported!", Toast.LENGTH_SHORT).show()
+                            stopSelf()
                         }
 
-                        override fun onSuccess(message: String?) {
-                            Timber.d("Mux successful: %s", message)
-                            saveProject(job)
+                        val commands: MutableList<String> = mutableListOf()
+                        when (job.type) {
+                            PROJECT_TYPE_DUBSMASH -> {
+                                commands += listOf(
+                                        "-i", job.inputFiles[0],
+                                        "-i", watermark,
+                                        "-i", job.inputFiles[1]
+                                )
+                                commands.addAll(listOf(
+                                        "-filter_complex", "[0:v]crop=in_h*0.5625:in_h [bg];[1:v]scale=-2:50 [ovrl];[bg][ovrl]overlay=x=(main_w-overlay_w-40):y=(main_h-overlay_h-40)",
+                                        "-codec:a", "aac",
+                                        "-codec:v", "libx264",
+                                        "-crf", "$CRF_FACTOR",
+                                        "-preset", "ultrafast",
+                                        "-map", "0:v:0",
+                                        "-map", "2:a:0",
+                                        "-shortest", "-y", job.outputFile
+                                ))
+                            }
+                            PROJECT_TYPE_SINGING -> {
+
+                                commands += listOf(
+                                        "-i", job.inputFiles[0],
+                                        "-i", watermark,
+                                        "-i", job.inputFiles[1],
+                                        "-i", job.inputFiles[2]
+                                )
+
+                                commands.addAll(listOf(
+                                        "-filter_complex", "[0:v]crop=in_h*0.5625:in_h [bg];[1:v]scale=-2:50 [ovrl];[bg][ovrl]overlay=x=(main_w-overlay_w-40):y=(main_h-overlay_h-40);[2:0][3:0]amix=inputs=2:duration=longest",
+                                        "-codec:a", "aac",
+                                        "-codec:v", "libx264",
+                                        "-crf", "$CRF_FACTOR",
+                                        "-preset", "ultrafast",
+                                        "-map", "0:v",
+                                        "-map", "2:a",
+                                        "-shortest", "-y",
+                                        job.outputFile
+                                ))
+                            }
                         }
 
-                        override fun onFailure(message: String?) {
-                            Timber.e("Mux failed: %s", message)
-                            Crashlytics.logException(Exception(message))
-                            createNotification(true, job.outputFile, true)
-                        }
+                        var duration: Long? = null
+                        ffmpeg.execute(
+                                commands.toTypedArray(),
+                                object : FFcommandExecuteResponseHandler {
+                                    override fun onFinish() {
+                                        Timber.d("Mux finished")
+                                        inProgress = false
+                                        job.inputFiles.forEach {
+                                            Timber.d("Deleting %s, %b", it, File(it).delete())
+                                        }
+                                    }
 
-                        override fun onProgress(message: String?) {
-                            Timber.d("Mux progress: %s", message)
-                        }
+                                    override fun onSuccess(message: String?) {
+                                        Timber.d("Mux successful: %s", message)
+                                        saveProject(job, nBuilder)
+                                    }
 
-                        override fun onStart() {
-                            Timber.d("Mux started")
-                        }
-                    }
-            )
+                                    override fun onFailure(message: String?) {
+                                        Timber.e("Mux failed: %s", message)
+                                        Crashlytics.logException(Exception(message))
+                                        failNotify(nBuilder)
+                                    }
+
+                                    override fun onProgress(message: String?) {
+                                        Timber.d("Mux progress: %s", message)
+                                        if (duration == null) {
+                                            val durationMatcher = DURATION_PATTERN.matcher(message)
+                                            if (durationMatcher.matches()) {
+                                                duration = durationMatcher.group(2).toLong() * 60000 + durationMatcher.group(3).toLong() * 1000 + durationMatcher.group(4).toLong()
+                                                nBuilder.setProgress(100, 0, false)
+                                                nManager.notify(hashCode(), nBuilder.build())
+                                            }
+                                        }
+
+                                        val progressMatcher = PROGRESS_PATTERN.matcher(message)
+                                        if (progressMatcher.matches()) {
+                                            val progress = progressMatcher.group(2).toLong() * 60000 + progressMatcher.group(3).toLong() * 1000 + progressMatcher.group(4).toLong()
+
+                                            val percent = (progress.toFloat() / duration!!.toFloat() * 100f).toInt()
+
+                                            nBuilder.setContentText(getString(R.string.progres_x, percent))
+                                            nBuilder.setProgress(100, percent, false)
+                                            nManager.notify(hashCode(), nBuilder.build())
+                                        }
+                                    }
+
+                                    override fun onStart() {
+                                        Timber.d("Mux started")
+                                        startForeground(hashCode(), nBuilder.build())
+                                    }
+                                }
+                        )
+                    }, {
+                        Timber.e(it)
+                        Crashlytics.logException(it)
+                    })
+
         }
     }
 
     @SuppressLint("CheckResult")
-    private fun saveProject(job: MuxJob) {
+    private fun saveProject(job: MuxJob, nBuilder: NotificationCompat.Builder) {
         viewModel.getPost(job.postId)
                 .iomain()
                 .subscribe({
@@ -188,14 +227,14 @@ class MuxerService : Service() {
                             .iomain()
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribe({
-                                createNotification(true, job.outputFile)
+                                successNotify(nBuilder)
                             }, {
-                                createNotification(true, job.outputFile, false)
+                                failNotify(nBuilder)
                                 Timber.e(it)
                                 Crashlytics.logException(it)
                             })
                 }, {
-                    createNotification(true, job.outputFile, false)
+                    failNotify(nBuilder)
                     Crashlytics.logException(it)
                     Timber.e(it)
                 })
@@ -205,55 +244,49 @@ class MuxerService : Service() {
 
     private fun createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val name = "Timber"
-            val importance = NotificationManager.IMPORTANCE_LOW
-            val manager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-            val mChannel = NotificationChannel(CHANNEL_ID, name, importance)
-            manager.createNotificationChannel(mChannel)
+            val channel = NotificationChannel(CHANNEL_ID, CHANNEL_ID, NotificationManager.IMPORTANCE_NONE)
+            channel.enableVibration(false)
+            channel.enableLights(false)
+            channel.setSound(null, null)
+            nManager.createNotificationChannel(channel)
         }
     }
 
     @SuppressLint("CheckResult")
-    private fun createNotification(finish: Boolean, videoPath: String, failed: Boolean = false) {
-        Observable.create<Bitmap> {
+    private fun createNotification(videoPath: String): Flowable<NotificationCompat.Builder> {
+        return Flowable.create<Bitmap>({
             var thumbnail = ThumbnailUtils.createVideoThumbnail(videoPath, MINI_KIND)
             if (thumbnail == null) {
                 thumbnail = getBitmapFromVectorDrawable(this, R.drawable.ic_error)
             }
             it.onNext(thumbnail)
             it.onComplete()
-        }.subscribeOn(Schedulers.computation())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({
-                    val pendingIntent = PendingIntent.getActivity(this, hashCode(), Intent(this, MainActivity::class.java).apply {
-                        putExtra("target", "profile")
-                    }, PendingIntent.FLAG_UPDATE_CURRENT)
+        }, BackpressureStrategy.BUFFER).map {
+            val pendingIntent = PendingIntent.getActivity(this, hashCode(), Intent(this, MainActivity::class.java).apply {
+                putExtra("target", "profile")
+            }, PendingIntent.FLAG_UPDATE_CURRENT)
 
-                    val nBuilder = NotificationCompat.Builder(this, CHANNEL_ID)
-                            .setContentTitle(getString(R.string.canto))
-                            .setContentText(getString(R.string.muxing_project))
-                            .setSmallIcon(R.drawable.cantoriom)
-                            .setLargeIcon(it)
+            val nBuilder = NotificationCompat.Builder(this, CHANNEL_ID)
+                    .setContentTitle(getString(R.string.muxing_project))
+                    .setSmallIcon(R.drawable.cantoriom)
+                    .setLargeIcon(it)
+            nBuilder.setContentIntent(pendingIntent)
+            return@map nBuilder
 
-                    if (!finish) nBuilder.setProgress(100, 100, true)
+        }
+    }
 
-                    if (finish) {
-                        nBuilder.setContentIntent(pendingIntent)
-                        if (failed) {
-                            nBuilder.setContentText(getString(R.string.muxing_failed))
-                        } else {
-                            nBuilder.setContentText(getString(R.string.muxing_done))
-                        }
-                    }
-                    if (finish) {
-                        stopForeground(true)
-                        mNotificationManager.notify(hashCode(), nBuilder.build())
-                    } else {
-                        startForeground(hashCode(), nBuilder.build())
-                    }
-                }, {
-                    Crashlytics.logException(it)
-                    Timber.e(it)
-                })
+    private fun failNotify(builder: NotificationCompat.Builder) {
+        stopForeground(true)
+        builder.setProgress(0, 0, false)
+        builder.setContentText(getString(R.string.muxing_failed))
+        nManager.notify(hashCode(), builder.build())
+    }
+
+    private fun successNotify(builder: NotificationCompat.Builder) {
+        stopForeground(true)
+        builder.setProgress(0, 0, false)
+        builder.setContentText(getString(R.string.muxing_done))
+        nManager.notify(hashCode(), builder.build())
     }
 }
