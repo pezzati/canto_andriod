@@ -148,10 +148,15 @@ class EditUserFragment : Fragment() {
         recyclerView.animate().alpha(1f).scaleY(1f).scaleX(1f).setListener(null)
     }
 
+    private var inProgress = false
     private fun hideAvatars() {
+        if (inProgress) return
+
+        inProgress = true
         recyclerView.animate().alpha(0f).scaleY(2f).scaleX(2f).setListener(object : MyAnimatorListener() {
             override fun onAnimationEnd(animation: Animator?) {
                 recyclerView.visibility = View.GONE
+                inProgress = false
             }
         })
     }
