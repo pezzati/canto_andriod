@@ -7,6 +7,7 @@ import android.os.Handler
 import android.view.SurfaceHolder
 import android.view.View
 import androidx.core.content.FileProvider
+import com.crashlytics.android.Crashlytics
 import com.hmomeni.canto.R
 import com.hmomeni.canto.entities.FullPost
 import com.hmomeni.canto.entities.Project
@@ -16,6 +17,7 @@ import com.hmomeni.canto.persistence.ProjectDao
 import com.hmomeni.canto.persistence.TrackDao
 import com.hmomeni.canto.utils.*
 import io.reactivex.Single
+import io.reactivex.disposables.Disposable
 import io.reactivex.functions.Consumer
 import kotlinx.android.synthetic.main.activity_video_play.*
 import timber.log.Timber
@@ -34,13 +36,15 @@ class VideoPlayActivity : BaseFullActivity(), View.OnClickListener {
 
     var filePath: String? = null
 
+    private var disposable: Disposable? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         app().di.inject(this)
         setContentView(R.layout.activity_video_play)
 
-        val args = VideoPlayActivityArgs.fromBundle(intent.extras)
-        projectDao
+        val args = VideoPlayActivityArgs.fromBundle(intent.extras!!)
+        disposable = projectDao
                 .getProject(args.project.toLong())
                 .flatMap { p ->
                     Single.create<Pair<Project, FullPost>> { e -> postDao.getPost(p.postId).subscribe(Consumer { e.onSuccess(Pair(p, it)) }) }
@@ -53,6 +57,7 @@ class VideoPlayActivity : BaseFullActivity(), View.OnClickListener {
                     prepareView(it)
                 }, {
                     Timber.e(it)
+                    Crashlytics.logException(it)
                 })
 
         gradientView.setOnClickListener(this)
@@ -89,10 +94,6 @@ class VideoPlayActivity : BaseFullActivity(), View.OnClickListener {
                 }
             }
         }
-    }
-
-    override fun onResume() {
-        super.onResume()
     }
 
     override fun onStop() {
@@ -157,6 +158,7 @@ class VideoPlayActivity : BaseFullActivity(), View.OnClickListener {
     }
 
     private fun cleanUp() {
+        disposable?.dispose()
         mediaPlayer.stop()
         mediaPlayer.release()
     }

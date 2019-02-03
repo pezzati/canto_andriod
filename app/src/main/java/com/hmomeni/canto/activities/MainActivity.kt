@@ -86,9 +86,6 @@ class MainActivity : BaseActivity() {
                             }
                             navController.navigate(R.id.action_mainFragment_to_profileFragment)
                         }
-                        is ProjectEvent -> {
-                            navController.navigate(R.id.action_profileFragment_to_videoPlayActivity, VideoPlayActivityArgs.Builder(it.projectId.toInt()).build().toBundle())
-                        }
                     }
                 }
         var userNavFired = false

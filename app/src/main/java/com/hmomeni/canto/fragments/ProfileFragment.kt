@@ -16,7 +16,6 @@ import com.crashlytics.android.Crashlytics
 import com.hmomeni.canto.R
 import com.hmomeni.canto.adapters.rcl.ProjectsRclAdapter
 import com.hmomeni.canto.utils.*
-import com.hmomeni.canto.utils.navigation.ProjectEvent
 import com.hmomeni.canto.vms.ProfileViewModel
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
@@ -52,7 +51,7 @@ class ProfileFragment : Fragment(), View.OnClickListener {
                     }
                     recyclerView.adapter = ProjectsRclAdapter(l).also {
                         it.clickPublisher.subscribe { pos ->
-                            viewModel.navEvents.onNext(ProjectEvent(l[pos].projectId))
+                            findNavController().navigate(ProfileFragmentDirections.actionProfileFragmentToVideoPlayActivity(l[pos].projectId.toInt()))
                         }
                     }
                 }, {
