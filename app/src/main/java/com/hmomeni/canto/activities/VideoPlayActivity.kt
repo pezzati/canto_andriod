@@ -122,29 +122,34 @@ class VideoPlayActivity : BaseFullActivity(), View.OnClickListener {
                 .rounded(dpToPx(5))
                 .into(artistPhoto)
 
+        try {
+            mediaPlayer.setDataSource(track.filePath)
+            mediaPlayer.setOnPreparedListener {
+                resume()
+            }
+            mediaPlayer.isLooping = true
+            mediaPlayer.prepareAsync()
+            if (surfaceView.holder.surface.isValid) {
+                mediaPlayer.setSurface(surfaceView.holder.surface)
+            } else {
+                surfaceView.holder.addCallback(object : SurfaceHolder.Callback {
+                    override fun surfaceChanged(holder: SurfaceHolder, format: Int, w: Int, h: Int) {
 
-        mediaPlayer.setDataSource(track.filePath)
-        mediaPlayer.setOnPreparedListener {
-            resume()
-        }
-        mediaPlayer.isLooping = true
-        mediaPlayer.prepareAsync()
-        if (surfaceView.holder.surface.isValid) {
-            mediaPlayer.setSurface(surfaceView.holder.surface)
-        } else {
-            surfaceView.holder.addCallback(object : SurfaceHolder.Callback {
-                override fun surfaceChanged(holder: SurfaceHolder, format: Int, w: Int, h: Int) {
+                    }
 
-                }
+                    override fun surfaceDestroyed(holder: SurfaceHolder) {
+                    }
 
-                override fun surfaceDestroyed(holder: SurfaceHolder) {
-                }
-
-                override fun surfaceCreated(holder: SurfaceHolder) {
-                    Timber.d("Surface Ready!")
-                    mediaPlayer.setSurface(holder.surface)
-                }
-            })
+                    override fun surfaceCreated(holder: SurfaceHolder) {
+                        Timber.d("Surface Ready!")
+                        mediaPlayer.setSurface(holder.surface)
+                    }
+                })
+            }
+        } catch (e: Exception) {
+            Timber.e(e)
+            Crashlytics.setString("file_path", track.filePath)
+            Crashlytics.logException(e)
         }
     }
 
@@ -163,7 +168,7 @@ class VideoPlayActivity : BaseFullActivity(), View.OnClickListener {
         mediaPlayer.release()
     }
 
-    val handler = Handler()
+    private val handler = Handler()
     private fun timer() {
         if (!isDestroyed) {
             val time = mediaPlayer.currentPosition / 1000
