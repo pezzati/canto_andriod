@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.hmomeni.canto.BuildConfig
 import com.hmomeni.canto.R
+import com.hmomeni.canto.utils.CantoDialog
 import com.hmomeni.canto.utils.PaymentDialog
 import kotlinx.android.synthetic.main.fragment_info.*
 import java.util.*
@@ -22,6 +23,7 @@ class InfoFragment : Fragment(), View.OnClickListener {
             R.id.telegramSupportBtn -> openLink("http://t.me/cantoapp")
             R.id.instagramBtn -> openLink("http://instagram.com/canto_app")
             R.id.webSiteBtn -> openLink("http://canto-app.ir")
+            R.id.termsBtn -> CantoDialog(context!!, getString(R.string.terms_and_conditions), getString(R.string.terms), showNegativeButton = false).show()
             R.id.requestSongBtn -> PaymentDialog(
                     context!!,
                     getString(R.string.request_song),
