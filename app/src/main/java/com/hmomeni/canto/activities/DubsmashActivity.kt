@@ -14,7 +14,8 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
-import androidx.recyclerview.widget.LinearLayoutManager
+import com.azoft.carousellayoutmanager.CarouselLayoutManager
+import com.azoft.carousellayoutmanager.CenterScrollListener
 import com.hmomeni.canto.App
 import com.hmomeni.canto.R
 import com.hmomeni.canto.adapters.rcl.LyricRclAdapter
@@ -199,12 +200,16 @@ class DubsmashActivity : CameraActivity() {
             lyricRecyclerVIew.visibility = View.GONE
             toggleLyricsBtn.visibility = View.GONE
         } else {
-            lyricRecyclerVIew.layoutManager = object : LinearLayoutManager(this) {
+            lyricRecyclerVIew.layoutManager = object : CarouselLayoutManager(CarouselLayoutManager.VERTICAL) {
                 override fun canScrollVertically(): Boolean {
                     return false
                 }
+            }.apply {
+                maxVisibleItems = 1
             }
             lyricRecyclerVIew.adapter = LyricRclAdapter(midiItems)
+            lyricRecyclerVIew.setHasFixedSize(true)
+            lyricRecyclerVIew.addOnScrollListener(CenterScrollListener())
 
 
             toggleLyricsBtn.setOnClickListener {

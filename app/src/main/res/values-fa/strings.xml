@@ -108,4 +108,5 @@
     <string name="show_terms">نمایش قوانین</string>
     <string name="please_accept_terms">لطفا قبل از ادامه قوانین را خوانده و آن را بپذیرید</string>
     <string name="progres_x">پیشرفت: %d٪</string>
+    <string name="tap_play_button_start_song">برای شروع رو دکمه پخش کلیک کنید</string>
 </resources>

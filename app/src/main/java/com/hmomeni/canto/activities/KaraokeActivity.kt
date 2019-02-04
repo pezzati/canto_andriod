@@ -8,7 +8,8 @@ import android.util.SparseIntArray
 import android.view.View
 import android.widget.SeekBar
 import android.widget.Toast
-import androidx.recyclerview.widget.LinearLayoutManager
+import com.azoft.carousellayoutmanager.CarouselLayoutManager
+import com.azoft.carousellayoutmanager.CenterScrollListener
 import com.hmomeni.canto.App
 import com.hmomeni.canto.R
 import com.hmomeni.canto.adapters.rcl.LyricRclAdapter
@@ -129,12 +130,16 @@ class KaraokeActivity : BaseFullActivity() {
                 .into(background)
         background.startRotation()
 
-        lyricRecyclerVIew.layoutManager = object : LinearLayoutManager(this) {
+        lyricRecyclerVIew.layoutManager = object : CarouselLayoutManager(CarouselLayoutManager.VERTICAL) {
             override fun canScrollVertically(): Boolean {
                 return false
             }
+        }.apply {
+            maxVisibleItems = 1
         }
         lyricRecyclerVIew.adapter = LyricRclAdapter(midiItems)
+        lyricRecyclerVIew.setHasFixedSize(true)
+        lyricRecyclerVIew.addOnScrollListener(CenterScrollListener())
 
 
         toggleLyricsBtn.setOnClickListener {
@@ -228,7 +233,7 @@ class KaraokeActivity : BaseFullActivity() {
             ACTION_DOWNLOAD_FINISH -> {
                 recordBtn.gone()
                 playBtn.visible()
-                guideTextView1.setText(R.string.tap_record_to_start)
+                guideTextView1.setText(R.string.tap_play_button_start_song)
             }
             ACTION_DOWNLOAD_FAILED -> {
                 Toast.makeText(this, R.string.download_failed_try_again, Toast.LENGTH_SHORT).show()

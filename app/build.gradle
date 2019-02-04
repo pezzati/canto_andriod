@@ -165,6 +165,8 @@ dependencies {
 
     implementation 'com.romandanylyk:pageindicatorview:1.0.3'
 
+    implementation 'com.azoft.carousellayoutmanager:carousel:1.2.4'
+
 }
 
 apply plugin: 'com.google.gms.google-services'
