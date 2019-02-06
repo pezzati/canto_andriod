@@ -378,7 +378,9 @@ class DubsmashActivity : CameraActivity() {
     private var countDown = 3
     private fun startRecordCountdown() {
         if (countDown < 0) {
-            startDubsmash()
+            if (!isDestroyed) {
+                startDubsmash()
+            }
             return
         }
         val textView = TextView(this).apply {
