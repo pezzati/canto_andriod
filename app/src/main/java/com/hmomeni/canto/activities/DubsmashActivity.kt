@@ -41,9 +41,10 @@ const val RATIO_SQUARE = 2
 const val INTENT_EXTRA_POST = "record_post"
 const val INTENT_EXTRA_TYPE = "record_type"
 const val INTENT_EXTRA_RATIO = "record_ratio"
+const val INTENT_EXTRA_TIMESTAMP = "time_stamp"
 
 class DubsmashActivity : CameraActivity() {
-
+    val timeStamp = System.currentTimeMillis()
 
     init {
         System.loadLibrary("Dubsmash")
@@ -52,7 +53,7 @@ class DubsmashActivity : CameraActivity() {
     override fun getTextureView(): TextureView = textureView
 
     override fun getVideoFilePath(): String {
-        return File(baseFile, "dubsmash.mp4").absolutePath
+        return File(baseFile, "dubsmash-$timeStamp.mp4").absolutePath
     }
 
     override fun onRecordStarted() {
@@ -74,7 +75,6 @@ class DubsmashActivity : CameraActivity() {
     }
 
 
-    private var audioInitialized: Boolean = false
     private var isPlaying: Boolean = false
     private var isRecording: Boolean = false
 
@@ -362,12 +362,11 @@ class DubsmashActivity : CameraActivity() {
                 bufferSize,
                 sampleRate,
                 type == PROJECT_TYPE_SINGING,
-                File(baseFile, "dubsmash").absolutePath,
-                File(baseFile, "temp").absolutePath,
-                File(baseFile, "dubsmash-mic").absolutePath,
-                File(baseFile, "tempmic").absolutePath
+                File(baseFile, "dubsmash-$timeStamp").absolutePath,
+                File(baseFile, "temp-$timeStamp").absolutePath,
+                File(baseFile, "dubsmash-mic-$timeStamp").absolutePath,
+                File(baseFile, "tempmic-$timeStamp").absolutePath
         )
-        audioInitialized = true
     }
 
     private fun startPlayBack() {
@@ -437,7 +436,13 @@ class DubsmashActivity : CameraActivity() {
         isRecording = false
         stopRecordingVideo()
         StopAudio()
-        startActivity(Intent(this, EditActivity::class.java).putExtra(INTENT_EXTRA_TYPE, type).putExtra(INTENT_EXTRA_POST, App.gson.toJson(post)).putExtra(INTENT_EXTRA_RATIO, mRatio))
+        startActivity(
+                Intent(this, EditActivity::class.java)
+                        .putExtra(INTENT_EXTRA_TYPE, type)
+                        .putExtra(INTENT_EXTRA_POST, App.gson.toJson(post))
+                        .putExtra(INTENT_EXTRA_RATIO, mRatio)
+                        .putExtra(INTENT_EXTRA_TIMESTAMP, timeStamp)
+        )
         finish()
     }
 
@@ -455,17 +460,14 @@ class DubsmashActivity : CameraActivity() {
 
     private external fun InitAudio(bufferSize: Int, sampleRate: Int, isSinging: Boolean, outputPath: String, tempPath: String, outputPathMic: String, tempPathMic: String)
     private external fun OpenFile(filePath: String, length: Int): Double
-    private external fun TogglePlayback()
     private external fun StartAudio()
     private external fun StartRecording()
     private external fun StopAudio()
     private external fun GetProgressMS(): Double
     private external fun GetDurationMS(): Double
-    private external fun Seek(percent: Double)
     private external fun SeekMS(percent: Double)
     private external fun SetPitch(pitchShift: Int)
     private external fun SetTempo(tempo: Double)
-    private external fun IsPlaying(): Boolean
     private external fun Cleanup()
 
 }

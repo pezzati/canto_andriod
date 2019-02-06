@@ -13,6 +13,8 @@ import android.view.Surface
 import android.view.TextureView
 import android.view.View
 import android.widget.SeekBar
+import android.widget.Toast
+import com.crashlytics.android.Crashlytics
 import com.hmomeni.canto.App
 import com.hmomeni.canto.R
 import com.hmomeni.canto.entities.FullPost
@@ -48,6 +50,7 @@ class EditActivity : BaseFullActivity(), View.OnClickListener {
     private lateinit var outFile: File
 
     private var ratio: Int = RATIO_FULLSCREEN
+    private var timeStamp: Long = 0L
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -66,13 +69,14 @@ class EditActivity : BaseFullActivity(), View.OnClickListener {
         type = intent.getIntExtra(INTENT_EXTRA_TYPE, type)
         post = App.gson.fromJson(intent.getStringExtra(INTENT_EXTRA_POST), FullPost::class.java)
         ratio = intent.getIntExtra(INTENT_EXTRA_RATIO, RATIO_FULLSCREEN)
+        timeStamp = intent.getLongExtra(INTENT_EXTRA_TIMESTAMP, 0L)
 
 
         initAudio()
 
-        audioFile = File(baseDir, "dubsmash.wav")
-        micFile = File(baseDir, "dubsmash-mic.wav")
-        videoFile = File(baseDir, "dubsmash.mp4")
+        audioFile = File(baseDir, "dubsmash-$timeStamp.wav")
+        micFile = File(baseDir, "dubsmash-mic-$timeStamp.wav")
+        videoFile = File(baseDir, "dubsmash-$timeStamp.mp4")
 
         val duration = getDuration(audioFile.absolutePath)
 
@@ -116,8 +120,17 @@ class EditActivity : BaseFullActivity(), View.OnClickListener {
             doMux()
         }
 
-        mediaPlayer.setDataSource(videoFile.absolutePath)
-
+        try {
+            mediaPlayer.setDataSource(videoFile.absolutePath)
+        } catch (e: Exception) {
+            Timber.e(e, "FilePath: %s, %b", videoFile.absoluteFile, videoFile.exists())
+            Crashlytics.setString("file_path", videoFile.absolutePath)
+            Crashlytics.setBool("file_exists", videoFile.exists())
+            Crashlytics.logException(e)
+            Toast.makeText(this, R.string.failed_storing_video, Toast.LENGTH_SHORT).show()
+            finish()
+            return
+        }
         mediaPlayer.setOnPreparedListener {
             mediaPlayer.seekTo(0)
             applyTransformation()
@@ -284,7 +297,7 @@ class EditActivity : BaseFullActivity(), View.OnClickListener {
 
     private fun applyEffects() {
         if (Effect() != 0) {
-            SaveEffect(micFile.absolutePath, File(baseDir, "mic-effect.wav").absolutePath)
+            SaveEffect(micFile.absolutePath, File(baseDir, "mic-effect-$timeStamp.wav").absolutePath)
         }
     }
 
@@ -298,7 +311,7 @@ class EditActivity : BaseFullActivity(), View.OnClickListener {
 
             if (type == PROJECT_TYPE_SINGING) {
                 inputFiles.add(
-                        if (Effect() == 0) micFile.absolutePath else File(baseDir, "mic-effect.wav").absolutePath
+                        if (Effect() == 0) micFile.absolutePath else File(baseDir, "mic-effect-$timeStamp.wav").absolutePath
                 )
             }
 
@@ -315,15 +328,11 @@ class EditActivity : BaseFullActivity(), View.OnClickListener {
 
     external fun InitAudio(bufferSize: Int, sampleRate: Int, isSinging: Boolean = false)
     external fun OpenFile(filePath: String, length: Int, micFilePath: String = "", micLength: Int = 0): Double
-    external fun TogglePlayback()
     external fun StartAudio()
     external fun StopAudio()
     external fun GetProgressMS(): Double
-    external fun GetDurationMS(): Double
-    external fun Seek(percent: Double)
     external fun SeekMS(percent: Double)
     external fun IsPlaying(): Boolean
-    external fun CropSave(sourcePath: String, destPath: String, from: Long, to: Long, total: Long)
     external fun SaveEffect(sourcePath: String, destPath: String)
     external fun Effect(): Int
     external fun ApplyEffect(effect: Int)

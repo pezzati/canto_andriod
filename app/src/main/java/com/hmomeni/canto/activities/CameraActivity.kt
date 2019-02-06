@@ -414,6 +414,10 @@ abstract class CameraActivity : BaseFullActivity() {
             setVideoSize(videoSize.width, videoSize.height)
             setVideoEncoder(MediaRecorder.VideoEncoder.H264)
 //            setAudioEncoder(MediaRecorder.AudioEncoder.AAC)
+            setOnErrorListener { _, what, extra ->
+                Timber.e("MediaRecorder Error, what: %d, extra: %d", what, extra)
+                Crashlytics.logException(Exception("MediaRecorder Error what: $what, extra: $extra"))
+            }
             prepare()
         }
     }

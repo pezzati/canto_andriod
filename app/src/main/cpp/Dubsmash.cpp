@@ -33,7 +33,9 @@ static float *playerBuffer;
 static float *micBuffer;
 
 bool audioInitialized = false;
-bool playing = false;
+
+bool micIsRecording = false;
+bool isRecording = false;
 
 static bool audioProcessing(
         void *__unused clientData, // custom pointer
@@ -142,6 +144,7 @@ Java_com_hmomeni_canto_activities_DubsmashActivity_InitAudio(
             -1, -1,
             bufferSize * 2
     );
+    audioInitialized = true;
 
 }
 
@@ -155,8 +158,6 @@ Java_com_hmomeni_canto_activities_DubsmashActivity_OpenFile(
     const char *path = env->GetStringUTFChars(filePath, 0);
 
     player->open(path, 0, length);
-
-    audioInitialized = true;
 
     log_print(ANDROID_LOG_DEBUG, TAG, "File Opened: %s", path);
 
@@ -185,8 +186,10 @@ Java_com_hmomeni_canto_activities_DubsmashActivity_StartRecording(
         jobject  __unused obj) {
     if (isSinging) {
         micRecorder->start(outFilePathMic);
+        micIsRecording = true;
     }
     recorder->start(outFilePath);
+    isRecording = true;
     if (!player->playing) {
         player->play(false);
     }
@@ -198,9 +201,11 @@ Java_com_hmomeni_canto_activities_DubsmashActivity_StopAudio(
         jobject  __unused obj) {
     if (isSinging) {
         micRecorder->stop();
+        micIsRecording = false;
     }
     if (recorder != nullptr) {
         recorder->stop();
+        isRecording = false;
     }
     if (player != nullptr) {
         player->pause();
@@ -263,19 +268,31 @@ Java_com_hmomeni_canto_activities_DubsmashActivity_Cleanup(
         JNIEnv *__unused env,
         jobject __unused obj
 ) {
-    if (audioIO != nullptr)
-        delete audioIO;
-    if (player != nullptr)
-        delete player;
-    if (recorder != nullptr)
-        delete recorder;
-    if (micRecorder != nullptr)
-        delete micRecorder;
+    try {
+        if (audioInitialized) {
+            audioIO->stop();
+            delete audioIO;
+            delete player;
+            if (isRecording) {
+                recorder->stop();
+            }
+            delete recorder;
+            if (isSinging) {
+                if (micIsRecording) {
+                    micRecorder->stop();
+                }
+                delete micRecorder;
+            }
+        }
 
-    if (playerBuffer != nullptr)
-        free(playerBuffer);
-    if (micBuffer != nullptr)
-        free(micBuffer);
+        if (playerBuffer != nullptr)
+            free(playerBuffer);
+        if (micBuffer != nullptr)
+            free(micBuffer);
+    } catch (...) {
+        log_print(ANDROID_LOG_ERROR, TAG, "Error on Cleaning Up Dubsmash");
+    }
+
 }
 
 extern "C" JNIEXPORT void

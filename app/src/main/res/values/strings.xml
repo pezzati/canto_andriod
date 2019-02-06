@@ -110,4 +110,5 @@
     <string name="please_accept_terms">Please read and accept terms before continuing</string>
     <string name="progres_x">Progress: %d%%</string>
     <string name="tap_play_button_start_song">Tap the PLAY button to start music playback</string>
+    <string name="failed_storing_video">Storing the video failed, please try again</string>
 </resources>
