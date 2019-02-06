@@ -52,6 +52,7 @@ class MainViewModel : ViewModel(), DIComponent.Injectable {
 
     fun getUser(): Flowable<User> = userDao
             .getCurrentUser()
+            .logError()
             .mergeWith(
                     api.getUserInfo()
                             .doOnSuccess {

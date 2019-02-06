@@ -176,7 +176,6 @@ class MainActivity : BaseActivity() {
 
         viewModel.getUser()
                 .iomain()
-                .logError()
                 .subscribe({
                     FirebaseAnalytics.getInstance(this).setUserId(it.id.toString())
                     Crashlytics.setUserIdentifier(it.id.toString())

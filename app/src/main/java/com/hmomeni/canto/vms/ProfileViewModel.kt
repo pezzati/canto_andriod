@@ -7,6 +7,7 @@ import com.hmomeni.canto.entities.User
 import com.hmomeni.canto.persistence.ProjectDao
 import com.hmomeni.canto.persistence.UserDao
 import com.hmomeni.canto.utils.UserSession
+import com.hmomeni.canto.utils.logError
 import com.hmomeni.canto.utils.navigation.NavEvent
 import io.reactivex.Flowable
 import io.reactivex.processors.PublishProcessor
@@ -32,27 +33,9 @@ class ProfileViewModel : ViewModel(), DIComponent.Injectable {
     @Inject
     lateinit var api: Api
 
-/*    fun getUser(): Flowable<User> = Flowable.create({ e ->
-        userDao.getCurrentUser().subscribe({
-            userSession.user = it
-            e.onNext(it)
-        }, {
-            Timber.e(it)
-            Crashlytics.logException(it)
-        })
-        api.getUserInfo().subscribe({
-            userSession.user = it
-            userDao.insert(it)
-            e.onNext(it)
-        }, {
-            Crashlytics.logException(it)
-            e.onError(it)
-        })
-    }, BackpressureStrategy.BUFFER)*/
-
-
     fun getUser(): Flowable<User> = userDao
             .getCurrentUser()
+            .logError()
             .mergeWith(
                     api.getUserInfo()
                             .doOnSuccess {

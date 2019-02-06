@@ -136,7 +136,6 @@ class ProfileFragment : BaseFragment(), View.OnClickListener {
                 .getUser()
                 .iomain()
                 .doAfterTerminate { progressBar.visibility = View.GONE }
-                .logError()
                 .subscribe({
                     FirebaseAnalytics.getInstance(context!!).setUserId(it.id.toString())
                     Crashlytics.setUserIdentifier(it.id.toString())
