@@ -1,7 +1,6 @@
 package com.hmomeni.canto.vms
 
 import androidx.lifecycle.ViewModel
-import com.crashlytics.android.Crashlytics
 import com.hmomeni.canto.App
 import com.hmomeni.canto.BuildConfig
 import com.hmomeni.canto.api.Api
@@ -10,14 +9,12 @@ import com.hmomeni.canto.entities.Post
 import com.hmomeni.canto.entities.User
 import com.hmomeni.canto.entities.UserInventory
 import com.hmomeni.canto.persistence.UserDao
-import com.hmomeni.canto.utils.UserSession
-import com.hmomeni.canto.utils.getDeviceId
+import com.hmomeni.canto.utils.*
 import com.hmomeni.canto.utils.navigation.NavEvent
-import com.hmomeni.canto.utils.toBody
 import io.reactivex.Completable
+import io.reactivex.Flowable
 import io.reactivex.Single
 import io.reactivex.processors.PublishProcessor
-import timber.log.Timber
 import javax.inject.Inject
 
 class MainViewModel : ViewModel(), DIComponent.Injectable {
@@ -53,22 +50,15 @@ class MainViewModel : ViewModel(), DIComponent.Injectable {
                 .ignoreElement()
     }
 
-    fun getUser(): Single<User> = Single.create { e ->
-        userDao.getCurrentUser().subscribe({
-            userSession.user = it
-            e.onSuccess(it)
-        }, {
-            Crashlytics.logException(it)
-            Timber.e(it)
-            api.getUserInfo().subscribe({
-                userSession.user = it
-                userDao.insert(it)
-                e.onSuccess(it)
-            }, {
-                e.onError(it)
-            })
-        })
-    }
+    fun getUser(): Flowable<User> = userDao
+            .getCurrentUser()
+            .mergeWith(
+                    api.getUserInfo()
+                            .doOnSuccess {
+                                userSession.user = it
+                                userDao.insert(it)
+                            }
+            )
 
     fun handshake(app: App): Single<Pair<Int, String?>> {
         val map = mutableMapOf<String, Any>()
@@ -79,10 +69,10 @@ class MainViewModel : ViewModel(), DIComponent.Injectable {
         map["bundle"] = BuildConfig.APPLICATION_ID
         return api.handshake(map.toBody()).map {
             return@map when {
-                it["force_update"].asBoolean -> Pair(1, it["url"].asString)
-                it["suggest_update"].asBoolean -> Pair(2, it["url"].asString)
-                it["token"].asString.startsWith("guest") -> Pair(3, null)
-                else -> Pair(0, null)
+                it["force_update"].asBoolean -> Pair(HANDSHAKE_FORCE_UPDATE, it["url"].asString)
+                it["suggest_update"].asBoolean -> Pair(HANDSHAKE_SUGGEST_UPDATE, it["url"].asString)
+                it["token"].asString.startsWith("guest") -> Pair(HANDSHAKE_GUEST, null)
+                else -> Pair(HANDSHAKE_OK, null)
             }
         }
     }

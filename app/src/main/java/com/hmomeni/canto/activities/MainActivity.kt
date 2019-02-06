@@ -134,7 +134,7 @@ class MainActivity : BaseActivity() {
         viewModel.handshake(app())
                 .iomain().subscribe({ p ->
                     when (p.first) {
-                        2 -> {
+                        HANDSHAKE_SUGGEST_UPDATE -> {
                             PaymentDialog(this,
                                     getString(R.string.update_required),
                                     getString(R.string.update_suggest_rationale),
@@ -147,7 +147,7 @@ class MainActivity : BaseActivity() {
                                         startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(p.second)))
                                     }).show()
                         }
-                        1 -> PaymentDialog(this,
+                        HANDSHAKE_FORCE_UPDATE -> PaymentDialog(this,
                                 getString(R.string.force_update),
                                 getString(R.string.update_force_rationale),
                                 imageResId = R.drawable.force_update,
@@ -174,13 +174,15 @@ class MainActivity : BaseActivity() {
                             }).show()
                 }).addTo(compositeDisposable)
 
-        viewModel.getUser().iomain().subscribe({
-            FirebaseAnalytics.getInstance(this).setUserId(it.id.toString())
-            Crashlytics.setUserIdentifier(it.id.toString())
-        }, {
-            Crashlytics.logException(it)
-            Timber.e(it)
-        }).addTo(compositeDisposable)
+        viewModel.getUser()
+                .iomain()
+                .logError()
+                .subscribe({
+                    FirebaseAnalytics.getInstance(this).setUserId(it.id.toString())
+                    Crashlytics.setUserIdentifier(it.id.toString())
+                }, {
+                    Timber.e(it)
+                }).addTo(compositeDisposable)
     }
 
     private fun openPost(post: Post) {
@@ -190,6 +192,7 @@ class MainActivity : BaseActivity() {
                 .iomain()
                 .doOnSubscribe { dialog.show() }
                 .doAfterTerminate { dialog.dismiss() }
+                .logError()
                 .subscribe({
                     if (navController.currentDestination!!.id != R.id.mainFragment) {
                         navController.popBackStack(R.id.mainFragment, false)

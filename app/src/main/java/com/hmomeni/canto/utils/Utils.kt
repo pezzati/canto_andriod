@@ -14,6 +14,7 @@ import android.view.View
 import android.view.WindowManager
 import androidx.core.content.ContextCompat
 import com.bumptech.glide.RequestBuilder
+import com.crashlytics.android.Crashlytics
 import com.google.gson.JsonParser
 import com.hmomeni.canto.App
 import io.reactivex.*
@@ -47,6 +48,31 @@ fun Completable.iomain(): Completable = this.compose {
 
 fun <T> Maybe<T>.iomain(): Maybe<T> = this.compose {
     it.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+}
+
+
+fun <T> Flowable<T>.logError(): Flowable<T> = this.compose {
+    it.doOnError {
+        Crashlytics.logException(it)
+    }
+}
+
+fun <T> Single<T>.logError(): Single<T> = this.compose {
+    it.doOnError {
+        Crashlytics.logException(it)
+    }
+}
+
+fun Completable.logError(): Completable = this.compose {
+    it.doOnError {
+        Crashlytics.logException(it)
+    }
+}
+
+fun <T> Maybe<T>.logError(): Maybe<T> = this.compose {
+    it.doOnError {
+        Crashlytics.logException(it)
+    }
 }
 
 

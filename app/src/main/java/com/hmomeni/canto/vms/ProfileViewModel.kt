@@ -1,7 +1,6 @@
 package com.hmomeni.canto.vms
 
 import androidx.lifecycle.ViewModel
-import com.crashlytics.android.Crashlytics
 import com.hmomeni.canto.api.Api
 import com.hmomeni.canto.di.DIComponent
 import com.hmomeni.canto.entities.User
@@ -9,10 +8,8 @@ import com.hmomeni.canto.persistence.ProjectDao
 import com.hmomeni.canto.persistence.UserDao
 import com.hmomeni.canto.utils.UserSession
 import com.hmomeni.canto.utils.navigation.NavEvent
-import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable
 import io.reactivex.processors.PublishProcessor
-import timber.log.Timber
 import javax.inject.Inject
 
 class ProfileViewModel : ViewModel(), DIComponent.Injectable {
@@ -35,7 +32,7 @@ class ProfileViewModel : ViewModel(), DIComponent.Injectable {
     @Inject
     lateinit var api: Api
 
-    fun getUser(): Flowable<User> = Flowable.create({ e ->
+/*    fun getUser(): Flowable<User> = Flowable.create({ e ->
         userDao.getCurrentUser().subscribe({
             userSession.user = it
             e.onNext(it)
@@ -51,6 +48,17 @@ class ProfileViewModel : ViewModel(), DIComponent.Injectable {
             Crashlytics.logException(it)
             e.onError(it)
         })
-    }, BackpressureStrategy.BUFFER)
+    }, BackpressureStrategy.BUFFER)*/
+
+
+    fun getUser(): Flowable<User> = userDao
+            .getCurrentUser()
+            .mergeWith(
+                    api.getUserInfo()
+                            .doOnSuccess {
+                                userSession.user = it
+                                userDao.insert(it)
+                            }
+            )
 
 }

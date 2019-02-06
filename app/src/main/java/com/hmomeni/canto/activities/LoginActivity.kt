@@ -72,12 +72,12 @@ class LoginActivity : BaseActivity(), View.OnClickListener {
                 .iomain()
                 .subscribe({ p ->
                     when (p.first) {
-                        0 -> prepareLogin()
-                        3 -> {
+                        HANDSHAKE_OK -> prepareLogin()
+                        HANDSHAKE_GUEST -> {
                             startActivity(Intent(this, MainActivity::class.java))
                             finish()
                         }
-                        2 -> {
+                        HANDSHAKE_SUGGEST_UPDATE -> {
                             prepareLogin()
                             PaymentDialog(this,
                                     getString(R.string.update_required),
@@ -91,7 +91,7 @@ class LoginActivity : BaseActivity(), View.OnClickListener {
                                         startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(p.second)))
                                     }).show()
                         }
-                        1 -> PaymentDialog(this,
+                        HANDSHAKE_FORCE_UPDATE -> PaymentDialog(this,
                                 getString(R.string.force_update),
                                 getString(R.string.update_force_rationale),
                                 imageResId = R.drawable.force_update,

@@ -6,10 +6,7 @@ import com.hmomeni.canto.BuildConfig
 import com.hmomeni.canto.api.Api
 import com.hmomeni.canto.di.DIComponent
 import com.hmomeni.canto.persistence.UserDao
-import com.hmomeni.canto.utils.UserSession
-import com.hmomeni.canto.utils.getDeviceId
-import com.hmomeni.canto.utils.makeMap
-import com.hmomeni.canto.utils.toBody
+import com.hmomeni.canto.utils.*
 import com.pixplicity.easyprefs.library.Prefs
 import io.reactivex.Completable
 import io.reactivex.Single
@@ -42,10 +39,10 @@ class LoginViewModel : ViewModel(), DIComponent.Injectable {
         map["bundle"] = BuildConfig.APPLICATION_ID
         return api.handshake(map.toBody()).map {
             return@map when {
-                it["force_update"].asBoolean -> Pair(1, it["url"].asString)
-                it["suggest_update"].asBoolean -> Pair(2, it["url"].asString)
-                it["token"].asString.startsWith("guest") -> Pair(3, null)
-                else -> Pair(0, null)
+                it["force_update"].asBoolean -> Pair(HANDSHAKE_FORCE_UPDATE, it["url"].asString)
+                it["suggest_update"].asBoolean -> Pair(HANDSHAKE_SUGGEST_UPDATE, it["url"].asString)
+                it["token"].asString.startsWith("guest") -> Pair(HANDSHAKE_GUEST, null)
+                else -> Pair(HANDSHAKE_OK, null)
             }
         }
     }

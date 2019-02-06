@@ -14,3 +14,8 @@ const val FFMPEG_URL = "${BASE_URL}static/ffmpeg/{arch}/ffmpeg"
 
 const val HTTP_ERROR_PAYMENT_REQUIRED = 402
 const val HTTP_ERROR_NOT_PURCHASED = 403
+
+const val HANDSHAKE_FORCE_UPDATE = 1
+const val HANDSHAKE_SUGGEST_UPDATE = 2
+const val HANDSHAKE_GUEST = 3
+const val HANDSHAKE_OK = 0
