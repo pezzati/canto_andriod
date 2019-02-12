@@ -111,4 +111,11 @@
     <string name="progres_x">Progress: %d%%</string>
     <string name="tap_play_button_start_song">Tap the PLAY button to start music playback</string>
     <string name="failed_storing_video">Storing the video failed, please try again</string>
+    <string name="got_gift_code">Got gift code?</string>
+    <string name="enter_gift_code">Enter gift code</string>
+    <string name="validate">Validate</string>
+    <string name="gift_code_is_invalid">Gift code is invalid</string>
+    <string name="gift_code_is_valid">Gift code is valid</string>
+    <string name="gift_code_is_applied">Your gift code was successfully applied.</string>
+    <string name="apply">Apply</string>
 </resources>

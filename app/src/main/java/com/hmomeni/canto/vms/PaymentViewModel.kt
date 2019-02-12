@@ -63,4 +63,16 @@ class PaymentViewModel : ViewModel(), DIComponent.Injectable {
                 }
                 .ignoreElement()
     }
+
+    fun validateGiftCode(code: String): Completable {
+        val map = makeMap().add("code", code)
+
+        return api.validateGiftCode(map.body())
+    }
+
+    fun applyGiftCode(code: String): Completable {
+        val map = makeMap().add("code", code)
+
+        return api.applyGiftCode(map.body())
+    }
 }

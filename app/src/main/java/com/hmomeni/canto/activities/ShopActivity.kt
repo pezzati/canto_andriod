@@ -7,11 +7,11 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.hmomeni.canto.R
 import com.hmomeni.canto.adapters.rcl.PaymentPacksRclAdapter
-import com.hmomeni.canto.utils.ViewModelFactory
-import com.hmomeni.canto.utils.app
-import com.hmomeni.canto.utils.iomain
+import com.hmomeni.canto.utils.*
 import com.hmomeni.canto.vms.PaymentViewModel
-import io.reactivex.disposables.Disposable
+import com.jakewharton.rxbinding3.widget.textChanges
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxkotlin.addTo
 import kotlinx.android.synthetic.main.activity_shop.*
 import timber.log.Timber
 import java.text.NumberFormat
@@ -21,7 +21,8 @@ class ShopActivity : BaseActivity() {
 
     lateinit var viewModel: PaymentViewModel
     private var mAdapter: PaymentPacksRclAdapter? = null
-    private var disposable: Disposable? = null
+    private val compositeDisposable = CompositeDisposable()
+    private var giftCodeValidate = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,7 +42,7 @@ class ShopActivity : BaseActivity() {
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = mAdapter
 
-        disposable = viewModel.getPaymentPacks()
+        viewModel.getPaymentPacks()
                 .iomain()
                 .doOnSubscribe { progressBar.visibility = View.VISIBLE }
                 .doAfterTerminate { progressBar.visibility = View.GONE }
@@ -49,7 +50,44 @@ class ShopActivity : BaseActivity() {
                     mAdapter?.notifyDataSetChanged()
                 }, {
                     Timber.e(it)
-                })
+                }).addTo(compositeDisposable)
+
+        giftCodeBtn.setOnClickListener {
+            val progressDialog: ProgressDialog = ProgressDialog(this).apply {
+                setCanceledOnTouchOutside(false)
+            }
+            if (giftCodeValidate) {
+                viewModel.applyGiftCode(giftCodeInpt.text.toString())
+                        .iomain()
+                        .doOnSubscribe { progressDialog.show() }
+                        .doAfterTerminate { progressDialog.dismiss() }
+                        .subscribe({
+                            PaymentDialog(this, getString(R.string.congrats), getString(R.string.gift_code_is_applied)).show()
+                            giftCodeValidate = false
+                        }, {
+                            Timber.e(it)
+                        }).addTo(compositeDisposable)
+            } else {
+                viewModel.validateGiftCode(giftCodeInpt.text.toString())
+                        .iomain()
+                        .doOnSubscribe { progressDialog.show() }
+                        .doAfterTerminate {
+                            giftResultWrapper.visible()
+                            progressDialog.dismiss()
+                        }
+                        .subscribe({
+                            giftCodeValidate = true
+                            giftCodeBtn.setText(R.string.apply)
+                            giftValidateResult.setText(R.string.gift_code_is_valid)
+                            giftValidateResultImg.setImageResource(R.drawable.ic_success)
+                        }, {
+                            Timber.e(it)
+                            giftCodeValidate = false
+                            giftValidateResult.setText(R.string.gift_code_is_invalid)
+                            giftValidateResultImg.setImageResource(R.drawable.ic_error)
+                        }).addTo(compositeDisposable)
+            }
+        }
     }
 
     override fun onResume() {
@@ -60,8 +98,19 @@ class ShopActivity : BaseActivity() {
         }
     }
 
+    override fun onStart() {
+        super.onStart()
+        giftCodeInpt.textChanges()
+                .skipInitialValue()
+                .subscribe {
+                    giftCodeBtn.setText(R.string.validate)
+                    giftCodeValidate = false
+                    giftWrapper.gone()
+                }.addTo(compositeDisposable)
+    }
+
     override fun onStop() {
-        disposable?.dispose()
+        compositeDisposable.clear()
         super.onStop()
     }
 }

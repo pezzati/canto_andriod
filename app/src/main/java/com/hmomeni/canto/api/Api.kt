@@ -62,4 +62,10 @@ interface Api {
     @POST("user/profile/")
     fun updateUserInfo(@Body requestBody: RequestBody): Single<User>
 
+    @POST("/finance/giftcodes/validate/")
+    fun validateGiftCode(@Body requestBody: RequestBody): Completable
+
+    @POST("/finance/giftcodes/apply/")
+    fun applyGiftCode(@Body requestBody: RequestBody): Completable
+
 }

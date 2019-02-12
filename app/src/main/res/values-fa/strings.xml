@@ -110,4 +110,11 @@
     <string name="progres_x">پیشرفت: %d٪</string>
     <string name="tap_play_button_start_song">برای شروع رو دکمه پخش کلیک کنید</string>
     <string name="failed_storing_video">ذخیره سازی فایل ویدیو با مشکل مواجه شد. لطفا دوباره تلاش کنید.</string>
+    <string name="got_gift_code">کد هدیه دارید؟</string>
+    <string name="enter_gift_code">کد هدیه را وارد کنید</string>
+    <string name="validate">بررسی</string>
+    <string name="gift_code_is_invalid">کد هدیه نامعتبر است</string>
+    <string name="gift_code_is_valid">کد هدیه معتبر است</string>
+    <string name="gift_code_is_applied">کد هدیه ما با موفقیت اعمال شد</string>
+    <string name="apply">اعمال</string>
 </resources>
