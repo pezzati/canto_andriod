@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.hmomeni.canto.R
 import com.hmomeni.canto.adapters.rcl.PaymentPacksRclAdapter
+import com.hmomeni.canto.entities.UserAction
 import com.hmomeni.canto.utils.*
 import com.hmomeni.canto.vms.PaymentViewModel
 import com.jakewharton.rxbinding3.widget.textChanges
@@ -33,6 +34,7 @@ class ShopActivity : BaseActivity() {
             mAdapter = PaymentPacksRclAdapter(viewModel.items).also {
                 it.clickPublisher.subscribe {
                     val pack = viewModel.items[it]
+                    addUserAction(UserAction("Package tapped", pack.sku))
                     startActivity(Intent(this@ShopActivity, PaymentActivity::class.java).putExtra("pack", pack))
                 }
             }

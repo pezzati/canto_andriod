@@ -8,11 +8,16 @@ import android.widget.Toast
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
+import androidx.work.Constraints
+import androidx.work.NetworkType
+import androidx.work.PeriodicWorkRequestBuilder
+import androidx.work.WorkManager
 import com.crashlytics.android.Crashlytics
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.hmomeni.canto.App
 import com.hmomeni.canto.R
 import com.hmomeni.canto.entities.Post
+import com.hmomeni.canto.entities.UserAction
 import com.hmomeni.canto.fragments.ListFragment
 import com.hmomeni.canto.fragments.MainFragmentDirections
 import com.hmomeni.canto.services.FFMpegService
@@ -28,6 +33,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 import retrofit2.HttpException
 import timber.log.Timber
 import java.util.*
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 val BOTTOM_NAV_FRAGMENTS = arrayOf(R.id.mainFragment, R.id.profileFragment, R.id.searchFragment, R.id.listFragment)
@@ -52,6 +58,10 @@ class MainActivity : BaseActivity() {
         (application as App).di.inject(this)
 
         startService(Intent(this, FFMpegService::class.java))
+
+        scheduleUserActionSync()
+
+        addUserAction(UserAction("App entered foreground"))
 
         if (!userSession.isUser()) {
             startActivity(Intent(this, LoginActivity::class.java))
@@ -193,6 +203,7 @@ class MainActivity : BaseActivity() {
                 .doAfterTerminate { dialog.dismiss() }
                 .logError()
                 .subscribe({
+                    addUserAction(UserAction("Karaoke Tapped", post.id.toString(), "Ok"))
                     if (navController.currentDestination!!.id != R.id.mainFragment) {
                         navController.popBackStack(R.id.mainFragment, false)
                     }
@@ -201,11 +212,18 @@ class MainActivity : BaseActivity() {
                     if (it is HttpException) {
                         when (it.code()) {
                             HTTP_ERROR_PAYMENT_REQUIRED -> {
+                                addUserAction(UserAction("Karaoke Tapped", post.id.toString(), "Payment required"))
                                 PaymentDialog(this, showNegativeButton = true, positiveListener = { _, _ ->
                                     startActivity(Intent(this, ShopActivity::class.java))
-                                }).show()
+                                    addUserAction(UserAction("Go to shop", post.id.toString(), "Tapped"))
+                                }).apply {
+                                    setOnDismissListener {
+                                        addUserAction(UserAction("Go to shop", post.id.toString(), "canceled"))
+                                    }
+                                }.show()
                             }
                             HTTP_ERROR_NOT_PURCHASED -> {
+                                addUserAction(UserAction("Karaoke Tapped", post.id.toString(), "Should buy"))
                                 PaymentDialog(
                                         this,
                                         title = getString(R.string.purchase_song),
@@ -215,9 +233,14 @@ class MainActivity : BaseActivity() {
                                         positiveButtonText = getString(R.string.yes_buy),
                                         positiveListener = { _, _ ->
                                             purchaseSong(post)
+                                            addUserAction(UserAction("Buy song", post.id.toString(), "Tapped"))
                                         },
                                         overlayText = "X%d".format(Locale.ENGLISH, post.count)
-                                ).show()
+                                ).apply {
+                                    setOnDismissListener {
+                                        addUserAction(UserAction("Buy song", post.id.toString(), "canceled"))
+                                    }
+                                }.show()
                             }
                         }
                     }
@@ -248,8 +271,17 @@ class MainActivity : BaseActivity() {
     override fun onDestroy() {
         navDisposable?.dispose()
         compositeDisposable.clear()
+        addUserAction(UserAction("App entered background"))
         super.onDestroy()
     }
 
+    private fun scheduleUserActionSync() {
+        val userActionWorkBuilder = PeriodicWorkRequestBuilder<UserActionSyncWorker>(1, TimeUnit.HOURS)
+                .setConstraints(Constraints.Builder()
+                        .setRequiredNetworkType(NetworkType.CONNECTED)
+                        .setRequiresBatteryNotLow(true)
+                        .build())
+        WorkManager.getInstance().enqueue(userActionWorkBuilder.build())
+    }
 
 }

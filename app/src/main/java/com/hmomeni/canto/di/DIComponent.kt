@@ -7,6 +7,7 @@ import com.hmomeni.canto.adapters.rcl.PostsRclAdapter
 import com.hmomeni.canto.fragments.RecorderFragment
 import com.hmomeni.canto.services.DownloadService
 import com.hmomeni.canto.services.MuxerService
+import com.hmomeni.canto.utils.UserActionSyncWorker
 import com.hmomeni.canto.vms.*
 import dagger.Component
 import javax.inject.Singleton
@@ -38,4 +39,5 @@ interface DIComponent {
     fun inject(listPostHolder: ListPostsRclAdapter.ListPostHolder)
     fun inject(editUserViewModel: EditUserViewModel)
     fun inject(baseActivity: BaseActivity)
+    fun inject(userActionSyncWorker: UserActionSyncWorker)
 }

@@ -15,6 +15,7 @@ import com.hmomeni.canto.R
 import com.hmomeni.canto.adapters.rcl.LyricRclAdapter
 import com.hmomeni.canto.entities.FullPost
 import com.hmomeni.canto.entities.MidiItem
+import com.hmomeni.canto.entities.UserAction
 import com.hmomeni.canto.services.*
 import com.hmomeni.canto.utils.*
 import com.hmomeni.canto.utils.views.RecordButton
@@ -166,6 +167,16 @@ class KaraokeActivity : BaseFullActivity() {
     override fun onPause() {
         onBackground()
         super.onPause()
+    }
+
+    override fun onStart() {
+        super.onStart()
+        addUserAction(UserAction("Entered Mode View", post.id.toString(), "Karaoke"))
+    }
+
+    override fun onStop() {
+        addUserAction(UserAction("Exited Mode View", post.id.toString(), "Karaoke"))
+        super.onStop()
     }
 
     override fun onDestroy() {

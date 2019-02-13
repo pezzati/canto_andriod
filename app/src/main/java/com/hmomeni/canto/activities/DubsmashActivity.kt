@@ -19,10 +19,7 @@ import com.azoft.carousellayoutmanager.CenterScrollListener
 import com.hmomeni.canto.App
 import com.hmomeni.canto.R
 import com.hmomeni.canto.adapters.rcl.LyricRclAdapter
-import com.hmomeni.canto.entities.FullPost
-import com.hmomeni.canto.entities.MidiItem
-import com.hmomeni.canto.entities.PROJECT_TYPE_DUBSMASH
-import com.hmomeni.canto.entities.PROJECT_TYPE_SINGING
+import com.hmomeni.canto.entities.*
 import com.hmomeni.canto.services.*
 import com.hmomeni.canto.utils.*
 import com.hmomeni.canto.utils.views.RecordButton
@@ -271,8 +268,14 @@ class DubsmashActivity : CameraActivity() {
         }, 300)
     }
 
+    override fun onStart() {
+        super.onStart()
+        addUserAction(UserAction("Entered Mode View", post.id.toString(), if (type == PROJECT_TYPE_DUBSMASH) "Dubsmash" else "Singing"))
+    }
+
     override fun onStop() {
         disposable?.dispose()
+        addUserAction(UserAction("Exited Mode View", post.id.toString(), if (type == PROJECT_TYPE_DUBSMASH) "Dubsmash" else "Singing"))
         super.onStop()
     }
 

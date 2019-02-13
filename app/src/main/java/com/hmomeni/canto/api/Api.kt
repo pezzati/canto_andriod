@@ -68,4 +68,7 @@ interface Api {
     @POST("/finance/giftcodes/apply/")
     fun applyGiftCode(@Body requestBody: RequestBody): Completable
 
+    @POST("/analysis/actions/")
+    fun syncActions(@Body requestBody: RequestBody): Completable
+
 }

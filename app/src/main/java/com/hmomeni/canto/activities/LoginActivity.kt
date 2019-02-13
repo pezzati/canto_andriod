@@ -15,6 +15,7 @@ import com.google.android.gms.auth.api.Auth
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.GoogleApiClient
 import com.hmomeni.canto.R
+import com.hmomeni.canto.entities.UserAction
 import com.hmomeni.canto.utils.*
 import com.hmomeni.canto.vms.LoginViewModel
 import io.reactivex.disposables.CompositeDisposable
@@ -264,6 +265,7 @@ class LoginActivity : BaseActivity(), View.OnClickListener {
     }
 
     private fun backToPhoneInput() {
+        addUserAction(UserAction("Code verification", if (modeIsEmail) "email" else "phone", "back"))
         timerCanceled = true
         step = 1
         phoneInputWrapper.visibility = View.VISIBLE
@@ -298,6 +300,7 @@ class LoginActivity : BaseActivity(), View.OnClickListener {
             showErrorMessage(viewModel.signupMode)
             return
         }
+        addUserAction(UserAction("Sign up", if (modeIsEmail) "email" else "phone"))
 
         val progressDialog = ProgressDialog(this)
 
@@ -335,7 +338,9 @@ class LoginActivity : BaseActivity(), View.OnClickListener {
                             }
                     startActivity(intent)
                     finish()
+                    addUserAction(UserAction("Code verification", if (modeIsEmail) "email" else "phone", "success"))
                 }, {
+                    addUserAction(UserAction("Code verification", if (modeIsEmail) "email" else "phone", "wrong"))
                     if (it is HttpException && it.code() == 400) {
                         Toast.makeText(this, it.response().errorString(), Toast.LENGTH_SHORT).show()
                     } else {
@@ -379,6 +384,8 @@ class LoginActivity : BaseActivity(), View.OnClickListener {
     }
 
     private fun signInByGoogle() {
+        addUserAction(UserAction("Sign up", "google"))
+
         val signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient)
         startActivityForResult(signInIntent, GOOGLE_SIGNIN_REQ_CODE)
     }

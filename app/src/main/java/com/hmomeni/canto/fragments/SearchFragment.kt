@@ -10,7 +10,9 @@ import com.google.firebase.analytics.FirebaseAnalytics
 import com.hmomeni.canto.R
 import com.hmomeni.canto.adapters.rcl.ListPostsRclAdapter
 import com.hmomeni.canto.entities.Post
+import com.hmomeni.canto.entities.UserAction
 import com.hmomeni.canto.utils.ViewModelFactory
+import com.hmomeni.canto.utils.addUserAction
 import com.hmomeni.canto.utils.app
 import com.hmomeni.canto.utils.iomain
 import com.hmomeni.canto.utils.navigation.PostNavEvent
@@ -58,6 +60,7 @@ class SearchFragment : BaseFragment() {
                             .logEvent(FirebaseAnalytics.Event.SEARCH, Bundle().apply {
                                 putString(FirebaseAnalytics.Param.SEARCH_TERM, it.editable.toString())
                             })
+                    addUserAction(UserAction("Searched", detail = it.editable.toString()))
                     searchDisposable = viewModel.api
                             .searchInGenres(it.editable.toString())
                             .map { it.data }

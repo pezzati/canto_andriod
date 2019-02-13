@@ -33,6 +33,7 @@ import com.hmomeni.canto.api.Api
 import com.hmomeni.canto.entities.PROJECT_TYPE_DUBSMASH
 import com.hmomeni.canto.entities.PROJECT_TYPE_KARAOKE
 import com.hmomeni.canto.entities.PROJECT_TYPE_SINGING
+import com.hmomeni.canto.entities.UserAction
 import com.hmomeni.canto.utils.*
 import com.hmomeni.canto.utils.views.RotatingImageView
 import com.karumi.dexter.Dexter
@@ -190,14 +191,17 @@ class RecorderFragment : BaseFragment() {
         viewPager.adapter = ModePagerAdapter(context!!, arrayOf(textureView, textureView2, karaokeView))
 
         textureView.setOnClickListener {
+            addUserAction(UserAction("Mode selected", selectPostId.toString(), "Dubsmash"))
             openActivity(PROJECT_TYPE_DUBSMASH)
         }
 
         textureView2.setOnClickListener {
+            addUserAction(UserAction("Mode selected", selectPostId.toString(), "Singing"))
             openActivity(PROJECT_TYPE_SINGING)
         }
 
         karaokeView.setOnClickListener {
+            addUserAction(UserAction("Mode selected", selectPostId.toString(), "Karaoke"))
             openActivity(PROJECT_TYPE_KARAOKE)
         }
 

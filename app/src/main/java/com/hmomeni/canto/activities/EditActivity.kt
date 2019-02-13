@@ -17,12 +17,10 @@ import android.widget.Toast
 import com.crashlytics.android.Crashlytics
 import com.hmomeni.canto.App
 import com.hmomeni.canto.R
-import com.hmomeni.canto.entities.FullPost
-import com.hmomeni.canto.entities.MuxJob
-import com.hmomeni.canto.entities.PROJECT_TYPE_DUBSMASH
-import com.hmomeni.canto.entities.PROJECT_TYPE_SINGING
+import com.hmomeni.canto.entities.*
 import com.hmomeni.canto.services.MuxerService
 import com.hmomeni.canto.utils.CantoDialog
+import com.hmomeni.canto.utils.addUserAction
 import com.hmomeni.canto.utils.getDuration
 import com.hmomeni.canto.utils.views.VerticalSlider
 import kotlinx.android.synthetic.main.activity_edit.*
@@ -118,6 +116,7 @@ class EditActivity : BaseFullActivity(), View.OnClickListener {
             StopAudio()
             mediaPlayer.stop()
             doMux()
+            addUserAction(UserAction("Save tapped", post.id.toString(), if (type == PROJECT_TYPE_DUBSMASH) "Dubsmash" else "Singing"))
         }
 
         try {
