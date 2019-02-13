@@ -62,8 +62,9 @@ class ShopActivity : BaseActivity() {
                         .doOnSubscribe { progressDialog.show() }
                         .doAfterTerminate { progressDialog.dismiss() }
                         .subscribe({
-                            PaymentDialog(this, getString(R.string.congrats), getString(R.string.gift_code_is_applied)).show()
+                            PaymentDialog(this, getString(R.string.congrats), getString(R.string.gift_code_is_applied), imageResId = R.drawable.gift_code, positiveButtonText = getString(R.string.back)).show()
                             giftCodeValidate = false
+                            giftResultWrapper.gone()
                         }, {
                             Timber.e(it)
                         }).addTo(compositeDisposable)
@@ -105,7 +106,7 @@ class ShopActivity : BaseActivity() {
                 .subscribe {
                     giftCodeBtn.setText(R.string.validate)
                     giftCodeValidate = false
-                    giftWrapper.gone()
+                    giftResultWrapper.gone()
                 }.addTo(compositeDisposable)
     }
 
