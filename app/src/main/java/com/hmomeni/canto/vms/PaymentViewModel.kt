@@ -45,6 +45,12 @@ class PaymentViewModel : ViewModel(), DIComponent.Injectable {
                 .ignoreElement()
     }
 
+    fun createInvoiceZarinpal(): Single<String> {
+        val map = makeMap().add("serial_number", pack.sku)
+
+        return api.createInvoiceZarinpal(map.body())
+    }
+
     fun verifyPayment(invoiceId: String, paymentToken: String): Completable {
         pack.paymentToken = paymentToken
         pack.invoiceId = invoiceId

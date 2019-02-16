@@ -97,6 +97,11 @@ android {
     productFlavors {
         cafebazaar {
             dimension "market"
+            buildConfigField "String", "market", "\"cafebazaar\""
+        }
+        canto {
+            dimension "market"
+            buildConfigField "String", "market", "\"canto\""
         }
     }
 }

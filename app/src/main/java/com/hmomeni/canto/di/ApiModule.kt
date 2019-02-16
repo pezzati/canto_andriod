@@ -2,6 +2,7 @@ package com.hmomeni.canto.di
 
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
+import com.hmomeni.canto.BuildConfig
 import com.hmomeni.canto.api.Api
 import com.hmomeni.canto.utils.BASE_URL
 import com.hmomeni.canto.utils.LogoutEvent
@@ -42,6 +43,7 @@ class ApiModule {
                                     builder.addHeader("USERTOKEN", userSession.token!!)
                                 }
                                 builder.addHeader("deviceType", "android")
+                                builder.addHeader("market", BuildConfig.market)
                                 it.proceed(builder.build())
                             }
                             .addInterceptor {

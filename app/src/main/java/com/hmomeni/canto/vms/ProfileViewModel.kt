@@ -10,6 +10,7 @@ import com.hmomeni.canto.utils.UserSession
 import com.hmomeni.canto.utils.logError
 import com.hmomeni.canto.utils.navigation.NavEvent
 import io.reactivex.Flowable
+import io.reactivex.Single
 import io.reactivex.processors.PublishProcessor
 import javax.inject.Inject
 
@@ -36,6 +37,9 @@ class ProfileViewModel : ViewModel(), DIComponent.Injectable {
     fun getUser(): Flowable<User> = userDao
             .getCurrentUser()
             .logError()
+            .onErrorResumeNext {
+                Single.just(User(-1, "", "", "", 0, 0, null))
+            }
             .mergeWith(
                     api.getUserInfo()
                             .doOnSuccess {

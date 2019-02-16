@@ -47,6 +47,9 @@ interface Api {
     @POST("finance/purchase")
     fun createInvoice(@Body requestBody: RequestBody): Single<JsonObject>
 
+    @POST("finance/purchase")
+    fun createInvoiceZarinpal(@Body requestBody: RequestBody): Single<String>
+
     @POST("finance/bazzar_paymnet")
     fun verifyPayment(@Body requestBody: RequestBody): Single<JsonObject>
 

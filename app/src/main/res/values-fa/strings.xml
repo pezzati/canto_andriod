@@ -117,4 +117,5 @@
     <string name="gift_code_is_valid">کد هدیه معتبر است</string>
     <string name="gift_code_is_applied">کد هدیه ما با موفقیت اعمال شد</string>
     <string name="apply">اعمال</string>
+    <string name="please_install_browser">لطفا برای انجام عملیات پرداخت یک مرورگر نصب کنید.</string>
 </resources>

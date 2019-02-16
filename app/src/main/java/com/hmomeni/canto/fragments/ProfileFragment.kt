@@ -11,6 +11,7 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.room.EmptyResultSetException
 import com.crashlytics.android.Crashlytics
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.hmomeni.canto.R
@@ -56,7 +57,9 @@ class ProfileFragment : BaseFragment(), View.OnClickListener {
                     }
                 }, {
                     showNoPost()
-                    Crashlytics.logException(it)
+                    if (it !is EmptyResultSetException) {
+                        Crashlytics.logException(it)
+                    }
                 }).addTo(compositeDisposable)
 
         recyclerView.setPadding(0, getScreenDimensions(context!!).height / 4, 0, 0)
@@ -134,14 +137,15 @@ class ProfileFragment : BaseFragment(), View.OnClickListener {
         super.onResume()
         viewModel
                 .getUser()
+                .filter { it.id >= 0 }
                 .iomain()
                 .doAfterTerminate { progressBar.visibility = View.GONE }
                 .subscribe({
                     FirebaseAnalytics.getInstance(context!!).setUserId(it.id.toString())
                     Crashlytics.setUserIdentifier(it.id.toString())
 
-                    userGroup.visibility = View.VISIBLE
-                    progressBar.visibility = View.GONE
+                    userGroup.visible()
+                    progressBar.gone()
 
                     userName.text = it.username
                     if (it.premiumDays > 0) {
@@ -157,7 +161,7 @@ class ProfileFragment : BaseFragment(), View.OnClickListener {
                                 .into(userPhoto)
                     }
                 }, {
-                    Timber.e(it)
+                    Timber.e(it, "failed loading user")
                 }).addTo(compositeDisposable)
     }
 

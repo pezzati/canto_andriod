@@ -1,6 +1,8 @@
 package com.hmomeni.canto.activities
 
+import android.content.ActivityNotFoundException
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
@@ -84,22 +86,39 @@ class PaymentActivity : BaseActivity() {
     }
 
     private fun createNewInvoice() {
-        viewModel.createInvoice()
-                .iomain()
-                .subscribe({
-                    iabHelper.launchPurchaseFlow(this, viewModel.pack.sku, PURCHASE_CODE, { result, purchase ->
-                        if (result.isSuccess) {
-                            verifyPurchase(purchase)
-                        } else {
-                            Timber.d("Purchase failed: %s", result.message)
-                            showError()
-                        }
-                    }, viewModel.pack.invoiceId)
+        if (BuildConfig.market == "canto") {
+            viewModel.createInvoiceZarinpal()
+                    .iomain()
+                    .doOnSuccess {
+                        startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(it)))
+                        finish()
+                    }.ignoreElement()
+        } else {
+            viewModel.createInvoice()
+                    .iomain()
+                    .doOnComplete {
+                        launchPurchase()
+                    }
+        }.subscribe({
+            Timber.d("invoice successful")
+        }, {
+            if (it is ActivityNotFoundException) {
+                Toast.makeText(this, R.string.please_install_browser, Toast.LENGTH_SHORT).show()
+            }
+            Timber.e(it)
+            showError()
+        }).addTo(compositeDisposable)
+    }
 
-                }, {
-                    Timber.e(it)
-                    showError()
-                }).addTo(compositeDisposable)
+    private fun launchPurchase() {
+        iabHelper.launchPurchaseFlow(this, viewModel.pack.sku, PURCHASE_CODE, { result, purchase ->
+            if (result.isSuccess) {
+                verifyPurchase(purchase)
+            } else {
+                Timber.d("Purchase failed: %s", result.message)
+                showError()
+            }
+        }, viewModel.pack.invoiceId)
     }
 
     private fun verifyPurchase(purchase: Purchase) {
