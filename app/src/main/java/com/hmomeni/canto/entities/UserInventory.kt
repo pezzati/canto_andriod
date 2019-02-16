@@ -6,8 +6,11 @@ import com.google.gson.reflect.TypeToken
 import com.hmomeni.canto.App
 import com.hmomeni.canto.utils.UserSession
 import com.pixplicity.easyprefs.library.Prefs
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class UserInventory(val userSession: UserSession) {
+@Singleton
+class UserInventory @Inject constructor(val userSession: UserSession) {
     var items: SparseIntArray = SparseIntArray()
     var coins: Long = 0
 

@@ -1,5 +1,9 @@
 package com.hmomeni.canto.utils
 
+import android.content.Context
+import android.os.Bundle
+import androidx.fragment.app.Fragment
+import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.gson.reflect.TypeToken
 import com.hmomeni.canto.App
 import com.hmomeni.canto.entities.UserAction
@@ -26,3 +30,13 @@ fun getUserActions(): List<UserAction> {
 fun getUserActionsRaw(): String = Prefs.getString(USER_ACTION_PREF, "[]")
 
 fun purgeUserActions() = Prefs.remove(USER_ACTION_PREF)
+
+fun Context.logAnalyticsEvent(event: String, bundle: Bundle) {
+    FirebaseAnalytics.getInstance(this)
+            .logEvent(event, bundle)
+}
+
+fun Fragment.logAnalyticsEvent(event: String, bundle: Bundle) {
+    FirebaseAnalytics.getInstance(context!!)
+            .logEvent(event, bundle)
+}
