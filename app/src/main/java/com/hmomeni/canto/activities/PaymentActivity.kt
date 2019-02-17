@@ -90,7 +90,7 @@ class PaymentActivity : BaseActivity() {
             viewModel.createInvoiceZarinpal()
                     .iomain()
                     .doOnSuccess {
-                        startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(it)))
+                        startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(it.trim('"'))))
                         finish()
                     }.ignoreElement()
         } else {

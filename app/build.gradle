@@ -25,7 +25,7 @@ android {
         minSdkVersion 21
         targetSdkVersion 28
         versionCode 8
-        versionName "0.9.14-RC1"
+        versionName "0.9.15"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         externalNativeBuild {
             cmake {
@@ -74,7 +74,8 @@ android {
             if (abi != null) {
                 buildAbi = "-" + output.getFilter(com.android.build.OutputFile.ABI)
             }
-            def newApkName = project + SEP + "v" + version + buildType + buildAbi + ".apk"
+            def flavor = variant.productFlavors[0].name
+            def newApkName = project + SEP + "v" + version + "-" + flavor + buildType + buildAbi + ".apk"
             output.outputFileName = newApkName
         }
     }
