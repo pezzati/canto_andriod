@@ -9,14 +9,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.hmomeni.canto.R
 import com.hmomeni.canto.adapters.rcl.ListPostsRclAdapter
-import com.hmomeni.canto.entities.Post
 import com.hmomeni.canto.entities.UserAction
-import com.hmomeni.canto.utils.ViewModelFactory
 import com.hmomeni.canto.utils.addUserAction
-import com.hmomeni.canto.utils.app
 import com.hmomeni.canto.utils.iomain
 import com.hmomeni.canto.utils.navigation.PostNavEvent
 import com.hmomeni.canto.vms.SearchViewModel
+import com.hmomeni.canto.vms.injector
 import com.jakewharton.rxbinding3.widget.afterTextChangeEvents
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -29,12 +27,12 @@ import java.util.concurrent.TimeUnit
 class SearchFragment : BaseFragment() {
     private lateinit var viewModel: SearchViewModel
     private val compositeDisposable = CompositeDisposable()
-    private val posts: MutableList<Post> = mutableListOf()
-    private val adapter = ListPostsRclAdapter(posts, R.layout.rcl_item_list_post)
+    private lateinit var adapter: ListPostsRclAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel = ViewModelProviders.of(this, ViewModelFactory(context!!.app()))[SearchViewModel::class.java]
+        viewModel = ViewModelProviders.of(this, injector.searchViewModelFactory())[SearchViewModel::class.java]
+        adapter = ListPostsRclAdapter(viewModel.result, R.layout.rcl_item_list_post)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -61,9 +59,7 @@ class SearchFragment : BaseFragment() {
                                 putString(FirebaseAnalytics.Param.SEARCH_TERM, it.editable.toString())
                             })
                     addUserAction(UserAction("Searched", detail = it.editable.toString()))
-                    searchDisposable = viewModel.api
-                            .searchInGenres(it.editable.toString())
-                            .map { it.data }
+                    searchDisposable = viewModel.search(it.editable.toString())
                             .iomain()
                             .doOnSubscribe {
                                 progressBar.visibility = View.VISIBLE
@@ -74,18 +70,21 @@ class SearchFragment : BaseFragment() {
                                 searchImage.visibility = View.VISIBLE
                             }
                             .subscribe({
-                                posts.clear()
-                                posts.addAll(it)
-                                adapter.notifyDataSetChanged()
                             }, {
                                 Timber.e(it)
-                            })
-                    compositeDisposable.add(searchDisposable!!)
+                            }).addTo(compositeDisposable)
                 }.addTo(compositeDisposable)
 
 
         recyclerView.layoutManager = LinearLayoutManager(context!!)
         recyclerView.adapter = adapter
+
+        viewModel
+                .postsPublisher
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe {
+                    adapter.notifyDataSetChanged()
+                }.addTo(compositeDisposable)
 
         adapter.clickPublisher.subscribe {
             viewModel.navEvents.onNext(PostNavEvent(adapter.posts[it]))

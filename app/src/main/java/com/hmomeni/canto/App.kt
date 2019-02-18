@@ -2,7 +2,10 @@ package com.hmomeni.canto
 
 import android.app.Application
 import com.google.gson.Gson
-import com.hmomeni.canto.di.*
+import com.hmomeni.canto.di.AppModule
+import com.hmomeni.canto.di.DIComponent
+import com.hmomeni.canto.di.DaggerDIComponent
+import com.hmomeni.canto.di.RoomModule
 import com.hmomeni.canto.persistence.UserDao
 import com.hmomeni.canto.utils.UserSession
 import com.pixplicity.easyprefs.library.Prefs
@@ -32,8 +35,8 @@ class App : Application() {
         Timber.plant(Timber.DebugTree())
 
         di = DaggerDIComponent.builder()
+                .applicationContext(this)
                 .appModule(AppModule(this))
-                .apiModule(ApiModule())
                 .roomModule(RoomModule(this))
                 .build()
 
