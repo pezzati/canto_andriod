@@ -18,9 +18,9 @@ data class Post(
         @SerializedName("cover_photo")
         val coverPhoto: CoverPhoto? = null,
         @SerializedName("price")
-        var price: Long,
+        var price: Long = 0,
         @SerializedName("count")
-        var count: Int
+        var count: Int = 0
 ) : Parcelable {
     constructor(source: Parcel) : this(
             source.readInt(),

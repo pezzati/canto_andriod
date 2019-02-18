@@ -1,5 +1,6 @@
 package com.hmomeni.canto.di
 
+import android.app.Application
 import com.hmomeni.canto.App
 import com.hmomeni.canto.utils.DownloadEvent
 import com.hmomeni.canto.utils.LogoutEvent
@@ -10,9 +11,9 @@ import io.reactivex.processors.PublishProcessor
 import javax.inject.Singleton
 
 @Module
-class AppModule(private val app: App) {
+class AppModule(private val app: Application) {
     @Provides
-    fun providesApp() = app
+    fun providesApp(): App = app as App
 
     @Provides
     @Singleton

@@ -1,14 +1,14 @@
 package com.hmomeni.canto.di
 
+import android.app.Application
 import androidx.room.Room
-import com.hmomeni.canto.App
 import com.hmomeni.canto.persistence.*
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
 
 @Module
-class RoomModule(app: App) {
+class RoomModule(app: Application) {
 
     private val appDatabase = Room.databaseBuilder(app.applicationContext, AppDatabase::class.java, "canto")
             .allowMainThreadQueries()

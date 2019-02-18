@@ -6,9 +6,9 @@ class ApiResponse<T>(
         @SerializedName("results")
         val data: T,
         @SerializedName("next")
-        val next: String?,
+        val next: String? = null,
         @SerializedName("previous")
-        val previous: String?,
+        val previous: String? = null,
         @SerializedName("count")
-        val count: Int
+        val count: Int = 0
 )

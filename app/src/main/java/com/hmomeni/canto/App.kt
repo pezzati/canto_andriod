@@ -12,7 +12,7 @@ import com.pixplicity.easyprefs.library.Prefs
 import timber.log.Timber
 import javax.inject.Inject
 
-class App : Application() {
+open class App : Application() {
 
     companion object {
         lateinit var gson: Gson
@@ -26,7 +26,7 @@ class App : Application() {
     lateinit var userDao: UserDao
 
 
-    lateinit var di: DIComponent
+    open lateinit var di: DIComponent
     override fun onCreate() {
         super.onCreate()
 
