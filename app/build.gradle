@@ -105,6 +105,8 @@ android {
             buildConfigField "String", "market", "\"canto\""
         }
     }
+
+    testOptions.unitTests.includeAndroidResources = true
 }
 
 dependencies {

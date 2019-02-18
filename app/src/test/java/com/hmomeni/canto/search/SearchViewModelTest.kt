@@ -2,10 +2,10 @@ package com.hmomeni.canto.search
 
 import android.app.Application
 import androidx.test.core.app.ApplicationProvider
+import androidx.test.runner.AndroidJUnit4
 import com.hmomeni.canto.TestApp
 import com.hmomeni.canto.di.AppModule
 import com.hmomeni.canto.di.DaggerTestDIComponent
-import com.hmomeni.canto.di.RoomModule
 import com.hmomeni.canto.entities.ApiResponse
 import com.hmomeni.canto.entities.Post
 import com.hmomeni.canto.vms.SearchViewModel
@@ -16,10 +16,11 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.ArgumentMatchers.anyString
 import org.mockito.Mockito.`when`
-import org.robolectric.RobolectricTestRunner
+import org.robolectric.annotation.Config
 import javax.inject.Inject
 
-@RunWith(RobolectricTestRunner::class)
+@RunWith(AndroidJUnit4::class)
+@Config(manifest = Config.NONE)
 class SearchViewModelTest {
 
     @Inject
@@ -31,7 +32,6 @@ class SearchViewModelTest {
         DaggerTestDIComponent.builder()
                 .applicationContext(app)
                 .appModule(AppModule(app))
-                .roomModule(RoomModule(app))
                 .build()
                 .inject(this)
 

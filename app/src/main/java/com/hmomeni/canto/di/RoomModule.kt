@@ -1,37 +1,36 @@
 package com.hmomeni.canto.di
 
-import android.app.Application
 import androidx.room.Room
+import com.hmomeni.canto.App
 import com.hmomeni.canto.persistence.*
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
 
 @Module
-class RoomModule(app: Application) {
+class RoomModule {
 
-    private val appDatabase = Room.databaseBuilder(app.applicationContext, AppDatabase::class.java, "canto")
+    @Singleton
+    @Provides
+    fun providesAppDatabase(app: App): AppDatabase = Room
+            .databaseBuilder(app.applicationContext, AppDatabase::class.java, "canto")
             .allowMainThreadQueries()
             .build()
 
     @Singleton
     @Provides
-    fun providesAppDatabase(): AppDatabase = appDatabase
+    fun providesProjectDao(appDatabase: AppDatabase): ProjectDao = appDatabase.projectDao()
 
     @Singleton
     @Provides
-    fun providesProjectDao(): ProjectDao = appDatabase.projectDao()
+    fun providesTrackDao(appDatabase: AppDatabase): TrackDao = appDatabase.trackDao()
 
     @Singleton
     @Provides
-    fun providesTrackDao(): TrackDao = appDatabase.trackDao()
+    fun providesPostDao(appDatabase: AppDatabase): PostDao = appDatabase.postDao()
 
     @Singleton
     @Provides
-    fun providesPostDao(): PostDao = appDatabase.postDao()
-
-    @Singleton
-    @Provides
-    fun providesUserDao(): UserDao = appDatabase.userDao()
+    fun providesUserDao(appDatabase: AppDatabase): UserDao = appDatabase.userDao()
 }
 

@@ -5,7 +5,6 @@ import com.google.gson.Gson
 import com.hmomeni.canto.di.AppModule
 import com.hmomeni.canto.di.DIComponent
 import com.hmomeni.canto.di.DaggerDIComponent
-import com.hmomeni.canto.di.RoomModule
 import com.hmomeni.canto.persistence.UserDao
 import com.hmomeni.canto.utils.UserSession
 import com.pixplicity.easyprefs.library.Prefs
@@ -37,7 +36,6 @@ open class App : Application() {
         di = DaggerDIComponent.builder()
                 .applicationContext(this)
                 .appModule(AppModule(this))
-                .roomModule(RoomModule(this))
                 .build()
 
         di.inject(this)
