@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModelProviders
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.hmomeni.canto.BuildConfig
 import com.hmomeni.canto.R
+import com.hmomeni.canto.utils.PaymentDialog
 import com.hmomeni.canto.utils.ViewModelFactory
 import com.hmomeni.canto.utils.app
 import com.hmomeni.canto.utils.billing.IabHelper
@@ -53,14 +54,28 @@ class PaymentActivity : BaseActivity() {
 
         viewModel.pack = intent.getParcelableExtra("pack")
 
-        iabHelper = IabHelper(this, getPaymentKey(BuildConfig.FLAVOR))
+        if (BuildConfig.payment == "zarinpal") {
+            PaymentDialog(
+                    this,
+                    getString(R.string.payment),
+                    getString(R.string.you_will_be_directed_to_payment_url),
+                    imageResId = R.drawable.canto_logo,
+                    showPositiveButton = true,
+                    showNegativeButton = true,
+                    positiveButtonText = getString(R.string.ok),
+                    negativeButtonText = getString(R.string.cancel),
+                    positiveListener = { _, _ -> createNewInvoice() }
+            ).show()
+        } else {
+            iabHelper = IabHelper(this, getPaymentKey(BuildConfig.FLAVOR))
 
-        iabHelper.startSetup {
-            if (it.isFailure) {
-                Timber.d("IAB setup failed: %s", it.message)
-                showError()
-            } else {
-                queryInventory()
+            iabHelper.startSetup {
+                if (it.isFailure) {
+                    Timber.d("IAB setup failed: %s", it.message)
+                    showError()
+                } else {
+                    queryInventory()
+                }
             }
         }
         backBtn.setOnClickListener { finish() }
@@ -86,7 +101,7 @@ class PaymentActivity : BaseActivity() {
     }
 
     private fun createNewInvoice() {
-        if (BuildConfig.market == "canto") {
+        if (BuildConfig.payment == "zarinpal") {
             viewModel.createInvoiceZarinpal()
                     .iomain()
                     .doOnSuccess {

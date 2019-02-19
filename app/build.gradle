@@ -99,10 +99,17 @@ android {
         cafebazaar {
             dimension "market"
             buildConfigField "String", "market", "\"cafebazaar\""
+            buildConfigField "String", "payment", "\"market\""
         }
         canto {
             dimension "market"
             buildConfigField "String", "market", "\"canto\""
+            buildConfigField "String", "payment", "\"zarinpal\""
+        }
+        googleplay {
+            dimension "market"
+            buildConfigField "String", "market", "\"googleplay\""
+            buildConfigField "String", "payment", "\"zarinpal\""
         }
     }
 

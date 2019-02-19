@@ -119,4 +119,6 @@
     <string name="gift_code_is_applied">Your gift code was successfully applied.</string>
     <string name="apply">Apply</string>
     <string name="please_install_browser">Please install a browser to make a payment!</string>
+    <string name="you_will_be_directed_to_payment_url">You will now be directed to the internet payment gateway.</string>
+    <string name="payment">Payment</string>
 </resources>
