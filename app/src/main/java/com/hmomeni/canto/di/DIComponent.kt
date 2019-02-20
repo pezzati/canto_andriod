@@ -45,6 +45,7 @@ interface DIComponent {
     fun inject(userActionSyncWorker: UserActionSyncWorker)
 
     fun searchViewModelFactory(): ViewModelFactory<SearchViewModel>
+    fun listViewModelFactory(): ViewModelFactory<ListViewModel>
 
 
     @Component.Builder

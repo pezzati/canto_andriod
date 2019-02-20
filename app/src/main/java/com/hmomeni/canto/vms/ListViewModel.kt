@@ -2,7 +2,6 @@ package com.hmomeni.canto.vms
 
 import androidx.lifecycle.ViewModel
 import com.hmomeni.canto.api.Api
-import com.hmomeni.canto.di.DIComponent
 import com.hmomeni.canto.entities.ApiResponse
 import com.hmomeni.canto.entities.Post
 import com.hmomeni.canto.utils.navigation.NavEvent
@@ -11,10 +10,7 @@ import io.reactivex.Single
 import io.reactivex.processors.PublishProcessor
 import javax.inject.Inject
 
-class ListViewModel : ViewModel(), DIComponent.Injectable {
-    override fun inject(diComponent: DIComponent) {
-        diComponent.inject(this)
-    }
+class ListViewModel @Inject constructor() : ViewModel() {
 
     lateinit var type: String
     var urlPath: String = ""
@@ -26,7 +22,7 @@ class ListViewModel : ViewModel(), DIComponent.Injectable {
 
     val posts: MutableList<Post> = mutableListOf()
 
-    private var nextUrl: String? = null
+    var nextUrl: String? = null
 
     fun loadPosts(): Completable {
         return api

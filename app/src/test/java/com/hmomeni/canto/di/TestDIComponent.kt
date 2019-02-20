@@ -1,6 +1,7 @@
 package com.hmomeni.canto.di
 
 import android.content.Context
+import com.hmomeni.canto.list.ListViewModelUnitTest
 import com.hmomeni.canto.search.SearchViewModelTest
 import com.hmomeni.canto.vms.SearchViewModel
 import com.hmomeni.canto.vms.ViewModelFactory
@@ -18,6 +19,7 @@ interface TestDIComponent {
     fun searchViewModelFactory(): ViewModelFactory<SearchViewModel>
 
     fun inject(searchViewModelTest: SearchViewModelTest)
+    fun inject(searchViewModelTest: ListViewModelUnitTest)
 
 
     @Component.Builder

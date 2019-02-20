@@ -12,12 +12,11 @@ import com.crashlytics.android.Crashlytics
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.hmomeni.canto.R
 import com.hmomeni.canto.adapters.rcl.ListPostsRclAdapter
-import com.hmomeni.canto.utils.ViewModelFactory
-import com.hmomeni.canto.utils.app
 import com.hmomeni.canto.utils.iomain
 import com.hmomeni.canto.utils.navigation.BackEvent
 import com.hmomeni.canto.utils.navigation.PostNavEvent
 import com.hmomeni.canto.vms.ListViewModel
+import com.hmomeni.canto.vms.injector
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
 import kotlinx.android.synthetic.main.fragment_list.*
@@ -45,7 +44,7 @@ class ListFragment : BaseFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel = ViewModelProviders.of(this, ViewModelFactory(context!!.app()))[ListViewModel::class.java]
+        viewModel = ViewModelProviders.of(this, injector.listViewModelFactory())[ListViewModel::class.java]
 
         arguments?.let {
             title = it.getString("title")
