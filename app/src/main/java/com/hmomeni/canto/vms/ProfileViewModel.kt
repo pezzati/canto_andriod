@@ -1,13 +1,14 @@
 package com.hmomeni.canto.vms
 
 import androidx.lifecycle.ViewModel
+import androidx.room.EmptyResultSetException
+import com.crashlytics.android.Crashlytics
 import com.hmomeni.canto.api.Api
 import com.hmomeni.canto.di.DIComponent
 import com.hmomeni.canto.entities.User
 import com.hmomeni.canto.persistence.ProjectDao
 import com.hmomeni.canto.persistence.UserDao
 import com.hmomeni.canto.utils.UserSession
-import com.hmomeni.canto.utils.logError
 import com.hmomeni.canto.utils.navigation.NavEvent
 import io.reactivex.Flowable
 import io.reactivex.Single
@@ -36,7 +37,11 @@ class ProfileViewModel : ViewModel(), DIComponent.Injectable {
 
     fun getUser(): Flowable<User> = userDao
             .getCurrentUser()
-            .logError()
+            .doOnError {
+                if (it !is EmptyResultSetException) {
+                    Crashlytics.logException(it)
+                }
+            }
             .onErrorResumeNext {
                 Single.just(User(-1, "", "", "", 0, 0, null))
             }

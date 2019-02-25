@@ -1,6 +1,8 @@
 package com.hmomeni.canto.vms
 
 import androidx.lifecycle.ViewModel
+import androidx.room.EmptyResultSetException
+import com.crashlytics.android.Crashlytics
 import com.hmomeni.canto.App
 import com.hmomeni.canto.BuildConfig
 import com.hmomeni.canto.api.Api
@@ -52,7 +54,11 @@ class MainViewModel : ViewModel(), DIComponent.Injectable {
 
     fun getUser(): Flowable<User> = userDao
             .getCurrentUser()
-            .logError()
+            .doOnError {
+                if (it !is EmptyResultSetException) {
+                    Crashlytics.logException(it)
+                }
+            }
             .mergeWith(
                     api.getUserInfo()
                             .doOnSuccess {
