@@ -8,7 +8,7 @@ import okhttp3.RequestBody
 import retrofit2.http.*
 
 interface Api {
-    @POST("handshake")
+    @POST("/v2/handshake")
     fun handshake(@Body requestBody: RequestBody): Single<JsonObject>
 
     @POST("user/signup")
