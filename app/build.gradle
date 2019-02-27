@@ -24,8 +24,8 @@ android {
         applicationId "ir.canto_app.android"
         minSdkVersion 21
         targetSdkVersion 28
-        versionCode 9
-        versionName "0.9.16"
+        versionCode 10
+        versionName "0.9.17"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         externalNativeBuild {
             cmake {
@@ -110,6 +110,11 @@ android {
             dimension "market"
             buildConfigField "String", "market", "\"googleplay\""
             buildConfigField "String", "payment", "\"zarinpal\""
+        }
+        iranapps {
+            dimension "market"
+            buildConfigField "String", "market", "\"iranapps\""
+            buildConfigField "String", "payment", "\"market\""
         }
     }
 

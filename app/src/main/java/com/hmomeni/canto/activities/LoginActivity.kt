@@ -54,7 +54,7 @@ class LoginActivity : BaseActivity(), View.OnClickListener {
 
         if (mGoogleApiClient == null) {
             mGoogleApiClient = GoogleApiClient.Builder(this)
-                    .enableAutoManage(this) { googleBtn.visibility = View.GONE }
+                    .enableAutoManage(this) { googleBtn?.gone() }
                     .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                     .build()
         }

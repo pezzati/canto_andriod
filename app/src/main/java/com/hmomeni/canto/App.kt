@@ -1,6 +1,7 @@
 package com.hmomeni.canto
 
 import android.app.Application
+import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.gson.Gson
 import com.hmomeni.canto.di.AppModule
 import com.hmomeni.canto.di.DIComponent
@@ -44,6 +45,6 @@ open class App : Application() {
         if (Prefs.contains("token")) {
             userSession.token = Prefs.getString("token", null)
         }
-
+        FirebaseAnalytics.getInstance(this).setUserProperty("market", BuildConfig.market)
     }
 }

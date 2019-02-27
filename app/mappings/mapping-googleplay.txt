@@ -38218,6 +38218,7 @@ com.google.android.gms.measurement.AppMeasurement -> com.google.android.gms.meas
     com.google.android.gms.measurement.internal.zzbw zzada -> a
     com.google.android.gms.measurement.AppMeasurement getInstance(android.content.Context) -> getInstance
     void logEvent(java.lang.String,android.os.Bundle) -> a
+    void setUserProperty(java.lang.String,java.lang.String) -> a
     void zzd(boolean) -> a
     void <init>(com.google.android.gms.measurement.internal.zzbw) -> <init>
     void logEventInternal(java.lang.String,java.lang.String,android.os.Bundle) -> logEventInternal
@@ -46782,6 +46783,7 @@ com.google.firebase.analytics.FirebaseAnalytics -> com.google.firebase.analytics
     java.lang.Object zzbsp -> c
     com.google.firebase.analytics.FirebaseAnalytics getInstance(android.content.Context) -> getInstance
     void logEvent(java.lang.String,android.os.Bundle) -> a
+    void setUserProperty(java.lang.String,java.lang.String) -> a
     void setCurrentScreen(android.app.Activity,java.lang.String,java.lang.String) -> setCurrentScreen
     void setUserId(java.lang.String) -> a
     void <init>(com.google.android.gms.measurement.internal.zzbw) -> <init>
@@ -51295,15 +51297,16 @@ com.hmomeni.canto.activities.DubsmashActivity -> com.hmomeni.canto.activities.Du
     java.util.List midiItems -> v
     com.hmomeni.canto.entities.FullPost post -> w
     java.io.File baseFile -> x
-    int type -> y
+    android.view.TextureView textureView -> y
+    int type -> z
     io.reactivex.processors.PublishProcessor downloadEvents -> m
-    int lastPos -> z
-    android.os.Handler handler -> A
-    int sampleRate -> B
-    int bufferSize -> C
-    int countDown -> D
-    long recordStartTime -> E
-    java.util.HashMap _$_findViewCache -> F
+    int lastPos -> A
+    android.os.Handler handler -> B
+    int sampleRate -> C
+    int bufferSize -> D
+    int countDown -> E
+    long recordStartTime -> F
+    java.util.HashMap _$_findViewCache -> G
     android.view.TextureView getTextureView() -> n
     java.lang.String getVideoFilePath() -> t
     void onRecordStarted() -> o
@@ -54241,7 +54244,6 @@ com.hmomeni.canto.utils.UtilsKt -> com.hmomeni.canto.utils.w:
     io.reactivex.Flowable iomain(io.reactivex.Flowable) -> a
     io.reactivex.Single iomain(io.reactivex.Single) -> a
     io.reactivex.Completable iomain(io.reactivex.Completable) -> a
-    io.reactivex.Single logError(io.reactivex.Single) -> b
     io.reactivex.Completable logError(io.reactivex.Completable) -> b
     com.hmomeni.canto.utils.Dimension getScreenDimensions(android.content.Context) -> b
     int dpToPx(int) -> a
@@ -54267,31 +54269,19 @@ com.hmomeni.canto.utils.UtilsKt$iomain$2 -> com.hmomeni.canto.utils.w$b:
     io.reactivex.Completable apply(io.reactivex.Completable) -> b
     void <init>() -> <init>
     void <clinit>() -> <clinit>
-com.hmomeni.canto.utils.UtilsKt$logError$2 -> com.hmomeni.canto.utils.w$c:
-    com.hmomeni.canto.utils.UtilsKt$logError$2 INSTANCE -> a
-    io.reactivex.SingleSource apply(io.reactivex.Single) -> a
-    io.reactivex.Single apply(io.reactivex.Single) -> b
-    void <init>() -> <init>
-    void <clinit>() -> <clinit>
-com.hmomeni.canto.utils.UtilsKt$logError$2$1 -> com.hmomeni.canto.utils.w$c$1:
-    com.hmomeni.canto.utils.UtilsKt$logError$2$1 INSTANCE -> a
-    void accept(java.lang.Object) -> a
-    void accept(java.lang.Throwable) -> a
-    void <init>() -> <init>
-    void <clinit>() -> <clinit>
-com.hmomeni.canto.utils.UtilsKt$logError$3 -> com.hmomeni.canto.utils.w$d:
+com.hmomeni.canto.utils.UtilsKt$logError$3 -> com.hmomeni.canto.utils.w$c:
     com.hmomeni.canto.utils.UtilsKt$logError$3 INSTANCE -> a
     io.reactivex.CompletableSource apply(io.reactivex.Completable) -> a
     io.reactivex.Completable apply(io.reactivex.Completable) -> b
     void <init>() -> <init>
     void <clinit>() -> <clinit>
-com.hmomeni.canto.utils.UtilsKt$logError$3$1 -> com.hmomeni.canto.utils.w$d$1:
+com.hmomeni.canto.utils.UtilsKt$logError$3$1 -> com.hmomeni.canto.utils.w$c$1:
     com.hmomeni.canto.utils.UtilsKt$logError$3$1 INSTANCE -> a
     void accept(java.lang.Object) -> a
     void accept(java.lang.Throwable) -> a
     void <init>() -> <init>
     void <clinit>() -> <clinit>
-com.hmomeni.canto.utils.UtilsKt$schedulers$1 -> com.hmomeni.canto.utils.w$e:
+com.hmomeni.canto.utils.UtilsKt$schedulers$1 -> com.hmomeni.canto.utils.w$d:
     com.hmomeni.canto.utils.UtilsKt$schedulers$1 INSTANCE -> a
     org.reactivestreams.Publisher apply(io.reactivex.Flowable) -> a
     io.reactivex.Flowable apply(io.reactivex.Flowable) -> b
@@ -54939,22 +54929,28 @@ com.hmomeni.canto.vms.MainViewModel -> com.hmomeni.canto.e.j:
     io.reactivex.Single handshake(com.hmomeni.canto.App) -> a
     void <init>() -> <init>
 com.hmomeni.canto.vms.MainViewModel$getUser$1 -> com.hmomeni.canto.e.j$a:
+    com.hmomeni.canto.vms.MainViewModel$getUser$1 INSTANCE -> a
+    void accept(java.lang.Object) -> a
+    void accept(java.lang.Throwable) -> a
+    void <init>() -> <init>
+    void <clinit>() -> <clinit>
+com.hmomeni.canto.vms.MainViewModel$getUser$2 -> com.hmomeni.canto.e.j$b:
     com.hmomeni.canto.vms.MainViewModel this$0 -> a
     void accept(java.lang.Object) -> a
     void accept(com.hmomeni.canto.entities.User) -> a
     void <init>(com.hmomeni.canto.vms.MainViewModel) -> <init>
-com.hmomeni.canto.vms.MainViewModel$handshake$1 -> com.hmomeni.canto.e.j$b:
+com.hmomeni.canto.vms.MainViewModel$handshake$1 -> com.hmomeni.canto.e.j$c:
     com.hmomeni.canto.vms.MainViewModel$handshake$1 INSTANCE -> a
     java.lang.Object apply(java.lang.Object) -> a
     kotlin.Pair apply(com.google.gson.JsonObject) -> a
     void <init>() -> <init>
     void <clinit>() -> <clinit>
-com.hmomeni.canto.vms.MainViewModel$purchaseSong$1 -> com.hmomeni.canto.e.j$c:
+com.hmomeni.canto.vms.MainViewModel$purchaseSong$1 -> com.hmomeni.canto.e.j$d:
     com.hmomeni.canto.vms.MainViewModel this$0 -> a
     void accept(java.lang.Object) -> a
     void accept(com.google.gson.JsonObject) -> a
     void <init>(com.hmomeni.canto.vms.MainViewModel) -> <init>
-com.hmomeni.canto.vms.MainViewModel$sing$1 -> com.hmomeni.canto.e.j$d:
+com.hmomeni.canto.vms.MainViewModel$sing$1 -> com.hmomeni.canto.e.j$e:
     com.hmomeni.canto.vms.MainViewModel this$0 -> a
     void accept(java.lang.Object) -> a
     void accept(com.google.gson.JsonObject) -> a
@@ -55017,11 +55013,17 @@ com.hmomeni.canto.vms.ProfileViewModel -> com.hmomeni.canto.e.n:
     void <init>() -> <init>
 com.hmomeni.canto.vms.ProfileViewModel$getUser$1 -> com.hmomeni.canto.e.n$a:
     com.hmomeni.canto.vms.ProfileViewModel$getUser$1 INSTANCE -> a
+    void accept(java.lang.Object) -> a
+    void accept(java.lang.Throwable) -> a
+    void <init>() -> <init>
+    void <clinit>() -> <clinit>
+com.hmomeni.canto.vms.ProfileViewModel$getUser$2 -> com.hmomeni.canto.e.n$b:
+    com.hmomeni.canto.vms.ProfileViewModel$getUser$2 INSTANCE -> a
     java.lang.Object apply(java.lang.Object) -> a
     io.reactivex.Single apply(java.lang.Throwable) -> a
     void <init>() -> <init>
     void <clinit>() -> <clinit>
-com.hmomeni.canto.vms.ProfileViewModel$getUser$2 -> com.hmomeni.canto.e.n$b:
+com.hmomeni.canto.vms.ProfileViewModel$getUser$3 -> com.hmomeni.canto.e.n$c:
     com.hmomeni.canto.vms.ProfileViewModel this$0 -> a
     void accept(java.lang.Object) -> a
     void accept(com.hmomeni.canto.entities.User) -> a

@@ -41,7 +41,7 @@ const val INTENT_EXTRA_RATIO = "record_ratio"
 const val INTENT_EXTRA_TIMESTAMP = "time_stamp"
 
 class DubsmashActivity : CameraActivity() {
-    val timeStamp = System.currentTimeMillis()
+    private val timeStamp = System.currentTimeMillis()
 
     init {
         System.loadLibrary("Dubsmash")
@@ -89,6 +89,8 @@ class DubsmashActivity : CameraActivity() {
 
     private lateinit var baseFile: File
 
+    private lateinit var textureView: TextureView
+
 
     var type: Int = PROJECT_TYPE_DUBSMASH
 
@@ -98,6 +100,10 @@ class DubsmashActivity : CameraActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         baseFile = cacheDir
+
+        // had to make this reference explicit so that it doesn't get garbage collected
+        // it seems that not holding a strong reference makes it to be garbage collected
+        textureView = findViewById(R.id.textureView)
 
         app().di.inject(this)
 

@@ -484,15 +484,16 @@ abstract class CameraActivity : BaseFullActivity() {
     }
 
     protected fun stopRecordingVideo() {
-        isRecordingVideo = false
-//        videoButton.setText(R.string.record)
-        onRecordStopped()
-        mediaRecorder?.apply {
-            stop()
-            reset()
+        try {
+            isRecordingVideo = false
+            onRecordStopped()
+            mediaRecorder?.stop()
+            mediaRecorder?.reset()
+            nextVideoAbsolutePath = null
+        } catch (e: Exception) {
+            Timber.e(e)
+            Crashlytics.logException(e)
         }
-        nextVideoAbsolutePath = null
-//        startPreview()
     }
 
     private fun showToast(message: String) = Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
