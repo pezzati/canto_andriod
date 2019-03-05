@@ -101,10 +101,6 @@ class DubsmashActivity : CameraActivity() {
         super.onCreate(savedInstanceState)
         baseFile = cacheDir
 
-        // had to make this reference explicit so that it doesn't get garbage collected
-        // it seems that not holding a strong reference makes it to be garbage collected
-        textureView = findViewById(R.id.textureView)
-
         app().di.inject(this)
 
         val details = DubsmashActivityArgs.fromBundle(intent.extras!!)
@@ -124,6 +120,10 @@ class DubsmashActivity : CameraActivity() {
                 }
 
         setContentView(R.layout.activity_dubsmash)
+
+        // had to make this reference explicit so that it doesn't get garbage collected
+        // it seems that not holding a strong reference makes it to be garbage collected
+        textureView = findViewById(R.id.textureView)
 
         if (type == PROJECT_TYPE_DUBSMASH) {
             pageTitle.setText(R.string.dubsmash)

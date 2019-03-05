@@ -127,7 +127,7 @@ class EditUserFragment : BaseFragment() {
     private fun loadAvatars() {
         viewModel.getAvatars().iomain()
                 .subscribe({
-                    recyclerView.adapter!!.notifyDataSetChanged()
+                    recyclerView?.adapter!!.notifyDataSetChanged()
                     if (it.isNotEmpty()) {
                         loadAvatars()
                     }
