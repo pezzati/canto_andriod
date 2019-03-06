@@ -165,6 +165,8 @@ class LoginActivity : BaseActivity(), View.OnClickListener {
                                 startActivity(Intent(this, MainActivity::class.java))
                                 finish()
                             }, {
+                                Crashlytics.log("IDTOKEN: ${account.idToken}")
+                                Crashlytics.logException(it)
                                 if (it is HttpException && it.code() == 400) {
                                     Toast.makeText(this, it.response().errorString(), Toast.LENGTH_SHORT).show()
                                 } else {
@@ -173,6 +175,7 @@ class LoginActivity : BaseActivity(), View.OnClickListener {
                                 Timber.e(it)
                             }).addTo(compositeDisposable)
                 } else {
+                    Crashlytics.logException(Exception("Failed receiving google token: Code: ${result.status.statusCode}, Message: ${result.status.statusMessage}"))
                     Toast.makeText(this, R.string.failed_requstin_verification, Toast.LENGTH_SHORT).show()
                     Timber.e("Code: %s, Message: %s", result.status.statusCode, result.status.statusMessage)
                 }

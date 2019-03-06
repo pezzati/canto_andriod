@@ -23499,7 +23499,8 @@ com.crashlytics.android.Crashlytics -> com.crashlytics.android.a:
     java.lang.Void doInBackground() -> d
     com.crashlytics.android.Crashlytics getInstance() -> e
     void logException(java.lang.Throwable) -> a
-    void setUserIdentifier(java.lang.String) -> a
+    void log(java.lang.String) -> a
+    void setUserIdentifier(java.lang.String) -> b
     void setString(java.lang.String,java.lang.String) -> a
     void setBool(java.lang.String,boolean) -> a
     void checkInitialized() -> g
@@ -51732,9 +51733,10 @@ com.hmomeni.canto.activities.LoginActivity$onActivityResult$3 -> com.hmomeni.can
     void <init>(com.hmomeni.canto.activities.LoginActivity) -> <init>
 com.hmomeni.canto.activities.LoginActivity$onActivityResult$4 -> com.hmomeni.canto.activities.LoginActivity$k:
     com.hmomeni.canto.activities.LoginActivity this$0 -> a
+    com.google.android.gms.auth.api.signin.GoogleSignInAccount $account -> b
     void accept(java.lang.Object) -> a
     void accept(java.lang.Throwable) -> a
-    void <init>(com.hmomeni.canto.activities.LoginActivity) -> <init>
+    void <init>(com.hmomeni.canto.activities.LoginActivity,com.google.android.gms.auth.api.signin.GoogleSignInAccount) -> <init>
 com.hmomeni.canto.activities.LoginActivity$onCreate$1 -> com.hmomeni.canto.activities.LoginActivity$l:
     com.hmomeni.canto.activities.LoginActivity this$0 -> a
     void onConnectionFailed(com.google.android.gms.common.ConnectionResult) -> a
