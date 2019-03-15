@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.crashlytics.android.Crashlytics
 import com.hmomeni.canto.R
@@ -62,7 +63,7 @@ class MainFragment : BaseFragment() {
                             val pos = it.row - 1
                             val genre = genres[pos]
                             if (it.item == -1) {
-                                viewModel.navEvents.onNext(ListNavEvent("url_path", 0, genre.name, genre.filesLink))
+                                findNavController().navigate(MainFragmentDirections.actionMainFragmentToListFragment(genre.name, "url_path", genre.filesLink))
                             } else {
                                 val post = genre.posts!![it.item]
                                 viewModel.navEvents.onNext(PostNavEvent(post))

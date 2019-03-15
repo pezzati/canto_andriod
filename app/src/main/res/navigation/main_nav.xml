@@ -67,7 +67,15 @@
     <fragment
         android:id="@+id/listFragment"
         android:name="com.hmomeni.canto.fragments.ListFragment"
-        android:label="ListFragment" />
+        android:label="ListFragment">
+        <argument
+            android:name="title"
+            app:argType="string" />
+        <argument
+            android:name="type"
+            app:argType="string" />
+        <argument android:name="urlPath" />
+    </fragment>
     <fragment
         android:id="@+id/searchFragment"
         android:name="com.hmomeni.canto.fragments.SearchFragment"

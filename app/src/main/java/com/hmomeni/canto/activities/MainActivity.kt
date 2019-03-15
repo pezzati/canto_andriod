@@ -8,6 +8,7 @@ import android.widget.Toast
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
+import androidx.navigation.ui.setupWithNavController
 import androidx.work.Constraints
 import androidx.work.NetworkType
 import androidx.work.PeriodicWorkRequestBuilder
@@ -99,38 +100,12 @@ class MainActivity : BaseActivity() {
                         }
                     }
                 }
-        var userNavFired = false
-        bottomNav.setOnNavigationItemSelectedListener {
-            if (userNavFired) {
-                userNavFired = false
-                return@setOnNavigationItemSelectedListener true
-            }
-            when (it.itemId) {
-                R.id.navHome -> navController.popBackStack(R.id.mainFragment, false)
-                R.id.navSearch -> navEvents.onNext(SearchEvent())
-                R.id.navProfile -> navEvents.onNext(ProfileEvent())
-            }
-            return@setOnNavigationItemSelectedListener true
-        }
+        bottomNav.setupWithNavController(navController)
         navController.addOnDestinationChangedListener { _, destination, _ ->
             if (destination.id !in BOTTOM_NAV_FRAGMENTS) {
                 bottomNav.visibility = View.GONE
             } else {
                 bottomNav.visibility = View.VISIBLE
-            }
-            when (destination.id) {
-                R.id.mainFragment -> {
-                    userNavFired = true
-                    bottomNav.selectedItemId = R.id.navHome
-                }
-                R.id.searchFragment -> {
-                    userNavFired = true
-                    bottomNav.selectedItemId = R.id.navSearch
-                }
-                R.id.profileFragment -> {
-                    userNavFired = true
-                    bottomNav.selectedItemId = R.id.navProfile
-                }
             }
         }
         handshake()

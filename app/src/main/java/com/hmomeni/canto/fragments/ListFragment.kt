@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -42,21 +43,21 @@ class ListFragment : BaseFragment() {
     private var listAdapter: ListPostsRclAdapter? = null
     private var gridAdapter: ListPostsRclAdapter? = null
 
+    private val args by navArgs<ListFragmentArgs>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel = ViewModelProviders.of(this, injector.listViewModelFactory())[ListViewModel::class.java]
 
-        arguments?.let {
-            title = it.getString("title")
-            viewModel.type = it.getString("type")
-            viewModel.urlPath = it.getString("url_path")
-            FirebaseAnalytics.getInstance(context!!)
-                    .logEvent("List", Bundle().apply {
-                        putString("url", viewModel.urlPath)
-                        putString("type", viewModel.type)
-                        putString("title", title)
-                    })
-        }
+        title = args.title
+        viewModel.type = args.type
+        viewModel.urlPath = args.urlPath
+        FirebaseAnalytics.getInstance(context!!)
+                .logEvent("List", Bundle().apply {
+                    putString("url", viewModel.urlPath)
+                    putString("type", viewModel.type)
+                    putString("title", title)
+                })
         listAdapter = ListPostsRclAdapter(viewModel.posts, R.layout.rcl_item_list_post)
     }
 
