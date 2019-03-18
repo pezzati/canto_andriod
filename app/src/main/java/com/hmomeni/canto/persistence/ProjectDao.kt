@@ -21,7 +21,7 @@ interface ProjectDao {
     @Query("SELECT * FROM Project")
     fun fetchProjects(): Single<List<Project>>
 
-    @Query("SELECT F.*, T.filePath, T.ratio, P.id as projectId FROM Project as P INNER JOIN FullPost as F ON F.id = P.postId INNER JOIN Track as T ON T.projectId = P.id WHERE T.type = $TRACK_TYPE_FINAL")
+    @Query("SELECT F.*, T.filePath, T.ratio, P.id as projectId FROM Project as P INNER JOIN FullPost as F ON F.id = P.postId INNER JOIN Track as T ON T.projectId = P.id WHERE T.type = $TRACK_TYPE_FINAL ORDER BY P.id DESC")
     fun fetchCompleteProjects(): Single<List<CompleteProject>>
 
     @RawQuery

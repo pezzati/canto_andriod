@@ -90,14 +90,14 @@ class ProfileFragment : BaseFragment(), View.OnClickListener {
                 scaleAnimator = ValueAnimator.ofFloat(1f, dpToPx(24).toFloat() / userPhoto.height.toFloat()).apply {
                     duration = 10000
                     addUpdateListener {
-                        userPhoto.scaleX = it.animatedValue as Float
-                        userPhoto.scaleY = it.animatedValue as Float
-                        userName.alpha = 1f - it.animatedFraction
-                        userName.scaleX = 1f - it.animatedFraction
-                        userName.scaleY = 1f - it.animatedFraction
-                        currentBalance.alpha = 1f - it.animatedFraction
-                        currentBalance.scaleX = 1f - it.animatedFraction
-                        currentBalance.scaleY = 1f - it.animatedFraction
+                        userPhoto?.scaleX = it.animatedValue as Float
+                        userPhoto?.scaleY = it.animatedValue as Float
+                        userName?.alpha = 1f - it.animatedFraction
+                        userName?.scaleX = 1f - it.animatedFraction
+                        userName?.scaleY = 1f - it.animatedFraction
+                        currentBalance?.alpha = 1f - it.animatedFraction
+                        currentBalance?.scaleX = 1f - it.animatedFraction
+                        currentBalance?.scaleY = 1f - it.animatedFraction
                     }
                 }
                 btnInfo.viewTreeObserver.removeOnGlobalLayoutListener(globalLayoutListener)

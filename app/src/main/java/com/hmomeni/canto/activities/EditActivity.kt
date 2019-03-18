@@ -282,9 +282,10 @@ class EditActivity : BaseFullActivity(), View.OnClickListener {
 
             MuxerService.startJob(this, MuxJob(type, post.id, inputFiles, outFile.absolutePath))
             runOnUiThread {
-                CantoDialog(this, getString(R.string.congrats), getString(R.string.your_project_is_now_being_processed), positiveListener = {
-                    finish()
-                }).show()
+                CantoDialog(this, getString(R.string.congrats), getString(R.string.your_project_is_now_being_processed), autoDismiss = true)
+                        .apply {
+                            setOnDismissListener { finish() }
+                        }.show()
             }
         }
 
