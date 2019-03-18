@@ -140,11 +140,11 @@ class TrimView : View {
                 initTrimStart = trimStart
                 initx = event.x
                 captured = when {
-                    rightAnchor.contains(event.x, event.y) -> {
+                    rightAnchor.contains(event.x, event.y) && maxTrim > trim -> {
                         initrx = rightAnchor.left
                         Captured.RIGHT
                     }
-                    leftAnchor.contains(event.x, event.y) -> {
+                    leftAnchor.contains(event.x, event.y) && maxTrim > trim -> {
                         initlx = leftAnchor.left
                         Captured.LEFT
                     }
