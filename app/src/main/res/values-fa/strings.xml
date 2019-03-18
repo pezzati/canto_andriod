@@ -120,4 +120,5 @@
     <string name="please_install_browser">لطفا برای انجام عملیات پرداخت یک مرورگر نصب کنید.</string>
     <string name="you_will_be_directed_to_payment_url">شما هم اکنون به درگاه پرداخت اینترنتی هدایت می‌شوید.</string>
     <string name="payment">پرداخت</string>
+    <string name="free">رایگان</string>
 </resources>

@@ -57,11 +57,8 @@ class PostsRclAdapter(private val posts: List<Post>) : RecyclerView.Adapter<Post
                 itemView.price.setCompoundDrawables(null, null, null, null)
             } else {
                 if (post.price == 0L) {
-                    itemView.price.visibility = View.GONE
-                    itemView.giftView.visibility = View.VISIBLE
+                    itemView.price.setText(R.string.free)
                 } else {
-                    itemView.price.visibility = View.VISIBLE
-                    itemView.giftView.visibility = View.GONE
                     itemView.price.text = post.price.toString()
                 }
             }

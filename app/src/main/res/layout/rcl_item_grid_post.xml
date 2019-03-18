@@ -66,14 +66,4 @@
         app:layout_constraintBottom_toBottomOf="@+id/postImageView"
         app:layout_constraintRight_toRightOf="@+id/postImageView" />
 
-    <ImageView
-        android:id="@+id/giftView"
-        android:layout_width="14dp"
-        android:layout_height="14dp"
-        android:layout_marginRight="12dp"
-        android:layout_marginBottom="8dp"
-        android:src="@drawable/gift"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="@+id/postImageView"
-        app:layout_constraintRight_toRightOf="@+id/postImageView" />
 </androidx.constraintlayout.widget.ConstraintLayout>
