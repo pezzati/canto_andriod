@@ -54,7 +54,7 @@ class MainFragment : BaseFragment() {
                         MainRclAdapter.ClickEvent.Type.BANNER -> {
                             val banner = adapter.banners[it.item]
                             when {
-                                banner.contentType == "multi" -> findNavController().navigate(MainFragmentDirections.actionMainFragmentToListFragment("url_path", banner.title, banner.link))
+                                banner.contentType == "multi" -> findNavController().navigate(MainFragmentDirections.actionMainFragmentToListFragment(banner.title, "url_path", banner.link))
                                 banner.contentType == "redirect" -> startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(banner.link)))
                             }
                         }
