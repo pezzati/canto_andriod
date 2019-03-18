@@ -19,11 +19,11 @@ import com.hmomeni.canto.App
 import com.hmomeni.canto.R
 import com.hmomeni.canto.entities.Post
 import com.hmomeni.canto.entities.UserAction
-import com.hmomeni.canto.fragments.ListFragment
 import com.hmomeni.canto.fragments.MainFragmentDirections
 import com.hmomeni.canto.services.FFMpegService
 import com.hmomeni.canto.utils.*
-import com.hmomeni.canto.utils.navigation.*
+import com.hmomeni.canto.utils.navigation.NavEvent
+import com.hmomeni.canto.utils.navigation.PostNavEvent
 import com.hmomeni.canto.vms.MainViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -77,26 +77,8 @@ class MainActivity : BaseActivity() {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
                     when (it) {
-                        is BackEvent -> {
-                            navController.navigateUp()
-                        }
-                        is ListNavEvent -> {
-                            navController.navigate(R.id.action_mainFragment_to_listFragment, ListFragment.getBundle(it.type, it.objectId, it.title, it.urlPath))
-                        }
-                        is SearchEvent -> {
-                            if (navController.currentDestination!!.id != R.id.mainFragment) {
-                                navController.popBackStack(R.id.mainFragment, false)
-                            }
-                            navController.navigate(R.id.action_mainFragment_to_searchFragment)
-                        }
                         is PostNavEvent -> {
                             openPost(it.post)
-                        }
-                        is ProfileEvent -> {
-                            if (navController.currentDestination!!.id != R.id.mainFragment) {
-                                navController.popBackStack(R.id.mainFragment, false)
-                            }
-                            navController.navigate(R.id.action_mainFragment_to_profileFragment)
                         }
                     }
                 }

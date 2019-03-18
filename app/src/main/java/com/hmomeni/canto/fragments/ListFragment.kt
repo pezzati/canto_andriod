@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -14,7 +15,6 @@ import com.google.firebase.analytics.FirebaseAnalytics
 import com.hmomeni.canto.R
 import com.hmomeni.canto.adapters.rcl.ListPostsRclAdapter
 import com.hmomeni.canto.utils.iomain
-import com.hmomeni.canto.utils.navigation.BackEvent
 import com.hmomeni.canto.utils.navigation.PostNavEvent
 import com.hmomeni.canto.vms.ListViewModel
 import com.hmomeni.canto.vms.injector
@@ -71,7 +71,7 @@ class ListFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         pageTitle.text = title
         backBtn.setOnClickListener {
-            viewModel.navEvents.onNext(BackEvent())
+            findNavController().navigateUp()
         }
 
         listAdapter?.let {

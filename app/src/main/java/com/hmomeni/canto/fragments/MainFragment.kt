@@ -17,7 +17,6 @@ import com.hmomeni.canto.entities.Genre
 import com.hmomeni.canto.utils.ViewModelFactory
 import com.hmomeni.canto.utils.app
 import com.hmomeni.canto.utils.iomain
-import com.hmomeni.canto.utils.navigation.ListNavEvent
 import com.hmomeni.canto.utils.navigation.PostNavEvent
 import com.hmomeni.canto.vms.MainViewModel
 import io.reactivex.disposables.CompositeDisposable
@@ -55,7 +54,7 @@ class MainFragment : BaseFragment() {
                         MainRclAdapter.ClickEvent.Type.BANNER -> {
                             val banner = adapter.banners[it.item]
                             when {
-                                banner.contentType == "multi" -> viewModel.navEvents.onNext(ListNavEvent("url_path", 0, banner.title, banner.link))
+                                banner.contentType == "multi" -> findNavController().navigate(MainFragmentDirections.actionMainFragmentToListFragment("url_path", banner.title, banner.link))
                                 banner.contentType == "redirect" -> startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(banner.link)))
                             }
                         }
