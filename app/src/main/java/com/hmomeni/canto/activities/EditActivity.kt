@@ -7,12 +7,10 @@ import android.media.AudioManager
 import android.media.MediaPlayer
 import android.os.Bundle
 import android.os.Environment
-import android.os.Handler
 import android.text.format.DateFormat
 import android.view.Surface
 import android.view.TextureView
 import android.view.View
-import android.widget.SeekBar
 import android.widget.Toast
 import com.crashlytics.android.Crashlytics
 import com.hmomeni.canto.App
@@ -82,36 +80,6 @@ class EditActivity : BaseFullActivity(), View.OnClickListener {
 
         OpenFile(audioFile.absolutePath, audioFile.length().toInt(), micFile.absolutePath, micFile.length().toInt())
 
-        playBtn.setOnClickListener {
-            if (IsPlaying()) {
-                StopAudio()
-                mediaPlayer.pause()
-                playBtn.setImageResource(R.drawable.ic_play_circle)
-            } else {
-                StartAudio()
-                mediaPlayer.start()
-                timer()
-                playBtn.setImageResource(R.drawable.ic_pause_circle)
-            }
-        }
-
-        seekBar.max = duration.toInt()
-
-        seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
-            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                if (fromUser) {
-                    mediaPlayer.seekTo(progress)
-                    SeekMS(progress.toDouble())
-                }
-            }
-
-            override fun onStartTrackingTouch(seekBar: SeekBar?) {
-            }
-
-            override fun onStopTrackingTouch(seekBar: SeekBar?) {
-            }
-        })
-
         saveBtn.setOnClickListener {
             StopAudio()
             mediaPlayer.stop()
@@ -132,9 +100,16 @@ class EditActivity : BaseFullActivity(), View.OnClickListener {
         }
         mediaPlayer.setOnPreparedListener {
             mediaPlayer.seekTo(0)
+            mediaPlayer.start()
             applyTransformation()
         }
-
+        mediaPlayer.setOnCompletionListener {
+            it.seekTo(0)
+            it.start()
+        }
+        textureView.setOnClickListener {
+            mediaPlayer.seekTo(0)
+        }
         mediaPlayer.prepareAsync()
 
         if (textureView.isAvailable) {
@@ -262,15 +237,6 @@ class EditActivity : BaseFullActivity(), View.OnClickListener {
         pitchBtn.setImageResource(R.drawable.ic_ef_pitch_disabled)
     }
 
-    private var handler = Handler()
-    private fun timer() {
-        seekBar.progress = GetProgressMS().toInt()
-        if (IsPlaying()) {
-            handler.postDelayed({
-                timer()
-            }, 300)
-        }
-    }
 
     private var audioInitialized: Boolean = false
 

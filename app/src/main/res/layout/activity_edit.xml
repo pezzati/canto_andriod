@@ -32,35 +32,11 @@
         app:layout_constraintBottom_toBottomOf="parent" />
 
     <ImageView
-        android:id="@+id/playBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginRight="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginBottom="32dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:srcCompat="@drawable/ic_play_circle" />
-
-    <SeekBar
-        android:id="@+id/seekBar"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginRight="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginBottom="32dp"
-        android:layoutDirection="ltr"
-        app:layout_constraintBottom_toTopOf="@+id/playBtn"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent" />
-
-    <ImageView
         android:id="@+id/openSettingBtn"
         android:layout_width="wrap_content"
         android:layout_height="24dp"
-        android:layout_marginRight="8dp"
         android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -72,7 +48,6 @@
         android:layout_height="0dp"
         android:background="#88000000"
         android:orientation="horizontal"
-        android:visibility="gone"
         android:weightSum="5"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toTopOf="@+id/guideline2">
@@ -81,8 +56,8 @@
             android:id="@+id/closeSettingBtn"
             android:layout_width="wrap_content"
             android:layout_height="24dp"
-            android:layout_marginRight="8dp"
             android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -92,13 +67,13 @@
             android:id="@+id/noneBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginRight="8dp"
             android:layout_marginTop="8dp"
+            android:layout_marginRight="8dp"
             android:layout_weight="1"
             android:contentDescription="None"
             android:src="@drawable/ic_ef_none_disabled"
-            app:layout_constraintLeft_toRightOf="@+id/reverbBtn"
             app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintLeft_toRightOf="@+id/reverbBtn"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/closeSettingBtn" />
 
@@ -110,8 +85,8 @@
             android:layout_weight="1"
             android:contentDescription="Reverb"
             android:src="@drawable/ic_ef_reverb_disabled"
-            app:layout_constraintLeft_toRightOf="@+id/flangerBtn"
             app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintLeft_toRightOf="@+id/flangerBtn"
             app:layout_constraintRight_toLeftOf="@+id/noneBtn"
             app:layout_constraintTop_toTopOf="@+id/noneBtn" />
 
@@ -123,8 +98,8 @@
             android:layout_weight="1"
             android:contentDescription="Flanger"
             android:src="@drawable/ic_ef_flanger_disabled"
-            app:layout_constraintLeft_toRightOf="@+id/pitchBtn"
             app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintLeft_toRightOf="@+id/pitchBtn"
             app:layout_constraintRight_toLeftOf="@+id/reverbBtn"
             app:layout_constraintTop_toTopOf="@+id/reverbBtn" />
 
@@ -136,8 +111,8 @@
             android:layout_weight="1"
             android:contentDescription="Pitch"
             android:src="@drawable/ic_ef_pitch_disabled"
-            app:layout_constraintLeft_toRightOf="@+id/echoBtn"
             app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintLeft_toRightOf="@+id/echoBtn"
             app:layout_constraintRight_toLeftOf="@+id/flangerBtn"
             app:layout_constraintTop_toTopOf="@+id/flangerBtn" />
 
@@ -145,13 +120,13 @@
             android:id="@+id/echoBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginRight="8dp"
             android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
             android:layout_weight="1"
             android:contentDescription="Echo"
             android:src="@drawable/ic_ef_echo_disabled"
-            app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toLeftOf="@+id/pitchBtn"
             app:layout_constraintTop_toTopOf="@+id/pitchBtn" />
 
@@ -159,12 +134,12 @@
             android:id="@+id/musicVolume"
             android:layout_width="80dp"
             android:layout_height="145dp"
-            android:layout_marginRight="8dp"
             android:layout_marginTop="16dp"
+            android:layout_marginRight="8dp"
             android:layout_marginBottom="8dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toRightOf="@+id/micVolume"
             app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintLeft_toRightOf="@+id/micVolume"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/noneBtn"
             app:vs_iconHigh="@drawable/ic_music_volume_hi"
@@ -175,10 +150,10 @@
             android:id="@+id/micVolume"
             android:layout_width="80dp"
             android:layout_height="145dp"
-            android:layout_marginRight="8dp"
             android:layout_marginLeft="8dp"
-            app:layout_constraintLeft_toLeftOf="parent"
+            android:layout_marginRight="8dp"
             app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toLeftOf="@+id/musicVolume"
             app:layout_constraintTop_toTopOf="@+id/musicVolume"
             app:vs_iconHigh="@drawable/ic_sing_hi"
@@ -186,15 +161,35 @@
             app:vs_iconMedium="@drawable/ic_sing_mid" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <ImageView
+    <LinearLayout
         android:id="@+id/saveBtn"
-        android:layout_width="36dp"
+        android:layout_width="wrap_content"
         android:layout_height="36dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginBottom="32dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginTop="16dp"
+        android:layout_marginRight="16dp"
+        android:background="@drawable/save_btn_bg"
+        android:clickable="true"
+        android:gravity="center_vertical"
+        android:layoutDirection="rtl"
+        android:orientation="horizontal"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
         app:layout_constraintRight_toRightOf="parent"
-        app:srcCompat="@drawable/ic_save" />
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:srcCompat="@drawable/save" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="8dp"
+            android:text="@string/save" />
+    </LinearLayout>
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline2"
