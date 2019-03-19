@@ -28,6 +28,7 @@ class EditUserFragment : BaseFragment() {
     lateinit var viewModel: EditUserViewModel
     private val compositeDisposable = CompositeDisposable()
 
+    private var nothingChanged = true
     private var isUserNameValid = false
     private var selectedAvatar: Int = -1
     private val userNamePattern = Pattern.compile("(^[a-zA-Z]+)([a-zA-Z0-9_]*)")
@@ -52,7 +53,9 @@ class EditUserFragment : BaseFragment() {
                 return false
             }
         })
-
+        if (!viewModel.userSession.user?.username.isNullOrEmpty()) {
+            isUserNameValid = true
+        }
         userName.setText(viewModel.userSession.user?.username)
         viewModel.userSession.user?.avatar?.let {
             selectedAvatar = it.id
@@ -65,6 +68,7 @@ class EditUserFragment : BaseFragment() {
         recyclerView.layoutManager = GridLayoutManager(context!!, 3)
         recyclerView.adapter = AvatarsRclAdapter(viewModel.avatars).also {
             it.clickPublisher.subscribe {
+                nothingChanged = false
                 val avatar = viewModel.avatars[it]
                 selectedAvatar = avatar.id
                 GlideApp.with(userPhoto)
@@ -84,6 +88,7 @@ class EditUserFragment : BaseFragment() {
         }
         userName.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
+                nothingChanged = false
                 displayUserNameStatus()
             }
 
@@ -96,6 +101,10 @@ class EditUserFragment : BaseFragment() {
             }
         })
         confirmBtn.setOnClickListener {
+            if (nothingChanged) {
+                findNavController().navigateUp()
+                return@setOnClickListener
+            }
             if (!isUserNameValid) {
                 Toast.makeText(context!!, R.string.choose_valid_username, Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
@@ -112,7 +121,7 @@ class EditUserFragment : BaseFragment() {
                     .doAfterTerminate { progressDialog.dismiss() }
                     .subscribe({
                         Toast.makeText(context!!, R.string.user_info_updated_successfully, Toast.LENGTH_SHORT).show()
-                        findNavController().popBackStack()
+                        findNavController().navigateUp()
                     }, {
                         Timber.e(it)
                         Crashlytics.logException(it)
@@ -121,7 +130,7 @@ class EditUserFragment : BaseFragment() {
         }
         loadAvatars()
 
-        backBtn.setOnClickListener { findNavController().popBackStack() }
+        backBtn.setOnClickListener { findNavController().navigateUp() }
     }
 
     private fun loadAvatars() {
