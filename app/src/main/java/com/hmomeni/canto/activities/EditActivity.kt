@@ -101,14 +101,18 @@ class EditActivity : BaseFullActivity(), View.OnClickListener {
         mediaPlayer.setOnPreparedListener {
             mediaPlayer.seekTo(0)
             mediaPlayer.start()
+            StartAudio()
             applyTransformation()
         }
         mediaPlayer.setOnCompletionListener {
             it.seekTo(0)
+            SeekMS(0.0)
             it.start()
+            StartAudio()
         }
         textureView.setOnClickListener {
             mediaPlayer.seekTo(0)
+            SeekMS(0.0)
         }
         mediaPlayer.prepareAsync()
 
