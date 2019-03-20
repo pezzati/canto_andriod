@@ -141,7 +141,7 @@ class MuxerService : Service() {
                                 )
 
                                 commands.addAll(listOf(
-                                        "-filter_complex", "[0:v]crop=in_h*0.5625:in_h [bg];[1:v]scale=-2:50 [ovrl];[bg][ovrl]overlay=x=(main_w-overlay_w-40):y=(main_h-overlay_h-40);[2:0][3:0]amix=inputs=2:duration=longest",
+                                        "-filter_complex", "[0:v]crop=in_h*0.5625:in_h [bg];[1:v]scale=-2:50 [ovrl];[bg][ovrl]overlay=x=(main_w-overlay_w-40):y=(main_h-overlay_h-40);[3:0]volume=2.0[mic];[2:0][mic]amix=inputs=2:duration=longest",
                                         "-codec:a", "aac",
                                         "-codec:v", "libx264",
                                         "-crf", "$CRF_FACTOR",
