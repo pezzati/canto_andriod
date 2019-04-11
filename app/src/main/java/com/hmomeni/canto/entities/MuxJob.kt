@@ -7,13 +7,15 @@ class MuxJob(
         val type: Int,
         val postId: Long,
         val inputFiles: ArrayList<String>,
-        val outputFile: String
+        val outputFile: String,
+        val shouldUpload: Boolean = false
 ) : Parcelable {
     constructor(source: Parcel) : this(
             source.readInt(),
             source.readLong(),
             source.createStringArrayList(),
-            source.readString()
+            source.readString(),
+            1 == source.readInt()
     )
 
     override fun describeContents() = 0
@@ -23,6 +25,7 @@ class MuxJob(
         writeLong(postId)
         writeStringList(inputFiles)
         writeString(outputFile)
+        writeInt((if (shouldUpload) 1 else 0))
     }
 
     companion object {

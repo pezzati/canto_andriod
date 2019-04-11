@@ -122,4 +122,6 @@
     <string name="payment">پرداخت</string>
     <string name="free">رایگان</string>
     <string name="save">ذخیره</string>
+    <string name="uploading">در حال انتشار...</string>
+    <string name="share">انتشار</string>
 </resources>

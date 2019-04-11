@@ -4,6 +4,7 @@ import com.google.gson.JsonObject
 import com.hmomeni.canto.entities.*
 import io.reactivex.Completable
 import io.reactivex.Single
+import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.http.*
 
@@ -73,5 +74,9 @@ interface Api {
 
     @POST("/analysis/actions/")
     fun syncActions(@Body requestBody: RequestBody): Completable
+
+    @Multipart
+    @POST("/song/create")
+    fun uploadSong(@Part part: MultipartBody.Part?, @PartMap map: HashMap<String, RequestBody>): Completable
 
 }

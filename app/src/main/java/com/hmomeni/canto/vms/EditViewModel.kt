@@ -10,6 +10,10 @@ import com.hmomeni.canto.persistence.ProjectDao
 import com.hmomeni.canto.persistence.TrackDao
 import io.reactivex.Completable
 import io.reactivex.Single
+import okhttp3.MediaType
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
+import java.io.File
 import javax.inject.Inject
 
 class EditViewModel() : ViewModel(), DIComponent.Injectable {
@@ -34,6 +38,17 @@ class EditViewModel() : ViewModel(), DIComponent.Injectable {
             .onErrorResumeNext {
                 api.getSinglePost(postId.toInt())
             }
+
+    fun uploadSong(filePath: String, postId: Long): Completable {
+        val file = File(filePath)
+
+        val map = HashMap<String, RequestBody>()
+        map["name"] = RequestBody.create(MediaType.parse("text/plain"), "")
+        map["karaoke"] = RequestBody.create(MediaType.parse("text/plain"), postId.toString())
+        val requestFile = RequestBody.create(MediaType.parse("video/mp4"), file)
+        val part = MultipartBody.Part.createFormData("file", file.name, requestFile)
+        return api.uploadSong(part, map)
+    }
 
     fun saveDubsmash(finalFile: String, post: FullPost, ratio: Int): Completable {
         return Completable.create {

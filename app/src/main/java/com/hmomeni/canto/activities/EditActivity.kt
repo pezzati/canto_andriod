@@ -20,6 +20,7 @@ import com.hmomeni.canto.services.MuxerService
 import com.hmomeni.canto.utils.CantoDialog
 import com.hmomeni.canto.utils.addUserAction
 import com.hmomeni.canto.utils.getDuration
+import com.hmomeni.canto.utils.gone
 import com.hmomeni.canto.utils.views.VerticalSlider
 import kotlinx.android.synthetic.main.activity_edit.*
 import timber.log.Timber
@@ -99,8 +100,8 @@ class EditActivity : BaseFullActivity(), View.OnClickListener {
             return
         }
         mediaPlayer.setOnPreparedListener {
-            mediaPlayer.seekTo(0)
             mediaPlayer.start()
+            mediaPlayer.seekTo(0)
             StartAudio()
             applyTransformation()
         }
@@ -146,6 +147,10 @@ class EditActivity : BaseFullActivity(), View.OnClickListener {
         echoBtn.setOnClickListener(this)
         openSettingBtn.setOnClickListener(this)
         closeSettingBtn.setOnClickListener(this)
+
+        if (type == PROJECT_TYPE_DUBSMASH) {
+            settingsWrapper.gone()
+        }
 
         musicVolume.max = 40
         musicVolume.progress = 10
@@ -292,6 +297,11 @@ class EditActivity : BaseFullActivity(), View.OnClickListener {
                         }.show()
             }
         }
+
+    }
+
+
+    private fun uploadSong() {
 
     }
 

@@ -123,4 +123,6 @@
     <string name="payment">Payment</string>
     <string name="free">Free</string>
     <string name="save">Save</string>
+    <string name="uploading">Uploading…</string>
+    <string name="share">Share</string>
 </resources>

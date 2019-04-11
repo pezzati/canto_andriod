@@ -216,28 +216,37 @@ class MuxerService : Service() {
 
     @SuppressLint("CheckResult")
     private fun saveProject(job: MuxJob, nBuilder: NotificationCompat.Builder) {
-        viewModel.getPost(job.postId)
+        viewModel.uploadSong(job.outputFile, job.postId)
                 .iomain()
-                .subscribe({
-                    if (job.type == PROJECT_TYPE_SINGING) {
-                        viewModel.saveSinging(job.outputFile, it, RATIO_FULLSCREEN)
-                    } else {
-                        viewModel.saveDubsmash(job.outputFile, it, RATIO_FULLSCREEN)
-                    }
+                .doOnSubscribe {
+                    uploadNotify(nBuilder)
+                }.subscribe({
+                    viewModel.getPost(job.postId)
                             .iomain()
-                            .observeOn(AndroidSchedulers.mainThread())
                             .subscribe({
-                                successNotify(nBuilder)
+                                if (job.type == PROJECT_TYPE_SINGING) {
+                                    viewModel.saveSinging(job.outputFile, it, RATIO_FULLSCREEN)
+                                } else {
+                                    viewModel.saveDubsmash(job.outputFile, it, RATIO_FULLSCREEN)
+                                }
+                                        .iomain()
+                                        .observeOn(AndroidSchedulers.mainThread())
+                                        .subscribe({
+                                            successNotify(nBuilder)
+                                        }, {
+                                            failNotify(nBuilder)
+                                            Timber.e(it)
+                                            Crashlytics.logException(it)
+                                        })
                             }, {
                                 failNotify(nBuilder)
-                                Timber.e(it)
                                 Crashlytics.logException(it)
+                                Timber.e(it)
                             })
                 }, {
-                    failNotify(nBuilder)
-                    Crashlytics.logException(it)
                     Timber.e(it)
                 })
+
     }
 
     private val CHANNEL_ID: String = "muxer"
@@ -274,6 +283,13 @@ class MuxerService : Service() {
             return@map nBuilder
 
         }
+    }
+
+    private fun uploadNotify(builder: NotificationCompat.Builder) {
+        stopForeground(true)
+        builder.setProgress(0, 0, true)
+        builder.setContentText(getString(R.string.uploading))
+        startForeground(hashCode(), builder.build())
     }
 
     private fun failNotify(builder: NotificationCompat.Builder) {
