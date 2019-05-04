@@ -81,12 +81,8 @@ class EditActivity : BaseFullActivity(), View.OnClickListener {
 
         OpenFile(audioFile.absolutePath, audioFile.length().toInt(), micFile.absolutePath, micFile.length().toInt())
 
-        saveBtn.setOnClickListener {
-            StopAudio()
-            mediaPlayer.stop()
-            doMux()
-            addUserAction(UserAction("Save tapped", post.id.toString(), if (type == PROJECT_TYPE_DUBSMASH) "Dubsmash" else "Singing"))
-        }
+        saveBtn.setOnClickListener(this)
+        uploadBtn.setOnClickListener(this)
 
         try {
             mediaPlayer.setDataSource(videoFile.absolutePath)
@@ -214,6 +210,18 @@ class EditActivity : BaseFullActivity(), View.OnClickListener {
             }
             R.id.openSettingBtn -> settingsWrapper.visibility = View.VISIBLE
             R.id.closeSettingBtn -> settingsWrapper.visibility = View.GONE
+            R.id.saveBtn -> {
+                StopAudio()
+                mediaPlayer.stop()
+                doMux()
+                addUserAction(UserAction("Save tapped", post.id.toString(), if (type == PROJECT_TYPE_DUBSMASH) "Dubsmash" else "Singing"))
+            }
+            R.id.uploadBtn -> {
+                StopAudio()
+                mediaPlayer.stop()
+                doMux(true)
+                addUserAction(UserAction("Save tapped", post.id.toString(), if (type == PROJECT_TYPE_DUBSMASH) "Dubsmash" else "Singing"))
+            }
 
         }
     }
@@ -275,7 +283,7 @@ class EditActivity : BaseFullActivity(), View.OnClickListener {
         }
     }
 
-    private fun doMux() {
+    private fun doMux(shouldUpload: Boolean = false) {
         thread {
             applyEffects()
             val inputFiles = arrayListOf(
@@ -289,7 +297,7 @@ class EditActivity : BaseFullActivity(), View.OnClickListener {
                 )
             }
 
-            MuxerService.startJob(this, MuxJob(type, post.id, inputFiles, outFile.absolutePath))
+            MuxerService.startJob(this, MuxJob(type, post.id, inputFiles, outFile.absolutePath, shouldUpload))
             runOnUiThread {
                 CantoDialog(this, getString(R.string.congrats), getString(R.string.your_project_is_now_being_processed), autoDismiss = true)
                         .apply {
@@ -299,12 +307,6 @@ class EditActivity : BaseFullActivity(), View.OnClickListener {
         }
 
     }
-
-
-    private fun uploadSong() {
-
-    }
-
 
     external fun InitAudio(bufferSize: Int, sampleRate: Int, isSinging: Boolean = false)
     external fun OpenFile(filePath: String, length: Int, micFilePath: String = "", micLength: Int = 0): Double

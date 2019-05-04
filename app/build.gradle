@@ -141,8 +141,8 @@ dependencies {
     androidTestImplementation 'androidx.test:monitor:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
 
-    implementation 'androidx.fragment:fragment:1.1.0-alpha06'
-    debugImplementation 'androidx.fragment:fragment-testing:1.1.0-alpha06'
+    implementation 'androidx.fragment:fragment:1.1.0-alpha07'
+    debugImplementation 'androidx.fragment:fragment-testing:1.1.0-alpha07'
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
@@ -153,9 +153,9 @@ dependencies {
     implementation 'com.google.android.material:material:1.1.0-alpha05'
     implementation 'androidx.media:media:1.1.0-alpha04'
     implementation 'androidx.lifecycle:lifecycle-extensions:2.1.0-alpha04'
-    implementation 'androidx.room:room-runtime:2.1.0-alpha06'
-    kapt 'androidx.room:room-compiler:2.1.0-alpha06'
-    implementation 'androidx.room:room-rxjava2:2.1.0-alpha06'
+    implementation 'androidx.room:room-runtime:2.1.0-alpha07'
+    kapt 'androidx.room:room-compiler:2.1.0-alpha07'
+    implementation 'androidx.room:room-rxjava2:2.1.0-alpha07'
     implementation 'androidx.lifecycle:lifecycle-reactivestreams:2.1.0-alpha04'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation "android.arch.work:work-runtime-ktx:1.0.1"
