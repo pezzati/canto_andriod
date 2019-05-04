@@ -7,6 +7,7 @@ import com.hmomeni.canto.api.Api
 import com.hmomeni.canto.di.DIComponent
 import com.hmomeni.canto.entities.User
 import com.hmomeni.canto.persistence.ProjectDao
+import com.hmomeni.canto.persistence.TrackDao
 import com.hmomeni.canto.persistence.UserDao
 import com.hmomeni.canto.utils.UserSession
 import com.hmomeni.canto.utils.navigation.NavEvent
@@ -28,6 +29,9 @@ class ProfileViewModel : ViewModel(), DIComponent.Injectable {
 
     @Inject
     lateinit var projectDao: ProjectDao
+
+    @Inject
+    lateinit var trackDao: TrackDao
 
     @Inject
     lateinit var navEvents: PublishProcessor<NavEvent>

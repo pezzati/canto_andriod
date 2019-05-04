@@ -84,6 +84,10 @@ class MainFragment : BaseFragment() {
         swipeRefresh.setOnRefreshListener {
             loadData()
         }
+
+        vFeedButton.setOnClickListener {
+            findNavController().navigate(MainFragmentDirections.actionMainFragmentToVideoFeedFragment())
+        }
     }
 
     override fun onDestroy() {
