@@ -1,9 +1,9 @@
 package com.hmomeni.canto.fragments
 
+import android.media.MediaPlayer
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.ViewModelProviders
 import androidx.viewpager2.widget.ViewPager2
 import com.hmomeni.canto.R
@@ -22,6 +22,8 @@ class VideoFeedFragment : BaseFragment() {
 
     private lateinit var viewModel: ProfileViewModel
     private val compositeDisposable = CompositeDisposable()
+    val mediaPlayer = MediaPlayer()
+    lateinit var items: List<VideoFeedItem>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,9 +48,40 @@ class VideoFeedFragment : BaseFragment() {
                 }
                 .iomain()
                 .subscribe({
+                    items = it
                     viewPager.adapter = VideoFeedPagerAdapter(it)
                 }, {
                     Timber.e(it)
                 }).addTo(compositeDisposable)
+        viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+            override fun onPageSelected(position: Int) {
+                super.onPageSelected(position)
+                val surfaceView = ((viewPager.getChildAt(0) as ViewGroup).getChildAt(1) as ConstraintLayout).getChildAt(1) as SurfaceView
+                mediaPlayer.reset()
+                mediaPlayer.setDataSource(items[position].track?.filePath)
+                mediaPlayer.setOnPreparedListener {
+                    it.start()
+                }
+                mediaPlayer.prepareAsync()
+
+                if (surfaceView.holder.surface.isValid) {
+                    mediaPlayer.setSurface(surfaceView.holder.surface)
+                } else {
+                    surfaceView.holder.addCallback(object : SurfaceHolder.Callback {
+                        override fun surfaceChanged(holder: SurfaceHolder, format: Int, w: Int, h: Int) {
+
+                        }
+
+                        override fun surfaceDestroyed(holder: SurfaceHolder) {
+                        }
+
+                        override fun surfaceCreated(holder: SurfaceHolder) {
+                            Timber.d("Surface Ready!")
+                            mediaPlayer.setSurface(holder.surface)
+                        }
+                    })
+                }
+            }
+        })
     }
 }
