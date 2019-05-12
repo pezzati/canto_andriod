@@ -107,6 +107,9 @@ class EditActivity : BaseFullActivity(), View.OnClickListener {
             it.start()
             StartAudio()
         }
+
+        mediaPlayer.setOnErrorListener { mp, what, extra -> Timber.e("MediaPlayer error: what: $what --> $extra");true; }
+
         textureView.setOnClickListener {
             mediaPlayer.seekTo(0)
             SeekMS(0.0)

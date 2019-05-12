@@ -168,7 +168,11 @@ class MuxerService : Service() {
 
                                     override fun onSuccess(message: String?) {
                                         Timber.d("Mux successful: %s", message)
-                                        saveProject(job, nBuilder)
+                                        if (job.shouldUpload) {
+                                            uploadProject(job, nBuilder)
+                                        } else {
+                                            saveProject(job, nBuilder)
+                                        }
                                     }
 
                                     override fun onFailure(message: String?) {
@@ -215,38 +219,43 @@ class MuxerService : Service() {
     }
 
     @SuppressLint("CheckResult")
-    private fun saveProject(job: MuxJob, nBuilder: NotificationCompat.Builder) {
+    private fun uploadProject(job: MuxJob, nBuilder: NotificationCompat.Builder) {
         viewModel.uploadSong(job.outputFile, job.postId)
                 .iomain()
                 .doOnSubscribe {
                     uploadNotify(nBuilder)
                 }.subscribe({
-                    viewModel.getPost(job.postId)
-                            .iomain()
-                            .subscribe({
-                                if (job.type == PROJECT_TYPE_SINGING) {
-                                    viewModel.saveSinging(job.outputFile, it, RATIO_FULLSCREEN)
-                                } else {
-                                    viewModel.saveDubsmash(job.outputFile, it, RATIO_FULLSCREEN)
-                                }
-                                        .iomain()
-                                        .observeOn(AndroidSchedulers.mainThread())
-                                        .subscribe({
-                                            successNotify(nBuilder)
-                                        }, {
-                                            failNotify(nBuilder)
-                                            Timber.e(it)
-                                            Crashlytics.logException(it)
-                                        })
-                            }, {
-                                failNotify(nBuilder)
-                                Crashlytics.logException(it)
-                                Timber.e(it)
-                            })
+                    saveProject(job, nBuilder)
                 }, {
                     Timber.e(it)
+                    failNotify(nBuilder)
                 })
+    }
 
+    @SuppressLint("CheckResult")
+    private fun saveProject(job: MuxJob, nBuilder: NotificationCompat.Builder) {
+        viewModel.getPost(job.postId)
+                .iomain()
+                .subscribe({
+                    if (job.type == PROJECT_TYPE_SINGING) {
+                        viewModel.saveSinging(job.outputFile, it, RATIO_FULLSCREEN)
+                    } else {
+                        viewModel.saveDubsmash(job.outputFile, it, RATIO_FULLSCREEN)
+                    }
+                            .iomain()
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe({
+                                successNotify(nBuilder)
+                            }, {
+                                failNotify(nBuilder)
+                                Timber.e(it)
+                                Crashlytics.logException(it)
+                            })
+                }, {
+                    failNotify(nBuilder)
+                    Crashlytics.logException(it)
+                    Timber.e(it)
+                })
     }
 
     private val CHANNEL_ID: String = "muxer"
