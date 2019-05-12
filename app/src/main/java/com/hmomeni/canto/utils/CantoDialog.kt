@@ -24,8 +24,8 @@ class CantoDialog(
         super.onCreate(savedInstanceState)
         setContentView(R.layout.dialog_alert)
 
-        window.setLayout(context.resources.getDimensionPixelSize(R.dimen.dialog_width), WindowManager.LayoutParams.WRAP_CONTENT)
-        window.setBackgroundDrawableResource(android.R.color.transparent)
+        window?.setLayout(context.resources.getDimensionPixelSize(R.dimen.dialog_width), WindowManager.LayoutParams.WRAP_CONTENT)
+        window?.setBackgroundDrawableResource(android.R.color.transparent)
 
         dialogTitle.text = title
         dialogContent.text = content
