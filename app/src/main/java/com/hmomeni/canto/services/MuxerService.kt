@@ -228,6 +228,7 @@ class MuxerService : Service() {
                     saveProject(job, nBuilder)
                 }, {
                     Timber.e(it)
+                    Crashlytics.logException(it)
                     failNotify(nBuilder)
                 })
     }
