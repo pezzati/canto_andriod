@@ -1,3 +1,12 @@
 package com.hmomeni.canto.entities
 
-class VideoFeedItem(val projectId: Long, var project: Project? = null, var post: FullPost? = null, var track: Track? = null)
+import com.google.gson.annotations.SerializedName
+
+class VideoFeedItem(
+        @SerializedName("id")
+        val id: Long,
+        @SerializedName("cover_photo")
+        val coverPhoto: CantoFile,
+        @SerializedName("content")
+        val song: Song
+)

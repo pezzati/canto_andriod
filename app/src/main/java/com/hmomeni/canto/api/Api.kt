@@ -79,4 +79,7 @@ interface Api {
     @POST("/song/create")
     fun uploadSong(@Part part: MultipartBody.Part?, @PartMap map: HashMap<String, RequestBody>): Completable
 
+    @GET("song/songs/homefeed")
+    fun getVideoFeed(): Single<ApiResponse<List<VideoFeedItem>>>
+
 }

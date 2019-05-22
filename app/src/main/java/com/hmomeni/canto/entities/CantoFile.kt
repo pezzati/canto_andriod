@@ -4,7 +4,7 @@ import android.os.Parcel
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
 
-data class CoverPhoto(
+data class CantoFile(
         @field:SerializedName("link")
         val link: String,
         @field:SerializedName("id")
@@ -24,9 +24,9 @@ data class CoverPhoto(
 
         companion object {
                 @JvmField
-                val CREATOR: Parcelable.Creator<CoverPhoto> = object : Parcelable.Creator<CoverPhoto> {
-                        override fun createFromParcel(source: Parcel): CoverPhoto = CoverPhoto(source)
-                        override fun newArray(size: Int): Array<CoverPhoto?> = arrayOfNulls(size)
+                val CREATOR: Parcelable.Creator<CantoFile> = object : Parcelable.Creator<CantoFile> {
+                    override fun createFromParcel(source: Parcel): CantoFile = CantoFile(source)
+                    override fun newArray(size: Int): Array<CantoFile?> = arrayOfNulls(size)
                 }
         }
 }

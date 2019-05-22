@@ -7,8 +7,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.hmomeni.canto.R
 import com.hmomeni.canto.entities.VideoFeedItem
 import com.hmomeni.canto.utils.GlideApp
+import com.hmomeni.canto.utils.gone
 import kotlinx.android.synthetic.main.activity_video_play.view.*
-import java.io.File
 
 class VideoFeedPagerAdapter(private val items: List<VideoFeedItem>) : RecyclerView.Adapter<VideoFeedPagerAdapter.VideoFeedHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VideoFeedHolder {
@@ -33,11 +33,12 @@ class VideoFeedPagerAdapter(private val items: List<VideoFeedItem>) : RecyclerVi
         }
 
         fun bind(item: VideoFeedItem) {
+            itemView.progressBar.gone()
             GlideApp.with(itemView.context)
-                    .load(item.post?.coverPhoto)
+                    .load(item.coverPhoto.link)
                     .into(itemView.artistPhoto)
             GlideApp.with(itemView.context)
-                    .load(File(item.track?.filePath))
+                    .load(item.song.thumbnail)
                     .into(itemView.preview)
         }
     }

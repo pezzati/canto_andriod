@@ -90,7 +90,7 @@ class VideoPlayActivity : BaseFullActivity(), View.OnClickListener {
                     val intentShareFile = Intent(Intent.ACTION_SEND)
                     intentShareFile.type = URLConnection.guessContentTypeFromName(file.name)
                     intentShareFile.putExtra(Intent.EXTRA_STREAM, fileUri)
-                    startActivity(Intent.createChooser(intentShareFile, "Share File"))
+                    startActivity(Intent.createChooser(intentShareFile, "Share CantoFile"))
                 }
             }
         }

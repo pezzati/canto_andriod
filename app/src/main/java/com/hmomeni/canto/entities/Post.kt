@@ -16,7 +16,7 @@ data class Post(
         @SerializedName("genre")
         val genre: Genre? = null,
         @SerializedName("cover_photo")
-        val coverPhoto: CoverPhoto? = null,
+        val coverPhoto: CantoFile? = null,
         @SerializedName("price")
         var price: Long = 0,
         @SerializedName("count")
@@ -28,7 +28,7 @@ data class Post(
             1 == source.readInt(),
             source.readParcelable<Artist>(Artist::class.java.classLoader),
             source.readParcelable<Genre>(Genre::class.java.classLoader),
-            source.readParcelable<CoverPhoto>(CoverPhoto::class.java.classLoader),
+            source.readParcelable<CantoFile>(CantoFile::class.java.classLoader),
             source.readLong(),
             source.readInt()
     )

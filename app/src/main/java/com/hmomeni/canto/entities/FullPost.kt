@@ -29,7 +29,7 @@ data class FullPost(
         var content: Content? = null,
         @TypeConverters(PostTypeConvertor::class)
         @SerializedName("cover_photo")
-        var coverPhoto: CoverPhoto? = null,
+        var coverPhoto: CantoFile? = null,
         @SerializedName("price")
         var price: Long,
         @SerializedName("count")
@@ -43,7 +43,7 @@ data class FullPost(
             1 == source.readInt(),
             source.readParcelable<Artist>(Artist::class.java.classLoader),
             source.readParcelable<Content>(Content::class.java.classLoader),
-            source.readParcelable<CoverPhoto>(CoverPhoto::class.java.classLoader),
+            source.readParcelable<CantoFile>(CantoFile::class.java.classLoader),
             source.readLong(),
             source.readInt()
     )

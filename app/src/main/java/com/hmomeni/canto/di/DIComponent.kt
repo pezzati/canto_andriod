@@ -26,6 +26,7 @@ interface DIComponent {
     fun inject(mainActivity: LoginViewModel)
     fun inject(mainViewModel: MainViewModel)
     fun inject(listViewModel: ListViewModel)
+    fun inject(videoFeedViewModel: VideoFeedViewModel)
     fun inject(searchViewModel: SearchViewModel)
     fun inject(recorderFragment: RecorderFragment)
     fun inject(downloadService: DownloadService)
@@ -46,6 +47,7 @@ interface DIComponent {
 
     fun searchViewModelFactory(): ViewModelFactory<SearchViewModel>
     fun listViewModelFactory(): ViewModelFactory<ListViewModel>
+    fun videoFeedViewModelFactory(): ViewModelFactory<VideoFeedViewModel>
 
 
     @Component.Builder

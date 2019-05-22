@@ -159,7 +159,7 @@ Java_com_hmomeni_canto_activities_DubsmashActivity_OpenFile(
 
     player->open(path, 0, length);
 
-    log_print(ANDROID_LOG_DEBUG, TAG, "File Opened: %s", path);
+    log_print(ANDROID_LOG_DEBUG, TAG, "CantoFile Opened: %s", path);
 
     return 0;
 }

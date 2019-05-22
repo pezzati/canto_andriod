@@ -3,8 +3,8 @@ package com.hmomeni.canto.persistence.typeconvertors
 import androidx.room.TypeConverter
 import com.hmomeni.canto.App
 import com.hmomeni.canto.entities.Artist
+import com.hmomeni.canto.entities.CantoFile
 import com.hmomeni.canto.entities.Content
-import com.hmomeni.canto.entities.CoverPhoto
 import com.hmomeni.canto.entities.Genre
 
 class PostTypeConvertor {
@@ -27,8 +27,8 @@ class PostTypeConvertor {
     fun fromGenre(value: Genre): String = App.gson.toJson(value)
 
     @TypeConverter
-    fun toCoverPhoto(value: String?): CoverPhoto? = if (value == null) null else App.gson.fromJson(value, CoverPhoto::class.java)
+    fun toCoverPhoto(value: String?): CantoFile? = if (value == null) null else App.gson.fromJson(value, CantoFile::class.java)
 
     @TypeConverter
-    fun fromCoverPhoto(value: CoverPhoto?): String? = if (value == null) null else App.gson.toJson(value)
+    fun fromCoverPhoto(value: CantoFile?): String? = if (value == null) null else App.gson.toJson(value)
 }
