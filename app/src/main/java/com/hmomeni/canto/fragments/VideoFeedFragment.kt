@@ -2,12 +2,13 @@ package com.hmomeni.canto.fragments
 
 import android.media.MediaPlayer
 import android.os.Bundle
-import android.view.*
-import androidx.constraintlayout.widget.ConstraintLayout
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProviders
 import androidx.viewpager2.widget.ViewPager2
 import com.hmomeni.canto.R
-import com.hmomeni.canto.adapters.viewpager.VideoFeedPagerAdapter
+import com.hmomeni.canto.adapters.viewpager.VideoFeedFragmentPagerAdapter
 import com.hmomeni.canto.entities.VideoFeedItem
 import com.hmomeni.canto.utils.iomain
 import com.hmomeni.canto.vms.VideoFeedViewModel
@@ -37,43 +38,11 @@ class VideoFeedFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         viewPager.orientation = ViewPager2.ORIENTATION_VERTICAL
 
-        viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
-            override fun onPageSelected(position: Int) {
-                super.onPageSelected(position)
-                val surfaceView = ((viewPager.getChildAt(0) as ViewGroup).getChildAt(1) as ConstraintLayout).getChildAt(1) as SurfaceView
-                mediaPlayer = MediaPlayer()
-                mediaPlayer?.setDataSource(items[position].song.fileUrl)
-                mediaPlayer?.setOnPreparedListener {
-                    it.start()
-                }
-                mediaPlayer?.prepareAsync()
-
-                if (surfaceView.holder.surface.isValid) {
-                    mediaPlayer?.setSurface(surfaceView.holder.surface)
-                } else {
-                    surfaceView.holder.addCallback(object : SurfaceHolder.Callback {
-                        override fun surfaceChanged(holder: SurfaceHolder, format: Int, w: Int, h: Int) {
-
-                        }
-
-                        override fun surfaceDestroyed(holder: SurfaceHolder) {
-                            mediaPlayer?.setSurface(null)
-                        }
-
-                        override fun surfaceCreated(holder: SurfaceHolder) {
-                            Timber.d("Surface Ready!")
-                            mediaPlayer?.setSurface(holder.surface)
-                        }
-                    })
-                }
-            }
-        })
-
         viewModel.api.getVideoFeed()
                 .iomain()
                 .subscribe({
                     items = it.data
-                    viewPager.adapter = VideoFeedPagerAdapter(it.data)
+                    viewPager.adapter = VideoFeedFragmentPagerAdapter(activity!!, it.data)
                 }, {
                     Timber.e(it)
                 }).addTo(compositeDisposable)
