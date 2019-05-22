@@ -86,13 +86,13 @@ class VerticalSlider : View {
         if (lowIcon != null && midIcon != null && hiIcon != null) {
             when {
                 progress < max / 3 -> {
-                    canvas.drawBitmap(lowIcon, null, iconRect, null)
+                    canvas.drawBitmap(lowIcon!!, null, iconRect, null)
                 }
                 progress < max * 2 / 3 -> {
-                    canvas.drawBitmap(midIcon, null, iconRect, null)
+                    canvas.drawBitmap(midIcon!!, null, iconRect, null)
                 }
                 else -> {
-                    canvas.drawBitmap(hiIcon, null, iconRect, null)
+                    canvas.drawBitmap(hiIcon!!, null, iconRect, null)
                 }
             }
         }

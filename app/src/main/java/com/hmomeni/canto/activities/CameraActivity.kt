@@ -505,7 +505,9 @@ abstract class CameraActivity : BaseFullActivity() {
      * @param choices The list of available sizes
      * @return The video size
      */
-    private fun chooseVideoSize(choices: Array<Size>) = choices.firstOrNull {
+    private fun chooseVideoSize(choices: Array<Size>) = choices.filter {
+        it.width <= 1080 || it.height <= 1080
+    }.firstOrNull {
         it.width == it.height * 16 / 9
     } ?: choices[0]
 

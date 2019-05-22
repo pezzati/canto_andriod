@@ -10,7 +10,7 @@ val VIDEO_PERMISSIONS = listOf(Manifest.permission.CAMERA, Manifest.permission.R
 const val FA_LANG = "fa"
 const val EN_LANG = "en"
 
-const val FFMPEG_URL = "${BASE_URL}static/ffmpeg/{arch}/ffmpeg"
+const val FFMPEG_URL = "https://canto-app.ir/static/ffmpeg/{arch}/ffmpeg"
 
 const val HTTP_ERROR_PAYMENT_REQUIRED = 402
 const val HTTP_ERROR_NOT_PURCHASED = 403
