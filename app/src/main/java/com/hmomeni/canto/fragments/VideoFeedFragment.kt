@@ -1,6 +1,5 @@
 package com.hmomeni.canto.fragments
 
-import android.media.MediaPlayer
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -24,8 +23,9 @@ class VideoFeedFragment : BaseFragment() {
     @Inject
     lateinit var viewModel: VideoFeedViewModel
     private val compositeDisposable = CompositeDisposable()
-    private var mediaPlayer: MediaPlayer? = null
-    lateinit var items: List<VideoFeedItem>
+    private var items: MutableList<VideoFeedItem> = mutableListOf()
+
+    private lateinit var pagerAdapter: VideoFeedFragmentPagerAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,12 +37,20 @@ class VideoFeedFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         viewPager.orientation = ViewPager2.ORIENTATION_VERTICAL
+        pagerAdapter = VideoFeedFragmentPagerAdapter(activity!!, items)
+        viewPager.adapter = pagerAdapter
+
+        viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+            override fun onPageSelected(position: Int) {
+                pagerAdapter.pagerEventPublisher.onNext(position)
+            }
+        })
 
         viewModel.api.getVideoFeed()
                 .iomain()
                 .subscribe({
-                    items = it.data
-                    viewPager.adapter = VideoFeedFragmentPagerAdapter(activity!!, it.data)
+                    items.addAll(it.data)
+                    pagerAdapter.notifyDataSetChanged()
                 }, {
                     Timber.e(it)
                 }).addTo(compositeDisposable)
