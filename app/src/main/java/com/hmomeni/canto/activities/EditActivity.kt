@@ -79,7 +79,7 @@ class EditActivity : BaseFullActivity(), View.OnClickListener {
 
         val duration = getDuration(audioFile.absolutePath)
 
-        Timber.d("FileDuration=%d", duration)
+//        Timber.d("FileDuration=%d", duration)
 
         OpenFile(audioFile.absolutePath, audioFile.length().toInt(), micFile.absolutePath, micFile.length().toInt())
 

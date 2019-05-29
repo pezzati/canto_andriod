@@ -14,7 +14,7 @@
         android:layout_marginRight="8dp"
         android:layout_marginBottom="8dp"
         android:clipToPadding="false"
-        android:paddingTop="160dp"
+        android:paddingTop="180dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -29,101 +29,6 @@
         app:layout_constraintGuide_begin="183dp" />
 
 
-    <View
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:background="@color/backgroundColorTransparent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <ImageView
-        android:id="@+id/userPhoto"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginTop="32dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginBottom="16dp"
-        android:src="@drawable/ic_user_place_holder"
-        android:visibility="visible"
-        app:layout_constraintBottom_toTopOf="@+id/guideline4"
-        app:layout_constraintDimensionRatio="1:1"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnSettings" />
-
-    <TextView
-        android:id="@+id/userName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginRight="16dp"
-        android:text="TextView"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/userPhoto"
-        app:layout_constraintRight_toLeftOf="@+id/userPhoto"
-        app:layout_constraintTop_toTopOf="@+id/userPhoto" />
-
-    <TextView
-        android:id="@+id/currentBalance"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:drawableLeft="@drawable/cantoriom"
-        android:drawablePadding="4dp"
-        android:text="1,345"
-        app:layout_constraintRight_toRightOf="@+id/userName"
-        app:layout_constraintTop_toBottomOf="@+id/userName" />
-
-    <androidx.constraintlayout.widget.Group
-        android:id="@+id/userGroup"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:visibility="gone"
-        app:constraint_referenced_ids="userName,currentBalance,btnShop,btnInfo,btnSettings" />
-
-    <ProgressBar
-        android:id="@+id/progressBar"
-        style="?android:attr/progressBarStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginBottom="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/guideline4"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent" />
-
-    <ImageView
-        android:id="@+id/btnSettings"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
-        android:layout_marginRight="24dp"
-        android:src="@drawable/ic_settings_profile"
-        android:visibility="visible"
-        app:layout_constraintBottom_toBottomOf="@+id/toolbar"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/toolbar" />
-
-    <ImageView
-        android:id="@+id/btnShop"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
-        android:layout_marginRight="8dp"
-        android:src="@drawable/ic_shop"
-        android:visibility="visible"
-        app:layout_constraintRight_toLeftOf="@+id/btnSettings"
-        app:layout_constraintTop_toTopOf="@+id/btnSettings" />
-
-    <ImageView
-        android:id="@+id/btnInfo"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
-        android:layout_marginRight="8dp"
-        android:src="@drawable/ic_info"
-        android:visibility="visible"
-        app:layout_constraintRight_toLeftOf="@+id/btnShop"
-        app:layout_constraintTop_toTopOf="@+id/btnSettings" />
-
     <ImageView
         android:id="@+id/noPostImage"
         android:layout_width="120dp"
@@ -132,7 +37,7 @@
         android:layout_marginTop="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginBottom="8dp"
-        android:visibility="gone"
+        android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -142,14 +47,94 @@
         android:id="@+id/noPostText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="8dp"
         android:layout_marginTop="16dp"
         android:gravity="center_horizontal"
         android:text="@string/nothing_posted_yet"
         android:textColor="#4E4E4E"
-        android:visibility="gone"
-        app:layout_constraintLeft_toLeftOf="@+id/noPostImage"
-        app:layout_constraintRight_toRightOf="@+id/noPostImage"
+        android:visibility="visible"
+        app:layout_constraintEnd_toEndOf="@+id/noPostImage"
+        app:layout_constraintStart_toStartOf="@+id/noPostImage"
         app:layout_constraintTop_toBottomOf="@+id/noPostImage" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/header"
+        android:layout_width="0dp"
+        android:layout_height="180dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+
+        <ImageView
+            android:id="@+id/userPhoto"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_margin="5dp"
+            android:src="@drawable/ic_user_place_holder"
+            android:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/userName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:text="TextView"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/userPhoto"
+            app:layout_constraintStart_toEndOf="@+id/userPhoto"
+            app:layout_constraintTop_toTopOf="@+id/userPhoto" />
+
+        <TextView
+            android:id="@+id/currentBalance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableStart="@drawable/cantoriom"
+            android:drawablePadding="4dp"
+            android:text="1,345"
+            app:layout_constraintStart_toStartOf="@+id/userName"
+            app:layout_constraintTop_toBottomOf="@+id/userName" />
+
+        <androidx.constraintlayout.widget.Group
+            android:id="@+id/userGroup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="visible"
+            app:constraint_referenced_ids="userName,currentBalance,btnShop,btnInfo,btnSettings" />
+
+        <ImageView
+            android:id="@+id/btnSettings"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginRight="24dp"
+            android:src="@drawable/ic_settings_profile"
+            android:visibility="visible"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/btnShop"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginRight="8dp"
+            android:src="@drawable/ic_shop"
+            android:visibility="visible"
+            app:layout_constraintRight_toLeftOf="@+id/btnSettings"
+            app:layout_constraintTop_toTopOf="@+id/btnSettings" />
+
+        <ImageView
+            android:id="@+id/btnInfo"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginRight="8dp"
+            android:src="@drawable/ic_info"
+            android:visibility="visible"
+            app:layout_constraintRight_toLeftOf="@+id/btnShop"
+            app:layout_constraintTop_toTopOf="@+id/btnSettings" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
