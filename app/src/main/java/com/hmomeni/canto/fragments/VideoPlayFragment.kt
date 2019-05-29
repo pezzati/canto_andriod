@@ -94,10 +94,13 @@ class VideoPlayFragment(private val position: Int, private val videoFeedItem: Vi
         }
     }
 
+    override fun onStop() {
+        mediaPlayer.stop()
+        super.onStop()
+    }
+
     override fun onDestroyView() {
         disposable?.dispose()
-
-        mediaPlayer.stop()
         mediaPlayer.release()
 
         super.onDestroyView()

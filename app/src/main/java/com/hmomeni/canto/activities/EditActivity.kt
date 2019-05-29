@@ -58,9 +58,11 @@ class EditActivity : BaseFullActivity(), View.OnClickListener {
 
         outDir.mkdirs()
 
+        val dateStr = SimpleDateFormat("yyyy-MM-dd-hh-mm-ss", Locale.ENGLISH).format(Date())
+
         outFile = File(outDir, "Canto_%s_%s.mp4".format(Locale.ENGLISH,
                 if (type == PROJECT_TYPE_SINGING) "singing" else "dubsmash",
-                SimpleDateFormat("yyyy-MM-dd-hh-mm-ss", Locale.ENGLISH).format(Date())
+                dateStr
         ))
 
         type = intent.getIntExtra(INTENT_EXTRA_TYPE, type)
