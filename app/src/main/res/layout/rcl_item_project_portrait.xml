@@ -41,18 +41,18 @@
         android:layout_marginRight="8dp"
         android:layout_marginBottom="8dp"
         app:layout_constraintBottom_toBottomOf="@+id/preview"
-        app:layout_constraintRight_toRightOf="@+id/preview"
+        app:layout_constraintStart_toStartOf="@+id/preview"
         tools:src="@tools:sample/avatars" />
 
     <TextView
         android:id="@+id/artistName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginRight="8dp"
+        android:layout_marginStart="8dp"
         android:text="Behnam Bani"
         android:textSize="12sp"
         app:layout_constraintBottom_toTopOf="@+id/trackName"
-        app:layout_constraintRight_toLeftOf="@+id/postImageView"
+        app:layout_constraintStart_toEndOf="@+id/postImageView"
         app:layout_constraintTop_toTopOf="@+id/postImageView" />
 
     <TextView
@@ -63,7 +63,7 @@
         android:textColor="@color/secondaryText"
         android:textSize="11sp"
         app:layout_constraintBottom_toBottomOf="@+id/postImageView"
-        app:layout_constraintRight_toRightOf="@+id/artistName"
+        app:layout_constraintStart_toStartOf="@+id/artistName"
         app:layout_constraintTop_toBottomOf="@+id/artistName" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

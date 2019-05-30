@@ -58,14 +58,14 @@
         android:id="@+id/price"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginRight="12dp"
+        android:layout_marginEnd="12dp"
         android:layout_marginBottom="8dp"
-        android:drawableLeft="@drawable/cantoriom"
+        android:drawableStart="@drawable/cantoriom"
         android:drawablePadding="3dp"
         android:fontFamily="@font/roboto_bold"
         android:text="120"
         android:textSize="10dp"
         app:layout_constraintBottom_toBottomOf="@+id/postImageView"
-        app:layout_constraintRight_toRightOf="@+id/postImageView" />
+        app:layout_constraintEnd_toEndOf="@+id/postImageView" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -8,9 +8,9 @@
         android:id="@+id/postImageView"
         android:layout_width="158dp"
         android:layout_height="158dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginTop="8dp"
         android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginRight="8dp"
         android:layout_marginBottom="8dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -31,39 +31,38 @@
         android:id="@+id/artistName"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginRight="8dp"
-        android:layout_marginTop="8dp"
         android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginRight="8dp"
         android:text="Behnam Bani"
         android:textSize="14sp"
-        app:layout_constraintLeft_toLeftOf="@+id/view"
-        app:layout_constraintRight_toRightOf="@+id/postImageView"
+        app:layout_constraintEnd_toEndOf="@+id/postImageView"
+        app:layout_constraintStart_toStartOf="@+id/postImageView"
         app:layout_constraintTop_toBottomOf="@+id/postImageView" />
 
     <TextView
         android:id="@+id/trackName"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="8dp"
         android:layout_marginBottom="8dp"
         android:text="TextView"
         android:textSize="11sp"
-        app:layout_constraintLeft_toLeftOf="@+id/view"
         app:layout_constraintRight_toRightOf="@+id/artistName"
+        app:layout_constraintStart_toStartOf="@+id/artistName"
         app:layout_constraintTop_toBottomOf="@+id/artistName" />
 
     <TextView
         android:id="@+id/price"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginRight="12dp"
+        android:layout_marginEnd="12dp"
         android:layout_marginBottom="8dp"
-        android:drawableLeft="@drawable/cantoriom"
+        android:drawableStart="@drawable/cantoriom"
         android:drawablePadding="3dp"
         android:fontFamily="@font/roboto_bold"
         android:text="120"
         android:textSize="10dp"
         app:layout_constraintBottom_toBottomOf="@+id/postImageView"
-        app:layout_constraintRight_toRightOf="@+id/postImageView" />
+        app:layout_constraintEnd_toEndOf="@+id/postImageView" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
