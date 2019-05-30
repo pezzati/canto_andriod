@@ -1,7 +1,5 @@
 package com.hmomeni.canto.fragments
 
-import android.animation.ObjectAnimator
-import android.animation.ValueAnimator
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -23,6 +21,7 @@ import io.reactivex.rxkotlin.addTo
 import kotlinx.android.synthetic.main.fragment_profile.*
 import timber.log.Timber
 import java.util.*
+import kotlin.math.abs
 
 class ProfileFragment : BaseFragment(), View.OnClickListener {
 
@@ -70,63 +69,22 @@ class ProfileFragment : BaseFragment(), View.OnClickListener {
         userPhoto.setOnClickListener(this)
         userName.setOnClickListener(this)
 
-        var xAnimator: ObjectAnimator? = null
-        var yAnimator: ObjectAnimator? = null
-        var scaleAnimator: ValueAnimator? = null
 
-
-        var scrollOffset = 0
-        globalLayoutListener = ViewTreeObserver.OnGlobalLayoutListener {
-            if (btnInfo != null && btnInfo.x != 0f && btnInfo.y != 0f) {
-                recyclerView.setPadding(0, guideline4.y.toInt(), 0, 0)
-                scrollOffset = guideline4.y.toInt()
-
-                xAnimator = ObjectAnimator.ofFloat(userPhoto, View.X, userPhoto.x, 0f)
-                yAnimator = ObjectAnimator.ofFloat(userPhoto, View.Y, userPhoto.y, btnInfo.y - dpToPx(24 + 8))
-
-                xAnimator!!.duration = 10000
-                yAnimator!!.duration = 10000
-
-                scaleAnimator = ValueAnimator.ofFloat(1f, dpToPx(24).toFloat() / userPhoto.height.toFloat()).apply {
-                    duration = 10000
-                    addUpdateListener {
-                        userPhoto?.scaleX = it.animatedValue as Float
-                        userPhoto?.scaleY = it.animatedValue as Float
-                        userName?.alpha = 1f - it.animatedFraction
-                        userName?.scaleX = 1f - it.animatedFraction
-                        userName?.scaleY = 1f - it.animatedFraction
-                        currentBalance?.alpha = 1f - it.animatedFraction
-                        currentBalance?.scaleX = 1f - it.animatedFraction
-                        currentBalance?.scaleY = 1f - it.animatedFraction
-                    }
-                }
-                btnInfo.viewTreeObserver.removeOnGlobalLayoutListener(globalLayoutListener)
-            }
-
-        }
-        btnInfo.viewTreeObserver.addOnGlobalLayoutListener(globalLayoutListener)
-
-
-
+        val maxScroll = dpToPx(160)
+        var scrolled = 0
         recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 val offset = recyclerView.computeVerticalScrollOffset()
                 Timber.d("offset %d", offset)
-                when {
-                    offset == 0 -> {
-                        xAnimator?.currentPlayTime = 0
-                        yAnimator?.currentPlayTime = 0
-                        scaleAnimator?.currentPlayTime = 0
-                    }
-                    offset < scrollOffset -> {
-                        xAnimator?.currentPlayTime = (offset.toFloat() / scrollOffset.toFloat() * 10000).toLong()
-                        yAnimator?.currentPlayTime = (offset.toFloat() / scrollOffset.toFloat() * 10000).toLong()
-                        scaleAnimator?.currentPlayTime = (offset.toFloat() / scrollOffset.toFloat() * 10000).toLong()
-                    }
-                    offset >= scrollOffset -> {
-                        xAnimator?.currentPlayTime = 10000
-                        yAnimator?.currentPlayTime = 10000
-                        scaleAnimator?.currentPlayTime = 10000
+                if (offset == 0) {
+                    scrolled = 0
+                    header.translationY = 0f
+                } else {
+                    scrolled = -offset
+                    if (abs(scrolled) < maxScroll) {
+                        header.translationY = scrolled.toFloat()
+                    } else {
+                        header.translationY = (-maxScroll).toFloat()
                     }
                 }
             }
@@ -139,13 +97,13 @@ class ProfileFragment : BaseFragment(), View.OnClickListener {
                 .getUser()
                 .filter { it.id >= 0 }
                 .iomain()
-                .doAfterTerminate { progressBar.visibility = View.GONE }
+//                .doAfterTerminate { progressBar.visibility = View.GONE }
                 .subscribe({
                     FirebaseAnalytics.getInstance(context!!).setUserId(it.id.toString())
                     Crashlytics.setUserIdentifier(it.id.toString())
 
                     userGroup.visible()
-                    progressBar.gone()
+//                    progressBar.gone()
 
                     userName.text = it.username
                     if (it.premiumDays > 0) {
