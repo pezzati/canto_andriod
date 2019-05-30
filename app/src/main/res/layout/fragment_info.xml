@@ -13,7 +13,7 @@
         android:layout_width="@dimen/back_btn_size"
         android:layout_height="@dimen/back_btn_size"
         android:src="@drawable/ic_back"
-        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView

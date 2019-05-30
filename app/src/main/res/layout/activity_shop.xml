@@ -139,7 +139,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="48dp"
                     android:background="@drawable/bg_search_input"
-                    android:gravity="right|center_vertical"
+                    android:gravity="start|center_vertical"
                     android:hint="@string/enter_gift_code"
                     android:paddingRight="8dp" />
 
@@ -147,7 +147,7 @@
                     android:id="@+id/giftCodeBtn"
                     android:layout_width="86dp"
                     android:layout_height="48dp"
-                    android:layout_gravity="left"
+                    android:layout_gravity="end"
                     android:background="@drawable/confirm_btn_bg"
                     android:text="@string/validate"
                     android:textSize="10dp" />
